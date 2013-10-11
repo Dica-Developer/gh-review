@@ -1,0 +1,20 @@
+<nav id="mainNav">
+    <div>
+        <a href="#">index</a><input list="repositories" id="selectRepo">
+    </div>
+    <div class="powerOff">
+        <%= name %><a href="#" class="powerOff"><i class="batch shadow" data-icon="&#xF069;"></i></a>
+    </div>
+</nav>
+
+<datalist id="repositories">
+    <% _.forEach(repos, function(repo){ %>
+        <% if(repo.private && !repo.organization) {%>
+            <option value="<%= repo.name %>" data-type="private" data-id="<%= repo.id %>">Private - <%= repo.name %></option>
+        <%}else if(!repo.private && !repo.organization){%>
+            <option value="<%= repo.name %>" data-type="public" data-id="<%= repo.id %>">Public - <%= repo.name %></option>
+        <%} else {%>
+            <option value="<%= repo.name %>" data-type="organization" data-id="<%= repo.id %>"><%= repo.organization.login %> - <%= repo.name %></option>
+        <%}%>
+    <% }); %>
+</datalist>

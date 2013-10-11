@@ -1,0 +1,47 @@
+@base-white: #FDFDFD;
+@base-grey: #DDD;
+@base-font: #333;
+@base-icon: lighten(@base-font, 20%);
+
+
+.text-shadow{
+  text-shadow: 1px 1px 1px #FDFDFD;
+}
+
+.border-top(@val){
+  border-top: @val;
+}
+.border-right(@val){
+  border-right: @val;
+}
+.border-bottom(@val){
+  border-bottom: @val;
+}
+.border-left(@val){
+  border-left: @val;
+}
+.border-full(@val){
+  .border-top(@val);
+  .border-right(@val);
+  .border-bottom(@val);
+  .border-left(@val);
+}
+
+.rounded-top-left(@val){
+  -webkit-border-top-left-radius: @val;
+}
+.rounded-top-right(@val){
+  -webkit-border-top-right-radius: @val;
+}
+.rounded-bottom-right(@val){
+  -webkit-border-bottom-right-radius: @val;
+}
+.rounded-bottom-left(@val){
+  -webkit-border-bottom-left-radius: @val;
+}
+.rounded-full(@val){
+  .rounded-top-left(@val);
+  .rounded-top-right(@val);
+  .rounded-bottom-right(@val);
+  .rounded-bottom-left(@val);
+}

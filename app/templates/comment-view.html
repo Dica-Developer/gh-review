@@ -1,0 +1,27 @@
+<h3>Total</h3>
+Total: <%= stats.total %> </br>
+Additions: <%= stats.additions %> </br>
+Deletions: <%= stats.deletions %> </br>
+
+<h3>Files:</h3>
+<% _.forEach(files, function(file){ %>
+    <hr />
+    Total: <%= file.name %>
+    Total: <%= file.total %> </br>
+    Additions: <%= file.additions %> </br>
+    Deletions: <%= file.deletions %> </br>
+    Changes: <%= file.changes %> </br>
+    <table>
+        <% _.forEach(computedFiles, function(file){%>
+            <% _.forEach(file.chunks, function(chunk){%>
+                <% _.forEach(chunk.lines, function(line){%>
+                    <tr class="<%= line.format %>">
+                        <td><%= line.lineNrLeft %></td>
+                        <td><%= line.lineNrRight %></td>
+                        <td><pre><%= line.text %></pre></td>
+                    </tr>
+                <% }); %>
+            <% }); %>
+        <% }); %>
+    </table>
+<% }); %>
