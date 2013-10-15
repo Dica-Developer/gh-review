@@ -1,15 +1,15 @@
 <h3>Total</h3>
-Total: <%= stats.total %> </br>
-Additions: <%= stats.additions %> </br>
-Deletions: <%= stats.deletions %> </br>
+Total: <%= stats.total %> <br />
+Additions: <%= stats.additions %> <br />
+Deletions: <%= stats.deletions %> <br />
 
 <h3>Files:</h3>
 <% _.forEach(files, function(file){ %>
-    File: <%= file.filename %>
-    Total: <%= file.total %> </br>
-    Additions: <%= file.additions %> </br>
-    Deletions: <%= file.deletions %> </br>
-    Changes: <%= file.changes %> </br>
+    File: <%= file.filename %><br />
+    Total: <%= file.total %> <br />
+    Additions: <%= file.additions %> <br />
+    Deletions: <%= file.deletions %> <br />
+    Changes: <%= file.changes %> <br />
     <table>
         <% _.forEach(computedFiles, function(file, fileIndex){%>
             <% _.forEach(file.chunks, function(chunk){%>
