@@ -6,9 +6,11 @@ define([
   'app',
   'commentBox',
   'text!../templates/comment-view.html'
-], function(Backbone, _, when, app, CommentBox, template){
+], function(Backbone, _, when, app, CommentBoxes, template){
   'use strict';
 
+  var EditCommentBox = CommentBoxes.edit;
+//  var ShowCommentBox = CommentBoxes.show;
   var chunkHeadingRegExp = new RegExp('@@.*?[-+](\\d+)(,\\d+){0,1}\\s[-+](\\d+)(,\\d+){0,1} @@', 'g');
 
   function Chunk(chunkLine){
@@ -84,6 +86,9 @@ define([
           return _this.computeChunk();
         })
         .then(function(){
+          return _this.model.getCommitComments();
+        })
+        .then(function(){
           return _this.render();
         });
     },
@@ -120,7 +125,7 @@ define([
       if(this.commentBox){
         this.commentBox.remove();
       }
-      this.commentBox = new CommentBox({
+      this.commentBox = new EditCommentBox({
         model: this.model,
         tr: tr,
         position: position,
