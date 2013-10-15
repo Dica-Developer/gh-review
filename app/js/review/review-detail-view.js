@@ -17,32 +17,23 @@ define([
     },
     initialize: function(){
       var _this = this;
+      app.currentReviewData = {
+        user: this.model.get('user'),
+        repo: this.model.get('repo'),
+        branch: this.model.get('branch')
+      };
       this.render();
       when(this.getCommits(),function(){
         _this.renderAllCommits();
       });
     },
     getCommits: function(){
-      var defer = when.defer(),
-        _this = this;
-      app.github.repos.getCommits({
-        user: _this.model.get('user'),
-        repo: _this.model.get('repo'),
-        sha: _this.model.get('branch')  // could be commit SHA or branch
-      }, function(error, commits){
-        _.forEach(commits, function(commit){
-          commit.user = _this.model.get('user');
-          commit.repo = _this.model.get('repo');
-          var alreadyExist = commitCollection.where({
-            user: commit.user,
-            repo:commit.repo,
-            sha: commit.sha
-          });
-          if(!alreadyExist.length){
-            commitCollection.create(commit);
-          }
-        });
-        defer.resolve();
+      var defer = when.defer();
+      app.github.repos.getCommits(app.currentReviewData, function(error, commits){
+        if(!error){
+          commitCollection.reset(commits);
+          defer.resolve();
+        }
       });
       return defer.promise;
     },
@@ -51,19 +42,13 @@ define([
       this.$('#commitList').append(view.el);
     },
     renderAllCommits: function(){
-      var commits = commitCollection.where({
-        repo: this.model.get('repo'),
-        user: this.model.get('user')
-      });
-      _.forEach(commits, function(commit){
+      commitCollection.each(function(commit){
         this.renderOneCommit(commit);
       },this);
     },
     showCommit: function(event){
       var modelId = $(event.target).data('modelid');
-      var user = $(event.target).data('user');
-      var repo = $(event.target).data('repo');
-      app.router.navigate('commit/' + modelId + '/' + user + '/' + repo , {trigger: true});
+      app.router.navigate('commit/' + modelId , {trigger: true});
     },
     render: function(){
       this.$el.html(this.template(this.model.toJSON()));

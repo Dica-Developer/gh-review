@@ -1,9 +1,8 @@
 /*global define*/
-define(['backbone', 'backboneLocalStorage', 'commitModel'], function(Backbone, BackboneLocalStorage, CommitModel){
+define(['backbone', 'commitModel'], function(Backbone, CommitModel){
   'use strict';
   var CommitsCollection = Backbone.Collection.extend({
     model: CommitModel,
-    localStorage: new BackboneLocalStorage('commits'),
     initialize: function(){
 
     }

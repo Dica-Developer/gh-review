@@ -5,9 +5,8 @@ define(['backbone', 'underscore', 'text!../templates/commit-list-item.html'], fu
     tagName: 'li',
     template: _.template(template),
     initialize: function(){
-      this.$el.data('modelid', this.model.id);
-      this.$el.data('user', this.model.get('user'));
-      this.$el.data('repo', this.model.get('repo'));
+      console.log(this.model);
+      this.$el.data('modelid', this.model.cid);
       this.render();
     },
     render: function(){
