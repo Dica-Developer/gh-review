@@ -1,12 +1,12 @@
-/*global define, Rainbow*/
+/*global define*/
 define([
   'backbone',
   'underscore',
   'when',
   'app',
-  'text!../templates/comment-view.html',
-  'text!../templates/comment-box.html'
-], function(Backbone, _, when, app, template, boxTemplate){
+  'commentBox',
+  'text!../templates/comment-view.html'
+], function(Backbone, _, when, app, CommentBox, template){
   'use strict';
 
   var chunkHeadingRegExp = new RegExp('@@.*?[-+](\\d+)(,\\d+){0,1}\\s[-+](\\d+)(,\\d+){0,1} @@', 'g');
@@ -71,12 +71,6 @@ define([
     };
   };
 
-  function CommentBox(line){
-    var box = $(boxTemplate);
-    line.after(box);
-    return box;
-  }
-
   var CommentView = Backbone.View.extend({
     el: '#main',
     template: _.template(template),
@@ -119,17 +113,24 @@ define([
       return defer.promise;
     },
     commentLine: function(event){
-      var line = $(event.target).closest('tr');
+      var target = $(event.target);
+      var tr = target.closest('tr');
+      var position = target.data('position');
+      var fileIndex = target.data('fileindex');
       if(this.commentBox){
         this.commentBox.remove();
       }
-      this.commentBox = new CommentBox(line);
+      this.commentBox = new CommentBox({
+        model: this.model,
+        tr: tr,
+        position: position,
+        fileIndex: fileIndex
+      });
     },
     render: function(){
       var diff = this.model.get('diff');
       diff.computedFiles = this.files;
       this.$el.html(this.template(diff));
-      Rainbow.color();
     }
   });
 
