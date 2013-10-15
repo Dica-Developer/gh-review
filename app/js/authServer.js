@@ -14,11 +14,7 @@ define(['backbone', 'underscore', 'when', 'logger'], function (Backbone, _, when
     this.server = null;
   }
 
-  var authHandler = new AuthHandler();
-
-  _.extend(authHandler, Backbone.Events);
-
-  authHandler.createServer = function(){
+  AuthHandler.prototype.createServer = function(){
     var _this = this;
     return http.createServer(function (req, res) {
       var url = Url.parse(req.url);
@@ -53,6 +49,10 @@ define(['backbone', 'underscore', 'when', 'logger'], function (Backbone, _, when
       }
     });
   };
+
+  var authHandler = new AuthHandler();
+
+  _.extend(authHandler, Backbone.Events);
 
   authHandler.init = function(){
     var defer = when.defer();
