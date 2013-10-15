@@ -20,6 +20,23 @@ define(['backbone', 'app', 'when'], function(Backbone, app, when){
       }
 
       return defer.promise;
+    },
+    addLineComment: function(fileIndex, position, comment){
+      var diff = this.get('diff');
+      var files = diff.files;
+      var file = files[fileIndex];
+      app.github.repos.createCommitComment({
+        user: this.get('user'),
+        repo: this.get('repo'),
+        sha: this.get('sha'),
+        body: comment,
+        /* jshint camelcase:false */
+        commit_id: file.sha,
+        path: file.filename,
+        position: position
+      }, function(error, resp){
+        console.log(error, resp);
+      });
     }
   });
 

@@ -5,20 +5,19 @@ Deletions: <%= stats.deletions %> </br>
 
 <h3>Files:</h3>
 <% _.forEach(files, function(file){ %>
-    <hr />
-    Total: <%= file.name %>
+    File: <%= file.filename %>
     Total: <%= file.total %> </br>
     Additions: <%= file.additions %> </br>
     Deletions: <%= file.deletions %> </br>
     Changes: <%= file.changes %> </br>
     <table>
-        <% _.forEach(computedFiles, function(file){%>
+        <% _.forEach(computedFiles, function(file, fileIndex){%>
             <% _.forEach(file.chunks, function(chunk){%>
-                <% _.forEach(chunk.lines, function(line){%>
+                <% _.forEach(chunk.lines, function(line, lineIndex){%>
                     <tr class="<%= line.format %>">
                         <td><%= line.lineNrLeft %></td>
                         <td><%= line.lineNrRight %></td>
-                        <td><pre><%= line.text %></pre></td>
+                        <td><pre data-position="<%= lineIndex %>" data-fileindex="<%= fileIndex %>"><%= line.text %></pre></td>
                     </tr>
                 <% }); %>
             <% }); %>

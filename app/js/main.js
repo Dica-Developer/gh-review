@@ -43,6 +43,7 @@
       commitListItemView: 'commits/commit-list-item-view',
 
       commentView: 'comment/comment-view',
+      commentBox: 'comment/comment-box',
 
       userModel: 'user-model'
     },
