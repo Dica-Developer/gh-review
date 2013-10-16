@@ -1,17 +1,17 @@
 /*global define*/
-define(['backbone', 'app', 'when'], function(Backbone, app, when){
+define(['backbone', 'app', 'when'], function (Backbone, app, when) {
   'use strict';
   var CommitsModel = Backbone.Model.extend({
-    initialize: function(){},
-    getDiff: function(){
+    initialize: function () {},
+    getDiff: function () {
       var defer = when.defer(),
         _this = this;
-      if(!this.get('diff')){
+      if (!this.get('diff')) {
         app.github.repos.getCommit({
           user: app.currentReviewData.user,
           repo: app.currentReviewData.repo,
           sha: _this.get('sha')
-        }, function(error, res){
+        }, function (error, res) {
           _this.set('diff', res);
           defer.resolve();
         });
@@ -21,20 +21,20 @@ define(['backbone', 'app', 'when'], function(Backbone, app, when){
 
       return defer.promise;
     },
-    getCommitComments: function(){
+    getCommitComments: function () {
       var _this = this;
       var defer = when.defer();
       app.github.repos.getCommitComments({
         user: app.currentReviewData.user,
         repo: app.currentReviewData.repo,
         sha: _this.get('sha')
-      },function(error, resp){
+      }, function (error, resp) {
         console.log(error, resp);
         defer.resolve();
       });
       return defer.promise;
     },
-    addLineComment: function(fileIndex, position, comment){
+    addLineComment: function (fileIndex, position, comment) {
       var defer = when.defer();
       var diff = this.get('diff');
       var files = diff.files;
@@ -48,8 +48,8 @@ define(['backbone', 'app', 'when'], function(Backbone, app, when){
         commit_id: file.sha,
         path: file.filename,
         position: position
-      }, function(error/*, resp*/){
-        if(!error){
+      }, function (error/*, resp*/) {
+        if (!error) {
           defer.resolve();
         } else {
           defer.reject();
