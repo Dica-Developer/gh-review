@@ -1,3 +1,7 @@
-<img src="<%= author.avatar_url %>" /> <%= commit.author.name %></ br>
-<p><%= commit.message %></p>
-<p>Comments: <%= commit.comment_count %></p>
+<div class="media">
+    <img height="25px" class="media-object pull-left" src="<%= author.avatar_url %>" title="<%= commit.author.name %>"/>
+    <div class="media-body">
+        <%= commit.author.name %>: <%= commit.message %>
+        <span class="badge pull-right"><%= commit.comment_count %></span>
+    </div>
+</div>

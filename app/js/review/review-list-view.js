@@ -35,7 +35,7 @@ define([
     showHint: function(){
     },
     render: function(){
-      this.$el.html('<ul id="reviewList"></ul>');
+      this.$el.html('<ul id="reviewList" class="list-group"></ul>');
     }
   });
 

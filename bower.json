@@ -9,7 +9,8 @@
     "modernizr": "~2.6.2",
     "lodash": "~2.2.1",
     "when": "~2.5.0",
-    "backbone.localStorage": "~1.1.7"
+    "backbone.localStorage": "~1.1.7",
+    "bootstrap": "~3.0.0"
   },
   "devDependencies": {}
 }

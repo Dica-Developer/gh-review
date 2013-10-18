@@ -12,9 +12,6 @@ define([
   var ReviewDetailView = Backbone.View.extend({
     el: '#main',
     template: _.template(template),
-    events: {
-      'click li': 'showCommit'
-    },
     initialize: function(){
       var _this = this;
       app.currentReviewData = {
@@ -45,10 +42,6 @@ define([
       commitCollection.each(function(commit){
         this.renderOneCommit(commit);
       },this);
-    },
-    showCommit: function(event){
-      var modelId = $(event.target).data('modelid');
-      app.router.navigate('commit/' + modelId , {trigger: true});
     },
     render: function(){
       this.$el.html(this.template(this.model.toJSON()));

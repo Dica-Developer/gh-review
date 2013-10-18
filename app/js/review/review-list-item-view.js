@@ -7,21 +7,26 @@ define([
   'use strict';
 
   var ReviewListItemView = Backbone.View.extend({
-    tagName: 'li',
+    tagName: 'a',
+    attributes: {
+      'class': 'list-group-item'
+    },
     template: _.template(template),
     events: {
-      'click a.destroy' : 'clear'
+      'click .destroy' : 'clear'
     },
     initialize: function() {
+      this.$el.attr('href', '#review/' + this.model.id);
       this.listenTo(this.model, 'change', this.render);
       this.listenTo(this.model, 'destroy', this.remove);
     },
     render: function(){
       this.$el.html(this.template(this.model.toJSON()));
-      this.$el.data('modelid', this.model.id);
       return this;
     },
-    clear: function(){
+    clear: function(event){
+      event.stopPropagation();
+      event.preventDefault();
       this.model.destroy();
     }
   });

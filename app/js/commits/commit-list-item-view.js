@@ -2,11 +2,11 @@
 define(['backbone', 'underscore', 'text!../templates/commit-list-item.html'], function(Backbone, _, template){
   'use strict';
   var CommitListView = Backbone.View.extend({
-    tagName: 'li',
+    tagName: 'a',
     template: _.template(template),
     initialize: function(){
-      console.log(this.model);
-      this.$el.data('modelid', this.model.cid);
+      this.$el.attr('href', '#commit/' + this.model.cid);
+      this.$el.addClass('list-group-item');
       this.render();
     },
     render: function(){

@@ -1,10 +1,11 @@
-<nav id="mainNav">
-    <div>
-        <a href="#">index</a><input list="repositories" id="selectRepo">
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="navbar-header">
+        <a class="navbar-brand" href="#">GH_REVIEW</a>
     </div>
-    <div class="powerOff">
-        <%= name %><a href="#" class="powerOff"><i class="batch shadow" data-icon="&#xF069;"></i></a>
+    <div class="navbar-form navbar-left" role="search">
+        <input type="text" id="selectRepo" class="form-control" placeholder="Repositories" list="repositories">
     </div>
+    <p class="navbar-text pull-right">Signed in as <%= name %></p>
 </nav>
 
 <datalist id="repositories">
