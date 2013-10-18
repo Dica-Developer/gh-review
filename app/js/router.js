@@ -31,7 +31,6 @@ define([
     reviewDetail: function(id){
       this.clear();
       var model = reviewCollection.get(id);
-      console.log(model.toJSON());
       this.view = new ReviewDetailView({model: model});
     },
     showCommit: function(cid){
