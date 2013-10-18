@@ -6,9 +6,9 @@ module.exports = function (grunt) {
   // load all grunt tasks
   require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
-  // configurable paths
   var config = {
     app: 'app',
+    dev: 'dev',
     dist: 'dist',
     tmp: 'tmp',
     resources: 'resources'
@@ -27,7 +27,7 @@ module.exports = function (grunt) {
           '<%= config.app %>/css/{,*/}*.less',
           '<%= config.app %>/js/{,*/}*.js'
         ],
-        tasks: ['dev']
+        tasks: ['devWatch']
       }
     },
     clean: {
@@ -37,6 +37,14 @@ module.exports = function (grunt) {
           src: [
             '<%= config.dist %>/*',
             '<%= config.tmp %>/*'
+          ]
+        }]
+      },
+      dev: {
+        files: [{
+          dot: true,
+          src: [
+            '<%= config.dev %>/*'
           ]
         }]
       }
@@ -64,7 +72,7 @@ module.exports = function (grunt) {
       }
     },
     copy: {
-      appMacos: {
+      appMacosDist: {
         files: [{
           expand: true,
           cwd: '<%= config.app %>',
@@ -72,45 +80,29 @@ module.exports = function (grunt) {
           src: '**'
         }]
       },
-      webkit: {
+      appMacosDev: {
+        files: [{
+          expand: true,
+          cwd: '<%= config.app %>',
+          dest: '<%= config.dev %>/node-webkit.app/Contents/Resources/app.nw',
+          src: '**'
+        }]
+      },
+      webkitDist: {
         files: [{
           expand: true,
           cwd: '<%=config.resources %>/node-webkit/mac-os',
           dest: '<%= config.dist %>/',
           src: '**'
         }]
-      }
-    },
-    compress: {
-      appToTmp: {
-        options: {
-          archive: '<%= config.tmp %>/app.zip'
-        },
-        files: [
-          {
-            expand: true,
-            cwd:'<%= config.app %>',
-            src: ['**']
-          }
-        ]
-      }
-    },
-    rename: {
-      app: {
-        files: [
-          {
-            src: '<%= config.dist %>/node-webkit.app',
-            dest: '<%= config.dist %>/JSON Transformer.app'
-          }
-        ]
       },
-      zipToApp: {
-        files: [
-          {
-            src: '<%= config.tmp %>/app.zip',
-            dest: '<%= config.tmp %>/app.nw'
-          }
-        ]
+      webkitDev: {
+        files: [{
+          expand: true,
+          cwd: '<%=config.resources %>/node-webkit/mac-os',
+          dest: '<%= config.dev %>/',
+          src: '**'
+        }]
       }
     }
   });
@@ -123,19 +115,52 @@ module.exports = function (grunt) {
     fs.chmodSync('dist/node-webkit.app/Contents/MacOS/node-webkit', '555');
   });
 
+  grunt.registerTask('chmodDev', 'Add lost Permissions.', function () {
+    var fs = require('fs');
+    fs.chmodSync('dev/node-webkit.app/Contents/Frameworks/node-webkit Helper EH.app/Contents/MacOS/node-webkit Helper EH', '555');
+    fs.chmodSync('dev/node-webkit.app/Contents/Frameworks/node-webkit Helper NP.app/Contents/MacOS/node-webkit Helper NP', '555');
+    fs.chmodSync('dev/node-webkit.app/Contents/Frameworks/node-webkit Helper.app/Contents/MacOS/node-webkit Helper', '555');
+    fs.chmodSync('dev/node-webkit.app/Contents/MacOS/node-webkit', '555');
+  });
+
   grunt.registerTask('dist', [
     'jshint',
     'clean:dist',
-    'copy:webkit',
-    'copy:appMacos',
+    'copy:webkitDist',
+    'copy:appMacosDist',
     'chmod'
   ]);
 
-  grunt.registerTask('dev', [
+  grunt.registerTask('devWatch', [
     'jshint',
     'less:dev',
-    'copy:appMacos',
-    'chmod'
+    'copy:appMacosDev'
+  ]);
+
+  grunt.registerTask('copyToDev', [
+    'copy:webkitDev',
+    'copy:appMacosDev'
+  ]);
+
+  grunt.registerTask('startApp', 'Starting app for developing', function(){
+    var exec = require('child_process').exec;
+    var app = exec('dev/node-webkit.app/Contents/MacOS/node-webkit');
+    app.stdout.on('data', function(msg){
+      grunt.log.write(msg);
+    });
+    app.stderr.on('data', function(msg){
+      grunt.log.error(msg);
+    });
+  });
+
+  grunt.registerTask('dev', [
+    'clean:dev',
+    'jshint',
+    'less:dev',
+    'copyToDev',
+    'chmodDev',
+    'startApp',
+    'watch:dev'
   ]);
 
 };
