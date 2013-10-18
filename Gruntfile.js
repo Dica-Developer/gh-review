@@ -1,5 +1,4 @@
 /*jshint camelcase: false*/
-// Generated on 2013-08-01 using generator-chrome-extension 0.2.3
 
 module.exports = function (grunt) {
   'use strict';
