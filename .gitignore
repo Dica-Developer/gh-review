@@ -1,5 +1,6 @@
 .idea/
 dist/
+dev/
 node_modules/
 bower_components/
 app/.DS_Store
