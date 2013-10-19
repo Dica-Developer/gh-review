@@ -1,26 +1,40 @@
-<h3>Total</h3>
-Total: <%= stats.total %> <br />
-Additions: <%= stats.additions %> <br />
-Deletions: <%= stats.deletions %> <br />
+<div class="page-header">
+    <h1>Total
+        <small>
+            Total: <%= stats.total %> <br />
+            Additions: <%= stats.additions %> <br />
+            Deletions: <%= stats.deletions %> <br />
+        </small>
+    </h1>
+</div>
 
 <h3>Files:</h3>
-<% _.forEach(files, function(file){ %>
-    File: <%= file.filename %><br />
-    Total: <%= file.total %> <br />
-    Additions: <%= file.additions %> <br />
-    Deletions: <%= file.deletions %> <br />
-    Changes: <%= file.changes %> <br />
-    <table>
-        <% _.forEach(computedFiles, function(file, fileIndex){%>
-            <% _.forEach(file.chunks, function(chunk){%>
-                <% _.forEach(chunk.lines, function(line, lineIndex){%>
-                    <tr class="<%= line.format %>">
-                        <td><%= line.lineNrLeft %></td>
-                        <td><%= line.lineNrRight %></td>
-                        <td><pre data-position="<%= lineIndex %>" data-fileindex="<%= fileIndex %>"><%= line.text %></pre></td>
-                    </tr>
-                <% }); %>
+<% _.forEach(files, function(file, fileIndex){ %>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        File: <%= file.filename %>
+        <div class="pull-right">
+            <span class="label label-success">
+                <span class="glyphicon glyphicon-plus"></span> <%= file.additions %>
+            </span>
+            <span class="label label-danger">
+                <span class="glyphicon glyphicon-minus"></span> <%= file.deletions %>
+            </span>
+            <span class="label label-info">
+                <span class="glyphicon glyphicon-transfer"></span> <%= file.changes %>
+            </span>
+        </div>
+    </div>
+    <table class="comments table table-condensed table-bordered table-hover">
+        <% _.forEach(computedFiles[fileIndex].chunks, function(chunk){%>
+            <% _.forEach(chunk.lines, function(line, lineIndex){%>
+                <tr class="<%= line.format %>">
+                    <td class="lineNr"><%= line.lineNrLeft %></td>
+                    <td class="lineNr"><%= line.lineNrRight %></td>
+                    <td><pre data-position="<%= lineIndex %>" data-fileindex="<%= fileIndex %>"><%= line.text %></pre></td>
+                </tr>
             <% }); %>
         <% }); %>
     </table>
+</div>
 <% }); %>
