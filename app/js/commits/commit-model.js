@@ -1,7 +1,7 @@
 /*global define*/
 define(['backbone', 'app', 'when'], function (Backbone, app, when) {
   'use strict';
-  var CommitsModel = Backbone.Model.extend({
+  var CommitModel = Backbone.Model.extend({
     initialize: function () {},
     getDiff: function () {
       var defer = when.defer(),
@@ -60,5 +60,5 @@ define(['backbone', 'app', 'when'], function (Backbone, app, when) {
     }
   });
 
-  return CommitsModel;
+  return CommitModel;
 });
