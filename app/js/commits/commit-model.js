@@ -29,7 +29,6 @@ define(['backbone', 'app', 'when'], function (Backbone, app, when) {
         repo: app.currentReviewData.repo,
         sha: _this.get('sha')
       }, function (error, resp) {
-        console.log(error, resp);
         defer.resolve();
       });
       return defer.promise;
