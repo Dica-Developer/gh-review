@@ -61,7 +61,7 @@ module.exports = function (grunt) {
           yuicompress: true
         },
         files: {
-          '<%= config.app %>/css/main.css': '<%= config.app %>/css/main.less'
+          '<%= config.dev %>/node-webkit.app/Contents/Resources/app.nw/css/main.css': '<%= config.app %>/css/main.less'
         }
       },
       build: {
@@ -88,7 +88,7 @@ module.exports = function (grunt) {
           expand: true,
           cwd: '<%= config.app %>',
           dest: '<%= config.dev %>/node-webkit.app/Contents/Resources/app.nw',
-          src: ['*.*', 'views/**', 'css/**', 'templates/**', 'node_modules/**', 'bower_components/requirejs/require.js']
+          src: ['*.*', 'views/**', 'templates/**', 'node_modules/**', 'bower_components/requirejs/require.js']
         }, {
           cwd: '<%= config.app %>',
           expand: true,
