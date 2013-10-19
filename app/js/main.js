@@ -2,13 +2,6 @@
 (function () {
   'use strict';
 
-  if (typeof String.prototype.startsWith !== 'function') {
-    // see below for better implementation!
-    String.prototype.startsWith = function (str){
-      return this.indexOf(str) === 0;
-    };
-  }
-
   window.require = window.nodeRequire;
 
   requirejs.config({
@@ -17,7 +10,7 @@
       jquery: '../bower_components/jquery/jquery',
       backbone: '../bower_components/backbone/backbone',
       backboneLocalStorage: '../bower_components/backbone.localStorage/backbone.localStorage',
-      underscore: '../bower_components/lodash/dist/lodash',
+      underscore: '../bower_components/underscore/underscore',
       text: '../bower_components/requirejs-text/text',
       when: '../bower_components/when/when',
 
