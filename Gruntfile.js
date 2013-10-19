@@ -126,7 +126,7 @@ module.exports = function (grunt) {
       dev: {
         options: {
           dir: '<%= config.dev %>/node-webkit.app/Contents/Resources/app.nw/js',
-          optimize: 'uglify2',
+          optimize: 'none',
           modules: [
             {name: 'main'}
           ]
