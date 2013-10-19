@@ -3,8 +3,8 @@
 module.exports = function (grunt) {
   'use strict';
 
-  // load all grunt tasks
-  require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
+  require('time-grunt')(grunt);
+  require('load-grunt-tasks')(grunt);
 
   var config = {
     app: 'app',
@@ -57,6 +57,9 @@ module.exports = function (grunt) {
     },
     less: {
       dev: {
+        options: {
+          yuicompress: true
+        },
         files: {
           '<%= config.app %>/css/main.css': '<%= config.app %>/css/main.less'
         }
@@ -85,7 +88,14 @@ module.exports = function (grunt) {
           expand: true,
           cwd: '<%= config.app %>',
           dest: '<%= config.dev %>/node-webkit.app/Contents/Resources/app.nw',
-          src: '**'
+          src: ['*.*', 'views/**', 'css/**', 'templates/**', 'node_modules/**', 'bower_components/requirejs/require.js']
+        }, {
+          cwd: '<%= config.app %>',
+          expand: true,
+          flatten: true,
+          dest: '<%= config.dev %>/node-webkit.app/Contents/Resources/app.nw/fonts',
+          src: 'bower_components/bootstrap/dist/fonts/**',
+          filter: 'isFile'
         }]
       },
       webkitDist: {
@@ -103,6 +113,24 @@ module.exports = function (grunt) {
           dest: '<%= config.dev %>/',
           src: '**'
         }]
+      }
+    },
+    requirejs: {
+      options:{
+        loglevel: 5,
+        findNestedDependencies: true,
+        inlineText: true,
+        mainConfigFile: 'app/js/main.js'
+//        optimizeAllPluginResources: true
+      },
+      dev: {
+        options: {
+          dir: '<%= config.dev %>/node-webkit.app/Contents/Resources/app.nw/js',
+          optimize: 'uglify2',
+          modules: [
+            {name: 'main'}
+          ]
+        }
       }
     }
   });
@@ -134,7 +162,8 @@ module.exports = function (grunt) {
   grunt.registerTask('devWatch', [
     'jshint',
     'less:dev',
-    'copy:appMacosDev'
+    'copy:appMacosDev',
+    'requirejs'
   ]);
 
   grunt.registerTask('copyToDev', [
@@ -158,9 +187,9 @@ module.exports = function (grunt) {
     'jshint',
     'less:dev',
     'copyToDev',
+    'requirejs',
     'chmodDev',
     'startApp',
     'watch:dev'
   ]);
-
 };
