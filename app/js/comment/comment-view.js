@@ -9,6 +9,14 @@ define([
 ], function(Backbone, _, when, app, CommentBoxes, template){
   'use strict';
 
+  if (typeof String.prototype.startsWith !== 'function') {
+    // see below for better implementation!
+    String.prototype.startsWith = function (str){
+      return this.indexOf(str) === 0;
+    };
+  }
+
+
   var EditCommentBox = CommentBoxes.edit;
 //  var ShowCommentBox = CommentBoxes.show;
   var chunkHeadingRegExp = new RegExp('@@.*?[-+](\\d+)(,\\d+){0,1}\\s[-+](\\d+)(,\\d+){0,1} @@', 'g');
