@@ -1,7 +1,9 @@
-<div class="media">
-    <img height="25px" class="media-object pull-left" src="<%= author.avatar_url %>" title="<%= commit.author.name %>"/>
-    <div class="media-body">
-        <%= commit.author.name %>: <%= commit.message %>
-        <span class="badge pull-right"><%= commit.comment_count %></span>
+<a href="#commit/<%= sha %>" class="list-group-item">
+    <div class="media">
+        <img height="25px" class="media-object pull-left" src="<%= author.avatar_url %>" title="<%= commit.author.name %>"/>
+        <div class="media-body">
+            <%= commit.author.name %>: <%= commit.message %>
+            <span class="badge pull-right"><%= commit.comment_count %></span>
+        </div>
     </div>
-</div>
+</a>
