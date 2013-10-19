@@ -36,7 +36,7 @@ define([
     },
     renderOneCommit: function(commit){
       var view = new CommitListItemView({model: commit});
-      this.$('#commitList').append(view.el);
+      this.$('#commitList').append(view.render());
     },
     renderAllCommits: function(){
       commitCollection.each(function(commit){
