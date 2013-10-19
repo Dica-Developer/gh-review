@@ -2,7 +2,9 @@
 define(['backbone', 'app', 'when'], function (Backbone, app, when) {
   'use strict';
   var CommitModel = Backbone.Model.extend({
-    initialize: function () {},
+    initialize: function () {
+      this.id = this.get('sha');
+    },
     getDiff: function () {
       var defer = when.defer(),
         _this = this;
@@ -29,6 +31,7 @@ define(['backbone', 'app', 'when'], function (Backbone, app, when) {
         repo: app.currentReviewData.repo,
         sha: _this.get('sha')
       }, function (error, resp) {
+        console.log(error, resp);
         defer.resolve();
       });
       return defer.promise;

@@ -18,7 +18,7 @@ define([
       '': 'reviewList',
       'repo/:id': 'repoDetail',
       'review/:id': 'reviewDetail',
-      'commit/:cid': 'showCommit'
+      'commit/:id': 'showCommit'
     },
     reviewList: function(){
       this.clear();
@@ -33,9 +33,9 @@ define([
       var model = reviewCollection.get(id);
       this.view = new ReviewDetailView({model: model});
     },
-    showCommit: function(cid){
+    showCommit: function(id){
       this.clear();
-      var model = commitCollection.get(cid);
+      var model = commitCollection.get(id);
       this.view = new CommentView({model: model});
     },
     clear: function () {
