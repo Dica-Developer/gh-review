@@ -6,11 +6,10 @@
     "backbone": "~1.0.0",
     "requirejs": "~2.1.5",
     "requirejs-text": "~2.0.5",
-    "modernizr": "~2.6.2",
-    "lodash": "~2.2.1",
     "when": "~2.5.0",
     "backbone.localStorage": "~1.1.7",
-    "bootstrap": "~3.0.0"
+    "bootstrap": "~3.0.0",
+    "underscore": "~1.5.2"
   },
   "devDependencies": {}
 }
