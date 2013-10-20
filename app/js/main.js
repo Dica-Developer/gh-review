@@ -21,6 +21,7 @@
       options: 'options',
       logger: 'logger',
       router: 'router',
+      chunk: 'chunk',
       topMenuView: 'top-menu/top-menu-view',
 
       reviewCollection: 'review/review-collection',
