@@ -1,4 +1,4 @@
 <%= repo %>
 <%= branch %>
-<%= contributor %>
+<% if(typeof contributor !== 'undefined'){ %><%= contributor %><%}%>
 <span class="destroy glyphicon glyphicon-remove-circle"></span>
