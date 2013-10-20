@@ -9,14 +9,6 @@ define([
 ], function(Backbone, _, when, app, CommentBoxes, template){
   'use strict';
 
-  if (typeof String.prototype.startsWith !== 'function') {
-    // see below for better implementation!
-    String.prototype.startsWith = function (str){
-      return this.indexOf(str) === 0;
-    };
-  }
-
-
   var EditCommentBox = CommentBoxes.edit;
 //  var ShowCommentBox = CommentBoxes.show;
   var chunkHeadingRegExp = new RegExp('@@.*?[-+](\\d+)(,\\d+){0,1}\\s[-+](\\d+)(,\\d+){0,1} @@', 'g');
@@ -35,9 +27,9 @@ define([
     ];
     this.addLine = function(line){
       var computedLine = null;
-      if(line.startsWith('-')){
+      if(_.str.startsWith(line, '-')){
         computedLine = this.addDeletedLine(line);
-      } else if(line.startsWith('+')){
+      } else if(_.str.startsWith(line, '+')){
         computedLine = this.addAddedLine(line);
       } else {
         computedLine = this.addNormalLine(line);
@@ -84,7 +76,6 @@ define([
   var CommentView = Backbone.View.extend({
     el: '#main',
     template: _.template(template),
-    EOLRegExp: new RegExp('\\n|\\n\\r|\\r','g'),
     commentBox: null,
     initialize: function(){
       var _this = this;
@@ -110,9 +101,9 @@ define([
         this.files.push({
           chunks: []
         });
-        var patchSplit = file.patch.split(this.EOLRegExp);
-        _.forEach(patchSplit, function(line){
-          line = app.string.escapeHTML(line);
+        var lines = _.str.lines(file.patch);
+        _.forEach(lines, function(line){
+          line = _.str.escapeHTML(line);
           if(line.match(chunkHeadingRegExp)){
             this.files[fileIndex].chunks.push(new Chunk(line));
           } else {
