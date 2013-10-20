@@ -45,7 +45,6 @@ define([
   };
 
   Chunk.prototype.addDeletedLine = function(line){
-    line = line.replace('-', ' ');
     return {
       lineNrLeft: this.leftNr++,
       lineNrRight: '',
@@ -55,7 +54,6 @@ define([
   };
 
   Chunk.prototype.addAddedLine = function(line){
-    line = line.replace('+', ' ');
     return {
       lineNrLeft: '',
       lineNrRight: this.rightNr++,
