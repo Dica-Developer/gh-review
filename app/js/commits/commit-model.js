@@ -1,5 +1,5 @@
 /*global define*/
-define(['backbone', 'app', 'when', 'moment'], function (Backbone, app, when, moment) {
+define(['backbone', 'app', 'when', 'moment', 'commentCollection'], function (Backbone, app, when, moment, commentCollection) {
   'use strict';
   var CommitModel = Backbone.Model.extend({
     initialize: function () {
@@ -36,8 +36,10 @@ define(['backbone', 'app', 'when', 'moment'], function (Backbone, app, when, mom
         repo: app.currentReviewData.repo,
         sha: _this.get('sha')
       }, function (error, resp) {
-        console.log(error, resp);
-        defer.resolve();
+        if(!error){
+          commentCollection.reset(resp);
+          defer.resolve();
+        }
       });
       return defer.promise;
     },

@@ -26,10 +26,8 @@ define([
           return _this.computeChunk();
         })
         .then(function(){
+          _this.render();
           return _this.model.getCommitComments();
-        })
-        .then(function(){
-          return _this.render();
         });
     },
     events: {

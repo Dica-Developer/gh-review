@@ -1,11 +1,12 @@
 /*global define*/
 define([
+  'jquery',
   'backbone',
   'underscore',
   'when',
   'text!../templates/edit-comment-box.html',
   'text!../templates/show-comment-box.html'
-], function(Backbone, _, when, editTemplate, showTemplate){
+], function($, Backbone, _, when, editTemplate, showTemplate){
   'use strict';
 
   var ShowCommentBoxView = Backbone.View.extend({
@@ -14,11 +15,14 @@ define([
     events: {
     },
     initialize: function(){
+      var path = this.model.get('path');
+      var position = this.model.get('position');
+      this.position = $('[data-path="'+ path +'"][data-line="'+ position +'"]');
       this.render();
     },
     render: function(){
-      this.$el.html(this.template(this.options.comment));
-      this.options.tr.after(this.$el);
+      this.$el.html(this.template(this.model.toJSON()));
+      this.position.after(this.$el);
       return this;
     }
   });

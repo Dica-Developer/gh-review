@@ -28,7 +28,7 @@
     <table class="comments table table-condensed table-bordered table-hover">
         <% _.forEach(computedFiles[fileIndex].chunks, function(chunk){%>
             <% _.forEach(chunk.lines, function(line, lineIndex){%>
-                <tr class="<%= line.format %>">
+                <tr class="<%= line.format %>" data-path="<%= file.filename %>" data-line="<%= lineIndex %>">
                     <td class="lineNr"><%= line.lineNrLeft %></td>
                     <td class="lineNr"><%= line.lineNrRight %></td>
                     <td><pre data-position="<%= lineIndex %>" data-fileindex="<%= fileIndex %>"><%= line.text %></pre></td>
