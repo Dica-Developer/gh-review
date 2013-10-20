@@ -22,7 +22,6 @@ define([
   App.prototype.logger = logger;
   App.prototype.nwGui = require('nw.gui');
   App.prototype.options = options;
-  App.prototype.string = require('underscore.string');
 
   App.prototype.getOAuthToken = function getOAuthToken() {
     var defer = when.defer(),
