@@ -9,7 +9,9 @@
     "when": "~2.5.0",
     "backbone.localStorage": "~1.1.7",
     "bootstrap": "~3.0.0",
-    "underscore": "~1.5.2"
+    "underscore": "~1.5.2",
+    "moment": "~2.3.1",
+    "underscore.string": "~2.3.3"
   },
   "devDependencies": {}
 }
