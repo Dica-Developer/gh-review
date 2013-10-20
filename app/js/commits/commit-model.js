@@ -1,9 +1,14 @@
 /*global define*/
-define(['backbone', 'app', 'when'], function (Backbone, app, when) {
+define(['backbone', 'app', 'when', 'moment'], function (Backbone, app, when, moment) {
   'use strict';
   var CommitModel = Backbone.Model.extend({
     initialize: function () {
+      var commitDate = this.get('commit').author.date;
+      var date = moment(commitDate);
       this.id = this.get('sha');
+      this.set('commitMillisecond', date.valueOf());
+      this.set('commitFromNow', date.fromNow());
+      this.set('commitDayShort', date.format('MMM D, YYYY'));
     },
     getDiff: function () {
       var defer = when.defer(),
