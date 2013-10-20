@@ -1,3 +1,7 @@
+@font-face {
+  font-family: SourceCodePro;
+  src: url('../fonts/SourceCodePro-ExtraLight.ttf');
+}
 @import "../bower_components/bootstrap/less/bootstrap";
 
 body { padding-top: 70px;}
@@ -9,13 +13,16 @@ body { padding-top: 70px;}
 
 table{
  &.comments{
+   font-family: SourceCodePro;
    tr{
      td {
-       padding: 0;
+       padding: 0; border: none; border-right: 1px solid #DDDDDD;
        &.lineNr { width: 45px; }
+       &:last-child { border: none;}
      }
    }
    pre {
+     font-family: SourceCodePro;
      background: none;
      padding: 0;
      margin: 0;

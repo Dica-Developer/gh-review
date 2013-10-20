@@ -96,6 +96,13 @@ module.exports = function (grunt) {
           dest: '<%= config.dev %>/node-webkit.app/Contents/Resources/app.nw/fonts',
           src: 'bower_components/bootstrap/dist/fonts/**',
           filter: 'isFile'
+        }, {
+          cwd: '<%= config.app %>',
+          expand: true,
+          flatten: true,
+          dest: '<%= config.dev %>/node-webkit.app/Contents/Resources/app.nw/fonts',
+          src: 'fonts/**',
+          filter: 'isFile'
         }]
       },
       webkitDist: {
