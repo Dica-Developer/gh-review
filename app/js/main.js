@@ -11,8 +11,10 @@
       backbone: '../bower_components/backbone/backbone',
       backboneLocalStorage: '../bower_components/backbone.localStorage/backbone.localStorage',
       underscore: '../bower_components/underscore/underscore',
+      'underscore.string': '../bower_components/underscore.string/lib/underscore.string',
       text: '../bower_components/requirejs-text/text',
       when: '../bower_components/when/when',
+      moment: '../bower_components/moment/min/moment-with-langs.min',
 
       app: 'app',
       authServer: 'authServer',
@@ -44,6 +46,7 @@
       underscore: {
         exports: '_'
       },
+      'underscore.string': ['underscore'],
       backbone: {
         deps: [
           'underscore',
@@ -55,7 +58,9 @@
   });
 
   requirejs([
-    'app'
+    'app',
+    'underscore',
+    'underscore.string'
   ], function (app) {
     app.on('authenticated', function(){
       requirejs(['router', 'topMenuView'], function(router){
