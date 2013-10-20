@@ -1,10 +1,10 @@
 {
-  "name": "JSON-Transformer",
+  "name": "GH-Review",
   "main": "views/index.html",
   "version": "0.0.1",
   "single-instance": true,
   "window": {
-    "title": "JSON Transformer",
+    "title": "GH Review",
     "toolbar": true,
     "width": 1024,
     "height": 700,
@@ -12,5 +12,5 @@
     "min_height": 700,
     "show": true
   },
-  "chromium-args": "--child-clean-exit --hide-scrollbars"
+  "chromium-args": "--child-clean-exit"
 }
