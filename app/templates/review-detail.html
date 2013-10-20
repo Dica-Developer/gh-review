@@ -3,16 +3,14 @@
     <h3><%= repo %></h3>
     <h3><%= branch %></h3>
 </div>
-<ul class="pager">
-    <% if(hasFirst){%><li class="previous first"><span>First</span></li><%}%>
-    <% if(hasPrevious){%><li class="previous page"><span>Previous</span></li><%}%>
-    <% if(hasNext){%><li class="next page"><span>Next</span></li><%}%>
-    <% if(hasLast){%><li class="next last"><span>Last</span></li><%}%>
-</ul>
+<div class="btn-group clearfix">
+    <button type="button" class="btn btn-default first" <% if(!hasFirst){%>disabled="disabled"<%}%>>First</button>
+    <button type="button" class="btn btn-default previous" <% if(!hasPrevious){%>disabled="disabled"<%}%>>Previous</button>
+    <button type="button" class="btn btn-default next" <% if(!hasNext){%>disabled="disabled"<%}%>>Next</button>
+</div>
 <ul id="commitList" class="list-group"></ul>
-<ul class="pager">
-    <% if(hasFirst){%><li class="previous first"><span>First</span></li><%}%>
-    <% if(hasPrevious){%><li class="previous page"><span>Previous</span></li><%}%>
-    <% if(hasNext){%><li class="next page"><span>Next</span></li><%}%>
-    <% if(hasLast){%><li class="next last"><span>Last</span></li><%}%>
-</ul>
+<div class="btn-group">
+    <button type="button" class="btn btn-default first" <% if(!hasFirst){%>disabled="disabled"<%}%>>First</button>
+    <button type="button" class="btn btn-default previous" <% if(!hasPrevious){%>disabled="disabled"<%}%>>Previous</button>
+    <button type="button" class="btn btn-default next" <% if(!hasNext){%>disabled="disabled"<%}%>>Next</button>
+</div>
