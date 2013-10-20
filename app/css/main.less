@@ -6,6 +6,7 @@ body { padding-top: 70px;}
 .table-row-variant(added; @state-success-bg; @state-success-border);
 .table-row-variant(deleted; @state-danger-bg; @state-danger-border);
 .table-row-variant(chunk-header; @state-info-bg; @state-info-border);
+
 table{
  &.comments{
    tr{
@@ -25,4 +26,13 @@ table{
      padding: 5px;
    }
  }
+}
+
+.pager {
+  li {
+    > span {
+      cursor: pointer; color: @link-color;
+      &:hover{ color: @link-hover-color; }
+    }
+  }
 }

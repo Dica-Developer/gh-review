@@ -3,4 +3,16 @@
     <h3><%= repo %></h3>
     <h3><%= branch %></h3>
 </div>
+<ul class="pager">
+    <% if(hasFirst){%><li class="previous first"><span>First</span></li><%}%>
+    <% if(hasPrevious){%><li class="previous page"><span>Previous</span></li><%}%>
+    <% if(hasNext){%><li class="next page"><span>Next</span></li><%}%>
+    <% if(hasLast){%><li class="next last"><span>Last</span></li><%}%>
+</ul>
 <ul id="commitList" class="list-group"></ul>
+<ul class="pager">
+    <% if(hasFirst){%><li class="previous first"><span>First</span></li><%}%>
+    <% if(hasPrevious){%><li class="previous page"><span>Previous</span></li><%}%>
+    <% if(hasNext){%><li class="next page"><span>Next</span></li><%}%>
+    <% if(hasLast){%><li class="next last"><span>Last</span></li><%}%>
+</ul>
