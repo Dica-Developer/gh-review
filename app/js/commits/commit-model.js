@@ -1,5 +1,12 @@
 /*global define*/
-define(['backbone', 'app', 'when', 'moment', 'commentCollection'], function (Backbone, app, when, moment, commentCollection) {
+define([
+  'backbone',
+  'app',
+  'when',
+  'moment',
+  'commentCollection',
+  'userModel'
+], function (Backbone, app, when, moment, commentCollection, user) {
   'use strict';
   var CommitModel = Backbone.Model.extend({
     initialize: function () {
