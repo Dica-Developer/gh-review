@@ -13,12 +13,15 @@ body { padding-top: 70px;}
 
 table{
  &.comments{
-   font-family: SourceCodePro;
    tr{
      td {
        padding: 0; border: none; border-right: 1px solid #DDDDDD;
-       &.lineNr { width: 45px; }
+       &.lineNr {
+          width: 45px;
+          font-family: SourceCodePro;
+       }
        &:last-child { border: none;}
+       .panel{ margin:5px;}
      }
    }
    pre {
@@ -28,9 +31,6 @@ table{
      margin: 0;
      border: none;
      border-radius: 0;
-   }
-   #commentBox {
-     padding: 5px;
    }
  }
 }

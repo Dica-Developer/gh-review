@@ -1,15 +1,30 @@
-<div class="page-header">
-    <h1>Total
-        <small>
-            Total: <%= stats.total %> <br />
-            Additions: <%= stats.additions %> <br />
-            Deletions: <%= stats.deletions %> <br />
-        </small>
-    </h1>
+<div class="panel panel-info">
+    <div class="panel-heading"><h5><%= model.commit.message %></h5></div>
+    <div class="panel-body">
+        <div class="media">
+            <img height="24px" class="media-object pull-left" src="<%= model.author.avatar_url %>" title="<%= model.author.login %>"/>
+            <div class="media-body">
+                <strong><%= model.author.login %></strong> <span class="text-muted">authored <%= model.commitFromNow %></span>
+            </div>
+        </div>
+    </div>
 </div>
 
-<h3>Files:</h3>
-<% _.forEach(files, function(file, fileIndex){ %>
+<div>
+    <small>
+        Showing <strong><%= model.diff.files.length %> changed
+        <% if(model.diff.files.length === 1) {%>
+            file
+        <% }else{%>
+            files
+        <% }%>
+        </strong> with
+        <strong><%= model.diff.stats.additions %> additions</strong> and
+        <strong><%= model.diff.stats.deletions %> deletions</strong>
+    </small>
+</div>
+
+<% _.forEach(model.diff.files, function(file, fileIndex){ %>
 <div class="panel panel-default">
     <div class="panel-heading">
         File: <%= file.filename %>
@@ -25,8 +40,8 @@
             </span>
         </div>
     </div>
-    <table class="comments table table-condensed table-bordered table-hover">
-        <% _.forEach(computedFiles[fileIndex].chunks, function(chunk){%>
+    <table class="comments table table-condensed table-hover">
+        <% _.forEach(files[fileIndex].chunks, function(chunk){%>
             <% _.forEach(chunk.lines, function(line, lineIndex){%>
                 <tr class="<%= line.format %>" data-path="<%= file.filename %>" data-line="<%= lineIndex %>">
                     <td class="lineNr"><%= line.lineNrLeft %></td>

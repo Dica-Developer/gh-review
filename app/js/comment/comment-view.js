@@ -71,9 +71,8 @@ define([
       });
     },
     render: function(){
-      var diff = this.model.get('diff');
-      diff.computedFiles = this.files;
-      this.$el.html(this.template(diff));
+      console.log({model: this.model.toJSON(), files: this.files});
+      this.$el.html(this.template({model: this.model.toJSON(), files: this.files}));
     }
   });
 
