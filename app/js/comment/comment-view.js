@@ -31,7 +31,8 @@ define([
         });
     },
     events: {
-      'click .added,.deleted': 'commentLine'
+      'click .added,.deleted': 'commentLine',
+      'click .approveCommit': 'approveCommit'
     },
     computeChunk: function(){
       var defer = when.defer();
@@ -69,6 +70,9 @@ define([
         position: position,
         fileIndex: fileIndex
       });
+    },
+    approveCommit: function(){
+      this.model.approveCommit();
     },
     render: function(){
       console.log({model: this.model.toJSON(), files: this.files});

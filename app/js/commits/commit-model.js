@@ -66,6 +66,27 @@ define(['backbone', 'app', 'when', 'moment', 'commentCollection'], function (Bac
         }
       });
       return defer.promise;
+    },
+    approveCommit: function(){
+      var defer = when.defer();
+      var comment = 'Approved by @' + user.get('login');
+      debugger;
+      app.github.repos.createCommitComment({
+        user: app.currentReviewData.user,
+        repo: app.currentReviewData.repo,
+        sha: this.get('sha'),
+        /*jshint camelcase: false*/
+        commit_id: this.get('sha'),
+        body: comment
+      }, function (error/*, resp*/) {
+        if (!error) {
+          defer.resolve();
+        } else {
+          defer.reject();
+          app.logger.error(error);
+        }
+      });
+      return defer.promise;
     }
   });
 
