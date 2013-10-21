@@ -6,7 +6,6 @@ define(['backbone', 'moment'], function(Backbone, moment){
     initialize: function(){
       var date = moment(this.get('created_at'));
       this.set('commentFromNow', date.fromNow());
-      console.log(this);
     }
   });
 
