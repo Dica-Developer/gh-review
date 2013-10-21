@@ -17,7 +17,11 @@ define([
     initialize: function(){
       var path = this.model.get('path');
       var position = this.model.get('position');
-      this.position = $('[data-path="'+ path +'"][data-line="'+ position +'"]');
+      if(position){
+        this.position = $('[data-path="'+ path +'"][data-line="'+ position +'"]');
+      } else {
+        this.position = $('.approveCommit').parent().prev();
+      }
       this.render();
     },
     render: function(){
