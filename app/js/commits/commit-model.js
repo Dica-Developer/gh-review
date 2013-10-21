@@ -77,7 +77,6 @@ define([
     approveCommit: function(){
       var defer = when.defer();
       var comment = 'Approved by @' + user.get('login');
-      debugger;
       app.github.repos.createCommitComment({
         user: app.currentReviewData.user,
         repo: app.currentReviewData.repo,
