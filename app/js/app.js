@@ -69,7 +69,8 @@ define([
       position: 'center',
       width: 1024,
       height: 500,
-      show: false
+      show: false,
+      frame: false
     });
 
     this.authHandler.on('requestAccessToken', function () {
