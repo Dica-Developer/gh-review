@@ -12,7 +12,9 @@ define([
   var GitHubApi = require('github'),
     authWindowShowTimeoutID = null;
 
-  function App(){}
+  function App(){
+    this.tray  = this.createTrayEntries();
+  }
 
   App.prototype.github = new GitHubApi({
     version: '3.0.0'
@@ -22,6 +24,42 @@ define([
   App.prototype.logger = logger;
   App.prototype.nwGui = require('nw.gui');
   App.prototype.options = options;
+
+  App.prototype.createTrayEntries = function(){
+    var _this = this,
+      win = this.nwGui.Window.get();
+    var createTrayMenu = function(){
+      var menu = new _this.nwGui.Menu();
+      var devTools = new _this.nwGui.MenuItem({
+        label: 'Debug Quick Question',
+        click: function () {
+          win.showDevTools();
+        }
+      });
+      var separator = new _this.nwGui.MenuItem({
+        type: 'separator'
+      });
+      var quitItem = new _this.nwGui.MenuItem({
+        label: 'Quit Quick Question',
+        click: function () {
+          win.close();
+        }
+      });
+
+      menu.append(devTools);
+      menu.append(separator);
+      menu.append(quitItem);
+      return menu;
+    };
+
+
+    var trayMenu = createTrayMenu();
+    return new this.nwGui.Tray({
+      icon: 'img/octocat.png',
+      menu: trayMenu
+    });
+  };
+
 
   App.prototype.getOAuthToken = function getOAuthToken() {
     var defer = when.defer(),
