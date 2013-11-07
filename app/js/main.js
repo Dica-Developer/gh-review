@@ -33,6 +33,7 @@
       repoModel: 'repositories/repo-model',
       repoCollection: 'repositories/repo-collection',
       repoView: 'repositories/repo-view',
+      repoDetailView: 'repositories/repo-detail-view',
 
       commitModel: 'commits/commit-model',
       commitCollection: 'commits/commit-collection',

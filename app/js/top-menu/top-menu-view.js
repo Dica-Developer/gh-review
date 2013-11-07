@@ -4,9 +4,8 @@ define([
   'underscore',
   'app',
   'userModel',
-  'repoCollection',
   'text!../templates/top-menu.html'
-], function(Backbone, _, app, userModel, repoCollection, template){
+], function(Backbone, _, app, userModel, template){
   'use strict';
 
   var TopMenuView = Backbone.View.extend({
@@ -15,13 +14,11 @@ define([
     template: _.template(template),
     initialize: function(){
       app.on('ready', this.render, this);
-      repoCollection.on('add', this.render, this);
       this.model.on('change', this.render, this);
     },
     serialize: function(){
       return {
-        name: this.model.get('name'),
-        repos: repoCollection.toJSON()
+        name: this.model.get('name')
       };
     },
     events: {

@@ -1,0 +1,20 @@
+<div class="well">
+    <%= name %><br />
+    <%= description %><br />
+    <%= created_at %><br />
+    <%= default_branch %>
+</div>
+<input list="branches" id="branchList">
+<datalist id="branches">
+    <% _.forEach(branches, function(branch){ %>
+            <option value="<%= branch.name %>"><%= branch.name %></option>
+    <% }); %>
+</datalist>
+
+<input list="contributors" id="contributorsList">
+<datalist id="contributors">
+    <% _.forEach(contributors, function(contributor){ %>
+    <option value="<%= contributor.login %>"><%= contributor.login %></option>
+    <% }); %>
+</datalist>
+<button id="addReview">Add Review</button>

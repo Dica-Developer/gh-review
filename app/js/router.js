@@ -4,18 +4,21 @@ define([
   'backbone',
   'repoCollection',
   'repoView',
+  'repoDetailView',
   'reviewCollection',
   'reviewListView',
   'reviewDetailView',
   'commitCollection',
   'commentView'
-], function($, Backbone, repoCollection, RepoView, reviewCollection, ReviewListView, ReviewDetailView, commitCollection, CommentView){
+], function($, Backbone, repoCollection, RepoView, RepoDetailView, reviewCollection, ReviewListView, ReviewDetailView, commitCollection, CommentView){
   'use strict';
 
   var Router = Backbone.Router.extend({
     view: null,
     routes:{
       '': 'reviewList',
+      'reviews': 'reviewList',
+      'repositories': 'repositories',
       'repo/:id': 'repoDetail',
       'review/:id': 'reviewDetail',
       'commit/:id': 'showCommit'
@@ -24,9 +27,14 @@ define([
       this.clear();
       this.view = new ReviewListView();
     },
+    repositories: function(){
+      this.clear();
+      this.view = new RepoView();
+    },
     repoDetail: function(id){
+      this.clear();
       var model = repoCollection.get(id);
-      this.view = new RepoView({model: model});
+      this.view = new RepoDetailView({model: model});
     },
     reviewDetail: function(id){
       this.clear();

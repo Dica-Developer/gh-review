@@ -1,16 +1,32 @@
+<div class="panel panel-default">
+    <div class="panel-heading">Public Repositories</div>
+    <ul class="list-group">
+        <% _.forEach(publicRepos, function(repo){ %>
+            <a href="#repo/<%= repo.id %>" class="list-group-item">
+                <%= repo.name %>  ->  <%= repo.fromNow %>
+            </a>
+        <% }); %>
+    </ul>
+</div>
 
-<%= name %>
-<input list="branches" id="branchList">
-<datalist id="branches">
-    <% _.forEach(branches, function(branch){ %>
-            <option value="<%= branch.name %>"><%= branch.name %></option>
-    <% }); %>
-</datalist>
+<div class="panel panel-default">
+    <div class="panel-heading">Private Repositories</div>
+    <ul class="list-group">
+        <% _.forEach(privateRepos, function(repo){ %>
+            <a href="#repo/<%= repo.id %>" class="list-group-item">
+                <%= repo.full_name %>  ->  <%= repo.fromNow %>
+            </a>
+        <% }); %>
+    </ul>
+</div>
 
-<input list="contributors" id="contributorsList">
-<datalist id="contributors">
-    <% _.forEach(contributors, function(contributor){ %>
-    <option value="<%= contributor.login %>"><%= contributor.login %></option>
-    <% }); %>
-</datalist>
-<button id="addReview">Add Review</button>
+<div class="panel panel-default">
+    <div class="panel-heading">Organization Repositories</div>
+    <ul class="list-group">
+        <% _.forEach(orgaRepos, function(repo){ %>
+            <a href="#repo/<%= repo.id %>" class="list-group-item">
+                <%= repo.full_name %>  ->  <%= repo.fromNow %>
+            </a>
+        <% }); %>
+    </ul>
+</div>

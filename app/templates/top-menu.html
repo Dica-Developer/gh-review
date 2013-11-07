@@ -1,21 +1,12 @@
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="navbar-header">
-        <a class="navbar-brand" href="#">GH_REVIEW</a>
+        <a class="navbar-brand" href="#">GH-REVIEW</a>
     </div>
-    <div class="navbar-form navbar-left" role="search">
-        <input type="text" id="selectRepo" class="form-control" placeholder="Repositories" list="repositories">
+    <div class="navbar-left">
+        <ul class="nav navbar-nav">
+            <li><a href="#reviews">Reviews</a></li>
+            <li><a href="#repositories">Repositories</a></li>
+        </ul>
     </div>
     <p class="navbar-text pull-right">Signed in as <%= name %></p>
 </nav>
-
-<datalist id="repositories">
-    <% _.forEach(repos, function(repo){ %>
-        <% if(repo.private && !repo.organization) {%>
-            <option value="<%= repo.name %>" data-type="private" data-id="<%= repo.id %>">Private - <%= repo.name %></option>
-        <%}else if(!repo.private && !repo.organization){%>
-            <option value="<%= repo.name %>" data-type="public" data-id="<%= repo.id %>">Public - <%= repo.name %></option>
-        <%} else {%>
-            <option value="<%= repo.name %>" data-type="organization" data-id="<%= repo.id %>"><%= repo.organization.login %> - <%= repo.name %></option>
-        <%}%>
-    <% }); %>
-</datalist>
