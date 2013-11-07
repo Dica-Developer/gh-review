@@ -3,7 +3,7 @@
     <ul class="list-group">
         <% _.forEach(publicRepos, function(repo){ %>
             <a href="#repo/<%= repo.id %>" class="list-group-item">
-                <%= repo.name %>  ->  <%= repo.fromNow %>
+                <%= repo.name %>  <div class="pull-right"> Last update: <%= repo.fromNow %></div>
             </a>
         <% }); %>
     </ul>
@@ -14,7 +14,7 @@
     <ul class="list-group">
         <% _.forEach(privateRepos, function(repo){ %>
             <a href="#repo/<%= repo.id %>" class="list-group-item">
-                <%= repo.full_name %>  ->  <%= repo.fromNow %>
+                <%= repo.full_name %> <div class="pull-right"> Last update: <%= repo.fromNow %></div>
             </a>
         <% }); %>
     </ul>
@@ -25,7 +25,7 @@
     <ul class="list-group">
         <% _.forEach(orgaRepos, function(repo){ %>
             <a href="#repo/<%= repo.id %>" class="list-group-item">
-                <%= repo.full_name %>  ->  <%= repo.fromNow %>
+                <%= repo.full_name %> <div class="pull-right"> Last update: <%= repo.fromNow %></div>
             </a>
         <% }); %>
     </ul>
