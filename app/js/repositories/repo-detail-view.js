@@ -13,27 +13,58 @@ define([
     template: _.template(template),
     initialize: function () {
       var _this = this;
+      reviewCollection.on('all', this.render, this);
       when.all(this.getFurtherInformations(), function () {
         _this.render();
       });
     },
     events: {
       'click #addReview': 'addReview',
-      'change #branchList': 'storeBranch',
-      'change #contributorsList': 'storeContributor'
+      'change #contributorsList, #branchList': 'checkAlreadyExist',
+      'click .destroy': 'removeReview'
     },
-    storeBranch: function (event) {
-      this.branch = $(event.target).val();
+    serialize: function(){
+      var existingReviews = reviewCollection.where({repo: this.model.get('name')});
+      return {
+        existingReviews: existingReviews,
+        repo: this.model.toJSON()
+      };
     },
-    storeContributor: function (event) {
-      this.contributor = $(event.target).val();
+    checkAlreadyExist: function(){
+      var alreadyExist = reviewCollection.where({
+        repo: this.model.get('name'),
+        branch: this.getBranch(),
+        contributor: this.getContributor()
+      });
+      if(alreadyExist.length > 0){
+        this.disableButton();
+      }else{
+        this.enableButton();
+      }
+    },
+    disableButton: function(){
+      this.$('#addReview').attr('disabled', 'disabled');
+    },
+    enableButton: function(){
+      this.$('#addReview').removeAttr('disabled');
+    },
+    getBranch: function () {
+      return $('#branchList').find(':selected').val();
+    },
+    getContributor: function () {
+      return $('#contributorsList').find(':selected').val();
+    },
+    removeReview: function(event){
+      var modelCid = $(event.target).data('cid');
+      var model = reviewCollection.get(modelCid);
+      model.destroy();
     },
     addReview: function () {
       reviewCollection.create({
         user: this.model.get('owner').login,
         repo: this.model.get('name'),
-        branch: this.branch,
-        contributor: this.contributor
+        branch: this.getBranch(),
+        contributor: this.getContributor()
       });
     },
     getFurtherInformations: function () {
@@ -43,8 +74,8 @@ define([
       return promises;
     },
     render: function () {
-      console.log(this.model.toJSON());
-      this.$el.html(this.template(this.model.toJSON()));
+      this.$el.html(this.template(this.serialize()));
+      this.checkAlreadyExist();
     }
   });
 
