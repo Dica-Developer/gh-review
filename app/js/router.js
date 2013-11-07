@@ -10,12 +10,12 @@ define([
   'reviewDetailView',
   'commitCollection',
   'commentView'
-], function($, Backbone, repoCollection, RepoView, RepoDetailView, reviewCollection, ReviewListView, ReviewDetailView, commitCollection, CommentView){
+], function ($, Backbone, repoCollection, RepoView, RepoDetailView, reviewCollection, ReviewListView, ReviewDetailView, commitCollection, CommentView) {
   'use strict';
 
   var Router = Backbone.Router.extend({
     view: null,
-    routes:{
+    routes: {
       '': 'reviewList',
       'reviews': 'reviewList',
       'repositories': 'repositories',
@@ -23,25 +23,25 @@ define([
       'review/:id': 'reviewDetail',
       'commit/:id': 'showCommit'
     },
-    reviewList: function(){
+    reviewList: function () {
       this.clear();
       this.view = new ReviewListView();
     },
-    repositories: function(){
+    repositories: function () {
       this.clear();
       this.view = new RepoView();
     },
-    repoDetail: function(id){
+    repoDetail: function (id) {
       this.clear();
       var model = repoCollection.get(id);
       this.view = new RepoDetailView({model: model});
     },
-    reviewDetail: function(id){
+    reviewDetail: function (id) {
       this.clear();
       var model = reviewCollection.get(id);
       this.view = new ReviewDetailView({model: model});
     },
-    showCommit: function(id){
+    showCommit: function (id) {
       this.clear();
       var model = commitCollection.get(id);
       this.view = new CommentView({model: model});
@@ -52,7 +52,7 @@ define([
         $('<div id="main"></div>').appendTo('body');
       }
     },
-    initialize: function(){
+    initialize: function () {
       Backbone.history.start();
     }
   });

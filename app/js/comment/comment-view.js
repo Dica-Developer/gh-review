@@ -7,7 +7,7 @@ define([
   'chunk',
   'commentBox',
   'text!../templates/comment-view.html'
-], function(Backbone, _, when, app, Chunk, CommentBoxes, template){
+], function (Backbone, _, when, app, Chunk, CommentBoxes, template) {
   'use strict';
 
   var chunkHeadingRegExp = new RegExp('@@.*?[-+](\\d+)(,\\d+){0,1}\\s[-+](\\d+)(,\\d+){0,1} @@', 'g');
@@ -18,14 +18,14 @@ define([
     el: '#main',
     template: _.template(template),
     commentBox: null,
-    initialize: function(){
+    initialize: function () {
       var _this = this;
       this.files = [];
       this.model.getDiff()
-        .then(function(){
+        .then(function () {
           return _this.computeChunk();
         })
-        .then(function(){
+        .then(function () {
           _this.render();
           return _this.model.getCommitComments();
         });
@@ -34,34 +34,34 @@ define([
       'click .added,.deleted': 'commentLine',
       'click .approveCommit': 'approveCommit'
     },
-    computeChunk: function(){
+    computeChunk: function () {
       var defer = when.defer();
       var files = this.model.get('diff').files;
-      _.forEach(files, function(file, fileIndex, array){
+      _.forEach(files, function (file, fileIndex, array) {
         this.files.push({
           chunks: []
         });
         var lines = _.str.lines(file.patch);
-        _.forEach(lines, function(line){
+        _.forEach(lines, function (line) {
           line = _.str.escapeHTML(line);
-          if(line.match(chunkHeadingRegExp)){
+          if (line.match(chunkHeadingRegExp)) {
             this.files[fileIndex].chunks.push(new Chunk(line));
           } else {
-            this.files[fileIndex].chunks[this.files[fileIndex].chunks.length -1].addLine(line);
+            this.files[fileIndex].chunks[this.files[fileIndex].chunks.length - 1].addLine(line);
           }
         }, this);
-        if(fileIndex === (array.length -1)){
+        if (fileIndex === (array.length - 1)) {
           defer.resolve();
         }
       }, this);
       return defer.promise;
     },
-    commentLine: function(event){
+    commentLine: function (event) {
       var target = $(event.target);
       var tr = target.closest('tr');
       var position = target.data('position');
       var fileIndex = target.data('fileindex');
-      if(this.commentBox){
+      if (this.commentBox) {
         this.commentBox.remove();
       }
       this.commentBox = new EditCommentBox({
@@ -71,10 +71,10 @@ define([
         fileIndex: fileIndex
       });
     },
-    approveCommit: function(){
+    approveCommit: function () {
       this.model.approveCommit();
     },
-    render: function(){
+    render: function () {
       this.$el.html(this.template({model: this.model.toJSON(), files: this.files}));
     }
   });

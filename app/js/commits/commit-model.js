@@ -43,7 +43,7 @@ define([
         repo: app.currentReviewData.repo,
         sha: _this.get('sha')
       }, function (error, resp) {
-        if(!error){
+        if (!error) {
           commentCollection.reset(resp);
           defer.resolve();
         }
@@ -74,7 +74,7 @@ define([
       });
       return defer.promise;
     },
-    approveCommit: function(){
+    approveCommit: function () {
       var defer = when.defer();
       var comment = 'Approved by @' + user.get('login');
       app.github.repos.createCommitComment({

@@ -1,5 +1,5 @@
 /*global define*/
-define(['backbone', 'reviewItemModel'], function(Backbone, ReviewItemModel){
+define(['backbone', 'reviewItemModel'], function (Backbone, ReviewItemModel) {
   'use strict';
 
   var ReviewCollection = Backbone.Collection.extend({

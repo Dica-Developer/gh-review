@@ -1,5 +1,5 @@
 /*global define*/
-define(['options'], function(options){
+define(['options'], function (options) {
   'use strict';
 
   var os = require('os');
@@ -26,15 +26,15 @@ define(['options'], function(options){
     'format': [
       '{{timestamp}} <{{title}}> {{message}}',
       {
-        error : '{{timestamp}} <{{title}}> {{message}} (in {{file}}:{{line}})'+ os.EOL +'Call Stack:{{stacklist}}',
-        warn : '{{timestamp}} <{{title}}> {{message}} (in {{file}}:{{line}})'+ os.EOL
+        error: '{{timestamp}} <{{title}}> {{message}} (in {{file}}:{{line}})' + os.EOL + 'Call Stack:{{stacklist}}',
+        warn: '{{timestamp}} <{{title}}> {{message}} (in {{file}}:{{line}})' + os.EOL
       }
     ],
-    'preprocess' :  function(data){
-      if(data.title==='error'){
-        var callstack = '',len=data.stack.length;
-        for(var i=0; i<len; i+=1){
-          callstack += '\n'+data.stack[i];
+    'preprocess': function (data) {
+      if (data.title === 'error') {
+        var callstack = '', len = data.stack.length;
+        for (var i = 0; i < len; i += 1) {
+          callstack += '\n' + data.stack[i];
         }
         data.stacklist = callstack;
       }
@@ -43,7 +43,7 @@ define(['options'], function(options){
     },
     'level': options.logLevel,
     'dateformat': 'yyyy-dd-mm HH:MM:ss.l',
-    methods : [ 'log', 'trace', 'debug', 'info', 'network', 'warn', 'error' ]
+    methods: [ 'log', 'trace', 'debug', 'info', 'network', 'warn', 'error' ]
     //filters: options.logInvert ? inversColors : stdColors
   });
 });

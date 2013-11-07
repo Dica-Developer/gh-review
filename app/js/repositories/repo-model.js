@@ -1,37 +1,37 @@
 /*global define*/
-define(['backbone', 'when', 'app'], function(Backbone, when, app){
+define(['backbone', 'when', 'app'], function (Backbone, when, app) {
   'use strict';
   var RepoModel = Backbone.Model.extend({
-    initialize: function(){
+    initialize: function () {
       this.user = this.get('owner').login;
       this.repo = this.get('name');
     },
-    getBranches: function(){
+    getBranches: function () {
       var defer = when.defer(),
         _this = this;
-      if(this.get('branches')){
+      if (this.get('branches')) {
         defer.resolve();
-      }else{
+      } else {
         app.github.repos.getBranches({
           user: this.user,
           repo: this.repo
-        }, function(error, res){
+        }, function (error, res) {
           _this.set('branches', res);
           defer.resolve();
         });
       }
       return defer.promise;
     },
-    getContributors: function(){
+    getContributors: function () {
       var defer = when.defer(),
         _this = this;
-      if(this.get('contributors')){
+      if (this.get('contributors')) {
         defer.resolve();
-      }else{
+      } else {
         app.github.repos.getContributors({
           user: this.user,
           repo: this.repo
-        }, function(error, res){
+        }, function (error, res) {
           _this.set('contributors', res);
           defer.resolve();
         });

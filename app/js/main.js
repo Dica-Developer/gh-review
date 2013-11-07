@@ -67,8 +67,8 @@
     'underscore.string',
     'backboneLocalStorage'
   ], function (app) {
-    app.on('authenticated', function(){
-      requirejs(['router', 'topMenuView'], function(router){
+    app.on('authenticated', function () {
+      requirejs(['router', 'topMenuView'], function (router) {
         app.router = router;
         app.trigger('ready');
         app.router.navigate('', {trigger: true});

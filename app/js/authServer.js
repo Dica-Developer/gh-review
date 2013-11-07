@@ -10,11 +10,11 @@ define(['backbone', 'underscore', 'when', 'logger'], function (Backbone, _, when
   var secret = '523d82c7936182b4d2e81a0a15d8729fbfe00757';
   var oauth = new OAuth2(clientId, secret, 'https://github.com/', 'login/oauth/authorize', 'login/oauth/access_token');
 
-  function AuthHandler(){
+  function AuthHandler() {
     this.server = null;
   }
 
-  AuthHandler.prototype.createServer = function(){
+  AuthHandler.prototype.createServer = function () {
     var _this = this;
     return http.createServer(function (req, res) {
       var url = Url.parse(req.url);
@@ -54,7 +54,7 @@ define(['backbone', 'underscore', 'when', 'logger'], function (Backbone, _, when
 
   _.extend(authHandler, Backbone.Events);
 
-  authHandler.init = function(){
+  authHandler.init = function () {
     var defer = when.defer();
     logger.log('Create auth server');
     this.server = this.createServer();

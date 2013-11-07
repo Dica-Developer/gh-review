@@ -6,14 +6,14 @@ define([
   'authServer',
   'options',
   'logger'
-], function(Backbone, _, when, authServer, options, logger){
+], function (Backbone, _, when, authServer, options, logger) {
   'use strict';
 
   var GitHubApi = require('github'),
     authWindowShowTimeoutID = null;
 
-  function App(){
-    this.tray  = this.createTrayEntries();
+  function App() {
+    this.tray = this.createTrayEntries();
   }
 
   App.prototype.github = new GitHubApi({
@@ -25,10 +25,10 @@ define([
   App.prototype.nwGui = require('nw.gui');
   App.prototype.options = options;
 
-  App.prototype.createTrayEntries = function(){
+  App.prototype.createTrayEntries = function () {
     var _this = this,
       win = this.nwGui.Window.get();
-    var createTrayMenu = function(){
+    var createTrayMenu = function () {
       var menu = new _this.nwGui.Menu();
       var devTools = new _this.nwGui.MenuItem({
         label: 'Debug Quick Question',
@@ -108,10 +108,10 @@ define([
 
 
   app.authHandler.init()
-    .then(function(){
+    .then(function () {
       return app.getOAuthToken();
     })
-    .then(function(){
+    .then(function () {
       app.trigger('authenticated');
     });
 

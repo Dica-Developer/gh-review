@@ -5,15 +5,15 @@ define([
   'when',
   'reviewCollection',
   'text!../templates/repo-detail-view.html'
-], function(Backbone, _, when, reviewCollection, template){
+], function (Backbone, _, when, reviewCollection, template) {
   'use strict';
 
   var RepoView = Backbone.View.extend({
     el: '#main',
     template: _.template(template),
-    initialize: function(){
+    initialize: function () {
       var _this = this;
-      when.all(this.getFurtherInformations(), function(){
+      when.all(this.getFurtherInformations(), function () {
         _this.render();
       });
     },
@@ -22,13 +22,13 @@ define([
       'change #branchList': 'storeBranch',
       'change #contributorsList': 'storeContributor'
     },
-    storeBranch: function(event){
+    storeBranch: function (event) {
       this.branch = $(event.target).val();
     },
-    storeContributor: function(event){
+    storeContributor: function (event) {
       this.contributor = $(event.target).val();
     },
-    addReview: function(){
+    addReview: function () {
       reviewCollection.create({
         user: this.model.get('owner').login,
         repo: this.model.get('name'),
@@ -36,13 +36,13 @@ define([
         contributor: this.contributor
       });
     },
-    getFurtherInformations: function(){
+    getFurtherInformations: function () {
       var promises = [];
       promises.push(this.model.getBranches());
       promises.push(this.model.getContributors());
       return promises;
     },
-    render: function(){
+    render: function () {
       console.log(this.model.toJSON());
       this.$el.html(this.template(this.model.toJSON()));
     }

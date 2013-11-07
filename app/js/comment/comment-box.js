@@ -6,7 +6,7 @@ define([
   'when',
   'text!../templates/edit-comment-box.html',
   'text!../templates/show-comment-box.html'
-], function($, Backbone, _, when, editTemplate, showTemplate){
+], function ($, Backbone, _, when, editTemplate, showTemplate) {
   'use strict';
 
   var ShowCommentBoxView = Backbone.View.extend({
@@ -14,17 +14,17 @@ define([
     tagName: 'tr',
     events: {
     },
-    initialize: function(){
+    initialize: function () {
       var path = this.model.get('path');
       var position = this.model.get('position');
-      if(position){
-        this.position = $('[data-path="'+ path +'"][data-line="'+ position +'"]');
+      if (position) {
+        this.position = $('[data-path="' + path + '"][data-line="' + position + '"]');
       } else {
         this.position = $('.approveCommit').parent().prev();
       }
       this.render();
     },
-    render: function(){
+    render: function () {
       this.$el.html(this.template(this.model.toJSON()));
       this.position.after(this.$el);
       return this;
@@ -38,25 +38,25 @@ define([
       'click #submitLineComment': 'submitLineComment',
       'click #cancelComment': 'cancelCommenting'
     },
-    initialize: function(){
+    initialize: function () {
       this.render();
     },
-    render: function(){
+    render: function () {
       this.$el.html(this.template());
       this.options.tr.after(this.$el);
       return this;
     },
-    submitLineComment: function(){
+    submitLineComment: function () {
       var _this = this;
       var comment = this.$el.find('#commentBox > textarea').val();
-      if(comment !== ''){
+      if (comment !== '') {
         when(this.model.addLineComment(this.options.fileIndex, this.options.position, comment))
-        .then(function(){
-          _this.remove();
-        });
+          .then(function () {
+            _this.remove();
+          });
       }
     },
-    cancelCommenting: function(){
+    cancelCommenting: function () {
       this.remove();
     }
   });
