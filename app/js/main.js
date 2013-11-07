@@ -64,9 +64,12 @@
   requirejs([
     'app',
     'underscore',
+    'moment',
     'underscore.string',
     'backboneLocalStorage'
-  ], function (app) {
+  ], function (app, _, moment) {
+    //add moment to underscore to have access to moment in templates
+    _.moment = moment;
     app.on('authenticated', function () {
       requirejs(['router', 'topMenuView'], function (router) {
         app.router = router;
