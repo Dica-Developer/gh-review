@@ -1,10 +1,10 @@
 /*global define*/
-define(['backbone', 'backboneLocalStorage', 'reviewItemModel'], function(Backbone, BackboneLocalStorage, ReviewItemModel){
+define(['backbone', 'reviewItemModel'], function(Backbone, ReviewItemModel){
   'use strict';
 
   var ReviewCollection = Backbone.Collection.extend({
     model: ReviewItemModel,
-    localStorage: new BackboneLocalStorage('reviews')
+    localStorage: new Backbone.LocalStorage('reviews')
   });
 
   return new ReviewCollection();

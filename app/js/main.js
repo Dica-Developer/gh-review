@@ -63,7 +63,8 @@
   requirejs([
     'app',
     'underscore',
-    'underscore.string'
+    'underscore.string',
+    'backboneLocalStorage'
   ], function (app) {
     app.on('authenticated', function(){
       requirejs(['router', 'topMenuView'], function(router){
