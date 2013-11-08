@@ -40,19 +40,21 @@
             </span>
         </div>
     </div>
-    <table class="comments table table-condensed table-hover">
-        <% var lineIndex = 0; %>
-        <% _.forEach(files[fileIndex].chunks, function(chunk){%>
-            <% _.forEach(chunk.lines, function(line){%>
-                <tr class="<%= line.format %>" data-path="<%= file.filename %>" data-line="<%= lineIndex %>">
-                    <td class="lineNr"><%= line.lineNrLeft %></td>
-                    <td class="lineNr"><%= line.lineNrRight %></td>
-                    <td><pre data-position="<%= lineIndex %>" data-fileindex="<%= fileIndex %>"><%= line.text %></pre></td>
-                </tr>
-            <% lineIndex++; %>
+    <div class="table-responsive">
+        <table class="comments table table-condensed table-hover">
+            <% var lineIndex = 0; %>
+            <% _.forEach(files[fileIndex].chunks, function(chunk){%>
+                <% _.forEach(chunk.lines, function(line){%>
+                    <tr class="<%= line.format %>" data-path="<%= file.filename %>" data-line="<%= lineIndex %>">
+                        <td class="lineNr"><%= line.lineNrLeft %></td>
+                        <td class="lineNr"><%= line.lineNrRight %></td>
+                        <td><pre data-position="<%= lineIndex %>" data-fileindex="<%= fileIndex %>"><%= line.text %></pre></td>
+                    </tr>
+                <% lineIndex++; %>
+                <% }); %>
             <% }); %>
-        <% }); %>
-    </table>
+        </table>
+    </div>
 </div>
 <% }); %>
 <div class="pull-right">
