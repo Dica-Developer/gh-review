@@ -4,7 +4,7 @@
         <div class="media">
             <img height="24px" class="media-object pull-left" src="<%= model.author.avatar_url %>" title="<%= model.author.login %>"/>
             <div class="media-body">
-                <strong><%= model.author.login %></strong> <span class="text-muted">authored <%= model.commitFromNow %></span>
+                <strong><%= model.author.login %></strong> <span class="text-muted">authored <%= _.moment(model.commit.author.date).fromNow() %></span>
             </div>
         </div>
     </div>

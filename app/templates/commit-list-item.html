@@ -3,7 +3,7 @@
         <img height="36px" class="media-object pull-left" src="<%= author.avatar_url %>" title="<%= commit.author.name %>"/>
         <div class="media-body">
             <strong><%= _.str.escapeHTML(commit.message) %></strong><br/>
-            <%= commit.author.name %> <small>authored <%= commitFromNow %></small>
+            <%= commit.author.name %> <small>authored <%= _.moment(commit.author.date).fromNow() %></small>
             <span class="badge pull-right"><%= commit.comment_count %></span>
         </div>
     </div>

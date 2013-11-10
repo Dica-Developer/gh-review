@@ -6,16 +6,11 @@ define([
   'moment',
   'commentCollection',
   'userModel'
-], function (Backbone, app, when, moment, commentCollection, user) {
+], function (Backbone, app, when, commentCollection, user) {
   'use strict';
   var CommitModel = Backbone.Model.extend({
     initialize: function () {
-      var commitDate = this.get('commit').author.date;
-      var date = moment(commitDate);
       this.id = this.get('sha');
-      this.set('commitMillisecond', date.valueOf());
-      this.set('commitFromNow', date.fromNow());
-      this.set('commitDayShort', date.format('MMM D, YYYY'));
     },
     getDiff: function () {
       var defer = when.defer(),
