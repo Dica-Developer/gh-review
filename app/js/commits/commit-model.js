@@ -3,7 +3,6 @@ define([
   'backbone',
   'app',
   'when',
-  'moment',
   'commentCollection',
   'userModel'
 ], function (Backbone, app, when, commentCollection, user) {
