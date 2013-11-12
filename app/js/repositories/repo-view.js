@@ -2,10 +2,11 @@
 define([
   'backbone',
   'underscore',
+  'app',
   'repoCollection',
   'moment',
   'text!../templates/repo-view.html'
-], function (Backbone, _, repoCollection, moment, template) {
+], function (Backbone, _, app, repoCollection, moment, template) {
   'use strict';
 
   var RepoView = Backbone.View.extend({
@@ -46,6 +47,7 @@ define([
     },
     render: function () {
       this.$el.html(this.template(this.serialize()));
+      app.showIndicator(false);
     }
   });
 

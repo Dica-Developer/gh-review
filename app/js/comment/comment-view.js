@@ -75,6 +75,7 @@ define([
       this.model.approveCommit();
     },
     render: function () {
+      app.showIndicator(false);
       this.$el.html(this.template({model: this.model.toJSON(), files: this.files}));
     }
   });

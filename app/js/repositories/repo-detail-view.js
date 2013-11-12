@@ -3,9 +3,10 @@ define([
   'backbone',
   'underscore',
   'when',
+  'app',
   'reviewCollection',
   'text!../templates/repo-detail-view.html'
-], function (Backbone, _, when, reviewCollection, template) {
+], function (Backbone, _, when, app, reviewCollection, template) {
   'use strict';
 
   var RepoView = Backbone.View.extend({
@@ -23,29 +24,29 @@ define([
       'change #contributorsList, #branchList': 'checkAlreadyExist',
       'click .destroy': 'removeReview'
     },
-    serialize: function(){
+    serialize: function () {
       var existingReviews = reviewCollection.where({repo: this.model.get('name')});
       return {
         existingReviews: existingReviews,
         repo: this.model.toJSON()
       };
     },
-    checkAlreadyExist: function(){
+    checkAlreadyExist: function () {
       var alreadyExist = reviewCollection.where({
         repo: this.model.get('name'),
         branch: this.getBranch(),
         contributor: this.getContributor()
       });
-      if(alreadyExist.length > 0){
+      if (alreadyExist.length > 0) {
         this.disableButton();
-      }else{
+      } else {
         this.enableButton();
       }
     },
-    disableButton: function(){
+    disableButton: function () {
       this.$('#addReview').attr('disabled', 'disabled');
     },
-    enableButton: function(){
+    enableButton: function () {
       this.$('#addReview').removeAttr('disabled');
     },
     getBranch: function () {
@@ -54,7 +55,7 @@ define([
     getContributor: function () {
       return $('#contributorsList').find(':selected').val();
     },
-    removeReview: function(event){
+    removeReview: function (event) {
       var modelCid = $(event.target).data('cid');
       var model = reviewCollection.get(modelCid);
       model.destroy();
@@ -74,6 +75,7 @@ define([
       return promises;
     },
     render: function () {
+      app.showIndicator(false);
       this.$el.html(this.template(this.serialize()));
       this.checkAlreadyExist();
     }

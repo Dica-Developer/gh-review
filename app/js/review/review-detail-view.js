@@ -83,6 +83,7 @@ define([
       commitCollection.each(function (commit) {
         this.renderOneCommit(commit);
       }, this);
+      app.showIndicator(false);
     },
     render: function () {
       this.$el.html(this.template(this.model.toJSON()));

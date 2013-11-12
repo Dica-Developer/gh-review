@@ -1,12 +1,13 @@
-/*global define*/
+/*global define, window*/
 define([
+  'jquery',
   'backbone',
   'underscore',
   'when',
   'authServer',
   'options',
   'logger'
-], function (Backbone, _, when, authServer, options, logger) {
+], function ($, Backbone, _, when, authServer, options, logger) {
   'use strict';
 
   var GitHubApi = require('github'),
@@ -14,6 +15,9 @@ define([
 
   function App() {
     this.tray = this.createTrayEntries();
+    this.ajaxIndicator = null;
+    this.ajaxIndicatorTimeoutId = null;
+    this.ajaxIndicatorIsVisible = false;
   }
 
   App.prototype.github = new GitHubApi({
@@ -101,6 +105,20 @@ define([
       defer.resolve();
     });
     return defer.promise;
+  };
+
+  App.prototype.showIndicator = function (show) {
+    var _this = this;
+    window.clearTimeout(this.ajaxIndicatorTimeoutId);
+    if (!this.ajaxIndicatorIsVisible && show) {
+      this.ajaxIndicatorTimeoutId = window.setTimeout(function () {
+        _this.ajaxIndicator.modal('show');
+        _this.ajaxIndicatorIsVisible = true;
+      }, 700);
+    } else if (this.ajaxIndicatorIsVisible && !show) {
+      this.ajaxIndicator.modal('hide');
+      this.ajaxIndicatorIsVisible = false;
+    }
   };
 
   var app = new App();

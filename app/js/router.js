@@ -29,20 +29,24 @@ define([
     },
     repositories: function () {
       this.clear();
+      this.trigger('ajaxIndicator', true);
       this.view = new RepoView();
     },
     repoDetail: function (id) {
       this.clear();
+      this.trigger('ajaxIndicator', true);
       var model = repoCollection.get(id);
       this.view = new RepoDetailView({model: model});
     },
     reviewDetail: function (id) {
       this.clear();
+      this.trigger('ajaxIndicator', true);
       var model = reviewCollection.get(id);
       this.view = new ReviewDetailView({model: model});
     },
     showCommit: function (id) {
       this.clear();
+      this.trigger('ajaxIndicator', true);
       var model = commitCollection.get(id);
       this.view = new CommentView({model: model});
     },
