@@ -1,11 +1,12 @@
 /*global define*/
 define([
   'backbone',
+  'underscore',
   'app',
   'when',
   'commentCollection',
   'userModel'
-], function (Backbone, app, when, commentCollection, user) {
+], function (Backbone, _, app, when, commentCollection, user) {
   'use strict';
   var CommitModel = Backbone.Model.extend({
     initialize: function () {
@@ -87,6 +88,15 @@ define([
         }
       });
       return defer.promise;
+    },
+    commitMessage: function () {
+      var orgMessage = this.get('commit').message;
+      var splits = _.str.lines(orgMessage);
+      if (splits && splits.length > 0) {
+        return splits;
+      } else {
+        return orgMessage;
+      }
     }
   });
 

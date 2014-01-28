@@ -10,8 +10,20 @@ define([
     initialize: function () {
       this.render();
     },
+    serialize: function () {
+      var commit = this.model.get('commit');
+      return {
+        message: this.model.commitMessage(),
+        authorDate: commit.author.date,
+        authorName: commit.author.name,
+        /*jshint camelcase:false*/
+        authorAvatar: this.model.get('author').avatar_url,
+        commentCount: commit.comment_count,
+        sha: this.model.get('sha')
+      };
+    },
     render: function () {
-      return this.template(this.model.toJSON());
+      return this.template(this.serialize());
     }
   });
 
