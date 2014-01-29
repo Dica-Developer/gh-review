@@ -6,8 +6,8 @@ define(['backbone', 'underscore', 'when', 'logger'], function (Backbone, _, when
   var Url = require('url');
   var querystring = require('querystring');
   var OAuth2 = require('oauth').OAuth2;
-  var clientId = '551a4a26805e129578a3';
-  var secret = '523d82c7936182b4d2e81a0a15d8729fbfe00757';
+  var clientId = '5082108e53d762d90c00';
+  var secret = '178651f3705d7952413ff82447004171712f1950';
   var oauth = new OAuth2(clientId, secret, 'https://github.com/', 'login/oauth/authorize', 'login/oauth/access_token');
 
   function AuthHandler() {
@@ -43,7 +43,6 @@ define(['backbone', 'underscore', 'when', 'logger'], function (Backbone, _, when
 
           logger.info('Access token received');
           _this.trigger('gotAccessToken', accessToken);
-
           res.end();
         });
       }
