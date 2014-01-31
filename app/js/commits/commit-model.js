@@ -11,6 +11,10 @@ define([
   var CommitModel = Backbone.Model.extend({
     initialize: function () {
       this.id = this.get('sha');
+      if(_.isNull(this.get('author'))){
+        var commit = this.get('commit');
+        this.set('author', commit.author);
+      }
     },
     getDiff: function () {
       var defer = when.defer(),
