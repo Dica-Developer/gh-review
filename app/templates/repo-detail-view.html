@@ -1,0 +1,47 @@
+<div class="row">
+    <div class="col-sm-12">
+        <div class="well">
+            <h1><%= repo.name %></h1>
+            <h2><%= repo.description %></h2>
+            <p>Created at: <%= _.moment(repo.created_at).format("MMMM Do YYYY, h:mm:ss a") %>. Default branch: <%= repo.default_branch %></p>
+            <p><%= repo.branches.length %> Branch<% if(repo.branches.length > 1){ %>es<%}%> developed by <%= repo.contributors.length %> contributor<% if(repo.contributors.length > 1){ %>s<%}%>.</p>
+        </div>
+    </div>
+    <div class="col-sm-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">Existing reviews</div>
+            <table class="table table-hover">
+                <% if(existingReviews.length > 0){ %>
+                    <%_.each(existingReviews, function(reviewModel){%>
+                        <tr>
+                            <td><%= reviewModel.get('branch') %></td>
+                            <td><%= reviewModel.get('contributor') %></td>
+                            <td>
+                                <div class="pull-right">
+                                    <span class="destroy glyphicon glyphicon-remove-circle" data-cid="<%= reviewModel.cid %>"></span>
+                                </div>
+                            </td>
+                        </tr>
+                    <%});%>
+                <%}%>
+            </table>
+        </div>
+    </div>
+    <div class="col-sm-5">
+        <select class="form-control input-sm" id="branchList">
+            <% _.forEach(repo.branches, function(branch){ %>
+                    <option value="<%= branch.name %>"><%= branch.name %></option>
+            <% }); %>
+        </select>
+    </div>
+    <div class="col-sm-5">
+        <select class="form-control input-sm" id="contributorsList">
+            <% _.forEach(repo.contributors, function(contributor){ %>
+                <option value="<%= contributor.login %>"><%= contributor.login %></option>
+            <% }); %>
+        </select>
+    </div>
+    <div class="col-sm-2">
+        <button id="addReview" class="btn btn-primary btn-sm">Add Review</button>
+    </div>
+</div>
