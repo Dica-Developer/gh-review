@@ -37,7 +37,7 @@ module.exports = function (grunt) {
       dev: {
         files: [
           '<%= config.app %>/css/*',
-          '<%= config.app %>/js/*',
+          '<%= config.app %>/js/**/*',
           '<%= config.app %>/*.html',
           '!<%= config.app %>/bower_components/*'
         ],
@@ -95,6 +95,11 @@ module.exports = function (grunt) {
           cwd: '<%= config.app %>',
           dest: '<%= config.dev %>',
           src: '**'
+        },{
+          expand: true,
+          cwd: '<%= config.app %>/bower_components/bootstrap/dist/fonts',
+          dest: '<%= config.dev %>/fonts',
+          src: '*'
         }]
       }
     },
