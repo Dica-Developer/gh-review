@@ -192,9 +192,7 @@
   };
 
   GitHub.prototype.user = function(callback){
-    this.get({
-      url: 'user'
-    }, callback);
+    this.get({url: 'user'}, callback);
   };
 
   if(typeof define === 'function'){
