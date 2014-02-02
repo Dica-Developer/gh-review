@@ -39,6 +39,7 @@ module.exports = function (grunt) {
           '<%= config.app %>/css/*',
           '<%= config.app %>/js/**/*',
           '<%= config.app %>/*.html',
+          '<%= config.app %>/templates/**/*',
           '!<%= config.app %>/bower_components/*'
         ],
         tasks: ['devWatch']
