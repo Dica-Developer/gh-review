@@ -13,5 +13,7 @@
     "moment": "~2.3.1",
     "underscore.string": "~2.3.3"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "oauth2": "https://raw2.github.com/ox-it/javascript-oauth2/master/oauth2/oauth2.js"
+  }
 }
