@@ -79,13 +79,16 @@
       show: false,
       keyboard: false
     });
-    requirejs(['router', 'topMenuView'], function (router) {
-      app.router = router;
-      app.trigger('ready');
-      app.router.navigate('', {trigger: true});
-      app.router.on('ajaxIndicator', function (show) {
-        this.showIndicator(show);
-      }, app);
+
+    app.on('authenticated', function(){
+      requirejs(['router', 'topMenuView'], function (router) {
+        app.router = router;
+        app.trigger('ready');
+        app.router.navigate('', {trigger: true});
+        app.router.on('ajaxIndicator', function (show) {
+          this.showIndicator(show);
+        }, app);
+      });
     });
   });
 }());

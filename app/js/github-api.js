@@ -5,20 +5,23 @@
     this.oauthIFrame = null;
     this.accessTokenURL = 'https://github.com/login/oauth/access_token';
     this.headers = {};
+    this.accessToken = null;
     if (config) {
       this.clientId = config.clientId;
       this.clientSecret = config.clientSecret;
       this.apiScope = config.apiScope;
       this.redirectUri = config.redirectUri;
+      this.openAuthorizationCodeIframe();
     } else {
       this.finishAuthorization();
     }
   }
 
-  GitHub.prototype.openAuthorizationCodeIframe = function (callback, scope) {
+  GitHub.prototype.openAuthorizationCodeIframe = function () {
+    console.count('open iframe');
     var body = document.getElementsByTagName('body')[0];
     var listener = function(event){
-      this.getAccessAndRefreshTokens(event.data, callback, scope);
+      this.getAccessAndRefreshTokens(event.data);
       body.removeChild(this.oauthIFrame);
     }.bind(this);
 
@@ -36,7 +39,7 @@
     }
   };
 
-  GitHub.prototype.getAccessAndRefreshTokens = function (authorizationCode, callback, scope) {
+  GitHub.prototype.getAccessAndRefreshTokens = function (authorizationCode) {
     var github = this;
     var xhr = new XMLHttpRequest();
     xhr.open('POST', this.accessTokenURL, true);
@@ -44,9 +47,7 @@
       if (xhr.readyState === 4) {
         if (xhr.status === 200) {
           github.setAccessToken(xhr.responseText);
-          console.log(this.accessToken);
           github.accessTokenDate = new Date().valueOf();
-          callback.call(scope ? scope : window);
         }
       }
     };
@@ -101,6 +102,7 @@
   };
 
   GitHub.prototype.authorize = function (callback, scope) {
+    console.log(this);
     if (!this.accessToken) {
       // There's no access token yet. Start the authorizationCode flow
       this.openAuthorizationCodeIframe(callback, scope);
@@ -148,30 +150,33 @@
   GitHub.prototype.setAccessToken = function(response) {
     this.accessToken = response.match(/access_token=([^&]*)/)[1];
     this.expiresIn = Number.MAX_VALUE;
+    this.onAccessTokenReceived();
   };
+
+  GitHub.prototype.onAccessTokenReceived = function(){};
 
   GitHub.prototype.get = function(options, callback){
     var github = this;
-    this.authorize(function(){
-      var xhr = new XMLHttpRequest();
-      xhr.open('GET', 'https://api.github.com/' + options.url + '?access_token=' + this.accessToken, true);
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'https://api.github.com/' + options.url, true);
 
-      xhr.onreadystatechange = function(){
-        if (xhr.readyState === 4) {
-          github.storeHeaders(xhr.getAllResponseHeaders());
-          if (xhr.status === 200) {
-            var obj = JSON.parse(xhr.responseText);
-            /*jshint camelcase:false*/
-            callback.call(github, null, obj);
-          }else{
-            callback.call(github, {status: xhr.status, message: xhr.responseText});
-          }
+    xhr.onreadystatechange = function(){
+      if (xhr.readyState === 4) {
+        github.storeHeaders(xhr.getAllResponseHeaders());
+        if (xhr.status === 200) {
+          var obj = JSON.parse(xhr.responseText);
+          obj.meta = github.headers;
+          /*jshint camelcase:false*/
+          callback.call(github, null, obj);
+        }else{
+          callback.call(github, {status: xhr.status, message: xhr.responseText});
         }
-      };
-      xhr.setRequestHeader('Accept','application/vnd.github.raw+json');
-      xhr.setRequestHeader('Content-Type','application/json;charset=UTF-8');
-      xhr.send(null);
-    }, this);
+      }
+    };
+    xhr.setRequestHeader('Accept','application/vnd.github.raw+json');
+    xhr.setRequestHeader('Content-Type','application/json;charset=UTF-8');
+    xhr.setRequestHeader('Authorization','token ' + this.accessToken);
+    xhr.send(null);
   };
 
   GitHub.prototype.storeHeaders = function(headersString){
@@ -191,8 +196,67 @@
     return this.headers['X-RateLimit-Remaining'];
   };
 
-  GitHub.prototype.user = function(callback){
+  GitHub.prototype.getPageLinks = function(link) {
+    if (typeof link === 'object' && (link.link || link.meta.link)){
+      link = link.link || link.meta.link;
+    }
+
+    var links = {};
+    if (typeof link !== 'string'){
+      return links;
+    }
+    link.replace(/<([^>]*)>;\s*rel="([\w]*)\"/g, function (m, uri, type) {
+      links[type] = uri;
+    });
+    return links;
+  };
+
+  GitHub.prototype.hasNextPage = function (link) {
+    return this.getPageLinks(link).next;
+  };
+
+  GitHub.prototype.hasPreviousPage = function (link) {
+    return this.getPageLinks(link).prev;
+  };
+
+  GitHub.prototype.hasLastPage = function (link) {
+    return this.getPageLinks(link).last;
+  };
+
+  GitHub.prototype.hasFirstPage = function (link) {
+    return this.getPageLinks(link).first;
+  };
+
+  GitHub.prototype.getUser = function(callback){
     this.get({url: 'user'}, callback);
+  };
+
+  GitHub.prototype.getUserOrgs = function(callback){
+    this.get({url: 'user/orgs'}, callback);
+  };
+
+  GitHub.prototype.getRepos = function(callback){
+    this.get({url: 'user/repos'}, callback);
+  };
+
+  GitHub.prototype.getReposFromOrg = function(options, callback){
+    this.get({url: 'orgs/'+ options.org +'/repos?type=' + options.type}, callback);
+  };
+
+  GitHub.prototype.getRepoBranches = function(options, callback){
+    this.get({url: 'repos/'+ options.user +'/'+ options.repo +'/branches'}, callback);
+  };
+
+  GitHub.prototype.getRepoCommits = function(options, callback){
+    this.get({url: 'repos/'+ options.user +'/'+ options.repo +'/commits'}, callback);
+  };
+
+  GitHub.prototype.getRepoCommit = function(options, callback){
+    this.get({url: 'repos/'+ options.user +'/'+ options.repo +'/commits/'+ options.sha}, callback);
+  };
+
+  GitHub.prototype.getRepoContributors = function(options, callback){
+    this.get({url: 'repos/'+ options.user +'/'+ options.repo +'/contributors'}, callback);
   };
 
   if(typeof define === 'function'){

@@ -16,7 +16,7 @@ define([
     },
     getRepos: function () {
       var _this = this;
-      app.github.repos.getAll({}, function (error, res) {
+      app.github.getRepos(function (error, res) {
         _.forEach(res, function (repo) {
           var alreadyExist = _this.findWhere(repo);
           if (!alreadyExist) {
@@ -28,7 +28,7 @@ define([
         });
       });
 
-      app.github.user.getOrgs({}, function (error, res) {
+      app.github.getUserOrgs(function (error, res) {
         _this.getOrgRepos(res);
       });
     },
@@ -38,7 +38,7 @@ define([
         var organization = {
           organization: org
         };
-        app.github.repos.getFromOrg({'org': org.login, 'type': 'all'}, function (error, res) {
+        app.github.getReposFromOrg({'org': org.login, 'type': 'all'}, function (error, res) {
           _.forEach(res, function (repo) {
             _.extend(repo, organization);
             var alreadyExist = _this.findWhere({id: repo.id});

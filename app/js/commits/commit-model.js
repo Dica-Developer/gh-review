@@ -20,7 +20,7 @@ define([
       var defer = when.defer(),
         _this = this;
       if (!this.get('diff')) {
-        app.github.repos.getCommit({
+        app.github.getRepoCommit({
           user: app.currentReviewData.user,
           repo: app.currentReviewData.repo,
           sha: _this.get('sha')

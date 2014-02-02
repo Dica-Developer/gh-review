@@ -8,7 +8,7 @@ define(['backbone', 'app'], function (Backbone, app) {
     },
     getUserData: function () {
       var _this = this;
-      app.github.user(function (error, res) {
+      app.github.getUser(function (error, res) {
         _this.set(res);
       });
     }

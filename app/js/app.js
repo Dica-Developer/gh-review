@@ -15,6 +15,9 @@ define([
     this.ajaxIndicator = null;
     this.ajaxIndicatorTimeoutId = null;
     this.ajaxIndicatorIsVisible = false;
+    this.github.onAccessTokenReceived = function(){
+      this.trigger('authenticated');
+    }.bind(this);
   }
 
   GHReview.prototype = Backbone.Events;
