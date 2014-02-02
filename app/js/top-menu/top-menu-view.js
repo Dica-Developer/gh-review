@@ -18,7 +18,8 @@ define([
     },
     serialize: function () {
       return {
-        name: this.model.get('name')
+        name: this.model.get('name'),
+        avatar: this.model.get('avatar_url')
       };
     },
     events: {

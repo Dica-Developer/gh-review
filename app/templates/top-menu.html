@@ -8,5 +8,6 @@
             <li><a href="#repositories">Repositories</a></li>
         </ul>
     </div>
+    <% if(!_.isUndefined(avatar)){ %><img src="<%=avatar%>" height="25" class="top-menu-avatar pull-right" /><%}%>
     <p class="navbar-text pull-right">Signed in as <%= name %></p>
 </nav>
