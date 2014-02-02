@@ -4,7 +4,6 @@ define(['backbone', 'app'], function (Backbone, app) {
 
   var UserModel = Backbone.Model.extend({
     initialize: function () {
-      console.log(1);
       app.on('ready', this.getUserData, this);
     },
     getUserData: function () {
