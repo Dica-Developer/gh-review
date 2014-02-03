@@ -33,7 +33,7 @@ define([
     },
     getCommits: function () {
       var _this = this;
-      app.github.getRepoCommits(app.currentReviewData, function (error, commits) {
+      app.github.repos.getCommits(app.currentReviewData, function (error, commits) {
         if (!error) {
           _this.storeMetaToModel(commits);
           commitCollection.reset(commits);

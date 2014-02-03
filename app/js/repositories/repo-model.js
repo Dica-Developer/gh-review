@@ -12,7 +12,7 @@ define(['backbone', 'when', 'app'], function (Backbone, when, app) {
       if (this.get('branches')) {
         defer.resolve();
       } else {
-        app.github.getRepoBranches({
+        app.github.repos.getBranches({
           user: this.user,
           repo: this.repo
         }, function (error, res) {
@@ -28,7 +28,7 @@ define(['backbone', 'when', 'app'], function (Backbone, when, app) {
       if (this.get('contributors')) {
         defer.resolve();
       } else {
-        app.github.getRepoContributors({
+        app.github.repos.getContributors({
           user: this.user,
           repo: this.repo
         }, function (error, res) {
