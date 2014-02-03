@@ -5,6 +5,20 @@
 
 @import "../bower_components/bootstrap/less/bootstrap";
 
+.border-radius(@radius){
+  .border-top-radius(@radius);
+  .border-right-radius(@radius);
+  .border-bottom-radius(@radius);
+  .border-left-radius(@radius);
+}
+
+@white: #FFF;
+@grayLighter: @gray-lighter;
+@grayLight: @gray-light;
+@btnPrimaryBackground: @btn-primary-bg;
+
+@import "../bower_components/bootstrap-datetimepicker/src/less/bootstrap-datetimepicker";
+
 body {
   padding-top: 70px;
 }
