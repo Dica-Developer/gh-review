@@ -121,6 +121,13 @@ define(function () {
           'invalidmsg': '',
           'description': 'Optional string of a timestamp in ISO 8601 format: YYYY-MM-DDTHH:MM:SSZ'
         },
+        'until': {
+          'type': 'Date',
+          'required': false,
+          'validation': '',
+          'invalidmsg': '',
+          'description': 'Optional string of a timestamp in ISO 8601 format: YYYY-MM-DDTHH:MM:SSZ'
+        },
         'state': {
           'type': 'String',
           'required': false,
@@ -1984,9 +1991,29 @@ define(function () {
             'invalidmsg': '',
             'description': 'Optional string - Only commits containing this file path will be returned.'
           },
+          'author': {
+            'type': 'String',
+            'required': false,
+            'validation': '',
+            'invalidmsg': '',
+            'description': 'Optional string - Only commits commited by this author.'
+          },
           '$page': null,
           '$per_page': null,
-          '$since': null
+          '$since': {
+            'type': 'Date',
+            'required': false,
+            'validation': '',
+            'invalidmsg': 'Optional string - ISO 8601 time.',
+            'description': 'Optional string - ISO 8601 time.'
+          },
+          '$until': {
+            'type': 'Date',
+            'required': false,
+            'validation': '',
+            'invalidmsg': 'Optional string - ISO 8601 time.',
+            'description': 'Optional string - ISO 8601 time.'
+          }
         }
       },
 
