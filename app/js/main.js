@@ -18,7 +18,8 @@
       moment: '../bower_components/moment/min/moment-with-langs.min',
       log4javascript: '../bower_components/log4javascript.min',
 
-      GitHub: 'github-api',
+      GitHub: 'github/index',
+      OAuth: 'oauth',
       Logger: 'logger',
       app: 'app',
       router: 'router',
