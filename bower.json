@@ -1,7 +1,8 @@
 {
   "name": "reviewweb",
   "version": "0.0.0",
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
     "jquery": "~1.9.0",
     "backbone": "~1.0.0",
     "requirejs": "~2.1.5",
@@ -11,9 +12,11 @@
     "bootstrap": "~3.0.0",
     "underscore": "~1.5.2",
     "moment": "~2.3.1",
-    "underscore.string": "~2.3.3"
+    "underscore.string": "~2.3.3",
+    "bootstrap-datetimepicker": "~0.0.11"
   },
-  "devDependencies": {
-    "oauth2": "https://raw2.github.com/ox-it/javascript-oauth2/master/oauth2/oauth2.js"
+  "resolutions": {
+    "bootstrap": "~3.0.0",
+    "jquery": ">=1.8.0 <2.1.0"
   }
 }
