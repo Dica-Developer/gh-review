@@ -18,10 +18,13 @@ define([
       'click .first': 'getFirstPage'
     },
     initialize: function () {
+      var oneWeekAgo = _.moment().subtract('days', 7).toISOString();
       app.currentReviewData = {
         user: this.model.get('user'),
         repo: this.model.get('repo'),
-        branch: this.model.get('branch')
+        branch: this.model.get('branch'),
+        author: this.model.get('contributor'),
+        since: oneWeekAgo
       };
       this.getCommits();
     },
