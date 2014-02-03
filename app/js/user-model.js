@@ -9,7 +9,6 @@ define(['backbone', 'app'], function (Backbone, app) {
     getUserData: function () {
       var _this = this;
       app.github.user.get({}, function (error, res) {
-        console.log(res);
         _this.set(res);
       });
     }
