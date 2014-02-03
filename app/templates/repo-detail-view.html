@@ -30,7 +30,7 @@
     <div class="col-sm-5">
         <select class="form-control input-sm" id="branchList">
             <% _.forEach(repo.branches, function(branch){ %>
-                    <option value="<%= branch.name %>"><%= branch.name %></option>
+                    <option value="<%= branch.name %>" <% if(branch.name === 'master'){ %>selected="selected"<%}%>><%= branch.name %></option>
             <% }); %>
         </select>
     </div>
