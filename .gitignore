@@ -1,0 +1,7 @@
+.idea/
+dist/
+dev/
+node_modules/
+bower_components/
+.DS_Store
+app/css/main.css
