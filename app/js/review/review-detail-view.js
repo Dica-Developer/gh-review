@@ -18,14 +18,29 @@ define([
       'click .first': 'getFirstPage'
     },
     initialize: function () {
-      var oneWeekAgo = _.moment().subtract('days', 7).toISOString();
-      app.currentReviewData = {
-        user: this.model.get('user'),
-        repo: this.model.get('repo'),
-        branch: this.model.get('branch'),
-        author: this.model.get('contributor'),
-        since: oneWeekAgo
-      };
+      var attributes = this.model.toJSON();
+      app.currentReviewData = {};
+      if(!_.isEmpty(attributes.user)){
+        app.currentReviewData.user = attributes.user;
+      }
+      if(!_.isEmpty(attributes.repo)){
+        app.currentReviewData.repo = attributes.repo;
+      }
+      if(!_.isEmpty(attributes.branch)){
+        app.currentReviewData.branch = attributes.branch;
+      }
+      if(!_.isEmpty(attributes.contributor)){
+        app.currentReviewData.author = attributes.contributor;
+      }
+      if(!_.isEmpty(attributes.since.pattern)){
+        app.currentReviewData.since = _.moment().subtract(attributes.since.pattern, attributes.since.amount).toISOString();
+      }
+      if(!_.isEmpty(attributes.until)){
+        app.currentReviewData.until = attributes.until;
+      }
+      if(!_.isEmpty(attributes.path)){
+        app.currentReviewData.path = attributes.path;
+      }
       this.getCommits();
     },
     storeMetaToModel: function (commits) {

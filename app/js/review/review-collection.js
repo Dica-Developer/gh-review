@@ -4,10 +4,7 @@ define(['backbone', 'reviewItemModel'], function (Backbone, ReviewItemModel) {
 
   var ReviewCollection = Backbone.Collection.extend({
     model: ReviewItemModel,
-    localStorage: new Backbone.LocalStorage('reviews'),
-    initialize: function(){
-      console.log(this);
-    }
+    localStorage: new Backbone.LocalStorage('reviews')
   });
 
   return new ReviewCollection();
