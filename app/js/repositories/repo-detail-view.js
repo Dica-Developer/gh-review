@@ -5,90 +5,43 @@ define([
   'when',
   'app',
   'reviewCollection',
-  'reviewItemModel',
   'text!../templates/repo-detail-view.html'
-], function (Backbone, _, when, app, reviewCollection, ReviewItemModel, template) {
+], function (Backbone, _, when, app, reviewCollection, template) {
   'use strict';
 
   var RepoView = Backbone.View.extend({
     el: '#main',
     template: _.template(template),
     initialize: function () {
-      this.reviewModel = new ReviewItemModel();
-      this.reviewModel.set('user', this.model.get('owner').login);
-      this.reviewModel.set('repo', this.model.get('name'));
+      var _this = this;
       reviewCollection.on('all', this.render, this);
-      this.listenTo(this.reviewModel, 'change', this.render);
-      when.all(this.getFurtherInformations(), this.render.bind(this));
+      when.all(this.getFurtherInformations(), function () {
+        _this.render();
+      });
     },
     events: {
       'click #addReview': 'addReview',
-//      'change .filterSelector': 'checkAlreadyExist',
-      'change .filterSelector': 'changeFilter',
-      'click .destroy': 'removeReview',
-      'click .filter': 'addFilter'
+      'change #contributorsList, #branchList': 'checkAlreadyExist',
+      'click .destroy': 'removeReview'
     },
     serialize: function () {
       var existingReviews = reviewCollection.where({repo: this.model.get('name')});
       return {
         existingReviews: existingReviews,
-        repo: this.model.toJSON(),
-        filter: this.reviewModel.toJSON()
+        repo: this.model.toJSON()
       };
     },
     checkAlreadyExist: function () {
-      var alreadyExist = reviewCollection.where(this.reviewModel.toJSON());
+      var alreadyExist = reviewCollection.where({
+        repo: this.model.get('name'),
+        branch: this.getBranch(),
+        contributor: this.getContributor()
+      });
       if (alreadyExist.length > 0) {
         this.disableButton();
       } else {
         this.enableButton();
       }
-    },
-    addFilter: function(event){
-      var target = this.$(event.target);
-      var filter = _.str.capitalize(target.data('filter'));
-      this['add' + filter].call(this);
-    },
-    changeFilter: function(event){
-      var target = this.$(event.target);
-      var filter = _.str.capitalize(target.data('filter'));
-      this['change' + filter].call(this, target);
-    },
-    addBranch: function(){
-      this.reviewModel.set('branch', 'master');
-    },
-    addContributor: function(){
-      this.reviewModel.set('contributor', ' ');
-    },
-    addSince: function(){
-      this.reviewModel.set('since', {amount: 1, pattern: 'weeks'});
-    },
-    addUntil: function(){
-      this.reviewModel.set('until', _.moment());
-    },
-    addPath: function(){
-      this.reviewModel.set('path', ' ');
-    },
-    changeBranch: function(target){
-      this.reviewModel.set('branch', target.val());
-    },
-    changeContributor: function(target){
-      this.reviewModel.set('contributor', target.val());
-    },
-    changeSince: function(target){
-      var since = this.reviewModel.get('since');
-      if(target.is('input')){
-        since.amount = target.val();
-      } else if(target.is('select')){
-        since.pattern = target.find(':selected').val();
-      }
-      this.reviewModel.set('since', since);
-    },
-    changeUntil: function(){
-      this.reviewModel.set('until', _.moment());
-    },
-    changePath: function(){
-      this.reviewModel.set('path', ' ');
     },
     disableButton: function () {
       this.$('#addReview').attr('disabled', 'disabled');
@@ -108,18 +61,18 @@ define([
       model.destroy();
     },
     addReview: function () {
-      reviewCollection.create(this.reviewModel);
+      reviewCollection.create({
+        user: this.model.get('owner').login,
+        repo: this.model.get('name'),
+        branch: this.getBranch(),
+        contributor: this.getContributor()
+      });
     },
     getFurtherInformations: function () {
       var promises = [];
       promises.push(this.model.getBranches());
       promises.push(this.model.getContributors());
       return promises;
-    },
-    checkDatePicker: function(){
-      if(this.$('#sinceDatepicker').length > 0){
-        this.$('#sinceDatepicker').datepicker();
-      }
     },
     render: function () {
       app.showIndicator(false);

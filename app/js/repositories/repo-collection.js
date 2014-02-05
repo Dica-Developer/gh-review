@@ -9,13 +9,23 @@ define([
 
   var RepoCollection = Backbone.Collection.extend({
     model: repoModel,
+    localStorage: new Backbone.LocalStorage('repos'),
     initialize: function () {
+      this.fetch();
       app.on('ready', this.getRepos, this);
     },
     getRepos: function () {
       var _this = this;
       app.github.repos.getAll({}, function (error, res) {
-        _this.reset(res);
+        _.forEach(res, function (repo) {
+          var alreadyExist = _this.findWhere(repo);
+          if (!alreadyExist) {
+            _this.create(repo);
+          } else if (!_.isEqual(alreadyExist, repo)) {
+            alreadyExist.set(repo);
+            _this.sync('update', alreadyExist);
+          }
+        });
       });
 
       app.github.user.getOrgs({}, function (error, res) {
@@ -31,7 +41,13 @@ define([
         app.github.repos.getFromOrg({'org': org.login, 'type': 'all'}, function (error, res) {
           _.forEach(res, function (repo) {
             _.extend(repo, organization);
-            _this.add(repo);
+            var alreadyExist = _this.findWhere({id: repo.id});
+            if (!alreadyExist) {
+              _this.create(repo);
+            } else if (!_.isEqual(alreadyExist, repo)) {
+              alreadyExist.set(repo);
+              _this.sync('update', alreadyExist);
+            }
           });
         });
       });

@@ -3,7 +3,6 @@
 module.exports = function (grunt) {
   'use strict';
 
-  grunt.loadNpmTasks('grunt-browserify');
   require('time-grunt')(grunt);
   require('load-grunt-tasks')(grunt);
 
@@ -11,61 +10,43 @@ module.exports = function (grunt) {
     app: 'app',
     dev: 'dev',
     dist: 'dist',
-    test: 'test'
+    tmp: 'tmp',
+    resources: 'resources'
   };
 
   grunt.initConfig({
     config: config,
-    connect: {
-      options: {
-        port: 9000,
-        livereload: 35729,
-        // Change this to '0.0.0.0' to access the server from outside
-        hostname: 'localhost'
-      },
-      dev: {
-        options: {
-          open: true,
-          base: '<%= config.dev %>',
-          livereload: false
-        }
-      }
-    },
     watch: {
       options: {
         nospawn: true
       },
       dev: {
         files: [
-          '<%= config.app %>/css/*',
-          '<%= config.app %>/js/**/*',
-          '<%= config.app %>/*.html',
-          '<%= config.app %>/templates/**/*',
-          '!<%= config.app %>/bower_components/*'
+          '<%= config.app %>/templates/*.html',
+          '<%= config.app %>/css/{,*/}*.css',
+          '<%= config.app %>/css/{,*/}*.less',
+          '<%= config.app %>/js/{,*/}*.js'
         ],
         tasks: ['devWatch']
       }
     },
     clean: {
       dist: {
-        files: [
-          {
-            dot: true,
-            src: [
-              '<%= config.dist %>/*'
-            ]
-          }
-        ]
+        files: [{
+          dot: true,
+          src: [
+            '<%= config.dist %>/*',
+            '<%= config.tmp %>/*'
+          ]
+        }]
       },
       dev: {
-        files: [
-          {
-            dot: true,
-            src: [
-              '<%= config.dev %>/*'
-            ]
-          }
-        ]
+        files: [{
+          dot: true,
+          src: [
+            '<%= config.dev %>/*'
+          ]
+        }]
       }
     },
     jshint: {
@@ -80,60 +61,69 @@ module.exports = function (grunt) {
           yuicompress: true
         },
         files: {
-          '<%= config.dev %>/css/main.css': '<%= config.app %>/css/main.less'
+          '<%= config.dev %>/node-webkit.app/Contents/Resources/app.nw/css/main.css': '<%= config.app %>/css/main.less'
         }
       },
-      dist: {
+      build: {
         options: {
+          paths: ['<%= yeoman.app %>/styles'],
           yuicompress: true
         },
         files: {
-          '<%= config.dist %>/css/main.css': '<%= config.app %>/css/main.less'
+          '<%= yeoman.dist %>/styles/main.css': '/main.less'
         }
       }
     },
     copy: {
-      dev: {
-        files: [
-          {
-            expand: true,
-            cwd: '<%= config.app %>',
-            dest: '<%= config.dev %>',
-            src: '**'
-          },
-          {
-            expand: true,
-            cwd: '<%= config.app %>/bower_components/bootstrap/dist/fonts',
-            dest: '<%= config.dev %>/fonts',
-            src: '*'
-          }
-        ]
+      appMacosDist: {
+        files: [{
+          expand: true,
+          cwd: '<%= config.app %>',
+          dest: '<%= config.dist %>/node-webkit.app/Contents/Resources/app.nw',
+          src: '**'
+        }]
       },
-      dist: {
-        files: [
-          {
-            expand: true,
-            cwd: '<%= config.app %>',
-            dest: '<%= config.dist %>',
-            src: ['img/**/*', 'templates/**/*', 'fonts/**/*', '*.html']
-          },
-          {
-            expand: true,
-            cwd: '<%= config.app %>/bower_components/bootstrap/dist/fonts',
-            dest: '<%= config.dist %>/fonts',
-            src: '*'
-          },
-          {
-            expand: true,
-            cwd: '<%= config.app %>/bower_components/requirejs',
-            dest: '<%= config.dist %>/bower_components/requirejs',
-            src: 'require.js'
-          }
-        ]
+      appMacosDev: {
+        files: [{
+          expand: true,
+          cwd: '<%= config.app %>',
+          dest: '<%= config.dev %>/node-webkit.app/Contents/Resources/app.nw',
+          src: ['*.*', 'img/**', 'views/**', 'templates/**', 'node_modules/**', 'js/**', 'bower_components/**']
+        }, {
+          cwd: '<%= config.app %>',
+          expand: true,
+          flatten: true,
+          dest: '<%= config.dev %>/node-webkit.app/Contents/Resources/app.nw/fonts',
+          src: 'bower_components/bootstrap/dist/fonts/**',
+          filter: 'isFile'
+        }, {
+          cwd: '<%= config.app %>',
+          expand: true,
+          flatten: true,
+          dest: '<%= config.dev %>/node-webkit.app/Contents/Resources/app.nw/fonts',
+          src: 'fonts/**',
+          filter: 'isFile'
+        }]
+      },
+      webkitDist: {
+        files: [{
+          expand: true,
+          cwd: '<%=config.resources %>/node-webkit/mac-os',
+          dest: '<%= config.dist %>/',
+          src: '**'
+        }]
+      },
+      webkitDev: {
+        files: [{
+          expand: true,
+          cwd: '<%=config.resources %>/node-webkit/mac-os',
+          dest: '<%= config.dev %>/',
+          src: '**'
+        }]
       }
     },
     requirejs: {
-      options: {
+      options:{
         loglevel: 5,
         findNestedDependencies: true,
         inlineText: true,
@@ -148,29 +138,39 @@ module.exports = function (grunt) {
             {name: 'main'}
           ]
         }
-      },
-      dist: {
-        options: {
-          out: '<%= config.dist %>/js/main.js',
-          optimize: 'uglify',
-          name: 'main'
-        }
-      }
-    },
-    karma: {
-      dev: {
-        configFile: '<%= config.test %>/dev.karma.conf.js'
-      },
-      travis: {
-        configFile: '<%= config.test %>/travis.karma.conf.js'
       }
     }
   });
 
+  grunt.registerTask('chmod', 'Add lost Permissions.', function () {
+    var fs = require('fs');
+    fs.chmodSync('dist/node-webkit.app/Contents/Frameworks/node-webkit Helper EH.app/Contents/MacOS/node-webkit Helper EH', '555');
+    fs.chmodSync('dist/node-webkit.app/Contents/Frameworks/node-webkit Helper NP.app/Contents/MacOS/node-webkit Helper NP', '555');
+    fs.chmodSync('dist/node-webkit.app/Contents/Frameworks/node-webkit Helper.app/Contents/MacOS/node-webkit Helper', '555');
+    fs.chmodSync('dist/node-webkit.app/Contents/MacOS/node-webkit', '555');
+  });
+
+  grunt.registerTask('chmodDev', 'Add lost Permissions.', function () {
+    var fs = require('fs');
+    fs.chmodSync('dev/node-webkit.app/Contents/Frameworks/node-webkit Helper EH.app/Contents/MacOS/node-webkit Helper EH', '555');
+    fs.chmodSync('dev/node-webkit.app/Contents/Frameworks/node-webkit Helper NP.app/Contents/MacOS/node-webkit Helper NP', '555');
+    fs.chmodSync('dev/node-webkit.app/Contents/Frameworks/node-webkit Helper.app/Contents/MacOS/node-webkit Helper', '555');
+    fs.chmodSync('dev/node-webkit.app/Contents/MacOS/node-webkit', '555');
+  });
+
+  grunt.registerTask('dist', [
+    'jshint',
+    'clean:dist',
+    'copy:webkitDist',
+    'copy:appMacosDist',
+    'chmod'
+  ]);
+
   grunt.registerTask('devWatch', [
     'jshint',
     'less:dev',
-    'copy:dev'
+    'copy:appMacosDev',
+    'requirejs'
   ]);
 
   grunt.registerTask('copyToDev', [
@@ -178,13 +178,13 @@ module.exports = function (grunt) {
     'copy:appMacosDev'
   ]);
 
-  grunt.registerTask('startApp', 'Starting app for developing', function () {
+  grunt.registerTask('startApp', 'Starting app for developing', function(){
     var exec = require('child_process').exec;
     var app = exec('dev/node-webkit.app/Contents/MacOS/node-webkit');
-    app.stdout.on('data', function (msg) {
+    app.stdout.on('data', function(msg){
       grunt.log.write(msg);
     });
-    app.stderr.on('data', function (msg) {
+    app.stderr.on('data', function(msg){
       grunt.log.error(msg);
     });
   });
@@ -192,18 +192,11 @@ module.exports = function (grunt) {
   grunt.registerTask('dev', [
     'clean:dev',
     'jshint',
-    'copy:dev',
     'less:dev',
-    'connect:dev',
+    'copyToDev',
+//    'requirejs',
+    'chmodDev',
+    'startApp',
     'watch:dev'
   ]);
-
-  grunt.registerTask('dist', [
-    'clean:dist',
-    'jshint',
-    'copy:dist',
-    'less:dist',
-    'requirejs:dist'
-  ]);
-
 };

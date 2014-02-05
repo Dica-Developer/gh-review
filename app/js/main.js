@@ -17,9 +17,10 @@
       when: '../bower_components/when/when',
       moment: '../bower_components/moment/min/moment-with-langs.min',
 
-      GitHub: 'github/index',
-      OAuth: 'oauth',
       app: 'app',
+      authServer: 'authServer',
+      options: 'options',
+      logger: 'logger',
       router: 'router',
       chunk: 'chunk',
       topMenuView: 'top-menu/top-menu-view',
@@ -78,8 +79,8 @@
       show: false,
       keyboard: false
     });
-
-    app.on('authenticated', function(){
+    console.log(app.ajaxIndicator);
+    app.on('authenticated', function () {
       requirejs(['router', 'topMenuView'], function (router) {
         app.router = router;
         app.trigger('ready');
