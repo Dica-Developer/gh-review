@@ -1,4 +1,4 @@
-
+[![Build Status](https://travis-ci.org/Dica-Developer/gh-review.png?branch=master)](https://travis-ci.org/Dica-Developer/gh-review)
 # GitHub Review #
 
 
