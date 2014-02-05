@@ -10,9 +10,10 @@ define(['backbone', 'app'], function (Backbone, app) {
       var _this = this;
       app.github.user.get({}, function (error, res) {
         _this.set(res);
+        app.user = res;
       });
     }
   });
 
-  return new UserModel();
+  return UserModel;
 });

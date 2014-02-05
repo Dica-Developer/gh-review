@@ -44,7 +44,7 @@
       commentModel: 'comment/comment-model',
       commentCollection: 'comment/comment-collection',
 
-      userModel: 'user-model'
+      UserModel: 'user-model'
     },
     shim: {
       underscore: {
@@ -69,7 +69,8 @@
     'moment',
     'underscore.string',
     'backboneLocalStorage',
-    'bootstrap'
+    'bootstrap',
+    'topMenuView'
   ], function ($, app, _, moment) {
     //add moment to underscore to have access to moment in templates
     _.moment = moment;
@@ -80,7 +81,7 @@
     });
 
     app.on('authenticated', function(){
-      requirejs(['router', 'topMenuView'], function (router) {
+      requirejs(['router'], function (router) {
         app.router = router;
         app.trigger('ready');
         app.router.navigate('', {trigger: true});

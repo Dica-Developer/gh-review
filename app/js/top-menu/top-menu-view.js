@@ -3,27 +3,38 @@ define([
   'backbone',
   'underscore',
   'app',
-  'userModel',
+  'UserModel',
   'text!../templates/top-menu.html'
-], function (Backbone, _, app, userModel, template) {
+], function (Backbone, _, app, UserModel, template) {
   'use strict';
 
   var TopMenuView = Backbone.View.extend({
     el: '#topMenu',
-    model: userModel,
+    model: null,
     template: _.template(template),
     initialize: function () {
-      app.on('ready', this.render, this);
+      this.listenTo(app, 'authenticated', this.renderAuthenticatedView);
+      this.render();
+    },
+    renderAuthenticatedView: function(){
+      this.model = new UserModel();
       this.model.on('change', this.render, this);
     },
     serialize: function () {
       return {
-        name: this.model.get('name'),
-        avatar: this.model.get('avatar_url')
+        ghName: this.model.get('name'),
+        avatar: this.model.get('avatar_url'),
+        authenticated: true
       };
     },
     events: {
-      'change #selectRepo': 'showRepoDetail'
+      'change #selectRepo': 'showRepoDetail',
+      'click #login': 'login'
+    },
+    login: function(event){
+      event.stopPropagation();
+      localStorage.inAuthorizationProcess = true;
+      app.authenticate();
     },
     showRepoDetail: function (event) {
       var target = $(event.target),
@@ -31,7 +42,11 @@ define([
       app.router.navigate('#repo/' + option.data('id'), {trigger: true});
     },
     render: function () {
-      this.$el.html(this.template(this.serialize()));
+      if(app.authenticated){
+        this.$el.html(this.template(this.serialize()));
+      }else{
+        this.$el.html(this.template({authenticated: false}));
+      }
     }
   });
 

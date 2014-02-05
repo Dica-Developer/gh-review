@@ -10,10 +10,21 @@ define([
 
 
   function GHReview() {
+    this.authenticated = false;
     this.ajaxIndicator = null;
     this.ajaxIndicatorTimeoutId = null;
     this.ajaxIndicatorIsVisible = false;
+    this.user = null;
     this.github = new GitHub({});
+    this.oauth = null;
+    if(localStorage.inAuthorizationProcess){
+      this.authenticate();
+    }
+  }
+
+  GHReview.prototype = Backbone.Events;
+
+  GHReview.prototype.authenticate = function () {
     this.oauth = new OAuth({
       clientId: '5082108e53d762d90c00',
       apiScope: 'user, repo',
@@ -25,11 +36,11 @@ define([
         type: 'token',
         token: this.oauth.accessToken
       });
+      localStorage.removeItem('inAuthorizationProcess');
+      this.authenticated = true;
       this.trigger('authenticated');
     }.bind(this);
-  }
-
-  GHReview.prototype = Backbone.Events;
+  };
 
   GHReview.prototype.showIndicator = function (show) {
     var _this = this;

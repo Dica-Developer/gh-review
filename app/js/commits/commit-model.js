@@ -4,9 +4,8 @@ define([
   'underscore',
   'app',
   'when',
-  'commentCollection',
-  'userModel'
-], function (Backbone, _, app, when, commentCollection, user) {
+  'commentCollection'
+], function (Backbone, _, app, when, commentCollection) {
   'use strict';
   var CommitModel = Backbone.Model.extend({
     initialize: function () {
@@ -75,7 +74,7 @@ define([
     },
     approveCommit: function () {
       var defer = when.defer();
-      var comment = 'Approved by @' + user.get('login');
+      var comment = 'Approved by @' + app.user.login;
       app.github.repos.createCommitComment({
         user: app.currentReviewData.user,
         repo: app.currentReviewData.repo,
