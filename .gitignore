@@ -1,6 +1,7 @@
 .idea/
 dist/
 dev/
+coverage/
 node_modules/
 bower_components/
 .DS_Store

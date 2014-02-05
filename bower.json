@@ -1,17 +1,20 @@
 {
   "name": "reviewweb",
   "version": "0.0.0",
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
     "jquery": "~1.9.0",
     "backbone": "~1.0.0",
     "requirejs": "~2.1.5",
     "requirejs-text": "~2.0.5",
     "when": "~2.5.0",
     "backbone.localStorage": "~1.1.7",
-    "bootstrap": "~3.0.0",
+    "bootstrap": "~3.1.0",
     "underscore": "~1.5.2",
     "moment": "~2.3.1",
     "underscore.string": "~2.3.3"
   },
-  "devDependencies": {}
+  "resolutions": {
+    "bootstrap": "~3.1.0"
+  }
 }
