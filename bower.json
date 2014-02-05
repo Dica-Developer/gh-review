@@ -13,8 +13,5 @@
     "underscore": "~1.5.2",
     "moment": "~2.3.1",
     "underscore.string": "~2.3.3"
-  },
-  "resolutions": {
-    "bootstrap": "~3.1.0"
   }
 }
