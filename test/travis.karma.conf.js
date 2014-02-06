@@ -20,8 +20,7 @@ module.exports = function(config) {
 
     logLevel: config.LOG_INFO,
 
-    autoWatch: true,
-    autoWatchBatchDelay: 500,
-    singleRun: false
+    autoWatch: false,
+    singleRun: true
   });
 };
