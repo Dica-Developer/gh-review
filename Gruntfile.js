@@ -3,7 +3,6 @@
 module.exports = function (grunt) {
   'use strict';
 
-  grunt.loadNpmTasks('grunt-browserify');
   require('time-grunt')(grunt);
   require('load-grunt-tasks')(grunt);
 
@@ -172,22 +171,6 @@ module.exports = function (grunt) {
     'less:dev',
     'copy:dev'
   ]);
-
-  grunt.registerTask('copyToDev', [
-    'copy:webkitDev',
-    'copy:appMacosDev'
-  ]);
-
-  grunt.registerTask('startApp', 'Starting app for developing', function () {
-    var exec = require('child_process').exec;
-    var app = exec('dev/node-webkit.app/Contents/MacOS/node-webkit');
-    app.stdout.on('data', function (msg) {
-      grunt.log.write(msg);
-    });
-    app.stderr.on('data', function (msg) {
-      grunt.log.error(msg);
-    });
-  });
 
   grunt.registerTask('dev', [
     'clean:dev',
