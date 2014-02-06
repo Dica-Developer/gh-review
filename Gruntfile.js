@@ -10,7 +10,19 @@ module.exports = function (grunt) {
     app: 'app',
     dev: 'dev',
     dist: 'dist',
-    test: 'test'
+    test: 'test',
+    distOptions: {
+      clientId: '833c028df47be8e881d9',
+      apiScope: 'user, public_repo',
+      redirectUri: 'http://dica-developer.github.io/gh-review/',
+      accessTokenUrl: 'http://gh-review.herokuapp.com/login/oauth/access_token'
+    },
+    devOptions: {
+      clientId: '5082108e53d762d90c00',
+      apiScope: 'user, repo',
+      redirectUri: 'http://localhost:9000',
+      accessTokenUrl: 'http://gh-review.herokuapp.com/bemdsvdsynggmvweibduvjcbgf'
+    }
   };
 
   grunt.initConfig({
@@ -166,6 +178,16 @@ module.exports = function (grunt) {
     }
   });
 
+  grunt.registerTask('processTmpl', function(target){
+    var options = config.distOptions;
+    var tmpl = grunt.file.read('build-templates/options.tmpl');
+    if('dev' === target){
+      options = config.devOptions;
+    }
+    var processedTmpl = grunt.template.process(tmpl , {data: options});
+    grunt.file.write('app/js/options.js', processedTmpl);
+  });
+
   grunt.registerTask('devWatch', [
     'jshint',
     'less:dev',
@@ -175,6 +197,7 @@ module.exports = function (grunt) {
   grunt.registerTask('dev', [
     'clean:dev',
     'jshint',
+    'processTmpl:dev',
     'copy:dev',
     'less:dev',
     'connect:dev',
@@ -184,6 +207,7 @@ module.exports = function (grunt) {
   grunt.registerTask('dist', [
     'clean:dist',
     'jshint',
+    'processTmpl:dist',
     'copy:dist',
     'less:dist',
     'requirejs:dist'

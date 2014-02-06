@@ -17,6 +17,8 @@
       when: '../bower_components/when/when',
       moment: '../bower_components/moment/min/moment-with-langs.min',
 
+      option: 'options',
+
       GitHub: 'github/index',
       OAuth: 'oauth',
       app: 'app',

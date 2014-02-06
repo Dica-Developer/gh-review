@@ -4,8 +4,9 @@ define([
   'underscore',
   'when',
   'OAuth',
-  'GitHub'
-], function (Backbone, _, when, OAuth, GitHub) {
+  'GitHub',
+  'options'
+], function (Backbone, _, when, OAuth, GitHub, options) {
   'use strict';
 
 
@@ -25,12 +26,7 @@ define([
   GHReview.prototype = Backbone.Events;
 
   GHReview.prototype.authenticate = function () {
-    this.oauth = new OAuth({
-      clientId: '5082108e53d762d90c00',
-      apiScope: 'user, repo',
-      redirectUri: 'http://localhost:9000',
-      accessTokenUrl: 'http://gh-review.herokuapp.com/bemdsvdsynggmvweibduvjcbgf'
-    });
+    this.oauth = new OAuth(options);
     this.oauth.onAccessTokenReceived = function(){
       this.github.authenticate({
         type: 'token',
