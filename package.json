@@ -1,8 +1,17 @@
 {
-  "name": "JSON-Transformer",
+  "name": "GH-Review",
   "version": "0.0.1",
-  "author": "",
-  "repository": {},
+  "author": "Dica-Developer",
+	"repository": [
+		{
+			"type": "git",
+			"url": "https://github.com/Dica-Developer/gh-review",
+			"path": "/"
+		}
+		],
+		"bugs": {
+			"url": "https://github.com/Dica-Developer/gh-review/issues"
+	},
   "dependencies": {},
   "devDependencies": {
     "grunt": "~0.4.1",
