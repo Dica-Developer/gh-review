@@ -2,16 +2,16 @@
   "name": "GH-Review",
   "version": "0.0.1",
   "author": "Dica-Developer",
-	"repository": [
-		{
-			"type": "git",
-			"url": "https://github.com/Dica-Developer/gh-review",
-			"path": "/"
-		}
-		],
-		"bugs": {
-			"url": "https://github.com/Dica-Developer/gh-review/issues"
-	},
+  "repository": [
+    {
+      "type": "git",
+      "url": "https://github.com/Dica-Developer/gh-review",
+      "path": "/"
+    }
+  ],
+  "bugs": {
+    "url": "https://github.com/Dica-Developer/gh-review/issues"
+  },
   "dependencies": {},
   "devDependencies": {
     "grunt": "~0.4.1",
@@ -40,13 +40,13 @@
     "karma-phantomjs-launcher": "~0.1.2",
     "karma": "~0.10.9",
     "grunt-karma": "~0.6.2",
-    "karma-coverage": "~0.1.5"
+    "karma-coverage": "~0.1.5",
+    "grunt-karma-coveralls": "~2.3.0"
   },
   "engines": {
     "node": ">=0.8.0"
   },
   "scripts": {
-    "test": "grunt karma:travis",
-		"coveralls": "npm run-script coverage && node bin/coveralls.js < coverage/lcov.info"
+    "test": "grunt travis"
   }
 }

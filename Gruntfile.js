@@ -5,7 +5,7 @@ module.exports = function (grunt) {
 
   require('time-grunt')(grunt);
   require('load-grunt-tasks')(grunt);
-
+  grunt.loadNpmTasks('grunt-karma-coveralls');
   var config = {
     app: 'app',
     dev: 'dev',
@@ -175,6 +175,12 @@ module.exports = function (grunt) {
       travis: {
         configFile: '<%= config.test %>/travis.karma.conf.js'
       }
+    },
+    coveralls: {
+      options: {
+        debug: true,
+        coverage_dir: 'coverage'
+      }
     }
   });
 
@@ -211,6 +217,11 @@ module.exports = function (grunt) {
     'copy:dist',
     'less:dist',
     'requirejs:dist'
+  ]);
+
+  grunt.registerTask('travis', [
+    'karma:travis',
+    'coveralls'
   ]);
 
 };
