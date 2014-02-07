@@ -1,4 +1,4 @@
-/*global define, describe, it, expect, afterEach, beforeEach, spyOn, waitsFor, runs, sinon, localStorage, jasmine*/
+/*global define, describe, it, expect, spyOn, waitsFor, runs*/
 define(['server', 'githubRequests', 'app', 'userModel'], function(server, githubRequests, app, UserModel){
   'use strict';
 
