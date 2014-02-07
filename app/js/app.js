@@ -18,12 +18,15 @@ define([
     this.user = null;
     this.github = new GitHub({});
     this.oauth = null;
-    if(localStorage.inAuthorizationProcess){
-      this.authenticate();
-    }
   }
 
   GHReview.prototype = Backbone.Events;
+
+  GHReview.prototype.init = function(){
+    if(localStorage.inAuthorizationProcess){
+      this.authenticate();
+    }
+  };
 
   GHReview.prototype.authenticate = function () {
     this.oauth = new OAuth(options);
