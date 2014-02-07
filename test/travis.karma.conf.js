@@ -16,7 +16,15 @@ module.exports = function(config) {
     ],
 
     browsers: ['PhantomJS'],
-    reporters: ['dots'],
+    reporters: ['dots', 'coverage'],
+    preprocessors: {
+      'app/js/*.js': ['coverage']
+    },
+    coverageReporter: {
+      type : 'lcov',
+      dir : 'coverage',
+      file: 'lcov.info'
+    },
 
     logLevel: config.LOG_INFO,
 
