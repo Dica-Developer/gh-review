@@ -1,5 +1,5 @@
 /*global define, sinon*/
-define([], function(){
+define(['githubRequests'], function(githubRequests){
   'use strict';
 
   function Server(){
@@ -20,9 +20,13 @@ define([], function(){
     this.contentTypes = {
       json: {'Content-Type': 'application/json; charset=UTF-8'}
     };
+
     this.urls= {
       oauthTokenRequestUrl: function(){
         return new RegExp('/gh-review.herokuapp.com/bemdsvdsynggmvweibduvjcbgf', 'g');
+      },
+      githubUserGet: function(){
+        return new RegExp('https://api.github.com/user', 'g');
       }
     };
 
@@ -37,6 +41,16 @@ define([], function(){
         200,
         this.contentTypes.json,
         JSON.stringify(response)
+      ]);
+    };
+
+    this.githubUserGet = function(manual){
+
+      this.start(manual);
+      this.server.respondWith('GET', this.urls.githubUserGet(), [
+        200,
+        this.contentTypes.json,
+        JSON.stringify(githubRequests.userGet)
       ]);
     };
   }
