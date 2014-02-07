@@ -1,6 +1,12 @@
 /*global define*/
-define(['underscore'], function (_) {
+define([], function () {
   'use strict';
+
+  if (typeof String.prototype.startsWith !== 'function') {
+    String.prototype.startsWith = function (str){
+      return this.slice(0, str.length) === str;
+    };
+  }
 
   var chunkHeadingRegExp = new RegExp('@@.*?[-+](\\d+)(,\\d+){0,1}\\s[-+](\\d+)(,\\d+){0,1} @@', 'g');
 
@@ -18,9 +24,9 @@ define(['underscore'], function (_) {
     ];
     this.addLine = function (line) {
       var computedLine = null;
-      if (_.str.startsWith(line, '-')) {
+      if (line.startsWith('-')) {
         computedLine = this.addDeletedLine(line);
-      } else if (_.str.startsWith(line, '+')) {
+      } else if (line.startsWith('+')) {
         computedLine = this.addAddedLine(line);
       } else {
         computedLine = this.addNormalLine(line);
