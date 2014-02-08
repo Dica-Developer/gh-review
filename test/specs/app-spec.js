@@ -30,19 +30,19 @@ define(['underscore', 'app', 'GitHub', 'OAuth'], function(_, app, GitHub, OAuth)
       });
 
       it('Should request oauth token', function(){
-        var requestAccessTokenSpy = spyOn(OAuth.prototype, 'getAuthorizationCode');
+        var doRedirectSpy = spyOn(OAuth.prototype, 'doRedirect');
         tmpApp.authenticate();
-        expect(requestAccessTokenSpy).toHaveBeenCalled();
+        expect(doRedirectSpy).toHaveBeenCalled();
       });
 
       it('Should override .onAccessTokenReceived', function(){
-        spyOn(OAuth.prototype, 'getAuthorizationCode');
+        spyOn(OAuth.prototype, 'doRedirect');
         tmpApp.authenticate();
         expect(tmpApp.oauth.onAccessTokenReceived).not.toEqual(OAuth.prototype.onAccessTokenReceived);
       });
 
       it('#GH-Review.ouath should be instance of OAuth', function(){
-        spyOn(OAuth.prototype, 'getAuthorizationCode');
+        spyOn(OAuth.prototype, 'doRedirect');
         tmpApp.authenticate();
         expect(tmpApp.oauth instanceof OAuth).toBeTruthy();
       });
@@ -61,7 +61,7 @@ define(['underscore', 'app', 'GitHub', 'OAuth'], function(_, app, GitHub, OAuth)
 
         it('Should call #GitHub.authenticate', function(){
           var authenticateSpy = spyOn(GitHub.prototype, 'authenticate');
-          spyOn(OAuth.prototype, 'getAuthorizationCode');
+          spyOn(OAuth.prototype, 'doRedirect');
           tmpApp.authenticate();
           tmpApp.oauth.accessToken = 'testToken';
           tmpApp.oauth.onAccessTokenReceived();
@@ -70,7 +70,7 @@ define(['underscore', 'app', 'GitHub', 'OAuth'], function(_, app, GitHub, OAuth)
 
         it('Should set #GH-Review.authenticated to true', function(){
           spyOn(GitHub.prototype, 'authenticate');
-          spyOn(OAuth.prototype, 'getAuthorizationCode');
+          spyOn(OAuth.prototype, 'doRedirect');
           tmpApp.authenticate();
           tmpApp.oauth.onAccessTokenReceived();
           expect(tmpApp.authenticated).toBeTruthy();

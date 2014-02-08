@@ -1,4 +1,4 @@
-/*global define*/
+/*global define, localStorage*/
 (function () {
   'use strict';
 
@@ -16,7 +16,7 @@
     this.accessTokenUrl = config.accessTokenUrl;
     var authCode = this.parseAuthorizationCode(window.location.href);
     if (!authCode && typeof this.accessToken === 'undefined') {
-      this.getAuthorizationCode();
+      this.doRedirect(this.authorizationCodeURL());
     } else if(authCode && typeof this.accessToken === 'undefined') {
       this.finishAuthorization(authCode);
     } else if(!authCode && typeof this.accessToken !== 'undefined') {
@@ -29,8 +29,8 @@
   }
 
 
-  OAuth2.prototype.getAuthorizationCode = function(){
-    window.location.href = this.authorizationCodeURL();
+  OAuth2.prototype.doRedirect = function(url){
+    window.location.href = url;
   };
 
   OAuth2.prototype.finishAuthorization = function(authCode){
@@ -82,7 +82,8 @@
   OAuth2.prototype.setAccessToken = function(response) {
     /*jshint camelcase:false*/
     localStorage.ghreviewAccessToken = response.access_token;
-    window.location.href = window.location.protocol + '//' + window.location.host + window.location.pathname;
+    var url = window.location.protocol + '//' + window.location.host + window.location.pathname;
+    this.doRedirect(url);
   };
 
   OAuth2.prototype.onAccessTokenReceived = function(){};

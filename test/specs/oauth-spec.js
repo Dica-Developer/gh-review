@@ -10,12 +10,11 @@ define(['underscore', 'server', 'OAuth'], function(_, server, OAuth2){
   };
 
   describe('OAuth', function(){
-    var getAuthorizationCodeSpy = null, setAccessTokenSpy = null;
+    var doRedirectSpy = null;
 
     //Need to setup this spy's every time to avoid page reloads while test running
     beforeEach(function(){
-      getAuthorizationCodeSpy = spyOn(OAuth2.prototype, 'getAuthorizationCode');
-      setAccessTokenSpy = spyOn(OAuth2.prototype, 'setAccessToken');
+      doRedirectSpy = spyOn(OAuth2.prototype, 'doRedirect');
     });
 
     it('Should be defined', function(){
@@ -37,7 +36,7 @@ define(['underscore', 'server', 'OAuth'], function(_, server, OAuth2){
 
     it('If no access token is present and no "code" string in url .getAuthorizationCode should be called', function(){
       new OAuth2(oauthConfig);
-      expect(getAuthorizationCodeSpy).toHaveBeenCalled();
+      expect(doRedirectSpy).toHaveBeenCalled();
     });
 
     it('If no access token is present but a "code" string in url .finishAuthorization should be called', function(){
@@ -93,6 +92,7 @@ define(['underscore', 'server', 'OAuth'], function(_, server, OAuth2){
     });
 
     it('.finishAuthorization should call .setAccessToken after successfully request', function(){
+      var setAccessTokenSpy = spyOn(OAuth2.prototype, 'setAccessToken');
       server.oauthTokenRequest();
       spyOn(OAuth2.prototype, 'parseAuthorizationCode').andReturn('123test45');
       new OAuth2(oauthConfig);
@@ -105,7 +105,6 @@ define(['underscore', 'server', 'OAuth'], function(_, server, OAuth2){
         expect(setAccessTokenSpy).toHaveBeenCalled();
         server.stop();
       });
-
     });
 
     it('.onAccessTokenReceived should called if access token is present', function(){
@@ -119,6 +118,17 @@ define(['underscore', 'server', 'OAuth'], function(_, server, OAuth2){
       expect(onAccessTokenReceivedSpy).toHaveBeenCalled();
 
     });
+
+    it('.setAccessToken', function(){
+      var oauth = new OAuth2(oauthConfig);
+
+      oauth.setAccessToken({'access_token': '123test45'});
+
+      expect(doRedirectSpy).toHaveBeenCalled();
+      expect(localStorage.ghreviewAccessToken).toBe('123test45');
+      localStorage.removeItem('ghreviewAccessToken');
+    });
+
   });
 
 });
