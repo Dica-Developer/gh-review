@@ -19,6 +19,7 @@ module.exports = function(config) {
     browsers: ['PhantomJS'],
     reporters: ['dots', 'coverage'],
     preprocessors: {
+      'app/js/!(github)/*.js': ['coverage'],
       'app/js/*.js': ['coverage'],
       'app/bower_components/bootstrap/less/*.less': ['less']
     },
