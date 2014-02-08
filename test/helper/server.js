@@ -66,7 +66,7 @@ define(['githubRequests'], function(githubRequests){
       this.server.respondWith('GET', this.urls.githubUserGetOrgUrl(), [
         200,
         this.contentTypes.json,
-        JSON.stringify(githubRequests.userGet)
+        JSON.stringify(githubRequests.userGetOrgs)
       ]);
     };
 
