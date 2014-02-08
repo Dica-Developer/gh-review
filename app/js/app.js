@@ -56,16 +56,17 @@ define([
   };
 
   GHReview.prototype.authenticate = function () {
+    var _this = this;
     this.oauth = new OAuth(options);
     this.oauth.onAccessTokenReceived = function(){
-      this.github.authenticate({
+      _this.github.authenticate({
         type: 'token',
-        token: this.oauth.accessToken
+        token: _this.oauth.accessToken
       });
       endAuthorizationInProgress();
-      this.authenticated = true;
-      this.trigger('authenticated');
-    }.bind(this);
+      _this.authenticated = true;
+      _this.trigger('authenticated');
+    };
   };
 
   GHReview.prototype.showIndicator = function (show) {
