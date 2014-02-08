@@ -27,6 +27,12 @@ define(['githubRequests'], function(githubRequests){
       },
       githubUserGet: function(){
         return new RegExp('https://api.github.com/user', 'g');
+      },
+      githubUserGetOrgUrl: function(){
+        return new RegExp('https://api.github.com/user/orgs', 'g');
+      },
+      githubReposGetAllUrl: function(){
+        return new RegExp('https://api.github.com/user/repos', 'g');
       }
     };
 
@@ -51,6 +57,25 @@ define(['githubRequests'], function(githubRequests){
         200,
         this.contentTypes.json,
         JSON.stringify(githubRequests.userGet)
+      ]);
+    };
+
+    this.githubUserGetOrgs = function(manual){
+
+      this.start(manual);
+      this.server.respondWith('GET', this.urls.githubUserGetOrgUrl(), [
+        200,
+        this.contentTypes.json,
+        JSON.stringify(githubRequests.userGet)
+      ]);
+    };
+
+    this.githubReposGetAll = function(manual){
+      this.start(manual);
+      this.server.respondWith('GET', this.urls.githubUserGet(), [
+        200,
+        this.contentTypes.json,
+        JSON.stringify(githubRequests.reposGetAll)
       ]);
     };
   }

@@ -47,8 +47,8 @@
       reviewListItemView: 'review/review-list-item-view',
       reviewDetailView: 'review/review-detail-view',
 
-      repoModel: 'repositories/repo-model',
-      repoCollection: 'repositories/repo-collection',
+      repoModel: '../app/js/repositories/repo-model',
+      RepoCollection: '../app/js/repositories/repo-collection',
       repoView: 'repositories/repo-view',
       repoDetailView: 'repositories/repo-detail-view',
 
