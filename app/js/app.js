@@ -1,4 +1,4 @@
-/*global define, window*/
+/*global define, window, localStorage*/
 define([
   'backbone',
   'underscore',
@@ -9,6 +9,33 @@ define([
 ], function (Backbone, _, when, OAuth, GitHub, options) {
   'use strict';
 
+  function hasLocalStorage(){
+    try {
+      localStorage.setItem('test', 'test');
+      localStorage.removeItem('test', 'test');
+      return true;
+    } catch(e) {
+      return false;
+    }
+  }
+
+  function isAuthorizationInProgress(){
+    var authorizationInProgress = false;
+    if(hasLocalStorage()){
+      authorizationInProgress = localStorage.inAuthorizationProcess || false;
+    } else {
+      //TODO add cookie fallback if no localStorage is available
+    }
+    return authorizationInProgress;
+  }
+
+  function endAuthorizationInProgress(){
+    if(hasLocalStorage()){
+      localStorage.removeItem('inAuthorizationProcess');
+    } else {
+      //TODO add cookie fallback if no localStorage is available
+    }
+  }
 
   function GHReview() {
     this.authenticated = false;
@@ -23,7 +50,7 @@ define([
   GHReview.prototype = Backbone.Events;
 
   GHReview.prototype.init = function(){
-    if(localStorage.inAuthorizationProcess){
+    if(isAuthorizationInProgress()){
       this.authenticate();
     }
   };
@@ -35,7 +62,7 @@ define([
         type: 'token',
         token: this.oauth.accessToken
       });
-      localStorage.removeItem('inAuthorizationProcess');
+      endAuthorizationInProgress();
       this.authenticated = true;
       this.trigger('authenticated');
     }.bind(this);
