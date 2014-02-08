@@ -41,7 +41,8 @@
     "karma": "~0.10.9",
     "grunt-karma": "~0.6.2",
     "karma-coverage": "~0.1.5",
-    "grunt-karma-coveralls": "~2.3.0"
+    "grunt-karma-coveralls": "~2.3.0",
+    "karma-less-preprocessor": "~0.2.0"
   },
   "engines": {
     "node": ">=0.8.0"
