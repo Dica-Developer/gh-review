@@ -3,15 +3,13 @@ define([
   'backbone',
   'underscore',
   'app',
-  'repoCollection',
   'moment',
   'text!../templates/repo-view.html'
-], function (Backbone, _, app, repoCollection, moment, template) {
+], function (Backbone, _, app, moment, template) {
   'use strict';
 
   var RepoView = Backbone.View.extend({
     el: '#main',
-    collection: repoCollection,
     template: _.template(template),
     serialize: function () {
       var repos = this.collection.toJSON();

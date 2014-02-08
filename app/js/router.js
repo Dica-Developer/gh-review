@@ -2,7 +2,7 @@
 define([
   'jquery',
   'backbone',
-  'repoCollection',
+  'RepoCollection',
   'repoView',
   'repoDetailView',
   'reviewCollection',
@@ -10,8 +10,10 @@ define([
   'reviewDetailView',
   'commitCollection',
   'commentView'
-], function ($, Backbone, repoCollection, RepoView, RepoDetailView, reviewCollection, ReviewListView, ReviewDetailView, commitCollection, CommentView) {
+], function ($, Backbone, RepoCollection, RepoView, RepoDetailView, reviewCollection, ReviewListView, ReviewDetailView, commitCollection, CommentView) {
   'use strict';
+
+  var repoCollection = null;
 
   var Router = Backbone.Router.extend({
     view: null,
@@ -30,7 +32,8 @@ define([
     repositories: function () {
       this.clear();
       this.trigger('ajaxIndicator', true);
-      this.view = new RepoView();
+      repoCollection = new RepoCollection();
+      this.view = new RepoView({collection: repoCollection});
     },
     repoDetail: function (id) {
       this.clear();

@@ -10,7 +10,7 @@ define([
   var RepoCollection = Backbone.Collection.extend({
     model: repoModel,
     initialize: function () {
-      app.on('ready', this.getRepos, this);
+      this.getRepos();
     },
     getRepos: function () {
       var _this = this;
@@ -38,5 +38,5 @@ define([
     }
   });
 
-  return new RepoCollection();
+  return RepoCollection;
 });
