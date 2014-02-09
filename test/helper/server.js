@@ -1,5 +1,5 @@
 /*global define, sinon*/
-define(['githubRequests'], function(githubRequests){
+define(['githubResponses'], function(githubResponses){
   'use strict';
 
   function Server(){
@@ -59,7 +59,7 @@ define(['githubRequests'], function(githubRequests){
       this.server.respondWith('GET', this.urls.githubUserGet(), [
         200,
         this.contentTypes.json,
-        JSON.stringify(githubRequests.userGet)
+        JSON.stringify(githubResponses.userGet)
       ]);
     };
 
@@ -69,7 +69,7 @@ define(['githubRequests'], function(githubRequests){
       this.server.respondWith('GET', this.urls.githubUserGetOrgUrl(), [
         200,
         this.contentTypes.json,
-        JSON.stringify(githubRequests.userGetOrgs)
+        JSON.stringify(githubResponses.userGetOrgs)
       ]);
     };
 
@@ -78,7 +78,7 @@ define(['githubRequests'], function(githubRequests){
       this.server.respondWith('GET', this.urls.githubReposGetAllUrl(), [
         200,
         this.contentTypes.json,
-        JSON.stringify(githubRequests.reposGetAll)
+        JSON.stringify(githubResponses.reposGetAll)
       ]);
     };
 
@@ -87,7 +87,7 @@ define(['githubRequests'], function(githubRequests){
       this.server.respondWith('GET', this.urls.githubReposFromOrgUrl(), [
         200,
         this.contentTypes.json,
-        JSON.stringify(githubRequests.reposGetFromOrg)
+        JSON.stringify(githubResponses.reposGetFromOrg)
       ]);
     };
   }

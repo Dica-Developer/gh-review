@@ -29,7 +29,7 @@
       moment: '../app/bower_components/moment/min/moment-with-langs.min',
       sinon: '../test/lib/sinon',
       server: '../test/helper/server',
-      githubRequests: '../test/helper/githubRequests',
+      githubResponses: '../test/helper/githubResponses',
       options: '../test/helper/compiledOptions',
 
       GitHub: '../app/js/github/index',

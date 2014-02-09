@@ -2,10 +2,10 @@
 define([
   'underscore',
   'server',
-  'githubRequests',
+  'githubResponses',
   'app',
   'RepoCollection'
-], function(_, server, githubRequests, app, RepoCollection){
+], function(_, server, githubResponses, app, RepoCollection){
   'use strict';
 
   describe('#RepoCollection', function(){
@@ -49,7 +49,7 @@ define([
       var Collection = RepoCollection.extend();
       var collection = new Collection();
 
-      collection.getAllReposCallback(null, githubRequests.reposGetAll);
+      collection.getAllReposCallback(null, githubResponses.reposGetAll);
 
       expect(collection.length).toBe(2);
     });
@@ -98,7 +98,7 @@ define([
       var Collection = RepoCollection.extend();
       var collection = new Collection();
       collection.organizations = {};
-      collection.getOrgRepos([githubRequests.userGetOrgs[0]]);
+      collection.getOrgRepos([githubResponses.userGetOrgs[0]]);
 
       waitsFor(function(){
         return server.server.requests[0].readyState === 4;
@@ -106,7 +106,7 @@ define([
 
       runs(function(){
         expect(collection.length).toBe(1);
-        expect(collection.models[0].get('organization')).toEqual(githubRequests.userGetOrgs[0]);
+        expect(collection.models[0].get('organization')).toEqual(githubResponses.userGetOrgs[0]);
         server.stop();
       });
     });
@@ -118,7 +118,7 @@ define([
       var Collection = RepoCollection.extend();
       var collection = new Collection();
       collection.organizations = {};
-      collection.getOrgRepos([githubRequests.userGetOrgs[1]]);
+      collection.getOrgRepos([githubResponses.userGetOrgs[1]]);
 
 
       waitsFor(function(){

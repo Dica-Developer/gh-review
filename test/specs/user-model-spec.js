@@ -1,5 +1,5 @@
 /*global define, describe, it, expect, spyOn, waitsFor, runs*/
-define(['server', 'githubRequests', 'app', 'userModel'], function(server, githubRequests, app, UserModel){
+define(['server', 'githubResponses', 'app', 'userModel'], function(server, githubResponses, app, UserModel){
   'use strict';
 
   describe('OAuth', function(){
@@ -34,7 +34,7 @@ define(['server', 'githubRequests', 'app', 'userModel'], function(server, github
         }, '', 500);
 
         runs(function(){
-          var expectedResponse = githubRequests.userGet;
+          var expectedResponse = githubResponses.userGet;
           expectedResponse.meta = {};
           expect(handleResponseSpy).toHaveBeenCalledWith(null, expectedResponse);
           server.stop();
@@ -44,7 +44,7 @@ define(['server', 'githubRequests', 'app', 'userModel'], function(server, github
 
       it('.handleResponse should store res', function(){
         var userModel = new UserModel();
-        var expectedResponse = githubRequests.userGet;
+        var expectedResponse = githubResponses.userGet;
         userModel.handleResponse(null, expectedResponse);
         expect(app.user).toBe(expectedResponse);
         expect(userModel.get('login')).toBe('USER');
