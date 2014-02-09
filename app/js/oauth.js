@@ -7,8 +7,9 @@
   };
 
   function OAuth2(config) {
+    var accessToken;
     if(localStorageAvailable()){
-      this.accessToken = localStorage.ghreviewAccessToken;
+      accessToken = localStorage.ghreviewAccessToken;
     }
     this.clientId = config.clientId;
     this.apiScope = config.apiScope;
@@ -16,17 +17,17 @@
     this.accessTokenUrl = config.accessTokenUrl;
     var authCode = this.parseAuthorizationCode(window.location.href);
     if (!authCode) {
-      if (typeof this.accessToken === 'undefined') {
+      if (typeof accessToken === 'undefined') {
         this.doRedirect(this.authorizationCodeURL());
       } else {
         var oauth = this;
         localStorage.removeItem('ghreviewAccessToken');
         window.setTimeout(function(){
-          oauth.onAccessTokenReceived(oauth.accessToken);
+          oauth.onAccessTokenReceived(accessToken);
         }, 500);
       }
     } else {
-      if (typeof this.accessToken === 'undefined') {
+      if (typeof accessToken === 'undefined') {
         this.finishAuthorization(authCode);
       }
     }
