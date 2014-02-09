@@ -4,8 +4,8 @@ define([
   'backbone',
   'underscore',
   'when',
-  'text!../templates/edit-comment-box.html',
-  'text!../templates/show-comment-box.html'
+  'text!templates/edit-comment-box.html',
+  'text!templates/show-comment-box.html'
 ], function ($, Backbone, _, when, editTemplate, showTemplate) {
   'use strict';
 

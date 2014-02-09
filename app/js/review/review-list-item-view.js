@@ -2,7 +2,7 @@
 define([
   'backbone',
   'underscore',
-  'text!../templates/review-list-item.html'
+  'text!templates/review-list-item.html'
 ], function (Backbone, _, template) {
   'use strict';
 

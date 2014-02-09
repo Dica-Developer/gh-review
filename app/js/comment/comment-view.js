@@ -6,7 +6,7 @@ define([
   'app',
   'chunk',
   'commentBox',
-  'text!../templates/comment-view.html'
+  'text!templates/comment-view.html'
 ], function (Backbone, _, when, app, Chunk, CommentBoxes, template) {
   'use strict';
 

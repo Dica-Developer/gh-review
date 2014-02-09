@@ -2,7 +2,7 @@
 define([
   'backbone',
   'underscore',
-  'text!../templates/commit-list-item.html'
+  'text!templates/commit-list-item.html'
 ], function (Backbone, _, template) {
   'use strict';
   var CommitListView = Backbone.View.extend({

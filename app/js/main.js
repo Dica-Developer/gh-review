@@ -14,6 +14,7 @@
       underscore: '../bower_components/underscore/underscore',
       'underscore.string': '../bower_components/underscore.string/lib/underscore.string',
       text: '../bower_components/requirejs-text/text',
+      templates: '../templates',
       when: '../bower_components/when/when',
       moment: '../bower_components/moment/min/moment-with-langs.min',
 

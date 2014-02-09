@@ -4,7 +4,7 @@ define([
   'underscore',
   'app',
   'moment',
-  'text!../templates/repo-view.html'
+  'text!templates/repo-view.html'
 ], function (Backbone, _, app, moment, template) {
   'use strict';
 

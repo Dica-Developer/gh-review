@@ -6,7 +6,7 @@ define([
   'app',
   'reviewCollection',
   'reviewItemModel',
-  'text!../templates/repo-detail-view.html'
+  'text!templates/repo-detail-view.html'
 ], function (Backbone, _, when, app, reviewCollection, ReviewItemModel, template) {
   'use strict';
 

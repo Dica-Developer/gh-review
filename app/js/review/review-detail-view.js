@@ -6,7 +6,7 @@ define([
   'when',
   'commitCollection',
   'commitListItemView',
-  'text!../templates/review-detail.html'
+  'text!templates/review-detail.html'
 ], function (Backbone, app, _, when, commitCollection, CommitListItemView, template) {
   'use strict';
   var ReviewDetailView = Backbone.View.extend({
