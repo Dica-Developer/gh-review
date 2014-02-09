@@ -104,6 +104,8 @@ define([
       app.showIndicator(false);
     },
     render: function () {
+      $('li[name="ghr-top-menu-links"').removeClass('active');
+      $('#reviewLink').addClass('active');
       this.$el.html(this.template(this.model.toJSON()));
     }
   });
