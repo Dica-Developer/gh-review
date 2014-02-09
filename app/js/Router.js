@@ -65,7 +65,7 @@ define([
     clear: function () {
       if (this.view) {
         this.view.remove();
-        $('<div id="main"></div>').appendTo('body');
+        $('<div id="main" class="container"></div>').appendTo('body');
       }
     },
     initialize: function () {
