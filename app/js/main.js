@@ -32,7 +32,7 @@
       reviewListItemView: 'review/review-list-item-view',
       reviewDetailView: 'review/review-detail-view',
 
-      repoModel: 'repositories/repo-model',
+      RepoModel: 'repositories/repo-model',
       RepoCollection: 'repositories/repo-collection',
       repoView: 'repositories/repo-view',
       repoDetailView: 'repositories/repo-detail-view',

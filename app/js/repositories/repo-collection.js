@@ -3,12 +3,12 @@ define([
   'backbone',
   'underscore',
   'app',
-  'repoModel'
-], function (Backbone, _, app, repoModel) {
+  'RepoModel'
+], function (Backbone, _, app, RepoModel) {
   'use strict';
 
   var RepoCollection = Backbone.Collection.extend({
-    model: repoModel,
+    model: RepoModel,
     organizations: {},
     initialize: function () {
       this.getRepos();
