@@ -33,6 +33,9 @@ define(['githubRequests'], function(githubRequests){
       },
       githubReposGetAllUrl: function(){
         return new RegExp('https://api.github.com/user/repos', 'g');
+      },
+      githubReposFromOrgUrl: function(){
+        return new RegExp('https://api.github.com/orgs/(.*)/repos', 'g');
       }
     };
 
@@ -72,10 +75,19 @@ define(['githubRequests'], function(githubRequests){
 
     this.githubReposGetAll = function(manual){
       this.start(manual);
-      this.server.respondWith('GET', this.urls.githubUserGet(), [
+      this.server.respondWith('GET', this.urls.githubReposGetAllUrl(), [
         200,
         this.contentTypes.json,
         JSON.stringify(githubRequests.reposGetAll)
+      ]);
+    };
+
+    this.githubReposGetFromOrg = function(manual){
+      this.start(manual);
+      this.server.respondWith('GET', this.urls.githubReposFromOrgUrl(), [
+        200,
+        this.contentTypes.json,
+        JSON.stringify(githubRequests.reposGetFromOrg)
       ]);
     };
   }

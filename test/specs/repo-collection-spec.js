@@ -12,14 +12,16 @@ define([
 
     it('Should call .getRepos on initialization', function(){
       var getReposSpy = spyOn(RepoCollection.prototype, 'getRepos');
-      new RepoCollection();
+      var Collection = RepoCollection.extend();
+      new Collection();
       expect(getReposSpy).toHaveBeenCalled();
     });
 
     it('.getRepos should call github api', function(){
       var githubReposGetAllSpy = spyOn(app.github.repos, 'getAll');
       var githubUserGetOrgsSpy = spyOn(app.github.user, 'getOrgs');
-      new RepoCollection();
+      var Collection = RepoCollection.extend();
+      new Collection();
       expect(githubReposGetAllSpy).toHaveBeenCalled();
       expect(githubUserGetOrgsSpy).toHaveBeenCalled();
     });
@@ -28,7 +30,8 @@ define([
       server.githubReposGetAll();
       var getAllReposCallbackSpy = spyOn(RepoCollection.prototype, 'getAllReposCallback');
       spyOn(app.github.user, 'getOrgs');
-      new RepoCollection();
+      var Collection = RepoCollection.extend();
+      new Collection();
 
       waitsFor(function(){
         return server.server.requests[0].readyState === 4;
@@ -43,7 +46,8 @@ define([
     it('.getAllReposCallback should reset collection and add new repos', function(){
       spyOn(app.github.repos, 'getAll');
       spyOn(app.github.user, 'getOrgs');
-      var collection = new RepoCollection();
+      var Collection = RepoCollection.extend();
+      var collection = new Collection();
 
       collection.getAllReposCallback(null, githubRequests.reposGetAll);
 
@@ -54,7 +58,8 @@ define([
       server.githubUserGetOrgs();
       var getOrgsCallbackSpy = spyOn(RepoCollection.prototype, 'getOrgsCallback');
       spyOn(app.github.repos, 'getAll');
-      new RepoCollection();
+      var Collection = RepoCollection.extend();
+      new Collection();
 
       waitsFor(function(){
         return server.server.requests[0].readyState === 4;
@@ -71,7 +76,8 @@ define([
       spyOn(app.github.repos, 'getAll');
       spyOn(app.github.user, 'getOrgs').andCallThrough();
       var githubgetFromOrgSpy = spyOn(app.github.repos, 'getFromOrg');
-      var collection = new RepoCollection();
+      var Collection = RepoCollection.extend();
+      var collection = new Collection();
 
       waitsFor(function(){
         return server.server.requests[0].readyState === 4;
@@ -81,6 +87,47 @@ define([
         expect(githubgetFromOrgSpy).toHaveBeenCalled();
         expect(githubgetFromOrgSpy.calls.length).toBe(2);
         expect(_.size(collection.organizations)).toBe(2);
+        server.stop();
+      });
+    });
+
+    it('.getOrgRepos should should call github.repos.getFromOrg with existing org', function(){
+      server.githubReposGetFromOrg();
+      spyOn(app.github.repos, 'getAll');
+      spyOn(app.github.user, 'getOrgs');
+      var Collection = RepoCollection.extend();
+      var collection = new Collection();
+      collection.organizations = {};
+      collection.getOrgRepos([githubRequests.userGetOrgs[0]]);
+
+      waitsFor(function(){
+        return server.server.requests[0].readyState === 4;
+      });
+
+      runs(function(){
+        expect(collection.length).toBe(1);
+        expect(collection.models[0].get('organization')).toEqual(githubRequests.userGetOrgs[0]);
+        server.stop();
+      });
+    });
+
+    it('.getOrgRepos should should call github.repos.getFromOrg without existing org', function(){
+      server.githubReposGetFromOrg();
+      spyOn(app.github.repos, 'getAll');
+      spyOn(app.github.user, 'getOrgs');
+      var Collection = RepoCollection.extend();
+      var collection = new Collection();
+      collection.organizations = {};
+      collection.getOrgRepos([githubRequests.userGetOrgs[1]]);
+
+
+      waitsFor(function(){
+        return server.server.requests[0].readyState === 4;
+      });
+
+      runs(function(){
+        expect(collection.length).toBe(1);
+        expect(collection.models[0].get('organization')).toBeUndefined();
         server.stop();
       });
     });
