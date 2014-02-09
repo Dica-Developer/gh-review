@@ -58,10 +58,10 @@ define([
   GHReview.prototype.authenticate = function () {
     var _this = this;
     this.oauth = new OAuth(options);
-    this.oauth.onAccessTokenReceived = function(){
+    this.oauth.onAccessTokenReceived = function(accessToken) {
       _this.github.authenticate({
         type: 'token',
-        token: _this.oauth.accessToken
+        token: accessToken
       });
       endAuthorizationInProgress();
       _this.authenticated = true;

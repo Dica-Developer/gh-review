@@ -15,16 +15,20 @@
     this.redirectUri = config.redirectUri;
     this.accessTokenUrl = config.accessTokenUrl;
     var authCode = this.parseAuthorizationCode(window.location.href);
-    if (!authCode && typeof this.accessToken === 'undefined') {
-      this.doRedirect(this.authorizationCodeURL());
-    } else if(authCode && typeof this.accessToken === 'undefined') {
-      this.finishAuthorization(authCode);
-    } else if(!authCode && typeof this.accessToken !== 'undefined') {
-      var oauth = this;
-      localStorage.removeItem('ghreviewAccessToken');
-      window.setTimeout(function(){
-        oauth.onAccessTokenReceived();
-      }, 500);
+    if (!authCode) {
+      if (typeof this.accessToken === 'undefined') {
+        this.doRedirect(this.authorizationCodeURL());
+      } else {
+        var oauth = this;
+        localStorage.removeItem('ghreviewAccessToken');
+        window.setTimeout(function(){
+          oauth.onAccessTokenReceived(oauth.accessToken);
+        }, 500);
+      }
+    } else {
+      if (typeof this.accessToken === 'undefined') {
+        this.finishAuthorization(authCode);
+      }
     }
   }
 
