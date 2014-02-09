@@ -52,6 +52,8 @@ define([
       this.trigger('ajaxIndicator', true);
       var model = commitCollection.get(id);
       this.view = new CommentView({model: model});
+      this.view.getDiffAndComments()
+        .then(this.view.render.bind(this.view));
     },
     clear: function () {
       if (this.view) {
@@ -63,5 +65,5 @@ define([
       Backbone.history.start();
     }
   });
-  return new Router();
+  return Router;
 });

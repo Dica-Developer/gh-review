@@ -23,7 +23,7 @@
       GitHub: 'github/index',
       OAuth: 'oauth',
       app: 'app',
-      router: 'router',
+      Router: 'Router',
       chunk: 'chunk',
       topMenuView: 'top-menu/top-menu-view',
 
@@ -87,8 +87,8 @@
     });
 
     app.on('authenticated', function(){
-      requirejs(['router'], function (router) {
-        app.router = router;
+      requirejs(['Router'], function (Router) {
+        app.router = new Router();
         app.trigger('ready');
         app.router.navigate('', {trigger: true});
         app.router.on('ajaxIndicator', function (show) {
