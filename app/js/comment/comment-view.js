@@ -12,7 +12,6 @@ define([
 
   var chunkHeadingRegExp = new RegExp('@@.*?[-+](\\d+)(,\\d+){0,1}\\s[-+](\\d+)(,\\d+){0,1} @@', 'g');
   var EditCommentBox = CommentBoxes.edit;
-//  var ShowCommentBox = CommentBoxes.show;
 
   var CommentView = Backbone.View.extend({
     el: '#main',
@@ -65,12 +64,16 @@ define([
         fileIndex: fileIndex
       });
     },
+    renderComments: function(){
+      this.model.comments.addComments();
+    },
     approveCommit: function () {
       this.model.approveCommit();
     },
     render: function () {
       app.showIndicator(false);
       this.$el.html(this.template({model: this.model.toJSON(), files: this.files}));
+      this.renderComments();
     }
   });
 

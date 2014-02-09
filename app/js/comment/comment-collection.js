@@ -6,9 +6,7 @@ define(['backbone', 'commentModel', 'commentBox'], function (Backbone, CommentMo
 
   var CommentCollection = Backbone.Collection.extend({
     model: CommentModel,
-    initialize: function () {
-      this.on('reset', this.addComments, this);
-    },
+    initialize: function () {},
     addComments: function () {
       this.each(function (model) {
         new ShowCommentBoxView({model: model});
@@ -17,5 +15,5 @@ define(['backbone', 'commentModel', 'commentBox'], function (Backbone, CommentMo
   });
 
 
-  return new CommentCollection();
+  return CommentCollection;
 });

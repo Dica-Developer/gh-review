@@ -4,10 +4,12 @@ define([
   'underscore',
   'app',
   'when',
-  'commentCollection'
-], function (Backbone, _, app, when, commentCollection) {
+  'CommentCollection'
+], function (Backbone, _, app, when, CommentCollection) {
   'use strict';
   var CommitModel = Backbone.Model.extend({
+    comments: new CommentCollection(),
+    getCommitCommentsDefer: null,
     initialize: function () {
       this.id = this.get('sha');
       if(_.isNull(this.get('author'))){
@@ -35,18 +37,19 @@ define([
     },
     getCommitComments: function () {
       var _this = this;
-      var defer = when.defer();
+      this.getCommitCommentsDefer = when.defer();
       app.github.repos.getCommitComments({
         user: app.currentReviewData.user,
         repo: app.currentReviewData.repo,
         sha: _this.get('sha')
-      }, function (error, resp) {
-        if (!error) {
-          commentCollection.reset(resp);
-          defer.resolve();
-        }
-      });
-      return defer.promise;
+      }, this.getCommitCommentCallback.bind(this));
+      return this.getCommitCommentsDefer.promise;
+    },
+    getCommitCommentCallback: function (error, resp) {
+      if (!error) {
+        this.comments.reset(resp);
+        this.getCommitCommentsDefer.resolve();
+      }
     },
     addLineComment: function (fileIndex, position, comment) {
       var defer = when.defer();
