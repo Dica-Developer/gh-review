@@ -53,12 +53,23 @@ define([
     if(isAuthorizationInProgress()){
       this.authenticate();
     }
+    if(hasLocalStorage() && localStorage.accessToken) {
+      this.authenticated = true;
+      this.github.authenticate({
+        type: 'token',
+        token: localStorage.accessToken
+      });
+      this.trigger('authenticated');
+    }
   };
 
   GHReview.prototype.authenticate = function () {
     var _this = this;
     this.oauth = new OAuth(options);
     this.oauth.onAccessTokenReceived = function(accessToken) {
+      if (hasLocalStorage()) {
+        localStorage.accessToken = accessToken;
+      }
       _this.github.authenticate({
         type: 'token',
         token: accessToken
