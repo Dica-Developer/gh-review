@@ -2,41 +2,43 @@
 define(['backbone', 'when', 'app'], function (Backbone, when, app) {
   'use strict';
   var RepoModel = Backbone.Model.extend({
+    getBranchesDefer: null,
+    getContributorsDefer: null,
     initialize: function () {
       this.user = this.get('owner').login;
       this.repo = this.get('name');
     },
     getBranches: function () {
-      var defer = when.defer(),
-        _this = this;
+      this.getBranchesDefer = when.defer();
       if (this.get('branches')) {
-        defer.resolve();
+        this.getBranchesDefer.resolve();
       } else {
         app.github.repos.getBranches({
           user: this.user,
           repo: this.repo
-        }, function (error, res) {
-          _this.set('branches', res);
-          defer.resolve();
-        });
+        }, this.getBranchesCallback.bind(this));
       }
-      return defer.promise;
+      return this.getBranchesDefer.promise;
     },
     getContributors: function () {
-      var defer = when.defer(),
-        _this = this;
+      this.getContributorsDefer = when.defer();
       if (this.get('contributors')) {
-        defer.resolve();
+        this.getContributorsDefer.resolve();
       } else {
         app.github.repos.getContributors({
           user: this.user,
           repo: this.repo
-        }, function (error, res) {
-          _this.set('contributors', res);
-          defer.resolve();
-        });
+        }, this.getContributorsCallback.bind(this));
       }
-      return defer.promise;
+      return this.getContributorsDefer.promise;
+    },
+    getBranchesCallback: function (error, res) {
+      this.set('branches', res);
+      this.getBranchesDefer.resolve();
+    },
+    getContributorsCallback: function (error, res) {
+      this.set('contributors', res);
+      this.getContributorsDefer.resolve();
     }
   });
 
