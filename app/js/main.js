@@ -78,8 +78,6 @@
     //add moment to underscore to have access to moment in templates
     _.moment = moment;
 
-    app.init();
-
     app.ajaxIndicator = $('#ajaxIndicator').modal({
       backdrop: true,
       show: false,
@@ -96,5 +94,7 @@
         }, app);
       });
     });
+
+    app.init();
   });
 }());
