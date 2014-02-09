@@ -17,22 +17,16 @@ define([
   var CommentView = Backbone.View.extend({
     el: '#main',
     template: _.template(template),
+    files: [],
     commentBox: null,
-    initialize: function () {
-      var _this = this;
-      this.files = [];
-      this.model.getDiff()
-        .then(function () {
-          return _this.computeChunk();
-        })
-        .then(function () {
-          _this.render();
-          return _this.model.getCommitComments();
-        });
-    },
     events: {
       'click .added,.deleted': 'commentLine',
       'click .approveCommit': 'approveCommit'
+    },
+    getDiffAndComments: function(){
+      return this.model.getDiff()
+        .then(this.computeChunk.bind(this))
+        .then(this.model.getCommitComments.bind(this.model));
     },
     computeChunk: function () {
       var defer = when.defer();

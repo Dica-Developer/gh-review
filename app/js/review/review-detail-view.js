@@ -12,6 +12,7 @@ define([
   var ReviewDetailView = Backbone.View.extend({
     el: '#main',
     template: _.template(template),
+    getCommitsRefer: null,
     events: {
       'click .previous': 'getPreviousPage',
       'click .next': 'getNextPage',
@@ -41,7 +42,6 @@ define([
       if(!_.isEmpty(attributes.path)){
         app.currentReviewData.path = attributes.path;
       }
-      this.getCommits();
     },
     storeMetaToModel: function (commits) {
       this.model.set('hasNext', app.github.hasNextPage(commits.meta.link));
@@ -50,15 +50,16 @@ define([
       this.model.set('currentLink', commits.meta.link);
     },
     getCommits: function () {
-      var _this = this;
-      app.github.repos.getCommits(app.currentReviewData, function (error, commits) {
-        if (!error) {
-          _this.storeMetaToModel(commits);
-          commitCollection.reset(commits);
-          _this.render();
-          _this.renderAllCommits();
-        }
-      });
+      this.getCommitsRefer = when.defer();
+      app.github.repos.getCommits(app.currentReviewData, this.getCommitsCallback.bind(this));
+      return this.getCommitsRefer.promise;
+    },
+    getCommitsCallback: function (error, commits) {
+      if (!error) {
+        this.storeMetaToModel(commits);
+        commitCollection.reset(commits);
+        this.getCommitsRefer.resolve();
+      }
     },
     getPreviousPage: function () {
       var _this = this;

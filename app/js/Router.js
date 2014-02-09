@@ -28,6 +28,8 @@ define([
     reviewList: function () {
       this.clear();
       this.view = new ReviewListView();
+      this.view.render();
+      this.view.fetchReviews();
     },
     repositories: function () {
       this.clear();
@@ -46,6 +48,11 @@ define([
       this.trigger('ajaxIndicator', true);
       var model = reviewCollection.get(id);
       this.view = new ReviewDetailView({model: model});
+      this.view.getCommits()
+        .then(function(){
+          this.view.render();
+          this.view.renderAllCommits();
+        }.bind(this));
     },
     showCommit: function (id) {
       this.clear();

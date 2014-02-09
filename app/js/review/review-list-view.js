@@ -5,22 +5,21 @@ define([
   'app',
   'reviewCollection',
   'reviewListItemView'
-], function (Backbone, _, app, reviews, ReviewListItemView) {
+], function (Backbone, _, app, reviewCollection, ReviewListItemView) {
   'use strict';
 
   var ReviewListView = Backbone.View.extend({
     el: '#main',
-    initialize: function () {
-      reviews.fetch();
-      this.render();
-      if (reviews.length) {
+    events: {
+      'click li': 'showDetail'
+    },
+    fetchReviews: function(){
+      reviewCollection.fetch();
+      if (reviewCollection.length) {
         this.addAll();
       } else {
         this.showHint();
       }
-    },
-    events: {
-      'click li': 'showDetail'
     },
     showDetail: function (event) {
       app.router.navigate('review/' + $(event.target).data('modelid'), {trigger: true});
@@ -30,7 +29,7 @@ define([
       this.$('#reviewList').append(view.render().el);
     },
     addAll: function () {
-      reviews.each(this.addOne, this);
+      reviewCollection.each(this.addOne, this);
     },
     showHint: function () {
     },
