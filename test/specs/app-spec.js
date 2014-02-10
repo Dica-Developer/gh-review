@@ -63,8 +63,7 @@ define(['jquery', 'underscore', 'app', 'GitHub', 'OAuth', 'bootstrap'], function
           var authenticateSpy = spyOn(GitHub.prototype, 'authenticate');
           spyOn(OAuth.prototype, 'doRedirect');
           tmpApp.authenticate();
-          tmpApp.oauth.accessToken = 'testToken';
-          tmpApp.oauth.onAccessTokenReceived();
+          tmpApp.oauth.onAccessTokenReceived('testToken');
           expect(authenticateSpy).toHaveBeenCalledWith({ type : 'token', token : 'testToken' });
         });
 
