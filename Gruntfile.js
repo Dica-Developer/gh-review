@@ -224,4 +224,8 @@ module.exports = function (grunt) {
     'coveralls'
   ]);
 
+  grunt.registerTask('test', [
+    'karma:dev'
+  ]);
+
 };
