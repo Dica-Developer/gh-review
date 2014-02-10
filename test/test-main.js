@@ -59,7 +59,7 @@
 
       commentView: '../app/js/comment/comment-view',
       commentBox: '../app/js/comment/comment-box',
-      commentModel: '../app/js/comment/comment-model',
+      CommentModel: '../app/js/comment/comment-model',
       CommentCollection: '../app/js/comment/Comment-collection',
 
       userModel: '../app/js/user-model',

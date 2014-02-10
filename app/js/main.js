@@ -44,7 +44,7 @@
 
       commentView: 'comment/comment-view',
       commentBox: 'comment/comment-box',
-      commentModel: 'comment/comment-model',
+      CommentModel: 'comment/comment-model',
       CommentCollection: 'comment/Comment-collection',
 
       UserModel: 'user-model',

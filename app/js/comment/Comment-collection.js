@@ -1,5 +1,5 @@
 /*global define*/
-define(['backbone', 'commentModel', 'commentBox'], function (Backbone, CommentModel, CommentBoxes) {
+define(['backbone', 'CommentModel', 'commentBox'], function (Backbone, CommentModel, CommentBoxes) {
   'use strict';
 
   var ShowCommentBoxView = CommentBoxes.show;
