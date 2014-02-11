@@ -14,7 +14,6 @@ define([
       'click li': 'showDetail'
     },
     fetchReviews: function(){
-      reviewCollection.fetch();
       if (reviewCollection.length) {
         this.addAll();
       } else {
