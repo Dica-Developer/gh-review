@@ -34,8 +34,6 @@ define([
     showHint: function () {
     },
     render: function () {
-      $('li[name="ghr-top-menu-links"]').removeClass('active');
-      $('#reviewLink').addClass('active');
       this.$el.html('<ul id="reviewList" class="list-group"></ul>');
     }
   });

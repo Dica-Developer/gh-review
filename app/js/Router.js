@@ -30,18 +30,24 @@ define([
       this.view = new ReviewListView();
       this.view.render();
       this.view.fetchReviews();
+      $('li[name="ghr-top-menu-links"]').removeClass('active');
+      $('#reviewLink').addClass('active');
     },
     repositories: function () {
       this.clear();
       this.trigger('ajaxIndicator', true);
       repoCollection = new RepoCollection();
       this.view = new RepoView({collection: repoCollection});
+      $('li[name="ghr-top-menu-links"]').removeClass('active');
+      $('#repositoryLink').addClass('active');
     },
     repoDetail: function (id) {
       this.clear();
       this.trigger('ajaxIndicator', true);
       var model = repoCollection.get(id);
       this.view = new RepoDetailView({model: model});
+      $('li[name="ghr-top-menu-links"]').removeClass('active');
+      $('#repositoryLink').addClass('active');
     },
     reviewDetail: function (id) {
       this.clear();
@@ -53,6 +59,8 @@ define([
           this.view.render();
           this.view.renderAllCommits();
         }.bind(this));
+      $('li[name="ghr-top-menu-links"]').removeClass('active');
+      $('#reviewLink').addClass('active');
     },
     showCommit: function (id) {
       this.clear();

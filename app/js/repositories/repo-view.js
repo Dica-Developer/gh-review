@@ -44,8 +44,6 @@ define([
       this.render();
     },
     render: function () {
-      $('li[name="ghr-top-menu-links"]').removeClass('active');
-      $('#repositoryLink').addClass('active');
       this.$el.html(this.template(this.serialize()));
       app.showIndicator(false);
     }
