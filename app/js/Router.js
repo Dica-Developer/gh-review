@@ -37,7 +37,9 @@ define([
       this.clear();
       this.trigger('ajaxIndicator', true);
       repoCollection = new RepoCollection();
-      this.view = new RepoView({collection: repoCollection});
+      this.view = new RepoView({
+        collection: repoCollection
+      });
       $('li[name="ghr-top-menu-links"]').removeClass('active');
       $('#repositoryLink').addClass('active');
     },
@@ -45,7 +47,9 @@ define([
       this.clear();
       this.trigger('ajaxIndicator', true);
       var model = repoCollection.get(id);
-      this.view = new RepoDetailView({model: model});
+      this.view = new RepoDetailView({
+        model: model
+      });
       $('li[name="ghr-top-menu-links"]').removeClass('active');
       $('#repositoryLink').addClass('active');
     },
@@ -53,9 +57,11 @@ define([
       this.clear();
       this.trigger('ajaxIndicator', true);
       var model = reviewCollection.get(id);
-      this.view = new ReviewDetailView({model: model});
+      this.view = new ReviewDetailView({
+        model: model
+      });
       this.view.getCommits()
-        .then(function(){
+        .then(function () {
           this.view.render();
           this.view.renderAllCommits();
         }.bind(this));
@@ -66,7 +72,9 @@ define([
       this.clear();
       this.trigger('ajaxIndicator', true);
       var model = commitCollection.get(id);
-      this.view = new CommentView({model: model});
+      this.view = new CommentView({
+        model: model
+      });
       this.view.getDiffAndComments()
         .then(this.view.render.bind(this.view));
     },
