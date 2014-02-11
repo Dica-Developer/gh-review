@@ -25,7 +25,7 @@
       app: 'app',
       Router: 'Router',
       chunk: 'chunk',
-      topMenuView: 'top-menu/top-menu-view',
+      TopMenuView: 'top-menu/top-menu-view',
 
       reviewCollection: 'review/review-collection',
       reviewItemModel: 'review/review-item-model',
@@ -47,7 +47,10 @@
       commentModel: 'comment/comment-model',
       CommentCollection: 'comment/Comment-collection',
 
-      UserModel: 'user-model'
+      UserModel: 'user-model',
+
+      LoginView: 'login/login-view',
+      OauthView: 'oauth/oauth-view'
     },
     shim: {
       underscore: {
@@ -68,13 +71,14 @@
   requirejs([
     'jquery',
     'app',
+    'Router',
+    'TopMenuView',
     'underscore',
     'moment',
     'underscore.string',
     'backboneLocalStorage',
-    'bootstrap',
-    'topMenuView'
-  ], function ($, app, _, moment) {
+    'bootstrap'
+  ], function ($, app, Router, TopMenuView, _, moment) {
     //add moment to underscore to have access to moment in templates
     _.moment = moment;
 
@@ -84,17 +88,11 @@
       keyboard: false
     });
 
-    app.on('authenticated', function(){
-      requirejs(['Router'], function (Router) {
-        app.router = new Router();
-        app.trigger('ready');
-        app.router.navigate('', {trigger: true});
-        app.router.on('ajaxIndicator', function (show) {
-          this.showIndicator(show);
-        }, app);
-      });
-    });
-
+    app.router = new Router();
+    app.router.on('ajaxIndicator', function (show) {
+      this.showIndicator(show);
+    }, app);
     app.init();
+    new TopMenuView();
   });
 }());

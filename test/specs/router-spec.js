@@ -6,36 +6,39 @@ define([
   'RepoCollection',
   'repoView',
   'repoDetailView',
-  'reviewCollection',
   'reviewListView',
   'reviewDetailView',
-  'commitCollection',
   'commentView',
+  'app',
+  'underscore',
   'backboneLocalStorage'
-], function(Backbone, when, Router, RepoCollection, RepoView, RepoDetailView, reviewCollection, ReviewListView, ReviewDetailView, commitCollection, CommentView){
+], function (Backbone, when, Router, RepoCollection, RepoView, RepoDetailView, ReviewListView, ReviewDetailView, CommentView, app, _) {
   'use strict';
 
-  describe('#Router', function(){
-    it('Should be defined', function(){
+  describe('#Router', function () {
+    it('Should be defined', function () {
       expect(Router).toBeDefined();
     });
 
-    describe('methods', function(){
+    describe('methods', function () {
 
-      var router = null, routerClearSpy = null;
+      var router = null,
+        routerClearSpy = null;
 
-      beforeEach(function(){
-        var TmpRouter = Router.extend({initialize: function(){}});
+      beforeEach(function () {
+        var TmpRouter = Router.extend({
+          initialize: function () {}
+        });
         router = new TmpRouter();
         routerClearSpy = spyOn(router, 'clear').andCallThrough();
       });
 
-      afterEach(function(){
+      afterEach(function () {
         router = null;
         routerClearSpy = null;
       });
 
-      it('.reviewList should init new #ReviewListView', function(){
+      it('.reviewList should init new #ReviewListView', function () {
         var reviewListViewSpy = spyOn(ReviewListView.prototype, 'initialize');
         var renderSpy = spyOn(ReviewListView.prototype, 'render');
         var fetchReviewsSpy = spyOn(ReviewListView.prototype, 'fetchReviews');
@@ -50,7 +53,7 @@ define([
 
       });
 
-      it('.repositories should init new #RepoCollection and #RepoView', function(){
+      it('.repositories should init new #RepoCollection and #RepoView', function () {
         var repoCollectionSpy = spyOn(RepoCollection.prototype, 'initialize');
         var repoViewSpy = spyOn(RepoView.prototype, 'initialize');
 
@@ -63,7 +66,9 @@ define([
 
       });
 
-      it('.repoDetail should init new #RepoDetailView', function(){
+      it('.repoDetail should init new #RepoDetailView if authenticated', function () {
+        var tmpApp = _.extend({}, app);
+        app.authenticated = true;
         var repoDetailViewSpy = spyOn(RepoDetailView.prototype, 'initialize');
 
         router.repoDetail();
@@ -71,10 +76,20 @@ define([
         expect(routerClearSpy).toHaveBeenCalled();
         expect(repoDetailViewSpy).toHaveBeenCalled();
         expect(router.view instanceof RepoDetailView).toBeTruthy();
+      });
+
+      it('.repoDetail should not init new #RepoDetailView if not authenticated', function () {
+        var repoDetailViewSpy = spyOn(RepoDetailView.prototype, 'initialize');
+
+        router.repoDetail();
+
+        expect(routerClearSpy).not.toHaveBeenCalled();
+        expect(repoDetailViewSpy).not.toHaveBeenCalled();
+        expect(router.view instanceof RepoDetailView).toBeFalsy();
 
       });
 
-      it('.reviewDetail should init new #ReviewDetailView', function(){
+      it('.reviewDetail should init new #ReviewDetailView', function () {
         var reviewDetailViewSpy = spyOn(ReviewDetailView.prototype, 'initialize');
 
         router.reviewDetail();
@@ -85,15 +100,14 @@ define([
 
       });
 
-      it('.showCommit should init new #CommentView', function(){
+      it('.showCommit should init new #CommentView', function () {
         var commentViewSpy = spyOn(CommentView.prototype, 'initialize');
         var getDiffAndCommentsSpy = spyOn(CommentView.prototype, 'getDiffAndComments').andReturn(
-          when.promise(function(resolve) {
+          when.promise(function (resolve) {
             resolve();
           })
         );
         var renderSpy = spyOn(CommentView.prototype, 'render');
-
 
         router.showCommit();
 
@@ -105,7 +119,7 @@ define([
         expect(router.view instanceof CommentView).toBeTruthy();
       });
 
-      it('.clear should remove view if present', function(){
+      it('.clear should remove view if present', function () {
         var View = Backbone.View.extend();
         router.view = new View();
         spyOn(View.prototype, 'remove');
@@ -114,9 +128,9 @@ define([
         expect(View.prototype.remove).toHaveBeenCalled();
       });
 
-      it('.initialize should start Backbone.history', function(){
+      it('.initialize should start Backbone.history', function () {
         spyOn(Backbone.history, 'start');
-        var newRouter = new Router();
+        new Router();
 
         expect(Backbone.history.start).toHaveBeenCalled();
       });

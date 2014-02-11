@@ -16,15 +16,8 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <div style="padding-right: 15px;">
-                    <%if (authenticated) {%>
-                        <%if (!_.isUndefined(avatar)) {%>
-                            <img src="<%=avatar%>" height="50"/>
-                        <%}%>
-                        <%=ghName%>
-                    <%} else {%>
-                        <button id="login" type="button" class="btn btn-default navbar-btn">Sign in with Github</button>
-                    <%}%>
+                    <div id="loginLogoutContainer" style="padding-right: 15px;">
+                        <a href="#login" class="btn btn-default navbar-btn" role="button">Sign in with Github</a>
                     </div>
                 </li>
             </ul>

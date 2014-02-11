@@ -4,11 +4,11 @@ define(['backbone', 'app'], function (Backbone, app) {
 
   var UserModel = Backbone.Model.extend({
     initialize: function () {
-      app.on('ready', this.getUserData, this);
+      this.getUserData();
     },
     getUserData: function () {
       var _this = this;
-      app.github.user.get({}, function(error, res){
+      app.github.user.get({}, function (error, res) {
         _this.handleResponse(error, res);
       });
     },

@@ -2,6 +2,7 @@
 define([
   'jquery',
   'backbone',
+  'app',
   'RepoCollection',
   'repoView',
   'repoDetailView',
@@ -9,8 +10,10 @@ define([
   'reviewListView',
   'reviewDetailView',
   'commitCollection',
-  'commentView'
-], function ($, Backbone, RepoCollection, RepoView, RepoDetailView, reviewCollection, ReviewListView, ReviewDetailView, commitCollection, CommentView) {
+  'commentView',
+  'OauthView',
+  'LoginView'
+], function ($, Backbone, app, RepoCollection, RepoView, RepoDetailView, reviewCollection, ReviewListView, ReviewDetailView, commitCollection, CommentView, OauthView, LoginView) {
   'use strict';
 
   var repoCollection = null;
@@ -18,12 +21,15 @@ define([
   var Router = Backbone.Router.extend({
     view: null,
     routes: {
-      '': 'reviewList',
+      '': 'root',
       'reviews': 'reviewList',
       'repositories': 'repositories',
       'repo/:id': 'repoDetail',
       'review/:id': 'reviewDetail',
-      'commit/:id': 'showCommit'
+      'commit/:id': 'showCommit',
+      'login': 'login',
+      'oauth/accesstoken': 'getAccessToken',
+      'oauth/callback': 'callback'
     },
     reviewList: function () {
       this.clear();
@@ -34,24 +40,28 @@ define([
       $('#reviewLink').addClass('active');
     },
     repositories: function () {
-      this.clear();
-      this.trigger('ajaxIndicator', true);
-      repoCollection = new RepoCollection();
-      this.view = new RepoView({
-        collection: repoCollection
-      });
-      $('li[name="ghr-top-menu-links"]').removeClass('active');
-      $('#repositoryLink').addClass('active');
+      if (app.authenticated) {
+        this.clear();
+        this.trigger('ajaxIndicator', true);
+        repoCollection = new RepoCollection();
+        this.view = new RepoView({
+          collection: repoCollection
+        });
+        $('li[name="ghr-top-menu-links"]').removeClass('active');
+        $('#repositoryLink').addClass('active');
+      }
     },
     repoDetail: function (id) {
-      this.clear();
-      this.trigger('ajaxIndicator', true);
-      var model = repoCollection.get(id);
-      this.view = new RepoDetailView({
-        model: model
-      });
-      $('li[name="ghr-top-menu-links"]').removeClass('active');
-      $('#repositoryLink').addClass('active');
+      if (app.authenticated) {
+        this.clear();
+        this.trigger('ajaxIndicator', true);
+        var model = repoCollection.get(id);
+        this.view = new RepoDetailView({
+          model: model
+        });
+        $('li[name="ghr-top-menu-links"]').removeClass('active');
+        $('#repositoryLink').addClass('active');
+      }
     },
     reviewDetail: function (id) {
       this.clear();
@@ -86,6 +96,30 @@ define([
     },
     initialize: function () {
       Backbone.history.start();
+    },
+    login: function () {
+      this.clear();
+      this.view = new LoginView();
+    },
+    getAccessToken: function () {
+      this.clear();
+      this.view = new OauthView();
+      this.view.getAccessToken();
+    },
+    callback: function () {
+      // TODO currently handled by root non authenticated case
+      this.clear();
+      this.view = new OauthView();
+      this.view.callback();
+    },
+    root: function () {
+      var url = window.location.href;
+      var error = url.match(/[&\?]error=([^&]+)/);
+      var code = url.match(/[&\?]code=([\w\/\-]+)/);
+      if (!app.authenticated && (error || code)) {
+        this.view = new OauthView();
+        this.view.callback();
+      }
     }
   });
   return Router;

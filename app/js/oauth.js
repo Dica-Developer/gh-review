@@ -1,58 +1,37 @@
-/*global define, localStorage*/
+/*global define*/
 (function () {
   'use strict';
 
-  var localStorageAvailable = function(){
-    return (typeof localStorage !== 'undefined');
-  };
-
   function OAuth2(config) {
-    var accessToken;
-    if(localStorageAvailable()){
-      accessToken = localStorage.ghreviewAccessToken;
-    }
     this.clientId = config.clientId;
     this.apiScope = config.apiScope;
     this.redirectUri = config.redirectUri;
     this.accessTokenUrl = config.accessTokenUrl;
-    var authCode = this.parseAuthorizationCode(window.location.href);
-    if (!authCode) {
-      if (typeof accessToken === 'undefined') {
-        this.doRedirect(this.authorizationCodeURL());
-      } else {
-        var oauth = this;
-        localStorage.removeItem('ghreviewAccessToken');
-        window.setTimeout(function(){
-          oauth.onAccessTokenReceived(accessToken);
-        }, 500);
-      }
-    } else {
-      if (typeof accessToken === 'undefined') {
-        this.finishAuthorization(authCode);
-      }
-    }
   }
 
+  OAuth2.prototype.startAuthentication = function () {
+    this.doRedirect(this.authorizationCodeURL());
+  };
 
-  OAuth2.prototype.doRedirect = function(url){
+  OAuth2.prototype.doRedirect = function (url) {
     window.location.href = url;
   };
 
-  OAuth2.prototype.finishAuthorization = function(authCode){
-    var oauth = this;
+  OAuth2.prototype.finishAuthentication = function (callback) {
+    var authCode = this.parseAuthorizationCode(window.location.href);
     var xhr = new XMLHttpRequest();
     xhr.open('POST', this.getAccessTokenURL(authCode), true);
-    xhr.onreadystatechange = function(){
-      if(xhr.readyState === 4){
-        if(xhr.status === 200){
-          oauth.setAccessToken(JSON.parse(xhr.responseText));
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          callback(JSON.parse(xhr.responseText));
         }
       }
     };
     xhr.send(null);
   };
 
-  OAuth2.prototype.authorizationCodeURL = function() {
+  OAuth2.prototype.authorizationCodeURL = function () {
     return ('https://github.com/login/oauth/authorize?' +
       'client_id={{CLIENT_ID}}&' +
       'redirect_uri={{REDIRECT_URI}}&' +
@@ -62,7 +41,7 @@
       .replace('{{API_SCOPE}}', this.apiScope);
   };
 
-  OAuth2.prototype.getAccessTokenURL = function(authCode) {
+  OAuth2.prototype.getAccessTokenURL = function (authCode) {
     return (this.accessTokenUrl + '?' +
       'client_id={{CLIENT_ID}}&' +
       'code={{CODE}}&' +
@@ -72,33 +51,23 @@
       .replace('{{API_SCOPE}}', this.apiScope);
   };
 
-  OAuth2.prototype.parseAuthorizationCode = function(url) {
+  OAuth2.prototype.parseAuthorizationCode = function (url) {
     var error = url.match(/[&\?]error=([^&]+)/);
     var code = url.match(/[&\?]code=([\w\/\-]+)/);
     if (error) {
       throw 'Error getting authorization code: ' + error[1];
     }
-    if(code){
+    if (code) {
       code = code[1];
     }
     return code;
   };
 
-  OAuth2.prototype.setAccessToken = function(response) {
-    /*jshint camelcase:false*/
-    localStorage.ghreviewAccessToken = response.access_token;
-    var url = window.location.protocol + '//' + window.location.host + window.location.pathname;
-    this.doRedirect(url);
-  };
-
-  OAuth2.prototype.onAccessTokenReceived = function(){};
-
-  if(typeof define === 'function'){
-    define(function(){
+  if (typeof define === 'function') {
+    define(function () {
       return OAuth2;
     });
-  }else{
+  } else {
     window.OAuth2 = OAuth2;
   }
-
 }());

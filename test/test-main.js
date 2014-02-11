@@ -62,9 +62,10 @@
       commentModel: '../app/js/comment/comment-model',
       CommentCollection: '../app/js/comment/Comment-collection',
 
-      userModel: '../app/js/user-model'
+      userModel: '../app/js/user-model',
 
-
+      LoginView: '../app/js/login/login-view',
+      OauthView: '../app/js/oauth/oauth-view'
     },
     map: {
       GitHub: {

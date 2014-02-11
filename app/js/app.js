@@ -1,40 +1,12 @@
 /*global define, window, localStorage*/
 define([
   'backbone',
-  'underscore',
-  'when',
-  'OAuth',
-  'GitHub',
-  'options'
-], function (Backbone, _, when, OAuth, GitHub, options) {
+  'GitHub'
+], function (Backbone, GitHub) {
   'use strict';
 
-  function hasLocalStorage(){
-    try {
-      localStorage.setItem('test', 'test');
-      localStorage.removeItem('test', 'test');
-      return true;
-    } catch(e) {
-      return false;
-    }
-  }
-
-  function isAuthorizationInProgress(){
-    var authorizationInProgress = false;
-    if(hasLocalStorage()){
-      authorizationInProgress = localStorage.inAuthorizationProcess || false;
-    } else {
-      //TODO add cookie fallback if no localStorage is available
-    }
-    return authorizationInProgress;
-  }
-
-  function endAuthorizationInProgress(){
-    if(hasLocalStorage()){
-      localStorage.removeItem('inAuthorizationProcess');
-    } else {
-      //TODO add cookie fallback if no localStorage is available
-    }
+  function hasLocalStorage() {
+    return (typeof localStorage !== 'undefined');
   }
 
   function GHReview() {
@@ -44,40 +16,21 @@ define([
     this.ajaxIndicatorIsVisible = false;
     this.user = null;
     this.github = new GitHub({});
-    this.oauth = null;
   }
 
   GHReview.prototype = Backbone.Events;
 
-  GHReview.prototype.init = function(){
-    if(isAuthorizationInProgress()){
-      this.authenticate();
-    }
-    if(hasLocalStorage() && localStorage.accessToken) {
+  GHReview.prototype.init = function () {
+    if (hasLocalStorage() && localStorage.accessToken) {
       this.authenticated = true;
       this.github.authenticate({
         type: 'token',
         token: localStorage.accessToken
       });
-      this.trigger('authenticated');
-    }
-  };
-
-  GHReview.prototype.authenticate = function () {
-    var _this = this;
-    this.oauth = new OAuth(options);
-    this.oauth.onAccessTokenReceived = function(accessToken) {
-      if (hasLocalStorage()) {
-        localStorage.accessToken = accessToken;
-      }
-      _this.github.authenticate({
-        type: 'token',
-        token: accessToken
+      this.router.navigate('#reviews', {
+        trigger: true
       });
-      endAuthorizationInProgress();
-      _this.authenticated = true;
-      _this.trigger('authenticated');
-    };
+    }
   };
 
   GHReview.prototype.showIndicator = function (show) {

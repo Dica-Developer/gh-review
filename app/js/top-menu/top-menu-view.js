@@ -13,28 +13,24 @@ define([
     model: null,
     template: _.template(template),
     initialize: function () {
-      this.listenTo(app, 'authenticated', this.renderAuthenticatedView);
+      if (app.authenticated) {
+        this.model = new UserModel();
+        this.model.on('change', this.setAvatarAndLogout, this);
+      }
       this.render();
     },
-    renderAuthenticatedView: function(){
-      this.model = new UserModel();
-      this.model.on('change', this.render, this);
-    },
-    serialize: function () {
-      return {
-        ghName: this.model.get('name'),
-        avatar: this.model.get('avatar_url'),
-        authenticated: true
-      };
+    setAvatarAndLogout: function () {
+      var container = this.$('#loginLogoutContainer');
+      var avatarUrl = this.model.get('avatar_url');
+      var content = '';
+      if (avatarUrl) {
+        content = content + '<img src="' + avatarUrl + '" height="50"/>';
+      }
+      content = content + this.model.get('name');
+      container.html(content);
     },
     events: {
-      'change #selectRepo': 'showRepoDetail',
-      'click #login': 'login'
-    },
-    login: function(event){
-      event.stopPropagation();
-      localStorage.inAuthorizationProcess = true;
-      app.authenticate();
+      'change #selectRepo': 'showRepoDetail'
     },
     showRepoDetail: function (event) {
       var target = $(event.target),
@@ -42,13 +38,9 @@ define([
       app.router.navigate('#repo/' + option.data('id'), {trigger: true});
     },
     render: function () {
-      if(app.authenticated){
-        this.$el.html(this.template(this.serialize()));
-      }else{
-        this.$el.html(this.template({authenticated: false}));
-      }
+      this.$el.html(this.template());
     }
   });
 
-  return new TopMenuView();
+  return TopMenuView;
 });
