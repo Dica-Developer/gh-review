@@ -9,17 +9,9 @@ define(['server', 'githubResponses', 'app', 'userModel'], function(server, githu
     });
 
     describe('new UserModel()', function(){
-
-      it('Should not call github api until app triggers ready event', function(){
-        var githubUserGetSpy = spyOn(app.github.user, 'get');
-        new UserModel();
-        expect(githubUserGetSpy).not.toHaveBeenCalled();
-      });
-
-      it('Should call github api if app triggers ready event', function(){
+      it('Should init user data on init', function(){
         var githubGithubUserSpy = spyOn(app.github.user, 'get');
         new UserModel();
-        app.trigger('ready');
         expect(githubGithubUserSpy).toHaveBeenCalled();
       });
 
