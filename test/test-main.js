@@ -64,7 +64,7 @@
 
       userModel: '../app/js/user-model',
 
-      loginLogout: '../app/js/login/loginLogout ',
+      loginLogout: '../app/js/login/loginLogout',
       OauthView: '../app/js/oauth/oauth-view'
     },
     map: {
