@@ -14,14 +14,15 @@ define([
     });
   }
 
-  function deleteAccessToken (){
-    if(hasLocalStorage()){
-      localStorage.removeItem('accessToken');
-    }
+  function redirectToRoot() {
+    window.location.href = window.location.protocol + '//' + window.location.host + window.location.pathname;
   }
 
   function logout(){
-    deleteAccessToken();
+    if(hasLocalStorage()){
+      localStorage.removeItem('accessToken');
+    }
+    redirectToRoot();
   }
 
   return {
