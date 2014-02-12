@@ -5,7 +5,7 @@ define([
   'app',
   'Router',
   'RepoCollection',
-  'repoView',
+  'RepoView',
   'repoDetailView',
   'reviewListView',
   'reviewDetailView',

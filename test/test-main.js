@@ -50,7 +50,7 @@
 
       RepoModel: '../app/js/repositories/repo-model',
       RepoCollection: '../app/js/repositories/repo-collection',
-      repoView: '../app/js/repositories/repo-view',
+      RepoView: '../app/js/repositories/repo-view',
       repoDetailView: '../app/js/repositories/repo-detail-view',
 
       commitModel: '../app/js/commits/commit-model',

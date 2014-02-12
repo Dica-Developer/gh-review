@@ -35,7 +35,7 @@
 
       RepoModel: 'repositories/repo-model',
       RepoCollection: 'repositories/repo-collection',
-      repoView: 'repositories/repo-view',
+      RepoView: 'repositories/repo-view',
       repoDetailView: 'repositories/repo-detail-view',
 
       commitModel: 'commits/commit-model',

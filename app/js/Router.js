@@ -4,7 +4,7 @@ define([
   'backbone',
   'app',
   'RepoCollection',
-  'repoView',
+  'RepoView',
   'repoDetailView',
   'reviewCollection',
   'reviewListView',
