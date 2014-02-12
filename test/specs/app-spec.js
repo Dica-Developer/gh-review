@@ -8,15 +8,6 @@ define(['jquery', 'underscore', 'app', 'bootstrap'], function ($, _, app) {
       expect(app).toBeDefined();
     });
 
-    it('Should call #GH-Review.authenticate if localStorage "inAuthorizationProcess" is present', function () {
-      var tmpApp = _.extend({}, app);
-      var authenticateSpy = spyOn(tmpApp, 'authenticate');
-      localStorage.inAuthorizationProcess = true;
-      tmpApp.init();
-      localStorage.removeItem('inAuthorizationProcess');
-      expect(authenticateSpy).toHaveBeenCalled();
-    });
-
     describe('.showIndicator', function () {
       var indicator = null,
         tmpApp = null;
