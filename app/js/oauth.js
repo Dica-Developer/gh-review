@@ -24,7 +24,9 @@
     xhr.onreadystatechange = function () {
       if (xhr.readyState === 4) {
         if (xhr.status === 200) {
-          callback(JSON.parse(xhr.responseText));
+          callback(JSON.parse(xhr.responseText), null);
+        } else {
+          callback(null, {status: xhr.status, message: xhr.responseText});
         }
       }
     };
