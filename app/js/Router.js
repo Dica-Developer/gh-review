@@ -1,20 +1,19 @@
 /*global define*/
-define([
-  'jquery',
-  'backbone',
-  'app',
-  'RepoCollection',
-  'RepoView',
-  'repoDetailView',
-  'reviewCollection',
-  'reviewListView',
-  'reviewDetailView',
-  'commitCollection',
-  'commentView',
-  'OauthView',
-  'loginLogout'
-], function ($, Backbone, app, RepoCollection, RepoView, RepoDetailView, ReviewCollection, ReviewListView, ReviewDetailView, commitCollection, CommentView, OauthView, loginLogout) {
+define(function (require) {
   'use strict';
+  var $ = require('jquery');
+  var Backbone = require('backbone');
+  var app = require('app');
+  var RepoCollection = require('RepoCollection');
+  var RepoView = require('RepoView');
+  var RepoDetailView = require('repoDetailView');
+  var ReviewCollection = require('reviewCollection');
+  var ReviewListView = require('reviewListView');
+  var ReviewDetailView = require('reviewDetailView');
+  var commitCollection = require('commitCollection');
+  var CommentView = require('commentView');
+  var OauthView = require('OauthView');
+  var loginLogout = require('loginLogout');
 
   var repoCollection = null;
 
@@ -96,10 +95,6 @@ define([
         $('<div id="main" class="container"></div>').appendTo('body');
       }
     },
-    initialize: function () {
-      this.reviewCollection = new ReviewCollection();
-      Backbone.history.start();
-    },
     login: loginLogout.login,
     logout: loginLogout.logout,
     getAccessToken: function () {
@@ -121,6 +116,10 @@ define([
         this.view = new OauthView();
         this.view.callback();
       }
+    },
+    initialize: function () {
+      this.reviewCollection = new ReviewCollection();
+      Backbone.history.start();
     }
   });
   return Router;
