@@ -57,7 +57,7 @@
     var error = url.match(/[&\?]error=([^&]+)/);
     var code = url.match(/[&\?]code=([\w\/\-]+)/);
     if (error) {
-      throw 'Error getting authorization code: ' + error[1];
+      throw new Error('Error getting authorization code: ' + error[1]);
     }
     if (code) {
       code = code[1];
