@@ -65,7 +65,8 @@
       userModel: '../app/js/user-model',
 
       loginLogout: '../app/js/login/loginLogout',
-      OauthView: '../app/js/oauth/oauth-view'
+      OauthView: '../app/js/oauth/oauth-view',
+      WhoAmI: '../app/js/whoami-view'
     },
     map: {
       GitHub: {

@@ -14,6 +14,7 @@ define(function (require) {
   var CommentView = require('commentView');
   var OauthView = require('OauthView');
   var loginLogout = require('loginLogout');
+  var WhoAmI = require('WhoAmI');
 
   var repoCollection = null;
 
@@ -30,7 +31,8 @@ define(function (require) {
       'login': 'login',
       'logout': 'logout',
       'oauth/accesstoken': 'getAccessToken',
-      'oauth/callback': 'callback'
+      'oauth/callback': 'callback',
+      'whoami': 'whoami'
     },
     reviewList: function () {
       this.clear();
@@ -116,6 +118,11 @@ define(function (require) {
         this.view = new OauthView();
         this.view.callback();
       }
+    },
+    whoami: function(){
+      this.clear();
+      this.view = new WhoAmI();
+      this.view.render();
     },
     initialize: function () {
       this.reviewCollection = new ReviewCollection();
