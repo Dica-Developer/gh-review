@@ -1,5 +1,5 @@
 /*global define, describe, it, expect, spyOn*/
-define(['app', 'LoginView'], function(app, LoginView){
+define(['app', 'Router', 'LoginView'], function(app, Router, LoginView){
   'use strict';
 
   describe('#LoginView', function(){
@@ -15,9 +15,11 @@ define(['app', 'LoginView'], function(app, LoginView){
     });
 
     it('.render should call router.navigate', function(){
-      var renderSpy = spyOn(LoginView.prototype, 'render');
+      var TmpRouter = Router.extend({initialize: function(){}});
+      app.router = new TmpRouter();
+      var routerSpy = spyOn(app.router, 'navigate');
       new LoginView();
-      expect(renderSpy).toHaveBeenCalled();
+      expect(routerSpy).toHaveBeenCalledWith('#oauth/accesstoken', { trigger : true });
     });
 
   });
