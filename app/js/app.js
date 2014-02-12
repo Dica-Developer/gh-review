@@ -40,7 +40,7 @@ define([
       this.ajaxIndicatorTimeoutId = window.setTimeout(function () {
         _this.ajaxIndicator.modal('show');
         _this.ajaxIndicatorIsVisible = true;
-      }, 700);
+      }, 200);
     } else if (this.ajaxIndicatorIsVisible && !show) {
       this.ajaxIndicator.modal('hide');
       this.ajaxIndicatorIsVisible = false;

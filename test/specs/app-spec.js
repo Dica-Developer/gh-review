@@ -1,5 +1,5 @@
-/*global define, describe, it, expect, spyOn, localStorage, beforeEach, afterEach, jasmine*/
-define(['jquery', 'underscore', 'app', 'bootstrap'], function ($, _, app) {
+/*global define, describe, it, expect, localStorage, beforeEach, afterEach, jasmine*/
+define(['jquery', 'underscore', 'app', 'Router', 'bootstrap'], function ($, _, app, Router) {
   'use strict';
 
   describe('#GH-Review', function () {
@@ -33,13 +33,13 @@ define(['jquery', 'underscore', 'app', 'bootstrap'], function ($, _, app) {
         expect(indicator.is(':visible')).toBeFalsy();
       });
 
-      it('Should be visible after 700ms timeout', function () {
+      it('Should be visible after 200ms timeout', function () {
         jasmine.Clock.useMock();
         tmpApp.showIndicator(true);
         expect(indicator.is(':visible')).toBeFalsy();
-        jasmine.Clock.tick(500);
+        jasmine.Clock.tick(100);
         expect(indicator.is(':visible')).toBeFalsy();
-        jasmine.Clock.tick(701);
+        jasmine.Clock.tick(250);
         expect(indicator.is(':visible')).toBeTruthy();
       });
 
@@ -47,17 +47,41 @@ define(['jquery', 'underscore', 'app', 'bootstrap'], function ($, _, app) {
         jasmine.Clock.useMock();
         tmpApp.showIndicator(true);
         expect(indicator.is(':visible')).toBeFalsy();
-        jasmine.Clock.tick(500);
+        jasmine.Clock.tick(100);
         expect(indicator.is(':visible')).toBeFalsy();
-        jasmine.Clock.tick(701);
+        jasmine.Clock.tick(250);
         expect(indicator.is(':visible')).toBeTruthy();
         tmpApp.showIndicator(false);
-        jasmine.Clock.tick(720);
+        jasmine.Clock.tick(300);
         expect(indicator.is(':visible')).toBeFalsy();
       });
-
     });
 
-  });
+    describe('.init', function () {
+      var tmpApp;
+      var router = new Router();
 
+      beforeEach(function () {
+        tmpApp = _.extend({}, app);
+      });
+
+      afterEach(function () {
+        tmpApp = null;
+      });
+
+      it('authenticate with already existing access token', function () {
+        tmpApp.router = router;
+        localStorage.accessToken = 'fdgdfgDFG';
+        tmpApp.init();
+        expect(tmpApp.authenticated).toBeTruthy();
+      });
+
+      it('not authenticated if no already existing access token', function () {
+        tmpApp.router = router;
+        localStorage.removeItem('accessToken');
+        tmpApp.init();
+        expect(tmpApp.authenticated).toBeFalsy();
+      });
+    });
+  });
 });
