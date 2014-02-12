@@ -2,6 +2,7 @@
 define([
   'backbone',
   'when',
+  'app',
   'Router',
   'RepoCollection',
   'repoView',
@@ -9,10 +10,9 @@ define([
   'reviewListView',
   'reviewDetailView',
   'commentView',
-  'app',
   'underscore',
   'backboneLocalStorage'
-], function (Backbone, when, Router, RepoCollection, RepoView, RepoDetailView, ReviewListView, ReviewDetailView, CommentView, app, _) {
+], function (Backbone, when, app, Router, RepoCollection, RepoView, RepoDetailView, ReviewListView, ReviewDetailView, CommentView, _) {
   'use strict';
 
   describe('#Router', function () {
@@ -36,6 +36,7 @@ define([
       afterEach(function () {
         router = null;
         routerClearSpy = null;
+        app.authenticated = false;
       });
 
       it('.reviewList should init new #ReviewListView', function () {
@@ -53,7 +54,8 @@ define([
 
       });
 
-      it('.repositories should init new #RepoCollection and #RepoView', function () {
+      it('.repositories should init new #RepoCollection and #RepoView if authenticated', function () {
+        app.authenticated = true;
         var repoCollectionSpy = spyOn(RepoCollection.prototype, 'initialize');
         var repoViewSpy = spyOn(RepoView.prototype, 'initialize');
 
@@ -66,8 +68,21 @@ define([
 
       });
 
+      it('.repositories should init new #RepoCollection and #RepoView if not authenticated', function () {
+        app.authenticated = false;
+        var repoCollectionSpy = spyOn(RepoCollection.prototype, 'initialize');
+        var repoViewSpy = spyOn(RepoView.prototype, 'initialize');
+
+        router.repositories();
+
+        expect(routerClearSpy).not.toHaveBeenCalled();
+        expect(repoCollectionSpy).not.toHaveBeenCalled();
+        expect(repoViewSpy).not.toHaveBeenCalled();
+        expect(router.view instanceof RepoView).toBeFalsy();
+
+      });
+
       it('.repoDetail should init new #RepoDetailView if authenticated', function () {
-        var tmpApp = _.extend({}, app);
         app.authenticated = true;
         var repoDetailViewSpy = spyOn(RepoDetailView.prototype, 'initialize');
 
@@ -79,6 +94,7 @@ define([
       });
 
       it('.repoDetail should not init new #RepoDetailView if not authenticated', function () {
+        app.authenticated = false;
         var repoDetailViewSpy = spyOn(RepoDetailView.prototype, 'initialize');
 
         router.repoDetail();
