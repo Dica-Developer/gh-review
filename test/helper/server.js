@@ -18,7 +18,8 @@ define(['githubResponses'], function(githubResponses){
 
     this.server = null;
     this.contentTypes = {
-      json: {'Content-Type': 'application/json; charset=UTF-8'}
+      json: {'Content-Type': 'application/json; charset=UTF-8'},
+      text: {'Content-Type': 'text/plain; charset=UTF-8'}
     };
 
     this.urls= {
@@ -50,6 +51,15 @@ define(['githubResponses'], function(githubResponses){
         200,
         this.contentTypes.json,
         JSON.stringify(response)
+      ]);
+    };
+
+    this.oauthTokenRequestWithError = function(manual){
+      this.start(manual);
+      this.server.respondWith('POST', this.urls.oauthTokenRequestUrl(), [
+        404,
+        this.contentTypes.text,
+        'Not found'
       ]);
     };
 

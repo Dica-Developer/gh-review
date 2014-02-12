@@ -1,4 +1,4 @@
-/*global define, describe, it, expect, beforeEach, spyOn, waitsFor, runs, sinon, localStorage, jasmine*/
+/*global define, describe, it, expect, beforeEach, spyOn, afterEach, waitsFor, runs, jasmine*/
 define(['underscore', 'server', 'OAuth'], function(_, server, OAuth2){
   'use strict';
 
@@ -10,11 +10,16 @@ define(['underscore', 'server', 'OAuth'], function(_, server, OAuth2){
   };
 
   describe('OAuth', function(){
-    var doRedirectSpy = null;
+    var oauth = null, doRedirectSpy = null;
 
     //Need to setup this spy's every time to avoid page reloads while test running
     beforeEach(function(){
+      oauth = new OAuth2(oauthConfig);
       doRedirectSpy = spyOn(OAuth2.prototype, 'doRedirect');
+    });
+
+    afterEach(function(){
+      oauth = null;
     });
 
     it('Should be defined', function(){
@@ -22,111 +27,80 @@ define(['underscore', 'server', 'OAuth'], function(_, server, OAuth2){
     });
 
     it('Given options should be assigned to public member', function(){
-      var oauth = new OAuth2(oauthConfig);
       _.each(oauthConfig, function(value, key){
         expect(oauth[key]).toBe(value);
       });
     });
 
-    it('.parseAuthorizationCode should be called on initialization', function(){
-      var parseAuthorizationCodeSpy = spyOn(OAuth2.prototype, 'parseAuthorizationCode');
-      new OAuth2(oauthConfig);
-      expect(parseAuthorizationCodeSpy).toHaveBeenCalled();
+    it('.startAuthentication should call .doRedirect', function(){
+      oauth.startAuthentication();
+      expect(doRedirectSpy).toHaveBeenCalledWith('https://github.com/login/oauth/authorize?client_id=5082108e53d762d90c00&redirect_uri=http://localhost:9000&scope=user, repo');
     });
 
-    it('If no access token is present and no "code" string in url .getAuthorizationCode should be called', function(){
-      new OAuth2(oauthConfig);
-      expect(doRedirectSpy).toHaveBeenCalled();
-    });
-
-    it('If no access token is present but a "code" string in url .finishAuthorization should be called', function(){
-      spyOn(OAuth2.prototype, 'parseAuthorizationCode').andReturn('123test45');
-      var finishAuthorizationSpy = spyOn(OAuth2.prototype, 'finishAuthorization');
-      new OAuth2(oauthConfig);
-      expect(finishAuthorizationSpy).toHaveBeenCalled();
-    });
-
-    it('.getAccessTokenURL should return correct url', function(){
-      spyOn(OAuth2.prototype, 'parseAuthorizationCode').andReturn('123test45');
-      spyOn(OAuth2.prototype, 'finishAuthorization');
-      var oauth = new OAuth2(oauthConfig);
-      expect(oauth.getAccessTokenURL('123test45')).toBe('http://gh-review.herokuapp.com/bemdsvdsynggmvweibduvjcbgf?client_id=5082108e53d762d90c00&code=123test45&scope=user, repo');
-    });
-
-    it('.authorizationCodeURL should return correct url', function(){
-      spyOn(OAuth2.prototype, 'parseAuthorizationCode').andReturn('123test45');
-      spyOn(OAuth2.prototype, 'finishAuthorization');
-      var oauth = new OAuth2(oauthConfig);
+    it('.authorizationCodeUrl should return correct url', function(){
       expect(oauth.authorizationCodeURL()).toBe('https://github.com/login/oauth/authorize?client_id=5082108e53d762d90c00&redirect_uri=http://localhost:9000&scope=user, repo');
     });
 
-    it('.parseAuthorizationCode should throw error if url parameter "error" is present', function(){
-      var tmpSpy = sinon.stub(OAuth2.prototype, 'parseAuthorizationCode');
-      tmpSpy.returns('123test45');
-      spyOn(OAuth2.prototype, 'finishAuthorization');
-      var oauth = new OAuth2(oauthConfig);
-      tmpSpy.restore();
-      var thrown = function(){
-        return oauth.parseAuthorizationCode('http://fake.de/fake?error=123test45');
-      };
-      expect(thrown).toThrow();
+    it('.getAccessTokenUrl should return correct url', function(){
+      expect(oauth.getAccessTokenURL()).toBe('http://gh-review.herokuapp.com/bemdsvdsynggmvweibduvjcbgf?client_id=5082108e53d762d90c00&code=undefined&scope=user, repo');
     });
 
-    it('.parseAuthorizationCode should return correct code if url parameter "code" is present', function(){
-      var tmpSpy = sinon.stub(OAuth2.prototype, 'parseAuthorizationCode');
-      tmpSpy.returns('123test45');
-      spyOn(OAuth2.prototype, 'finishAuthorization');
-      var oauth = new OAuth2(oauthConfig);
-      tmpSpy.restore();
-      expect(oauth.parseAuthorizationCode('http://fake.de/fake?code=123test45')).toBe('123test45');
+    it('.parseAuthorizationCode should throw error if url has parameter "error"', function(){
+      expect(function(){
+        oauth.parseAuthorizationCode('http://nodomain.no?error=nodomain');
+      }).toThrow(new Error('Error getting authorization code: nodomain'));
     });
 
-    it('.finishAuthorization should make ajax request to get token', function(){
+    it('.parseAuthorizationCode should return correct code if url has "code" parameter', function(){
+      expect(oauth.parseAuthorizationCode('http://nodomain.no?code=12test345')).toBe('12test345');
+    });
+
+    it('.finishAuthorization should do post call', function(){
+      var callbackSpy = jasmine.createSpy();
       server.oauthTokenRequest();
-      spyOn(OAuth2.prototype, 'parseAuthorizationCode').andReturn('123test45');
-      new OAuth2(oauthConfig);
-      var request = server.server.requests;
-      expect(request.length).toBe(1);
-      expect(request[0].url).toMatch(server.urls.oauthTokenRequestUrl());
-      server.stop();
-    });
-
-    it('.finishAuthorization should call .setAccessToken after successfully request', function(){
-      var setAccessTokenSpy = spyOn(OAuth2.prototype, 'setAccessToken');
-      server.oauthTokenRequest();
-      spyOn(OAuth2.prototype, 'parseAuthorizationCode').andReturn('123test45');
-      new OAuth2(oauthConfig);
+      oauth.finishAuthentication(callbackSpy);
 
       waitsFor(function(){
         return server.server.requests[0].readyState === 4;
-      }, '', 50);
+      });
 
       runs(function(){
-        expect(setAccessTokenSpy).toHaveBeenCalled();
+        expect(server.server.requests[0].status).toBe(200);
         server.stop();
       });
     });
 
-    it('.onAccessTokenReceived should called if access token is present', function(){
-      jasmine.Clock.useMock();
-      localStorage.ghreviewAccessToken = '123test45';
-      var oauth = new OAuth2(oauthConfig);
-      var onAccessTokenReceivedSpy = spyOn(oauth, 'onAccessTokenReceived');
+    it('.finishAuthorization should call callback if xhr.status === 200', function(){
+      var callbackSpy = jasmine.createSpy();
+      server.oauthTokenRequest();
+      oauth.finishAuthentication(callbackSpy);
 
-      expect(onAccessTokenReceivedSpy).not.toHaveBeenCalled();
-      jasmine.Clock.tick(501);
-      expect(onAccessTokenReceivedSpy).toHaveBeenCalled();
+      waitsFor(function(){
+        return server.server.requests[0].readyState === 4;
+      });
 
+      runs(function(){
+        expect(server.server.requests[0].status).toBe(200);
+        /*jshint camelcase:false*/
+        expect(callbackSpy).toHaveBeenCalledWith({ access_token : 'e72e16c7e42f292c6912e7710c838347ae178b4a', scope : 'repo,gist', token_type : 'bearer' }, null);
+        server.stop();
+      });
     });
 
-    it('.setAccessToken', function(){
-      var oauth = new OAuth2(oauthConfig);
+    it('.finishAuthorization should call callback with error if xhr.status !== 200', function(){
+      var callbackSpy = jasmine.createSpy();
+      server.oauthTokenRequestWithError();
+      oauth.finishAuthentication(callbackSpy);
 
-      oauth.setAccessToken({'access_token': '123test45'});
+      waitsFor(function(){
+        return server.server.requests[0].readyState === 4;
+      });
 
-      expect(doRedirectSpy).toHaveBeenCalled();
-      expect(localStorage.ghreviewAccessToken).toBe('123test45');
-      localStorage.removeItem('ghreviewAccessToken');
+      runs(function(){
+        expect(server.server.requests[0].status).toBe(404);
+        expect(callbackSpy).toHaveBeenCalledWith(null, { status : 404, message : 'Not found' });
+        server.stop();
+      });
     });
 
   });
