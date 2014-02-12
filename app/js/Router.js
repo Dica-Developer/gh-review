@@ -20,7 +20,7 @@ define([
 
   var Router = Backbone.Router.extend({
     view: null,
-    reviewCollection: null,
+    reviewCollection: null, //TODO move to proper place. Remind repo-detail-view
     routes: {
       '': 'root',
       'reviews': 'reviewList',

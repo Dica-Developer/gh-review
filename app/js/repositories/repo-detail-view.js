@@ -4,10 +4,9 @@ define([
   'underscore',
   'when',
   'app',
-  'reviewCollection',
   'reviewItemModel',
   'text!templates/repo-detail-view.html'
-], function (Backbone, _, when, app, reviewCollection, ReviewItemModel, template) {
+], function (Backbone, _, when, app, ReviewItemModel, template) {
   'use strict';
 
   var RepoView = Backbone.View.extend({
@@ -17,7 +16,7 @@ define([
       this.reviewModel = new ReviewItemModel();
       this.reviewModel.set('user', this.model.get('owner').login);
       this.reviewModel.set('repo', this.model.get('name'));
-      reviewCollection.on('all', this.render, this);
+      app.router.reviewCollection.on('all', this.render, this);
       this.listenTo(this.reviewModel, 'change', this.render);
       when.all(this.getFurtherInformations(), this.render.bind(this));
     },
@@ -29,7 +28,7 @@ define([
       'click .filter': 'addFilter'
     },
     serialize: function () {
-      var existingReviews = reviewCollection.where({repo: this.model.get('name')});
+      var existingReviews = app.router.reviewCollection.where({repo: this.model.get('name')});
       return {
         existingReviews: existingReviews,
         repo: this.model.toJSON(),
@@ -37,7 +36,7 @@ define([
       };
     },
     checkAlreadyExist: function () {
-      var alreadyExist = reviewCollection.where(this.reviewModel.toJSON());
+      var alreadyExist = app.router.reviewCollection.where(this.reviewModel.toJSON());
       if (alreadyExist.length > 0) {
         this.disableButton();
       } else {
@@ -104,11 +103,11 @@ define([
     },
     removeReview: function (event) {
       var modelCid = $(event.target).data('cid');
-      var model = reviewCollection.get(modelCid);
+      var model = app.router.reviewCollection.get(modelCid);
       model.destroy();
     },
     addReview: function () {
-      reviewCollection.create(this.reviewModel);
+      app.router.reviewCollection.create(this.reviewModel);
     },
     getFurtherInformations: function () {
       var promises = [];
