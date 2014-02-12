@@ -49,7 +49,7 @@
 
       UserModel: 'user-model',
 
-      LoginView: 'login/login-view',
+      loginLogout: 'login/loginLogout',
       OauthView: 'oauth/oauth-view'
     },
     shim: {

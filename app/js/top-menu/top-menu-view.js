@@ -4,14 +4,16 @@ define([
   'underscore',
   'app',
   'UserModel',
-  'text!../templates/top-menu.html'
-], function (Backbone, _, app, UserModel, template) {
+  'text!../templates/top-menu.html',
+  'text!../templates/top-right-menu.html'
+], function (Backbone, _, app, UserModel, template, topRightTemplate) {
   'use strict';
 
   var TopMenuView = Backbone.View.extend({
     el: '#topMenu',
     model: null,
     template: _.template(template),
+    topRightTemplate: _.template(topRightTemplate),
     initialize: function () {
       if (app.authenticated) {
         this.model = new UserModel();
@@ -21,13 +23,11 @@ define([
     },
     setAvatarAndLogout: function () {
       var container = this.$('#loginLogoutContainer');
-      var avatarUrl = this.model.get('avatar_url');
-      var content = '';
-      if (avatarUrl) {
-        content = content + '<img src="' + avatarUrl + '" height="50"/>';
-      }
-      content = content + this.model.get('name');
-      container.html(content);
+      var parent = container.parent();
+//      var avatarUrl = this.model.get('avatar_url');
+      parent.html(this.topRightTemplate({
+        userName: this.model.get('name')
+      }));
     },
     events: {
       'change #selectRepo': 'showRepoDetail'

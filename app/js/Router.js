@@ -12,8 +12,8 @@ define([
   'commitCollection',
   'commentView',
   'OauthView',
-  'LoginView'
-], function ($, Backbone, app, RepoCollection, RepoView, RepoDetailView, ReviewCollection, ReviewListView, ReviewDetailView, commitCollection, CommentView, OauthView, LoginView) {
+  'loginLogout'
+], function ($, Backbone, app, RepoCollection, RepoView, RepoDetailView, ReviewCollection, ReviewListView, ReviewDetailView, commitCollection, CommentView, OauthView, loginLogout) {
   'use strict';
 
   var repoCollection = null;
@@ -29,6 +29,7 @@ define([
       'review/:id': 'reviewDetail',
       'commit/:id': 'showCommit',
       'login': 'login',
+      'logout': 'logout',
       'oauth/accesstoken': 'getAccessToken',
       'oauth/callback': 'callback'
     },
@@ -99,10 +100,8 @@ define([
       this.reviewCollection = new ReviewCollection();
       Backbone.history.start();
     },
-    login: function () {
-      this.clear();
-      this.view = new LoginView();
-    },
+    login: loginLogout.login,
+    logout: loginLogout.logout,
     getAccessToken: function () {
       this.clear();
       this.view = new OauthView();
