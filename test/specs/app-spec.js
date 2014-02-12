@@ -69,18 +69,22 @@ define(['jquery', 'underscore', 'app', 'Router', 'bootstrap'], function ($, _, a
         tmpApp = null;
       });
 
-      it('authenticate with already existing access token', function () {
-        tmpApp.router = router;
-        localStorage.accessToken = 'fdgdfgDFG';
-        tmpApp.init();
-        expect(tmpApp.authenticated).toBeTruthy();
+      describe('existing access token', function(){
+        it('authenticated', function () {
+          tmpApp.router = router;
+          localStorage.accessToken = 'fdgdfgDFG';
+          tmpApp.init();
+          expect(tmpApp.authenticated).toBeTruthy();
+        });
       });
 
-      it('not authenticated if no already existing access token', function () {
-        tmpApp.router = router;
-        localStorage.removeItem('accessToken');
-        tmpApp.init();
-        expect(tmpApp.authenticated).toBeFalsy();
+      describe('no access token', function(){
+        it('not authenticated', function () {
+          tmpApp.router = router;
+          localStorage.removeItem('accessToken');
+          tmpApp.init();
+          expect(tmpApp.authenticated).toBeFalsy();
+        });
       });
     });
   });
