@@ -10,5 +10,5 @@ define(['backbone', 'reviewItemModel'], function (Backbone, ReviewItemModel) {
     }
   });
 
-  return new ReviewCollection();
+  return ReviewCollection;
 });

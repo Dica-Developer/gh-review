@@ -13,13 +13,14 @@ define([
   'commentView',
   'OauthView',
   'LoginView'
-], function ($, Backbone, app, RepoCollection, RepoView, RepoDetailView, reviewCollection, ReviewListView, ReviewDetailView, commitCollection, CommentView, OauthView, LoginView) {
+], function ($, Backbone, app, RepoCollection, RepoView, RepoDetailView, ReviewCollection, ReviewListView, ReviewDetailView, commitCollection, CommentView, OauthView, LoginView) {
   'use strict';
 
   var repoCollection = null;
 
   var Router = Backbone.Router.extend({
     view: null,
+    reviewCollection: null,
     routes: {
       '': 'root',
       'reviews': 'reviewList',
@@ -33,7 +34,7 @@ define([
     },
     reviewList: function () {
       this.clear();
-      this.view = new ReviewListView();
+      this.view = new ReviewListView({collection: this.reviewCollection});
       this.view.render();
       this.view.fetchReviews();
       $('li[name="ghr-top-menu-links"]').removeClass('active');
@@ -66,7 +67,7 @@ define([
     reviewDetail: function (id) {
       this.clear();
       this.trigger('ajaxIndicator', true);
-      var model = reviewCollection.get(id);
+      var model = this.reviewCollection.get(id);
       this.view = new ReviewDetailView({
         model: model
       });
@@ -95,6 +96,7 @@ define([
       }
     },
     initialize: function () {
+      this.reviewCollection = new ReviewCollection();
       Backbone.history.start();
     },
     login: function () {

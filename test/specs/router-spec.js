@@ -7,12 +7,14 @@ define([
   'RepoCollection',
   'RepoView',
   'repoDetailView',
+  'reviewCollection',
   'reviewListView',
   'reviewDetailView',
   'commentView',
-  'underscore',
+  'OauthView',
+  'LoginView',
   'backboneLocalStorage'
-], function (Backbone, when, app, Router, RepoCollection, RepoView, RepoDetailView, ReviewListView, ReviewDetailView, CommentView, _) {
+], function (Backbone, when, app, Router, RepoCollection, RepoView, RepoDetailView, ReviewCollection, ReviewListView, ReviewDetailView, CommentView, OauthView, LoginView) {
   'use strict';
 
   describe('#Router', function () {
@@ -107,7 +109,7 @@ define([
 
       it('.reviewDetail should init new #ReviewDetailView', function () {
         var reviewDetailViewSpy = spyOn(ReviewDetailView.prototype, 'initialize');
-
+        router.reviewCollection = new ReviewCollection();
         router.reviewDetail();
 
         expect(routerClearSpy).toHaveBeenCalled();
@@ -143,6 +145,44 @@ define([
 
         expect(View.prototype.remove).toHaveBeenCalled();
       });
+
+      it('.login should init new #LoginView', function () {
+        var loginViewSpy = spyOn(LoginView.prototype, 'initialize');
+
+        router.login();
+
+        expect(routerClearSpy).toHaveBeenCalled();
+        expect(loginViewSpy).toHaveBeenCalled();
+        expect(router.view instanceof LoginView).toBeTruthy();
+
+      });
+
+      it('.getAccessToken should init new #OauthView and call #OAuthView.getAccessToken', function () {
+        var oauthRenderViewSpy = spyOn(OauthView.prototype, 'render');
+        var oauthGetAccessTokenViewSpy = spyOn(OauthView.prototype, 'getAccessToken');
+
+        router.getAccessToken();
+
+        expect(routerClearSpy).toHaveBeenCalled();
+        expect(oauthRenderViewSpy).toHaveBeenCalled();
+        expect(oauthGetAccessTokenViewSpy).toHaveBeenCalled();
+        expect(router.view instanceof OauthView).toBeTruthy();
+
+      });
+
+      it('.callback should init new #OauthView and call #OAuthView.callback', function () {
+        var oauthRenderViewSpy = spyOn(OauthView.prototype, 'render');
+        var oauthCallbackViewSpy = spyOn(OauthView.prototype, 'callback');
+
+        router.callback();
+
+        expect(routerClearSpy).toHaveBeenCalled();
+        expect(oauthRenderViewSpy).toHaveBeenCalled();
+        expect(oauthCallbackViewSpy).toHaveBeenCalled();
+        expect(router.view instanceof OauthView).toBeTruthy();
+
+      });
+
 
       it('.initialize should start Backbone.history', function () {
         spyOn(Backbone.history, 'start');

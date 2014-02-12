@@ -14,7 +14,7 @@ define([
       'click li': 'showDetail'
     },
     fetchReviews: function(){
-      if (reviewCollection.length) {
+      if (this.collection.length) {
         this.addAll();
       } else {
         this.showHint();
@@ -28,7 +28,7 @@ define([
       this.$('#reviewList').append(view.render().el);
     },
     addAll: function () {
-      reviewCollection.each(this.addOne, this);
+      this.collection.each(this.addOne, this);
     },
     showHint: function () {
     },
