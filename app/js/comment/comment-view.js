@@ -1,14 +1,14 @@
 /*global define*/
-define([
-  'backbone',
-  'underscore',
-  'when',
-  'app',
-  'chunk',
-  'commentBox',
-  'text!templates/comment-view.html'
-], function (Backbone, _, when, app, Chunk, CommentBoxes, template) {
+define(function (require) {
   'use strict';
+
+  var Backbone = require('backbone'),
+    _ = require('underscore'),
+    when = require('when'),
+    app = require('app'),
+    Chunk = require('chunk'),
+    CommentBoxes = require('commentBox'),
+    template = require('text!templates/comment-view.html');
 
   var chunkHeadingRegExp = new RegExp('@@.*?[-+](\\d+)(,\\d+){0,1}\\s[-+](\\d+)(,\\d+){0,1} @@', 'g');
   var EditCommentBox = CommentBoxes.edit;
