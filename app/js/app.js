@@ -1,8 +1,9 @@
-/*global define, window, localStorage*/
+/*global define, window, localStorage, requirejs*/
 define([
   'backbone',
+  'when',
   'GitHub'
-], function (Backbone, GitHub) {
+], function (Backbone, when, GitHub) {
   'use strict';
 
   function hasLocalStorage() {
@@ -16,20 +17,29 @@ define([
     this.ajaxIndicatorIsVisible = false;
     this.user = null;
     this.github = new GitHub({});
+    this.repoCollection = null;
   }
 
   GHReview.prototype = Backbone.Events;
 
   GHReview.prototype.init = function () {
     if (hasLocalStorage() && localStorage.accessToken) {
+      this.showIndicator(true);
       this.authenticated = true;
       this.github.authenticate({
         type: 'token',
         token: localStorage.accessToken
       });
-      this.router.navigate('#reviews', {
-        trigger: true
-      });
+      requirejs(['RepoCollection'], function(RepoCollection){
+        this.repoCollection = new RepoCollection();
+        when.all(this.repoCollection.getRepos())
+          .then(function(){
+            this.router.navigate('#reviews', {
+              trigger: true
+            });
+            this.showIndicator(false);
+          }.bind(this));
+      }.bind(this));
     }
   };
 

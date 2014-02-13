@@ -4,7 +4,6 @@ define(function (require) {
   var $ = require('jquery');
   var Backbone = require('backbone');
   var app = require('app');
-  var RepoCollection = require('RepoCollection');
   var RepoView = require('RepoView');
   var RepoDetailView = require('repoDetailView');
   var ReviewCollection = require('reviewCollection');
@@ -15,8 +14,6 @@ define(function (require) {
   var oauthHandler = require('OauthHandler');
   var loginLogout = require('loginLogout');
   var WhoAmI = require('WhoAmI');
-
-  var repoCollection = null;
 
   var Router = Backbone.Router.extend({
     view: null,
@@ -47,9 +44,8 @@ define(function (require) {
       this.trigger('ajaxIndicator', true);
       if (app.authenticated) {
         this.clear();
-        repoCollection = new RepoCollection();
         this.view = new RepoView({
-          collection: repoCollection
+          collection: app.repoCollection
         });
         $('li[name="ghr-top-menu-links"]').removeClass('active');
         $('#repositoryLink').addClass('active');
@@ -59,7 +55,7 @@ define(function (require) {
       this.trigger('ajaxIndicator', true);
       if (app.authenticated) {
         this.clear();
-        var model = repoCollection.get(id);
+        var model = app.repoCollection.get(id);
         this.view = new RepoDetailView({
           model: model
         });

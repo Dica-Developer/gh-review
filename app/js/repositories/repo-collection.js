@@ -2,20 +2,21 @@
 define([
   'backbone',
   'underscore',
+  'when',
   'app',
   'RepoModel'
-], function (Backbone, _, app, RepoModel) {
+], function (Backbone, _, when, app, RepoModel) {
   'use strict';
 
   var RepoCollection = Backbone.Collection.extend({
     model: RepoModel,
     organizations: {},
-    initialize: function () {
-      this.getRepos();
-    },
+    getReposDefer: when.defer(),
+    getOrgReposDefer: when.defer(),
     getRepos: function () {
       app.github.repos.getAll({}, this.getAllReposCallback.bind(this));
       app.github.user.getOrgs({}, this.getOrgsCallback.bind(this));
+      return [this.getReposDefer.promise, this.getOrgReposDefer.promise];
     },
     getOrgRepos: function (res) {
       _.forEach(res, function (org) {
@@ -25,6 +26,7 @@ define([
     },
     getAllReposCallback: function (error, res) {
       this.reset(res);
+      this.getReposDefer.resolve();
     },
     getOrgsCallback: function (error, res) {
       this.getOrgRepos(res);
@@ -36,6 +38,7 @@ define([
         }
         this.add(repo);
       }, this);
+      this.getOrgReposDefer.resolve();
     }
   });
 
