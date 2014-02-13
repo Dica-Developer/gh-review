@@ -2,6 +2,11 @@
 define(['app', 'RepoModel'], function(app, RepoModel){
   'use strict';
 
+  afterEach(function(){
+    localStorage.clear();
+    app.authenticated = false;
+  });
+
   describe('#RepoModel', function(){
     var repoModel = null;
 

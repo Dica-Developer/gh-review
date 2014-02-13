@@ -1,6 +1,11 @@
-/*global define, describe, it, expect, spyOn, waitsFor, runs*/
+/*global define, describe, it, expect, spyOn, waitsFor, runs, afterEach, localStorage*/
 define(['server', 'githubResponses', 'app', 'userModel'], function(server, githubResponses, app, UserModel){
   'use strict';
+
+  afterEach(function(){
+    localStorage.clear();
+    app.authenticated = false;
+  });
 
   describe('OAuth', function(){
 

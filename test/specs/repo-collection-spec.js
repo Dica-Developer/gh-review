@@ -1,4 +1,4 @@
-/*global define, describe, it, expect, spyOn, runs, waitsFor */
+/*global define, describe, it, expect, spyOn, runs, waitsFor, afterEach, localStorage */
 define([
   'underscore',
   'server',
@@ -7,6 +7,11 @@ define([
   'RepoCollection'
 ], function(_, server, githubResponses, app, RepoCollection){
   'use strict';
+
+  afterEach(function(){
+    localStorage.clear();
+    app.authenticated = false;
+  });
 
   describe('#RepoCollection', function(){
 

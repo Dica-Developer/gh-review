@@ -2,11 +2,12 @@
 define(['app', 'Router', 'loginLogout'], function(app, Router, loginLogout){
   'use strict';
 
-  describe('#loginLogout', function(){
+  afterEach(function(){
+    localStorage.clear();
+    app.authenticated = false;
+  });
 
-    afterEach(function(){
-      localStorage.clear();
-    });
+  describe('#loginLogout', function(){
 
     it('#loginLogout should be defined', function(){
       expect(loginLogout).toBeDefined();

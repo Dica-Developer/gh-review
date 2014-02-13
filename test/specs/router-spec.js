@@ -17,6 +17,11 @@ define([
 ], function (Backbone, when, app, Router, RepoCollection, RepoView, RepoDetailView, ReviewCollection, ReviewListView, ReviewDetailView, CommentView, oauthHandler, loginLogout) {
   'use strict';
 
+  afterEach(function(){
+    localStorage.clear();
+    app.authenticated = false;
+  });
+
   describe('#Router', function () {
     it('Should be defined', function () {
       expect(Router).toBeDefined();
@@ -38,8 +43,6 @@ define([
       afterEach(function () {
         router = null;
         routerClearSpy = null;
-        app.authenticated = false;
-        localStorage.clear();
       });
 
       it('.reviewList should init new #ReviewListView', function () {

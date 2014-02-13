@@ -2,6 +2,11 @@
 define(['jquery', 'underscore', 'app', 'Router', 'bootstrap'], function ($, _, app, Router) {
   'use strict';
 
+  afterEach(function(){
+    localStorage.clear();
+    app.authenticated = false;
+  });
+
   describe('#GH-Review', function () {
 
     it('Should be defined', function () {
@@ -68,7 +73,6 @@ define(['jquery', 'underscore', 'app', 'Router', 'bootstrap'], function ($, _, a
 
       afterEach(function () {
         tmpApp = null;
-        localStorage.clear();
       });
 
       describe('existing access token', function(){
