@@ -29,25 +29,28 @@ define([
     },
     computeChunk: function () {
       var defer = when.defer();
+      this.files = [];
       var files = this.model.get('diff').files;
-      _.forEach(files, function (file, fileIndex, array) {
-        this.files.push({
-          chunks: []
-        });
+      var length = files.length;
+      _.forEach(files, function (file, fileIndex) {
+        this.files[fileIndex] = { chunks: [] };
         var lines = _.str.lines(file.patch);
-        _.forEach(lines, function (line) {
-          line = _.str.escapeHTML(line);
-          if (line.match(chunkHeadingRegExp)) {
-            this.files[fileIndex].chunks.push(new Chunk(line));
-          } else {
-            this.files[fileIndex].chunks[this.files[fileIndex].chunks.length - 1].addLine(line);
-          }
-        }, this);
-        if (fileIndex === (array.length - 1)) {
+        _.forEach(lines, this.addLine, this);
+        if (fileIndex === (length - 1)) {
           defer.resolve();
         }
       }, this);
       return defer.promise;
+    },
+    addLine: function (line) {
+      line = _.str.escapeHTML(line);
+      var file = this.files[this.files.length -1];
+      var chunks = file.chunks;
+      if (line.match(chunkHeadingRegExp)) {
+        chunks.push(new Chunk(line));
+      } else {
+        chunks[chunks.length - 1].addLine(line);
+      }
     },
     commentLine: function (event) {
       var target = $(event.target);
