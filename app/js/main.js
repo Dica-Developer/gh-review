@@ -50,7 +50,7 @@
       UserModel: 'user-model',
 
       loginLogout: 'login/loginLogout',
-      OauthView: 'oauth/oauth-view',
+      OauthHandler: 'oauth/oauth-handler',
       WhoAmI: 'whoami-view'
     },
     shim: {

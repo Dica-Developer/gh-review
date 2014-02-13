@@ -12,7 +12,7 @@ define(function (require) {
   var ReviewDetailView = require('reviewDetailView');
   var commitCollection = require('commitCollection');
   var CommentView = require('commentView');
-  var OauthView = require('OauthView');
+  var oauthHandler = require('OauthHandler');
   var loginLogout = require('loginLogout');
   var WhoAmI = require('WhoAmI');
 
@@ -101,22 +101,19 @@ define(function (require) {
     logout: loginLogout.logout,
     getAccessToken: function () {
       this.clear();
-      this.view = new OauthView();
-      this.view.getAccessToken();
+      oauthHandler.getAccessToken();
     },
     callback: function () {
       // TODO currently handled by root non authenticated case
       this.clear();
-      this.view = new OauthView();
-      this.view.callback();
+      oauthHandler.callback();
     },
     root: function () {
       var url = window.location.href;
       var error = url.match(/[&\?]error=([^&]+)/);
       var code = url.match(/[&\?]code=([\w\/\-]+)/);
       if (!app.authenticated && (error || code)) {
-        this.view = new OauthView();
-        this.view.callback();
+        oauthHandler.callback();
       }
     },
     whoami: function(){

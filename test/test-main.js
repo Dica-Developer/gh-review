@@ -65,7 +65,7 @@
       userModel: '../app/js/user-model',
 
       loginLogout: '../app/js/login/loginLogout',
-      OauthView: '../app/js/oauth/oauth-view',
+      OauthHandler: '../app/js/oauth/oauth-handler',
       WhoAmI: '../app/js/whoami-view'
     },
     map: {
