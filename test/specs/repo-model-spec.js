@@ -1,4 +1,4 @@
-/*global define, describe, it, expect, spyOn, beforeEach, afterEach*/
+/*global define, describe, it, expect, spyOn, beforeEach, afterEach, localStorage*/
 define(['app', 'RepoModel'], function(app, RepoModel){
   'use strict';
 
@@ -11,6 +11,7 @@ define(['app', 'RepoModel'], function(app, RepoModel){
 
     afterEach(function(){
       repoModel = null;
+      localStorage.clear();
     });
 
     it('Should be defined', function(){
@@ -42,7 +43,6 @@ define(['app', 'RepoModel'], function(app, RepoModel){
       repoModel.getContributors();
 
       expect(githubreposGetContributorsSpy).toHaveBeenCalled();
-
     });
 
     it('.getContributors should not call github api if contributors is present', function(){

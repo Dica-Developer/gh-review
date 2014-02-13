@@ -1,8 +1,12 @@
-/*global define, describe, it, expect, spyOn, localStorage*/
+/*global define, describe, it, expect, spyOn, localStorage, afterEach*/
 define(['app', 'Router', 'loginLogout'], function(app, Router, loginLogout){
   'use strict';
 
   describe('#loginLogout', function(){
+
+    afterEach(function(){
+      localStorage.clear();
+    });
 
     it('#loginLogout should be defined', function(){
       expect(loginLogout).toBeDefined();

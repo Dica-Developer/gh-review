@@ -1,4 +1,4 @@
-/*global define, describe, it, expect, beforeEach, afterEach, spyOn*/
+/*global define, describe, it, expect, beforeEach, afterEach, spyOn, localStorage*/
 define([
   'backbone',
   'when',
@@ -39,6 +39,7 @@ define([
         router = null;
         routerClearSpy = null;
         app.authenticated = false;
+        localStorage.clear();
       });
 
       it('.reviewList should init new #ReviewListView', function () {

@@ -58,15 +58,17 @@ define(['jquery', 'underscore', 'app', 'Router', 'bootstrap'], function ($, _, a
     });
 
     describe('.init', function () {
-      var tmpApp;
-      var router = new Router();
+      var tmpApp = null, router = null;
 
       beforeEach(function () {
+        var TmpRouter = Router.extend({initialize: function(){}});
+        router = new TmpRouter();
         tmpApp = _.extend({}, app);
       });
 
       afterEach(function () {
         tmpApp = null;
+        localStorage.clear();
       });
 
       describe('existing access token', function(){
@@ -81,7 +83,6 @@ define(['jquery', 'underscore', 'app', 'Router', 'bootstrap'], function ($, _, a
       describe('no access token', function(){
         it('not authenticated', function () {
           tmpApp.router = router;
-          localStorage.removeItem('accessToken');
           tmpApp.init();
           expect(tmpApp.authenticated).toBeFalsy();
         });

@@ -1,4 +1,4 @@
-/*global define, describe, it, expect, beforeEach, spyOn, afterEach, waitsFor, runs, jasmine*/
+/*global define, describe, it, expect, beforeEach, spyOn, afterEach, waitsFor, runs, jasmine, localStorage*/
 define(['underscore', 'server', 'OAuth'], function(_, server, OAuth2){
   'use strict';
 
@@ -8,6 +8,10 @@ define(['underscore', 'server', 'OAuth'], function(_, server, OAuth2){
     redirectUri: 'http://localhost:9000',
     accessTokenUrl: 'http://gh-review.herokuapp.com/bemdsvdsynggmvweibduvjcbgf'
   };
+
+  afterEach(function(){
+    localStorage.clear();
+  });
 
   describe('OAuth', function(){
     var oauth = null, doRedirectSpy = null;
