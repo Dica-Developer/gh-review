@@ -11,10 +11,10 @@ define([
   'reviewListView',
   'reviewDetailView',
   'commentView',
-  'OauthView',
+  'OauthHandler',
   'loginLogout',
   'backboneLocalStorage'
-], function (Backbone, when, app, Router, RepoCollection, RepoView, RepoDetailView, ReviewCollection, ReviewListView, ReviewDetailView, CommentView, OauthView, loginLogout) {
+], function (Backbone, when, app, Router, RepoCollection, RepoView, RepoDetailView, ReviewCollection, ReviewListView, ReviewDetailView, CommentView, oauthHandler, loginLogout) {
   'use strict';
 
   describe('#Router', function () {
@@ -157,29 +157,22 @@ define([
 
       });
 
-      it('.getAccessToken should init new #OauthView and call #OAuthView.getAccessToken', function () {
-        var oauthRenderViewSpy = spyOn(OauthView.prototype, 'render');
-        var oauthGetAccessTokenViewSpy = spyOn(OauthView.prototype, 'getAccessToken');
+      it('.getAccessToken should call #OAuthHandler.getAccessToken', function () {
+        var oauthGetAccessTokenSpy = spyOn(oauthHandler, 'getAccessToken');
 
         router.getAccessToken();
 
         expect(routerClearSpy).toHaveBeenCalled();
-        expect(oauthRenderViewSpy).toHaveBeenCalled();
-        expect(oauthGetAccessTokenViewSpy).toHaveBeenCalled();
-        expect(router.view instanceof OauthView).toBeTruthy();
-
+        expect(oauthGetAccessTokenSpy).toHaveBeenCalled();
       });
 
-      it('.callback should init new #OauthView and call #OAuthView.callback', function () {
-        var oauthRenderViewSpy = spyOn(OauthView.prototype, 'render');
-        var oauthCallbackViewSpy = spyOn(OauthView.prototype, 'callback');
+      it('.callback should call #OAuthHandler.callback', function () {
+        var oauthCallbackSpy = spyOn(oauthHandler, 'callback');
 
         router.callback();
 
         expect(routerClearSpy).toHaveBeenCalled();
-        expect(oauthRenderViewSpy).toHaveBeenCalled();
-        expect(oauthCallbackViewSpy).toHaveBeenCalled();
-        expect(router.view instanceof OauthView).toBeTruthy();
+        expect(oauthCallbackSpy).toHaveBeenCalled();
 
       });
 
