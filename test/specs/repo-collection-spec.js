@@ -15,18 +15,12 @@ define([
 
   describe('#RepoCollection', function(){
 
-    it('Should call .getRepos on initialization', function(){
-      var getReposSpy = spyOn(RepoCollection.prototype, 'getRepos');
-      var Collection = RepoCollection.extend();
-      new Collection();
-      expect(getReposSpy).toHaveBeenCalled();
-    });
-
     it('.getRepos should call github api', function(){
       var githubReposGetAllSpy = spyOn(app.github.repos, 'getAll');
       var githubUserGetOrgsSpy = spyOn(app.github.user, 'getOrgs');
       var Collection = RepoCollection.extend();
-      new Collection();
+      var collection = new Collection();
+      collection.getRepos();
       expect(githubReposGetAllSpy).toHaveBeenCalled();
       expect(githubUserGetOrgsSpy).toHaveBeenCalled();
     });
@@ -36,8 +30,8 @@ define([
       var getAllReposCallbackSpy = spyOn(RepoCollection.prototype, 'getAllReposCallback');
       spyOn(app.github.user, 'getOrgs');
       var Collection = RepoCollection.extend();
-      new Collection();
-
+      var collection = new Collection();
+      collection.getRepos();
       waitsFor(function(){
         return server.server.requests[0].readyState === 4;
       });
@@ -53,7 +47,6 @@ define([
       spyOn(app.github.user, 'getOrgs');
       var Collection = RepoCollection.extend();
       var collection = new Collection();
-
       collection.getAllReposCallback(null, githubResponses.reposGetAll);
 
       expect(collection.length).toBe(2);
@@ -64,7 +57,8 @@ define([
       var getOrgsCallbackSpy = spyOn(RepoCollection.prototype, 'getOrgsCallback');
       spyOn(app.github.repos, 'getAll');
       var Collection = RepoCollection.extend();
-      new Collection();
+      var collection = new Collection();
+      collection.getRepos();
 
       waitsFor(function(){
         return server.server.requests[0].readyState === 4;
@@ -83,6 +77,7 @@ define([
       var githubgetFromOrgSpy = spyOn(app.github.repos, 'getFromOrg');
       var Collection = RepoCollection.extend();
       var collection = new Collection();
+      collection.getRepos();
 
       waitsFor(function(){
         return server.server.requests[0].readyState === 4;

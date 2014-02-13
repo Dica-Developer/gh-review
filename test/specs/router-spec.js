@@ -60,57 +60,6 @@ define([
 
       });
 
-      it('.repositories should init new #RepoCollection and #RepoView if authenticated', function () {
-        app.authenticated = true;
-        var repoCollectionSpy = spyOn(RepoCollection.prototype, 'initialize');
-        var repoViewSpy = spyOn(RepoView.prototype, 'initialize');
-
-        router.repositories();
-
-        expect(routerClearSpy).toHaveBeenCalled();
-        expect(repoCollectionSpy).toHaveBeenCalled();
-        expect(repoViewSpy).toHaveBeenCalled();
-        expect(router.view instanceof RepoView).toBeTruthy();
-
-      });
-
-      it('.repositories should init new #RepoCollection and #RepoView if not authenticated', function () {
-        app.authenticated = false;
-        var repoCollectionSpy = spyOn(RepoCollection.prototype, 'initialize');
-        var repoViewSpy = spyOn(RepoView.prototype, 'initialize');
-
-        router.repositories();
-
-        expect(routerClearSpy).not.toHaveBeenCalled();
-        expect(repoCollectionSpy).not.toHaveBeenCalled();
-        expect(repoViewSpy).not.toHaveBeenCalled();
-        expect(router.view instanceof RepoView).toBeFalsy();
-
-      });
-
-      it('.repoDetail should init new #RepoDetailView if authenticated', function () {
-        app.authenticated = true;
-        var repoDetailViewSpy = spyOn(RepoDetailView.prototype, 'initialize');
-
-        router.repoDetail();
-
-        expect(routerClearSpy).toHaveBeenCalled();
-        expect(repoDetailViewSpy).toHaveBeenCalled();
-        expect(router.view instanceof RepoDetailView).toBeTruthy();
-      });
-
-      it('.repoDetail should not init new #RepoDetailView if not authenticated', function () {
-        app.authenticated = false;
-        var repoDetailViewSpy = spyOn(RepoDetailView.prototype, 'initialize');
-
-        router.repoDetail();
-
-        expect(routerClearSpy).not.toHaveBeenCalled();
-        expect(repoDetailViewSpy).not.toHaveBeenCalled();
-        expect(router.view instanceof RepoDetailView).toBeFalsy();
-
-      });
-
       it('.reviewDetail should init new #ReviewDetailView', function () {
         var reviewDetailViewSpy = spyOn(ReviewDetailView.prototype, 'initialize');
         router.reviewCollection = new ReviewCollection();
