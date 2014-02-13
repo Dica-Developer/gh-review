@@ -17,6 +17,7 @@ define([
     el: '#main',
     template: _.template(template),
     files: [],
+    chunkDefer: null,
     commentBox: null,
     events: {
       'click .added,.deleted': 'commentLine',
@@ -28,19 +29,19 @@ define([
         .then(this.model.getCommitComments.bind(this.model));
     },
     computeChunk: function () {
-      var defer = when.defer();
+      this.chunkDefer = when.defer();
       this.files = [];
       var files = this.model.get('diff').files;
-      var length = files.length;
-      _.forEach(files, function (file, fileIndex) {
-        this.files[fileIndex] = { chunks: [] };
-        var lines = _.str.lines(file.patch);
-        _.forEach(lines, this.addLine, this);
-        if (fileIndex === (length - 1)) {
-          defer.resolve();
-        }
-      }, this);
-      return defer.promise;
+      _.forEach(files, this.addFile, this);
+      return this.chunkDefer.promise;
+    },
+    addFile: function (file, fileIndex, array) {
+      this.files[fileIndex] = { chunks: [] };
+      var lines = _.str.lines(file.patch);
+      _.forEach(lines, this.addLine, this);
+      if (fileIndex === (array.length - 1)) {
+        this.chunkDefer.resolve();
+      }
     },
     addLine: function (line) {
       line = _.str.escapeHTML(line);
