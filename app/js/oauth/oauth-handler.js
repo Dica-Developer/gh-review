@@ -17,7 +17,7 @@ define([
     },
     callback: function () {
       var oauth = new OAuth(options);
-      oauth.finishAuthentication(this.accessTokenReceived);
+      oauth.finishAuthentication(this.accessTokenReceived.bind(this));
     },
     accessTokenReceived: function (response) {
       /*jshint camelcase:false*/

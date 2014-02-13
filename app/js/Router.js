@@ -97,8 +97,8 @@ define(function (require) {
         $('<div id="main" class="container"></div>').appendTo('body');
       }
     },
-    login: loginLogout.login,
-    logout: loginLogout.logout,
+    login: loginLogout.login.bind(loginLogout),
+    logout: loginLogout.logout.bind(loginLogout),
     getAccessToken: function () {
       this.clear();
       oauthHandler.getAccessToken();
@@ -106,7 +106,7 @@ define(function (require) {
     callback: function () {
       // TODO currently handled by root non authenticated case
       this.clear();
-      oauthHandler.callback();
+      oauthHandler.callback.call(oauthHandler);
     },
     root: function () {
       var url = window.location.href;
