@@ -34,6 +34,7 @@ define([
     },
     render: function () {
       this.$el.html('<ul id="reviewList" class="list-group"></ul>');
+      app.showIndicator(false);
     }
   });
 

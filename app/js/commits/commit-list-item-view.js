@@ -2,8 +2,9 @@
 define([
   'backbone',
   'underscore',
+  'app',
   'text!templates/commit-list-item.html'
-], function (Backbone, _, template) {
+], function (Backbone, _, app, template) {
   'use strict';
   var CommitListView = Backbone.View.extend({
     template: _.template(template),
@@ -23,6 +24,7 @@ define([
       };
     },
     render: function () {
+      app.showIndicator(false);
       return this.template(this.serialize());
     }
   });

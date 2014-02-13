@@ -121,9 +121,9 @@ define([
       }
     },
     render: function () {
-      app.showIndicator(false);
       this.$el.html(this.template(this.serialize()));
       this.checkAlreadyExist();
+      app.showIndicator(false);
     }
   });
 

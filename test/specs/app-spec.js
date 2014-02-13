@@ -19,9 +19,7 @@ define(['jquery', 'underscore', 'app', 'Router', 'bootstrap'], function ($, _, a
 
       beforeEach(function () {
         tmpApp = _.extend({}, app);
-        indicator = $('<div id="ajaxIndicator" class="modal fade"><div class="modal-dialog">' +
-          '<div class="modal-content"><div class="modal-body"><p>Fetching results ... </p>' +
-          '</div></div></div></div>');
+        indicator = $('<div id="ajaxIndicator" class="modal"> <div class="modal-dialog"> <div id="spinner" class="spinner">Loading ...</div> </div> </div>');
         tmpApp.ajaxIndicator = indicator.modal({
           backdrop: true,
           show: false,

@@ -35,6 +35,7 @@ define(function (require) {
       'whoami': 'whoami'
     },
     reviewList: function () {
+      this.trigger('ajaxIndicator', true);
       this.clear();
       this.view = new ReviewListView({collection: this.reviewCollection});
       this.view.render();
@@ -43,9 +44,9 @@ define(function (require) {
       $('#reviewLink').addClass('active');
     },
     repositories: function () {
+      this.trigger('ajaxIndicator', true);
       if (app.authenticated) {
         this.clear();
-        this.trigger('ajaxIndicator', true);
         repoCollection = new RepoCollection();
         this.view = new RepoView({
           collection: repoCollection
@@ -55,9 +56,9 @@ define(function (require) {
       }
     },
     repoDetail: function (id) {
+      this.trigger('ajaxIndicator', true);
       if (app.authenticated) {
         this.clear();
-        this.trigger('ajaxIndicator', true);
         var model = repoCollection.get(id);
         this.view = new RepoDetailView({
           model: model
@@ -67,8 +68,8 @@ define(function (require) {
       }
     },
     reviewDetail: function (id) {
-      this.clear();
       this.trigger('ajaxIndicator', true);
+      this.clear();
       var model = this.reviewCollection.get(id);
       this.view = new ReviewDetailView({
         model: model
@@ -82,8 +83,8 @@ define(function (require) {
       $('#reviewLink').addClass('active');
     },
     showCommit: function (id) {
-      this.clear();
       this.trigger('ajaxIndicator', true);
+      this.clear();
       var model = commitCollection.get(id);
       this.view = new CommentView({
         model: model
@@ -100,15 +101,17 @@ define(function (require) {
     login: loginLogout.login.bind(loginLogout),
     logout: loginLogout.logout.bind(loginLogout),
     getAccessToken: function () {
+      this.trigger('ajaxIndicator', true);
       this.clear();
       oauthHandler.getAccessToken();
     },
     callback: function () {
-      // TODO currently handled by root non authenticated case
+      // TODO github didn't work with our # urls so this is currently handled by the root function in non authenticated case
       this.clear();
-      oauthHandler.callback.call(oauthHandler);
+      oauthHandler.callback();
     },
     root: function () {
+      this.trigger('ajaxIndicator', true);
       var url = window.location.href;
       var error = url.match(/[&\?]error=([^&]+)/);
       var code = url.match(/[&\?]code=([\w\/\-]+)/);
@@ -117,6 +120,7 @@ define(function (require) {
       }
     },
     whoami: function(){
+      this.trigger('ajaxIndicator', true);
       this.clear();
       this.view = new WhoAmI();
       this.view.render();
