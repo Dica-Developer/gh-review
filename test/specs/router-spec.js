@@ -10,7 +10,7 @@ define([
   'reviewCollection',
   'reviewListView',
   'reviewDetailView',
-  'commentView',
+  'CommentView',
   'OauthHandler',
   'loginLogout',
   'backboneLocalStorage'

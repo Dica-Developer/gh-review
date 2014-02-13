@@ -42,7 +42,7 @@
       commitCollection: 'commits/commit-collection',
       commitListItemView: 'commits/commit-list-item-view',
 
-      commentView: 'comment/comment-view',
+      CommentView: 'comment/comment-view',
       commentBox: 'comment/comment-box',
       CommentModel: 'comment/comment-model',
       CommentCollection: 'comment/Comment-collection',

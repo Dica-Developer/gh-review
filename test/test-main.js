@@ -57,7 +57,7 @@
       commitCollection: '../app/js/commits/commit-collection',
       commitListItemView: '../app/js/commits/commit-list-item-view',
 
-      commentView: '../app/js/comment/comment-view',
+      CommentView: '../app/js/comment/comment-view',
       commentBox: '../app/js/comment/comment-box',
       CommentModel: '../app/js/comment/comment-model',
       CommentCollection: '../app/js/comment/Comment-collection',

@@ -11,7 +11,7 @@ define(function (require) {
   var ReviewListView = require('reviewListView');
   var ReviewDetailView = require('reviewDetailView');
   var commitCollection = require('commitCollection');
-  var CommentView = require('commentView');
+  var CommentView = require('CommentView');
   var oauthHandler = require('OauthHandler');
   var loginLogout = require('loginLogout');
   var WhoAmI = require('WhoAmI');
