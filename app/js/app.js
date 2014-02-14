@@ -51,9 +51,9 @@ define([
     window.clearTimeout(this.ajaxIndicatorTimeoutId);
     if (!this.ajaxIndicatorIsVisible && show) {
       this.ajaxIndicatorTimeoutId = window.setTimeout(function () {
-        var spinner = $('#spinner');
-        spinner.css('margin-top', ($(window.document).innerHeight() / 2));
-        spinner.css('margin-left', ($(window.document).innerWidth() / 2));
+        var spinner = $('#spinnerContainer');
+        spinner.css('top', (($(window.document).innerHeight() / 2) - 80) + 'px');
+        spinner.css('left', (($(window.document).innerWidth() / 2) - 100) + 'px');
         _this.ajaxIndicator.modal('show');
         _this.ajaxIndicatorIsVisible = true;
       }, 200);
