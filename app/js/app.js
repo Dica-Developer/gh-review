@@ -7,7 +7,7 @@ define([
   'use strict';
 
   function hasLocalStorage() {
-    return (typeof localStorage !== 'undefined');
+    return (localStorage !== undefined);
   }
 
   function GHReview() {
