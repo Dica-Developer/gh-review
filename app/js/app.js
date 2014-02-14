@@ -18,6 +18,7 @@ define([
     this.user = null;
     this.github = new GitHub({});
     this.repoCollection = null;
+    this.reviewCollection = null;
   }
 
   GHReview.prototype = Backbone.Events;
@@ -30,10 +31,12 @@ define([
         type: 'token',
         token: localStorage.accessToken
       });
-      requirejs(['RepoCollection'], function(RepoCollection){
+      requirejs(['RepoCollection', 'reviewCollection'], function(RepoCollection, ReviewCollection){
         this.repoCollection = new RepoCollection();
+        this.reviewCollection = new ReviewCollection();
         when.all(this.repoCollection.getRepos())
           .then(function(){
+            Backbone.history.start();
             this.router.navigate('#reviews', {
               trigger: true
             });

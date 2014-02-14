@@ -29,9 +29,11 @@
 
       reviewCollection: 'review/review-collection',
       reviewItemModel: 'review/review-item-model',
-      reviewListView: 'review/review-list-view',
+      ReviewListView: 'review/review-list-view',
       reviewListItemView: 'review/review-list-item-view',
       reviewDetailView: 'review/review-detail-view',
+      ReviewOverview: 'review/review-overview-view',
+      QuickReview: 'review/review-quick-review-view',
 
       RepoModel: 'repositories/repo-model',
       RepoCollection: 'repositories/repo-collection',

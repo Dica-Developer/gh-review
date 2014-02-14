@@ -9,7 +9,7 @@ define([
   'use strict';
 
   var ReviewListView = Backbone.View.extend({
-    el: '#main',
+    el: '#reviewList',
     events: {
       'click li': 'showDetail'
     },
@@ -25,17 +25,14 @@ define([
     },
     addOne: function (model) {
       var view = new ReviewListItemView({model: model});
-      this.$('#reviewList').append(view.render().el);
+      this.$el.append(view.render().el);
     },
     addAll: function () {
       this.collection.each(this.addOne, this);
-    },
-    showHint: function () {
-    },
-    render: function () {
-      this.$el.html('<ul id="reviewList" class="list-group"></ul>');
       app.showIndicator(false);
-    }
+    },
+    showHint: function () { },
+    render: function () {}
   });
 
   return ReviewListView;

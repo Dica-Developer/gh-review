@@ -6,8 +6,7 @@ define(function (require) {
   var app = require('app');
   var RepoView = require('RepoView');
   var RepoDetailView = require('repoDetailView');
-  var ReviewCollection = require('reviewCollection');
-  var ReviewListView = require('reviewListView');
+  var ReviewOverview = require('ReviewOverview');
   var ReviewDetailView = require('reviewDetailView');
   var commitCollection = require('commitCollection');
   var CommentView = require('CommentView');
@@ -17,10 +16,9 @@ define(function (require) {
 
   var Router = Backbone.Router.extend({
     view: null,
-    reviewCollection: null, //TODO move to proper place. Remind repo-detail-view
     routes: {
       '': 'root',
-      'reviews': 'reviewList',
+      'reviews': 'reviewOverview',
       'repositories': 'repositories',
       'repo/:id': 'repoDetail',
       'review/:id': 'reviewDetail',
@@ -31,14 +29,11 @@ define(function (require) {
       'oauth/callback': 'callback',
       'whoami': 'whoami'
     },
-    reviewList: function () {
+    reviewOverview: function () {
       this.trigger('ajaxIndicator', true);
       this.clear();
-      this.view = new ReviewListView({
-        collection: this.reviewCollection
-      });
+      this.view = new ReviewOverview();
       this.view.render();
-      this.view.fetchReviews();
       $('li[name="ghr-top-menu-links"]').removeClass('active');
       $('#reviewLink').addClass('active');
     },
@@ -68,7 +63,7 @@ define(function (require) {
     reviewDetail: function (id) {
       this.trigger('ajaxIndicator', true);
       this.clear();
-      var model = this.reviewCollection.get(id);
+      var model = app.reviewCollection.get(id);
       this.view = new ReviewDetailView({
         model: model
       });
@@ -124,10 +119,7 @@ define(function (require) {
       this.view = new WhoAmI();
       this.view.render();
     },
-    initialize: function () {
-      this.reviewCollection = new ReviewCollection();
-      Backbone.history.start();
-    }
+    initialize: function () {}
   });
   return Router;
 });
