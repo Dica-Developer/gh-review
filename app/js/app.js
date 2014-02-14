@@ -43,6 +43,8 @@ define([
             this.showIndicator(false);
           }.bind(this));
       }.bind(this));
+    }else{
+      Backbone.history.start();
     }
   };
 
