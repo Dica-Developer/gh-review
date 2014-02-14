@@ -63,5 +63,20 @@ define([
     }
   };
 
+  try {
+    window.onerror = function () {
+      window.setTimeout(function () {
+        var ai = $('#ajaxIndicator').modal({
+          backdrop: true,
+          show: false,
+          keyboard: false
+        });
+        ai.modal('hide');
+      }, 500);
+    };
+  } catch (ignore) {
+    // we should not fail in case of window.onerror does not exist
+  }
+
   return new GHReview();
 });
