@@ -8,7 +8,7 @@ define([
   'RepoView',
   'repoDetailView',
   'reviewCollection',
-  'reviewListView',
+  'ReviewListView',
   'reviewDetailView',
   'CommentView',
   'OauthHandler',

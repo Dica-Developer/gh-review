@@ -44,9 +44,11 @@
 
       reviewCollection: '../app/js/review/review-collection',
       reviewItemModel: '../app/js/review/review-item-model',
-      reviewListView: '../app/js/review/review-list-view',
+      ReviewListView: '../app/js/review/review-list-view',
       reviewListItemView: '../app/js/review/review-list-item-view',
       reviewDetailView: '../app/js/review/review-detail-view',
+      ReviewOverview: '../app/js/review/review-overview-view',
+      QuickReview: '../app/js/review/review-quick-review-view',
 
       RepoModel: '../app/js/repositories/repo-model',
       RepoCollection: '../app/js/repositories/repo-collection',
