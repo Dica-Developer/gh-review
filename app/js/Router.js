@@ -114,6 +114,7 @@ define(function (require) {
       if (!app.authenticated && (error || code)) {
         oauthHandler.callback();
       }
+      this.trigger('ajaxIndicator', false);
     },
     whoami: function(){
       this.trigger('ajaxIndicator', true);
