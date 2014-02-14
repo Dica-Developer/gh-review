@@ -7,14 +7,14 @@ define([
   'RepoCollection',
   'RepoView',
   'repoDetailView',
-  'reviewCollection',
+  'ReviewOverview',
   'ReviewListView',
   'reviewDetailView',
   'CommentView',
   'OauthHandler',
   'loginLogout',
   'backboneLocalStorage'
-], function (Backbone, when, app, Router, RepoCollection, RepoView, RepoDetailView, ReviewCollection, ReviewListView, ReviewDetailView, CommentView, oauthHandler, loginLogout) {
+], function (Backbone, when, app, Router, RepoCollection, RepoView, RepoDetailView, ReviewOverview, ReviewListView, ReviewDetailView, CommentView, oauthHandler, loginLogout) {
   'use strict';
 
   afterEach(function(){
@@ -45,29 +45,14 @@ define([
         routerClearSpy = null;
       });
 
-      it('.reviewList should init new #ReviewListView', function () {
-        var reviewListViewSpy = spyOn(ReviewListView.prototype, 'initialize');
-        var renderSpy = spyOn(ReviewListView.prototype, 'render');
-        var fetchReviewsSpy = spyOn(ReviewListView.prototype, 'fetchReviews');
-
-        router.reviewList();
+      it('.reviewOverview should init new #ReviewOverview', function () {
+        var reviewOverviewSpy = spyOn(ReviewOverview.prototype, 'initialize');
+        spyOn(ReviewOverview.prototype, 'render');
+        router.reviewOverview();
 
         expect(routerClearSpy).toHaveBeenCalled();
-        expect(reviewListViewSpy).toHaveBeenCalled();
-        expect(renderSpy).toHaveBeenCalled();
-        expect(fetchReviewsSpy).toHaveBeenCalled();
-        expect(router.view instanceof ReviewListView).toBeTruthy();
-
-      });
-
-      it('.reviewDetail should init new #ReviewDetailView', function () {
-        var reviewDetailViewSpy = spyOn(ReviewDetailView.prototype, 'initialize');
-        router.reviewCollection = new ReviewCollection();
-        router.reviewDetail();
-
-        expect(routerClearSpy).toHaveBeenCalled();
-        expect(reviewDetailViewSpy).toHaveBeenCalled();
-        expect(router.view instanceof ReviewDetailView).toBeTruthy();
+        expect(reviewOverviewSpy).toHaveBeenCalled();
+        expect(router.view instanceof ReviewOverview).toBeTruthy();
 
       });
 
@@ -127,14 +112,6 @@ define([
         expect(routerClearSpy).toHaveBeenCalled();
         expect(oauthCallbackSpy).toHaveBeenCalled();
 
-      });
-
-
-      it('.initialize should start Backbone.history', function () {
-        spyOn(Backbone.history, 'start');
-        new Router();
-
-        expect(Backbone.history.start).toHaveBeenCalled();
       });
 
     });
