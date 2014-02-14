@@ -34,7 +34,9 @@ define(function (require) {
     reviewList: function () {
       this.trigger('ajaxIndicator', true);
       this.clear();
-      this.view = new ReviewListView({collection: this.reviewCollection});
+      this.view = new ReviewListView({
+        collection: this.reviewCollection
+      });
       this.view.render();
       this.view.fetchReviews();
       $('li[name="ghr-top-menu-links"]').removeClass('active');
@@ -116,7 +118,7 @@ define(function (require) {
       }
       this.trigger('ajaxIndicator', false);
     },
-    whoami: function(){
+    whoami: function () {
       this.trigger('ajaxIndicator', true);
       this.clear();
       this.view = new WhoAmI();
