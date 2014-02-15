@@ -7,7 +7,7 @@
   requirejs.config({
     basePath: '../js',
     paths: {
-      jquery: '../bower_components/jquery/jquery',
+      jquery: '../bower_components/jquery/dist/jquery',
       bootstrap: '../bower_components/bootstrap/dist/js/bootstrap.min',
       backbone: '../bower_components/backbone/backbone',
       backboneLocalStorage: '../bower_components/backbone.localStorage/backbone.localStorage',
