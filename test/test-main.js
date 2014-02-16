@@ -18,7 +18,7 @@
     baseUrl: '/base/src',
 
     paths: {
-      jquery: '../app/bower_components/jquery/jquery',
+      jquery: '../app/bower_components/jquery/dist/jquery',
       bootstrap: '../app/bower_components/bootstrap/dist/js/bootstrap.min',
       backbone: '../app/bower_components/backbone/backbone',
       backboneLocalStorage: '../app/bower_components/backbone.localStorage/backbone.localStorage',
