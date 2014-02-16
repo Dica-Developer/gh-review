@@ -1,4 +1,4 @@
-/*global define*/
+/*global define, URL*/
 define(['github/util', 'github/api/index'], function (Util, Api) {
   'use strict';
 
@@ -34,88 +34,88 @@ define(['github/util', 'github/api/index'], function (Util, Api) {
    *  First, we look at a listing of a sample routes.json routes definition file:
    *
    *      {
- *          "defines": {
- *              "constants": {
- *                  "name": "Github",
- *                  "description": "A Node.JS module, which provides an object oriented wrapper for the GitHub v3 API.",
- *                  "protocol": "https",
- *                  "host": "api.github.com",
- *                  "port": 443,
- *                  "dateFormat": "YYYY-MM-DDTHH:MM:SSZ",
- *                  "requestFormat": "json"
- *              },
- *              "response-headers": [
- *                  "X-RateLimit-Limit",
- *                  "X-RateLimit-Remaining",
- *                  "Link"
- *              ],
- *              "params": {
- *                  "files": {
- *                      "type": "Json",
- *                      "required": true,
- *                      "validation": "",
- *                      "invalidmsg": "",
- *                      "description": "Files that make up this gist. The key of which should be a required string filename and the value another required hash with parameters: 'content'"
- *                  },
- *                  "user": {
- *                      "type": "String",
- *                      "required": true,
- *                      "validation": "",
- *                      "invalidmsg": "",
- *                      "description": ""
- *                  },
- *                  "description": {
- *                      "type": "String",
- *                      "required": false,
- *                      "validation": "",
- *                      "invalidmsg": "",
- *                      "description": ""
- *                  },
- *                  "page": {
- *                      "type": "Number",
- *                      "required": false,
- *                      "validation": "^[0-9]+$",
- *                      "invalidmsg": "",
- *                      "description": "Page number of the results to fetch."
- *                  },
- *                  "per_page": {
- *                      "type": "Number",
- *                      "required": false,
- *                      "validation": "^[0-9]+$",
- *                      "invalidmsg": "",
- *                      "description": "A custom page size up to 100. Default is 30."
- *                  }
- *              }
- *          },
- *
- *          "gists": {
- *              "get-from-user": {
- *                  "url": ":user/gists",
- *                  "method": "GET",
- *                  "params": {
- *                      "$user": null,
- *                      "$page": null,
- *                      "$per_page": null
- *                  }
- *              },
- *
- *              "create": {
- *                  "url": "/gists",
- *                  "method": "POST",
- *                  "params": {
- *                      "$description": null,
- *                      "public": {
- *                          "type": "Boolean",
- *                          "required": true,
- *                          "validation": "",
- *                          "invalidmsg": "",
- *                          "description": ""
- *                      },
- *                      "$files": null
- *                  }
- *              }
- *          }
- *       }
+   *          "defines": {
+   *              "constants": {
+   *                  "name": "Github",
+   *                  "description": "A Node.JS module, which provides an object oriented wrapper for the GitHub v3 API.",
+   *                  "protocol": "https",
+   *                  "host": "api.github.com",
+   *                  "port": 443,
+   *                  "dateFormat": "YYYY-MM-DDTHH:MM:SSZ",
+   *                  "requestFormat": "json"
+   *              },
+   *              "response-headers": [
+   *                  "X-RateLimit-Limit",
+   *                  "X-RateLimit-Remaining",
+   *                  "Link"
+   *              ],
+   *              "params": {
+   *                  "files": {
+   *                      "type": "Json",
+   *                      "required": true,
+   *                      "validation": "",
+   *                      "invalidmsg": "",
+   *                      "description": "Files that make up this gist. The key of which should be a required string filename and the value another required hash with parameters: 'content'"
+   *                  },
+   *                  "user": {
+   *                      "type": "String",
+   *                      "required": true,
+   *                      "validation": "",
+   *                      "invalidmsg": "",
+   *                      "description": ""
+   *                  },
+   *                  "description": {
+   *                      "type": "String",
+   *                      "required": false,
+   *                      "validation": "",
+   *                      "invalidmsg": "",
+   *                      "description": ""
+   *                  },
+   *                  "page": {
+   *                      "type": "Number",
+   *                      "required": false,
+   *                      "validation": "^[0-9]+$",
+   *                      "invalidmsg": "",
+   *                      "description": "Page number of the results to fetch."
+   *                  },
+   *                  "per_page": {
+   *                      "type": "Number",
+   *                      "required": false,
+   *                      "validation": "^[0-9]+$",
+   *                      "invalidmsg": "",
+   *                      "description": "A custom page size up to 100. Default is 30."
+   *                  }
+   *              }
+   *          },
+   *
+   *          "gists": {
+   *              "get-from-user": {
+   *                  "url": ":user/gists",
+   *                  "method": "GET",
+   *                  "params": {
+   *                      "$user": null,
+   *                      "$page": null,
+   *                      "$per_page": null
+   *                  }
+   *              },
+   *
+   *              "create": {
+   *                  "url": "/gists",
+   *                  "method": "POST",
+   *                  "params": {
+   *                      "$description": null,
+   *                      "public": {
+   *                          "type": "Boolean",
+   *                          "required": true,
+   *                          "validation": "",
+   *                          "invalidmsg": "",
+   *                          "description": ""
+   *                      },
+   *                      "$files": null
+   *                  }
+   *              }
+   *          }
+   *       }
    *
    *  You probably noticed that the definition is quite verbose and the decision
    *  for its design was made to be verbose whilst still allowing for basic variable
@@ -135,19 +135,19 @@ define(['github/util', 'github/api/index'], function (Util, Api) {
    *  on the [[Client]] object and may be invoked with
    *
    *      client.getFromUser({
- *          "user": "bob"
- *      }, function(err, ret) {
- *          // do something with the result here.
- *      });
+   *          "user": "bob"
+   *      }, function(err, ret) {
+   *          // do something with the result here.
+   *      });
    *
    *      // or to fetch a specfic page:
    *      client.getFromUser({
- *          "user": "bob",
- *          "page": 2,
- *          "per_page": 100
- *      }, function(err, ret) {
- *          // do something with the result here.
- *      });
+   *          "user": "bob",
+   *          "page": 2,
+   *          "per_page": 100
+   *      }, function(err, ret) {
+   *          // do something with the result here.
+   *      });
    *
    *  All the parameters as specified in the Object that is passed to the function
    *  as first argument, will be validated according to the rules in the `params`
@@ -165,10 +165,10 @@ define(['github/util', 'github/api/index'], function (Util, Api) {
    *  The `url` parameter also supports denoting parameters inside it as follows:
    *
    *      "get-from-user": {
- *          "url": ":user/gists",
- *          "method": "GET"
- *          ...
- *      }
+   *          "url": ":user/gists",
+   *          "method": "GET"
+   *          ...
+   *      }
    **/
   function Client(config) {
     this.config = config;
@@ -219,7 +219,7 @@ define(['github/util', 'github/api/index'], function (Util, Api) {
     delete routes.defines;
 
     function trim(s) {
-      if (typeof s !== 'string'){
+      if (typeof s !== 'string') {
         return s;
       }
       return s.replace(/^[\s\t\r\n]+/, '').replace(/[\s\t\r\n]+$/, '');
@@ -246,7 +246,7 @@ define(['github/util', 'github/api/index'], function (Util, Api) {
         if (typeof value !== 'boolean' && !value) {
           // we don't need to validation for undefined parameter values
           // that are not required.
-          if (!def.required){
+          if (!def.required) {
             continue;
           }
           console.error('Empty value for parameter "' + paramName + '": ' + value);
@@ -346,8 +346,7 @@ define(['github/util', 'github/api/index'], function (Util, Api) {
 
             api[section][funcName].call(api, msg, block, callback);
           };
-        }
-        else {
+        } else {
           // recurse into this block next:
           prepareApi(block, messageType);
         }
@@ -371,16 +370,16 @@ define(['github/util', 'github/api/index'], function (Util, Api) {
    *
    *      // basic
    *      github.authenticate({
-     *          type: "basic",
-     *          username: "mikedeboertest",
-     *          password: "test1324"
-     *      });
+   *          type: "basic",
+   *          username: "mikedeboertest",
+   *          password: "test1324"
+   *      });
    *
    *      // or oauth
    *      github.authenticate({
-     *          type: "oauth",
-     *          token: "e5a4a27487c26e571892846366de023349321a73"
-     *      });
+   *          type: "oauth",
+   *          token: "e5a4a27487c26e571892846366de023349321a73"
+   *      });
    **/
   Client.prototype.authenticate = function (options) {
     if (!options) {
@@ -462,7 +461,7 @@ define(['github/util', 'github/api/index'], function (Util, Api) {
     return getPageLinks(link).first;
   };
 
-  Client.prototype.getPage = function(link, which, callback) {
+  Client.prototype.getPage = function (link, which, callback) {
     var url = getPageLinks(link)[which];
     if (!url) {
       console.error('No ' + which + ' page found');
@@ -691,7 +690,6 @@ define(['github/util', 'github/api/index'], function (Util, Api) {
       headers[headerLC] = msg.headers[header];
     });
 
-
     if (this.debug) {
       console.log('REQUEST');
     }
@@ -703,7 +701,7 @@ define(['github/util', 'github/api/index'], function (Util, Api) {
     Object.keys(headers).forEach(function (header) {
       xhr.setRequestHeader(header, headers[header]);
     });
-    xhr.onreadystatechange = function(){
+    xhr.onreadystatechange = function () {
       if (self.debug) {
         console.log('STATUS: ' + xhr.status);
       }
@@ -716,7 +714,7 @@ define(['github/util', 'github/api/index'], function (Util, Api) {
           var headersSplit = xhr.getAllResponseHeaders().split('\n');
           for (var i = 0, length = headersSplit.length; i < length; i++) {
             var header = headersSplit[i];
-            if(header !== '' && header.indexOf(':') !== -1){
+            if (header !== '' && header.indexOf(':') !== -1) {
               var dividerIndex = header.indexOf(':');
               var key = header.substring(0, dividerIndex).trim().toLowerCase();
               var value = header.substring(dividerIndex + 1).trim();
@@ -726,7 +724,7 @@ define(['github/util', 'github/api/index'], function (Util, Api) {
           res.data = xhr.responseText;
           callbackCalled = true;
           callback(null, res);
-        }else if (!callbackCalled && xhr.status >= 400 && xhr.status < 600 || xhr.status < 10){
+        } else if (!callbackCalled && xhr.status >= 400 && xhr.status < 600 || xhr.status < 10) {
           console.error(xhr.status, xhr.responseText);
         }
       }

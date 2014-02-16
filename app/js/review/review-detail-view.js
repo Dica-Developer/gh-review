@@ -21,25 +21,25 @@ define([
     initialize: function () {
       var attributes = this.model.toJSON();
       app.currentReviewData = {};
-      if(!_.isEmpty(attributes.user)){
+      if (!_.isEmpty(attributes.user)) {
         app.currentReviewData.user = attributes.user;
       }
-      if(!_.isEmpty(attributes.repo)){
+      if (!_.isEmpty(attributes.repo)) {
         app.currentReviewData.repo = attributes.repo;
       }
-      if(!_.isEmpty(attributes.branch)){
+      if (!_.isEmpty(attributes.branch)) {
         app.currentReviewData.sha = attributes.branch;
       }
-      if(!_.isEmpty(attributes.contributor)){
+      if (!_.isEmpty(attributes.contributor)) {
         app.currentReviewData.author = attributes.contributor;
       }
-      if(!_.isEmpty(attributes.since.pattern)){
+      if (!_.isEmpty(attributes.since.pattern)) {
         app.currentReviewData.since = _.moment().subtract(attributes.since.pattern, attributes.since.amount).toISOString();
       }
-      if(!_.isEmpty(attributes.until)){
+      if (!_.isEmpty(attributes.until)) {
         app.currentReviewData.until = attributes.until;
       }
-      if(!_.isEmpty(attributes.path)){
+      if (!_.isEmpty(attributes.path)) {
         app.currentReviewData.path = attributes.path;
       }
     },
@@ -95,7 +95,9 @@ define([
       });
     },
     renderOneCommit: function (commit) {
-      var view = new CommitListItemView({model: commit});
+      var view = new CommitListItemView({
+        model: commit
+      });
       this.$('#commitList').append(view.render());
     },
     renderAllCommits: function () {
