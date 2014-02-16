@@ -470,15 +470,9 @@ define(['github/util', 'github/api/index'], function (Util, Api) {
     }
 
     var api = this.api;
-    var parsedUrl = ''; //Url.parse(url, true); //TODO
-    var block = {
-      url: parsedUrl.pathname,
-      method: 'GET',
-      params: parsedUrl.query
-    };
-    this.httpSend(parsedUrl.query, block, function (err, res) {
+    this.httpSendForGetPage(new URL(url), function (err, res) {
       if (err) {
-        return api.sendError(err, null, parsedUrl.query, callback);
+        return api.sendError(err, null, url, callback);
       }
 
       var ret;
@@ -507,6 +501,49 @@ define(['github/util', 'github/api/index'], function (Util, Api) {
         callback(null, ret);
       }
     });
+  };
+
+  Client.prototype.httpSendForGetPage = function (url, callback) {
+    var self = this;
+    var headers = [];
+    headers['content-type'] = 'application/json; charset=utf-8';
+    headers.authorization = 'token ' + this.auth.token;
+    var callbackCalled = false;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    Object.keys(headers).forEach(function (header) {
+      xhr.setRequestHeader(header, headers[header]);
+    });
+    xhr.onreadystatechange = function () {
+      if (self.debug) {
+        console.log('STATUS: ' + xhr.status);
+      }
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          var res = {
+            headers: {},
+            data: null
+          };
+          var headersSplit = xhr.getAllResponseHeaders().split('\n');
+          for (var i = 0, length = headersSplit.length; i < length; i++) {
+            var header = headersSplit[i];
+            if (header !== '' && header.indexOf(':') !== -1) {
+              var dividerIndex = header.indexOf(':');
+              var key = header.substring(0, dividerIndex).trim().toLowerCase();
+              var value = header.substring(dividerIndex + 1).trim();
+              res.headers[key] = value;
+            }
+          }
+          res.data = xhr.responseText;
+          callbackCalled = true;
+          callback(null, res);
+        } else if (!callbackCalled && xhr.status >= 400 && xhr.status < 600 || xhr.status < 10) {
+          console.error(xhr.status, xhr.responseText);
+        }
+      }
+    };
+    xhr.send();
   };
 
   /**
