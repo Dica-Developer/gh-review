@@ -679,10 +679,11 @@ define(['github/util', 'github/api/index'], function (Util, Api) {
           var headersSplit = xhr.getAllResponseHeaders().split('\n');
           for (var i = 0, length = headersSplit.length; i < length; i++) {
             var header = headersSplit[i];
-            if(header !== ''){
-              var keyValueSplit = header.split(':');
-              var key = keyValueSplit[0].trim();
-              res.headers[key] = keyValueSplit[1].trim();
+            if(header !== '' && header.indexOf(':') !== -1){
+              var dividerIndex = header.indexOf(':');
+              var key = header.substring(0, dividerIndex).trim().toLowerCase();
+              var value = header.substring(dividerIndex + 1).trim();
+              res.headers[key] = value;
             }
           }
           res.data = xhr.responseText;
