@@ -59,24 +59,20 @@ module.exports = function (grunt) {
     },
     clean: {
       dist: {
-        files: [
-          {
-            dot: true,
-            src: [
-              '<%= config.dist %>/*'
-            ]
-          }
-        ]
+        files: [{
+          dot: true,
+          src: [
+            '<%= config.dist %>/*'
+          ]
+        }]
       },
       dev: {
-        files: [
-          {
-            dot: true,
-            src: [
-              '<%= config.dev %>/*'
-            ]
-          }
-        ]
+        files: [{
+          dot: true,
+          src: [
+            '<%= config.dev %>/*'
+          ]
+        }]
       }
     },
     jshint: {
@@ -105,42 +101,35 @@ module.exports = function (grunt) {
     },
     copy: {
       dev: {
-        files: [
-          {
-            expand: true,
-            cwd: '<%= config.app %>',
-            dest: '<%= config.dev %>',
-            src: '**'
-          },
-          {
-            expand: true,
-            cwd: '<%= config.app %>/bower_components/bootstrap/dist/fonts',
-            dest: '<%= config.dev %>/fonts',
-            src: '*'
-          }
-        ]
+        files: [{
+          expand: true,
+          cwd: '<%= config.app %>',
+          dest: '<%= config.dev %>',
+          src: '**'
+        }, {
+          expand: true,
+          cwd: '<%= config.app %>/bower_components/bootstrap/dist/fonts',
+          dest: '<%= config.dev %>/fonts',
+          src: '*'
+        }]
       },
       dist: {
-        files: [
-          {
-            expand: true,
-            cwd: '<%= config.app %>',
-            dest: '<%= config.dist %>',
-            src: ['img/**/*', 'templates/**/*', 'fonts/**/*', '*.html']
-          },
-          {
-            expand: true,
-            cwd: '<%= config.app %>/bower_components/bootstrap/dist/fonts',
-            dest: '<%= config.dist %>/fonts',
-            src: '*'
-          },
-          {
-            expand: true,
-            cwd: '<%= config.app %>/bower_components/requirejs',
-            dest: '<%= config.dist %>/js',
-            src: 'require.js'
-          }
-        ]
+        files: [{
+          expand: true,
+          cwd: '<%= config.app %>',
+          dest: '<%= config.dist %>',
+          src: ['img/**/*', 'templates/**/*', 'fonts/**/*', '*.html']
+        }, {
+          expand: true,
+          cwd: '<%= config.app %>/bower_components/bootstrap/dist/fonts',
+          dest: '<%= config.dist %>/fonts',
+          src: '*'
+        }, {
+          expand: true,
+          cwd: '<%= config.app %>/bower_components/requirejs',
+          dest: '<%= config.dist %>/js',
+          src: 'require.js'
+        }]
       }
     },
     requirejs: {
@@ -149,15 +138,15 @@ module.exports = function (grunt) {
         findNestedDependencies: true,
         inlineText: true,
         mainConfigFile: 'app/js/main.js'
-//        optimizeAllPluginResources: true
+        //        optimizeAllPluginResources: true
       },
       dev: {
         options: {
           dir: '<%= config.dev %>/node-webkit.app/Contents/Resources/app.nw/js',
           optimize: 'none',
-          modules: [
-            {name: 'main'}
-          ]
+          modules: [{
+            name: 'main'
+          }]
         }
       },
       dist: {
@@ -184,13 +173,15 @@ module.exports = function (grunt) {
     }
   });
 
-  grunt.registerTask('processTmpl', function(target){
+  grunt.registerTask('processTmpl', function (target) {
     var options = config.distOptions;
     var tmpl = grunt.file.read('build-templates/options.tmpl');
-    if('dev' === target){
+    if ('dev' === target) {
       options = config.devOptions;
     }
-    var processedTmpl = grunt.template.process(tmpl , {data: options});
+    var processedTmpl = grunt.template.process(tmpl, {
+      data: options
+    });
     grunt.file.write('app/js/options.js', processedTmpl);
   });
 
