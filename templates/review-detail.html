@@ -1,8 +1,10 @@
-<div class="well">
-    <h3><%= user %></h3>
-    <h3><%= repo %></h3>
-    <h3><%= branch %></h3>
-</div>
+<ol class="breadcrumb">
+    <li><%= user %></li>
+    <li><%= repo %></li>
+    <%if (branch) {%>
+      <li><%= branch %></li>
+    <%}%>
+</ol>
 <div class="btn-group clearfix">
     <button type="button" class="btn btn-default first" <% if(!hasFirst){%>disabled="disabled"<%}%>>First</button>
     <button type="button" class="btn btn-default previous" <% if(!hasPrevious){%>disabled="disabled"<%}%>>Previous</button>
