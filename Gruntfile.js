@@ -111,6 +111,11 @@ module.exports = function (grunt) {
           cwd: '<%= config.app %>/bower_components/bootstrap/dist/fonts',
           dest: '<%= config.dev %>/fonts',
           src: '*'
+        }, {
+          expand: true,
+          cwd: '<%= config.app %>/bower_components/requirejs',
+          dest: '<%= config.dev %>/js',
+          src: 'require.js'
         }]
       },
       dist: {
@@ -139,15 +144,6 @@ module.exports = function (grunt) {
         inlineText: true,
         mainConfigFile: 'app/js/main.js'
         //        optimizeAllPluginResources: true
-      },
-      dev: {
-        options: {
-          dir: '<%= config.dev %>/node-webkit.app/Contents/Resources/app.nw/js',
-          optimize: 'none',
-          modules: [{
-            name: 'main'
-          }]
-        }
       },
       dist: {
         options: {
