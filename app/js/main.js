@@ -79,7 +79,6 @@
     'underscore',
     'moment',
     'underscore.string',
-    'backboneLocalStorage',
     'bootstrap'
   ], function ($, app, Router, TopMenuView, _, moment) {
     //add moment to underscore to have access to moment in templates
