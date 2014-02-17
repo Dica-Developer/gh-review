@@ -101,13 +101,12 @@ define([
       return defer.promise;
     },
     commitMessage: function () {
-      var orgMessage = this.get('commit').message;
-      var splits = _.str.lines(orgMessage);
+      var message = this.get('commit').message;
+      var splits = _.str.lines(message);
       if (splits && splits.length > 0) {
-        return splits;
-      } else {
-        return orgMessage;
+        message = splits;
       }
+      return message;
     }
   });
 
