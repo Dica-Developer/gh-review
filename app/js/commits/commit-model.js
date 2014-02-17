@@ -12,7 +12,7 @@ define([
     getCommitCommentsDefer: null,
     initialize: function () {
       this.id = this.get('sha');
-      if(_.isNull(this.get('author'))){
+      if (_.isNull(this.get('author'))) {
         var commit = this.get('commit');
         this.set('author', commit.author);
       }
@@ -65,7 +65,7 @@ define([
         commit_id: file.sha,
         path: file.filename,
         position: position
-      }, function (error/*, resp*/) {
+      }, function (error) {
         if (!error) {
           // FIXME its never called in case of error
           defer.resolve();
@@ -86,7 +86,7 @@ define([
         /*jshint camelcase: false*/
         commit_id: this.get('sha'),
         body: comment
-      }, function (error/*, resp*/) {
+      }, function (error) {
         if (!error) {
           defer.resolve();
         } else {
