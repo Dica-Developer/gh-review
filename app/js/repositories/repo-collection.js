@@ -39,6 +39,9 @@ define([
         this.add(repo);
       }, this);
       this.getOrgReposDefer.resolve();
+    },
+    getRepoByName: function(name){
+      return this.findWhere({name: name});
     }
   });
 

@@ -20,7 +20,7 @@ define(function (require) {
       '': 'root',
       'reviews': 'reviewOverview',
       'repositories': 'repositories',
-      'repo/:id': 'repoDetail',
+      'repository/:name': 'repoDetail',
       'review/:id': 'reviewDetail',
       'commit/:id': 'showCommit',
       'login': 'login',
@@ -48,11 +48,11 @@ define(function (require) {
         $('#repositoryLink').addClass('active');
       }
     },
-    repoDetail: function (id) {
+    repoDetail: function (name) {
       this.trigger('ajaxIndicator', true);
       if (app.authenticated) {
         this.clear();
-        var model = app.repoCollection.get(id);
+        var model = app.repoCollection.getRepoByName(name);
         this.view = new RepoDetailView({
           model: model
         });
