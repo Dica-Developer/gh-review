@@ -23,7 +23,7 @@ define(function (require) {
       'click .added,.deleted': 'commentLine',
       'click .approveCommit': 'approveCommit'
     },
-    getDiffAndComments: function(){
+    getDiffAndComments: function () {
       return this.model.getDiff()
         .then(this.computeChunk.bind(this))
         .then(this.model.getCommitComments.bind(this.model));
@@ -36,7 +36,9 @@ define(function (require) {
       return this.chunkDefer.promise;
     },
     addFile: function (file, fileIndex, array) {
-      this.files[fileIndex] = { chunks: [] };
+      this.files[fileIndex] = {
+        chunks: []
+      };
       var lines = _.str.lines(file.patch);
       _.forEach(lines, this.addLine, this);
       if (fileIndex === (array.length - 1)) {
@@ -45,7 +47,7 @@ define(function (require) {
     },
     addLine: function (line) {
       line = _.str.escapeHTML(line);
-      var file = this.files[this.files.length -1];
+      var file = this.files[this.files.length - 1];
       var chunks = file.chunks;
       if (line.match(chunkHeadingRegExp)) {
         chunks.push(new Chunk(line));
@@ -69,14 +71,17 @@ define(function (require) {
         fileIndex: fileIndex
       });
     },
-    renderComments: function(){
+    renderComments: function () {
       this.model.comments.addComments();
     },
     approveCommit: function () {
       this.model.approveCommit();
     },
     render: function () {
-      this.$el.html(this.template({model: this.model.toJSON(), files: this.files}));
+      this.$el.html(this.template({
+        model: this.model.toJSON(),
+        files: this.files
+      }));
       this.renderComments();
       app.showIndicator(false);
     }
