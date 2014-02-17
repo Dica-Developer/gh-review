@@ -519,7 +519,7 @@ define(['github/util', 'github/api/index'], function (Util, Api) {
         console.log('STATUS: ' + xhr.status);
       }
       if (xhr.readyState === 4) {
-        if (xhr.status === 200) {
+        if (xhr.status >= 200 && xhr.status < 300) {
           var res = {
             headers: {},
             data: null
@@ -706,7 +706,7 @@ define(['github/util', 'github/api/index'], function (Util, Api) {
         console.log('STATUS: ' + xhr.status);
       }
       if (xhr.readyState === 4) {
-        if (xhr.status === 200) {
+        if (xhr.status >= 200 && xhr.status < 300) {
           var res = {
             headers: {},
             data: null

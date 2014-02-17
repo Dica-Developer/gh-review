@@ -67,6 +67,7 @@ define([
         position: position
       }, function (error/*, resp*/) {
         if (!error) {
+          // FIXME its never called in case of error
           defer.resolve();
         } else {
           defer.reject();
