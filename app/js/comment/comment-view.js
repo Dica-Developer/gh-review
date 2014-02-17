@@ -56,8 +56,9 @@ define(function (require) {
     commentLine: function (event) {
       var target = $(event.target);
       var tr = target.closest('tr');
-      var position = target.data('position');
-      var fileIndex = target.data('fileindex');
+      var pre = tr.find('pre');
+      var position = pre.data('position');
+      var fileIndex = pre.data('fileindex');
       if (this.commentBox) {
         this.commentBox.remove();
       }
