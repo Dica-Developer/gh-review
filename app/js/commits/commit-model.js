@@ -26,8 +26,12 @@ define([
           repo: app.currentReviewData.repo,
           sha: _this.get('sha')
         }, function (error, res) {
-          _this.set('diff', res);
-          defer.resolve();
+          if (!error) {
+            _this.set('diff', res);
+            defer.resolve();
+          } else {
+            defer.reject();
+          }
         });
       } else {
         defer.resolve();
