@@ -63,6 +63,7 @@ define(function (require) {
     reviewDetail: function (id) {
       this.trigger('ajaxIndicator', true);
       this.clear();
+      app.reviewId = id;
       var model = app.reviewCollection.get(id);
       this.view = new ReviewDetailView({
         model: model
