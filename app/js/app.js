@@ -1,4 +1,4 @@
-/*global define, window, localStorage, requirejs*/
+/*global define, window, localStorage, requirejs, Worker*/
 define([
   'backbone',
   'when',
@@ -20,18 +20,28 @@ define([
     this.github = new GitHub({});
     this.repoCollection = null;
     this.reviewCollection = null;
+    this.commentCache = {};
+    this.commentCollector = new Worker('../worker/comments/collector.js');
+    this.commentCollector.onmessage = function (event) {
+      /*jshint camelcase:false*/
+      if ('comment' === event.data.type) {
+        this.commentCache[event.data.comment.commit_id] = event.data.comment;
+      }
+    }.bind(this);
   }
 
   GHReview.prototype = Backbone.Events;
 
   GHReview.prototype.init = function () {
     if (hasLocalStorage() && localStorage.accessToken) {
-      this.showIndicator(true);
-      this.authenticated = true;
-      this.github.authenticate({
+      var message = {
         type: 'token',
         token: localStorage.accessToken
-      });
+      };
+      this.commentCollector.postMessage(message);
+      this.showIndicator(true);
+      this.authenticated = true;
+      this.github.authenticate(message);
       requirejs(['RepoCollection', 'reviewCollection'], function (RepoCollection, ReviewCollection) {
         this.repoCollection = new RepoCollection();
         this.reviewCollection = new ReviewCollection();
@@ -44,7 +54,7 @@ define([
             this.showIndicator(false);
           }.bind(this));
       }.bind(this));
-    }else{
+    } else {
       Backbone.history.start();
     }
   };

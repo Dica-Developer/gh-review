@@ -13,6 +13,7 @@ define([
     },
     serialize: function () {
       var commit = this.model.get('commit');
+      var approved = app.commentCache[this.model.get('sha')] ? app.commentCache[this.model.get('sha')].body.indexOf('Approved by @') > -1 : false;
       return {
         message: this.model.commitMessage(),
         authorDate: commit.author.date,
@@ -20,7 +21,8 @@ define([
         /*jshint camelcase:false*/
         authorAvatar: this.model.get('author').avatar_url,
         commentCount: commit.comment_count,
-        sha: this.model.get('sha')
+        sha: this.model.get('sha'),
+        approved: approved
       };
     },
     render: function () {

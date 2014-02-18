@@ -4,14 +4,17 @@
 
         <div class="media-body">
             <%if(_.isArray(message)){%>
-            <% _.each(message, function(message){%>
-            <strong class="breakLine"><%= _.str.escapeHTML(message) %></strong><br/>
-            <% }); %>
+                <% _.each(message, function(message){%>
+                    <strong class="breakLine"><%= _.str.escapeHTML(message) %></strong><br/>
+                <% }); %>
             <%} else {%>
-            <strong><%= _.str.escapeHTML(message) %></strong><br/>
+                <strong><%= _.str.escapeHTML(message) %></strong><br/>
             <%}%>
             <%= authorName %>
             <small>authored <%= _.moment(authorDate).fromNow() %></small>
+            <%if (approved) {%>
+                <span class="label label-success">approved</span>
+            <%}%>
             <span class="badge pull-right"><%= commentCount %></span>
         </div>
     </div>
