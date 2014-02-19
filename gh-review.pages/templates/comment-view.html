@@ -1,0 +1,73 @@
+<div class="row">
+    <div class="col-sm-12">
+        <ol class="breadcrumb">
+            <li><%= reviewData.user %></li>
+            <li><%= reviewData.repo %></li>
+            <li><a href="#review/<%= reviewData.id %>"><%= reviewData.branch %></a></li>
+            <li><%= model.sha %></li>
+        </ol>
+    </div>
+</div>
+
+<div class="panel panel-info">
+    <div class="panel-heading"><h5><%= model.commit.message %></h5></div>
+    <div class="panel-body">
+        <div class="media">
+            <img height="24px" class="media-object pull-left" src="<%= model.author.avatar_url %>" title="<%= model.author.login %>"/>
+            <div class="media-body">
+                <strong><%= model.author.login %></strong> <span class="text-muted">authored <%= _.moment(model.commit.author.date).fromNow() %></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <small>
+        Showing <strong><%= model.diff.files.length %> changed
+        <% if(model.diff.files.length === 1) {%>
+            file
+        <% }else{%>
+            files
+        <% }%>
+        </strong> with
+        <strong><%= model.diff.stats.additions %> additions</strong> and
+        <strong><%= model.diff.stats.deletions %> deletions</strong>
+    </small>
+</div>
+
+<% _.forEach(model.diff.files, function(file, fileIndex){ %>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        File: <%= file.filename %>
+        <div class="pull-right">
+            <span class="label label-success">
+                <span class="glyphicon glyphicon-plus"></span> <%= file.additions %>
+            </span>
+            <span class="label label-danger">
+                <span class="glyphicon glyphicon-minus"></span> <%= file.deletions %>
+            </span>
+            <span class="label label-info">
+                <span class="glyphicon glyphicon-transfer"></span> <%= file.changes %>
+            </span>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="comments table table-condensed table-hover">
+            <% var lineIndex = 0; %>
+            <% _.forEach(files[fileIndex].chunks, function(chunk){%>
+                <% _.forEach(chunk.lines, function(line){%>
+                    <tr class="<%= line.format %>" data-path="<%= file.filename %>" data-line="<%= lineIndex %>">
+                        <td class="lineNr"><%= line.lineNrLeft %></td>
+                        <td class="lineNr"><%= line.lineNrRight %></td>
+                        <td><pre data-position="<%= lineIndex %>" data-fileindex="<%= fileIndex %>"><%= line.text %></pre></td>
+                    </tr>
+                <% lineIndex++; %>
+                <% }); %>
+            <% }); %>
+        </table>
+    </div>
+</div>
+<% }); %>
+<div class="pull-right">
+    <button type="button" class="btn btn-success approveCommit">Approve Commit</button>
+</div>

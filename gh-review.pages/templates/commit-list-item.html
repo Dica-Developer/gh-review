@@ -1,0 +1,21 @@
+<a href="#commit/<%= sha %>" class="list-group-item">
+    <div class="media">
+        <img height="36px" class="media-object pull-left" src="<%= authorAvatar %>" title="<%= authorName %>"/>
+
+        <div class="media-body">
+            <%if(_.isArray(message)){%>
+                <% _.each(message, function(message){%>
+                    <strong class="breakLine"><%= _.str.escapeHTML(message) %></strong><br/>
+                <% }); %>
+            <%} else {%>
+                <strong><%= _.str.escapeHTML(message) %></strong><br/>
+            <%}%>
+            <%= authorName %>
+            <small>authored <%= _.moment(authorDate).fromNow() %></small>
+            <%if (approved) {%>
+                <span class="label label-success">approved</span>
+            <%}%>
+            <span class="badge pull-right"><%= commentCount %></span>
+        </div>
+    </div>
+</a>
