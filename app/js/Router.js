@@ -88,8 +88,7 @@ define(function (require) {
     },
     clear: function () {
       if (this.view) {
-        this.view.remove();
-        $('<div id="main" class="container"></div>').appendTo('body');
+        $('#main').html('');
       }
     },
     login: loginLogout.login.bind(loginLogout),
