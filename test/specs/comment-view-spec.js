@@ -1,5 +1,14 @@
 /*globals define, describe, it, expect, beforeEach, afterEach, spyOn*/
-define(['when', 'app', 'CommentView','commitModel', 'underscore', 'underscore.string'], function(when, app, CommentView, CommitModel){
+define([
+  'when',
+  'app',
+  'CommentView',
+  'commitModel',
+  'reviewCollection',
+  'reviewItemModel',
+  'underscore',
+  'underscore.string'
+], function(when, app, CommentView, CommitModel, ReviewCollection, ReviewItemModel){
   'use strict';
 
   describe('#CommentView', function(){
@@ -7,6 +16,10 @@ define(['when', 'app', 'CommentView','commitModel', 'underscore', 'underscore.st
     var commentView = null;
 
     beforeEach(function(){
+      app.reviewCollection = new ReviewCollection();
+      app.reviewCollection.create(new ReviewItemModel());
+      app.reviewId = app.reviewCollection.models[0].id;
+
       var commitModel = new CommitModel({
         sha: '12test345',
         author: 'test',
