@@ -21,7 +21,7 @@ define([
     this.repoCollection = null;
     this.reviewCollection = null;
     this.commentCache = {};
-    this.commentCollector = new Worker('../worker/comments/collector.js');
+    this.commentCollector = new Worker('worker/comments/collector.js');
     this.commentCollector.onmessage = function (event) {
       if ('comment' === event.data.type) {
         if (event.data.comment.body && event.data.comment.body.indexOf('Approved by @') > -1) {
