@@ -59,16 +59,6 @@ module.exports = function (grunt) {
       }
     },
     clean: {
-      deploy: {
-        files: [{
-          dot: false,
-          src: [
-            './gh-review.pages/*',
-            '!.git',
-            '!.gitignore'
-          ]
-        }]
-      },
       dist: {
         files: [{
           dot: true,
@@ -115,7 +105,7 @@ module.exports = function (grunt) {
         files: [{
           expand: true,
           cwd: './dist',
-          dest: './gh-review.pages',
+          dest: '/tmp/gh-review.pages',
           src: '**'
         }]
       },
@@ -162,7 +152,6 @@ module.exports = function (grunt) {
         findNestedDependencies: true,
         inlineText: true,
         mainConfigFile: 'app/js/main.js'
-        //        optimizeAllPluginResources: true
       },
       dist: {
         options: {
@@ -204,7 +193,7 @@ module.exports = function (grunt) {
     var done = this.async();
     var childProcess = require('child_process');
     var exec = childProcess.exec;
-    exec('rm -r gh-review.pages/ 2> /dev/null || git clone --reference ./ -b gh-pages https://github.com/Dica-Developer/gh-review.git gh-review.pages', function (error, stdout, stderr) {
+    exec('rm -fr /tmp/gh-review.pages/ 2> /dev/null && git clone --reference ./ -b gh-pages git@github.com:Dica-Developer/gh-review.git /tmp/gh-review.pages', function (error, stdout, stderr) {
       var result = true;
       if (stdout) {
         grunt.log.write(stdout);
@@ -224,7 +213,7 @@ module.exports = function (grunt) {
     var done = this.async();
     var childProcess = require('child_process');
     var exec = childProcess.exec;
-    exec('cd gh-review.pages && git add . && git commit -m "*deploy release" && git push', function (error, stdout, stderr) {
+    exec('cd /tmp/gh-review.pages && git add --all . && git commit -m "* deploy release" && git push', function (error, stdout, stderr) {
       var result = true;
       if (stdout) {
         grunt.log.write(stdout);
@@ -237,6 +226,15 @@ module.exports = function (grunt) {
         result = false;
       }
       done(result);
+    });
+  });
+
+  grunt.registerTask('cleanDeploy', function () {
+    var done = this.async();
+    var childProcess = require('child_process');
+    var exec = childProcess.exec;
+    exec('rm -r /tmp/gh-review.pages/*', function () {
+      done(true);
     });
   });
 
@@ -278,7 +276,7 @@ module.exports = function (grunt) {
     'karma:travis',
     'dist',
     'checkoutWebsite',
-    'clean:deploy',
+    'cleanDeploy',
     'copy:deploy',
     'commitAndPush'
   ]);
