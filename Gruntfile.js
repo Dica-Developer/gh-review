@@ -124,7 +124,7 @@ module.exports = function (grunt) {
           expand: true,
           cwd: '<%= config.app %>',
           dest: '<%= config.dist %>',
-          src: ['img/**/*', 'templates/**/*', 'fonts/**/*', '*.html']
+          src: ['worker/**/*', 'img/**/*', 'templates/**/*', 'fonts/**/*', '*.html']
         }, {
           expand: true,
           cwd: '<%= config.app %>/bower_components/bootstrap/dist/fonts',
