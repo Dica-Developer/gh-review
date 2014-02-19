@@ -1,15 +1,16 @@
 /*globals define, describe, it, expect, beforeEach, afterEach, spyOn*/
-define([
-  'when',
-  'app',
-  'CommentView',
-  'commitModel',
-  'reviewCollection',
-  'reviewItemModel',
-  'underscore',
-  'underscore.string'
-], function(when, app, CommentView, CommitModel, ReviewCollection, ReviewItemModel){
+define(function(require){
   'use strict';
+
+  require('backboneLocalStorage');
+  require('underscore');
+  require('underscore.string');
+  var when = require('when');
+  var app = require('app');
+  var CommentView = require('CommentView');
+  var CommitModel = require('commitModel');
+  var ReviewCollection = require('reviewCollection');
+  var ReviewItemModel = require('reviewItemModel');
 
   describe('#CommentView', function(){
 
