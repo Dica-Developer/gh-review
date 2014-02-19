@@ -59,6 +59,16 @@ module.exports = function (grunt) {
       }
     },
     clean: {
+      deploy: {
+        files: [{
+          dot: false,
+          src: [
+            './gh-review.pages/*',
+            '!.git',
+            '!.gitignore'
+          ]
+        }]
+      },
       dist: {
         files: [{
           dot: true,
@@ -101,6 +111,14 @@ module.exports = function (grunt) {
       }
     },
     copy: {
+      deploy: {
+        files: [{
+          expand: true,
+          cwd: './dist',
+          dest: './gh-review.pages',
+          src: '**'
+        }]
+      },
       dev: {
         files: [{
           expand: true,
@@ -182,6 +200,46 @@ module.exports = function (grunt) {
     grunt.file.write('app/js/options.js', processedTmpl);
   });
 
+  grunt.registerTask('checkoutWebsite', function () {
+    var done = this.async();
+    var childProcess = require('child_process');
+    var exec = childProcess.exec;
+    exec('rm -r gh-review.pages/ 2> /dev/null || git clone --reference ./ -b gh-pages https://github.com/Dica-Developer/gh-review.git gh-review.pages', function (error, stdout, stderr) {
+      var result = true;
+      if (stdout) {
+        grunt.log.write(stdout);
+      }
+      if (stderr) {
+        grunt.log.write(stderr);
+      }
+      if (error !== null) {
+        grunt.log.error(error);
+        result = false;
+      }
+      done(result);
+    });
+  });
+
+  grunt.registerTask('commitAndPush', function () {
+    var done = this.async();
+    var childProcess = require('child_process');
+    var exec = childProcess.exec;
+    exec('cd gh-review.pages && git add . && git commit -m "*deploy release" && git push', function (error, stdout, stderr) {
+      var result = true;
+      if (stdout) {
+        grunt.log.write(stdout);
+      }
+      if (stderr) {
+        grunt.log.write(stderr);
+      }
+      if (error !== null) {
+        grunt.log.error(error);
+        result = false;
+      }
+      done(result);
+    });
+  });
+
   grunt.registerTask('devWatch', [
     'jshint',
     'less:dev',
@@ -216,4 +274,12 @@ module.exports = function (grunt) {
     'karma:dev'
   ]);
 
+  grunt.registerTask('deploy', [
+    'karma:travis',
+    'dist',
+    'checkoutWebsite',
+    'clean:deploy',
+    'copy:deploy',
+    'commitAndPush'
+  ]);
 };
