@@ -22,13 +22,15 @@ define([
     },
     events: {
       'click #addReview': 'addReview',
-//      'change .filterSelector': 'checkAlreadyExist',
+      //      'change .filterSelector': 'checkAlreadyExist',
       'change .filterSelector': 'changeFilter',
       'click .destroy': 'removeReview',
       'click .filter': 'addFilter'
     },
     serialize: function () {
-      var existingReviews = app.reviewCollection.where({repo: this.model.get('name')});
+      var existingReviews = app.reviewCollection.where({
+        repo: this.model.get('name')
+      });
       return {
         existingReviews: existingReviews,
         repo: this.model.toJSON(),
@@ -43,50 +45,53 @@ define([
         this.enableButton();
       }
     },
-    addFilter: function(event){
+    addFilter: function (event) {
       var target = this.$(event.target);
       var filter = _.str.capitalize(target.data('filter'));
       this['add' + filter].call(this);
     },
-    changeFilter: function(event){
+    changeFilter: function (event) {
       var target = this.$(event.target);
       var filter = _.str.capitalize(target.data('filter'));
       this['change' + filter].call(this, target);
     },
-    addBranch: function(){
+    addBranch: function () {
       this.reviewModel.set('branch', 'master');
     },
-    addContributor: function(){
+    addContributor: function () {
       this.reviewModel.set('contributor', ' ');
     },
-    addSince: function(){
-      this.reviewModel.set('since', {amount: 1, pattern: 'weeks'});
+    addSince: function () {
+      this.reviewModel.set('since', {
+        amount: 1,
+        pattern: 'weeks'
+      });
     },
-    addUntil: function(){
+    addUntil: function () {
       this.reviewModel.set('until', _.moment());
     },
-    addPath: function(){
+    addPath: function () {
       this.reviewModel.set('path', ' ');
     },
-    changeBranch: function(target){
+    changeBranch: function (target) {
       this.reviewModel.set('branch', target.val());
     },
-    changeContributor: function(target){
+    changeContributor: function (target) {
       this.reviewModel.set('contributor', target.val());
     },
-    changeSince: function(target){
+    changeSince: function (target) {
       var since = this.reviewModel.get('since');
-      if(target.is('input')){
+      if (target.is('input')) {
         since.amount = target.val();
-      } else if(target.is('select')){
+      } else if (target.is('select')) {
         since.pattern = target.find(':selected').val();
       }
       this.reviewModel.set('since', since);
     },
-    changeUntil: function(){
+    changeUntil: function () {
       this.reviewModel.set('until', _.moment());
     },
-    changePath: function(){
+    changePath: function () {
       this.reviewModel.set('path', ' ');
     },
     disableButton: function () {
@@ -116,8 +121,8 @@ define([
       promises.push(this.model.getContributors());
       return promises;
     },
-    checkDatePicker: function(){
-      if(this.$('#sinceDatepicker').length > 0){
+    checkDatePicker: function () {
+      if (this.$('#sinceDatepicker').length > 0) {
         this.$('#sinceDatepicker').datepicker();
       }
     },
