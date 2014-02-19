@@ -23,9 +23,11 @@ define([
     this.commentCache = {};
     this.commentCollector = new Worker('../worker/comments/collector.js');
     this.commentCollector.onmessage = function (event) {
-      /*jshint camelcase:false*/
       if ('comment' === event.data.type) {
-        this.commentCache[event.data.comment.commit_id] = event.data.comment;
+        if (event.data.comment.body && event.data.comment.body.indexOf('Approved by @') > -1) {
+          /*jshint camelcase:false*/
+          this.commentCache[event.data.comment.commit_id] = true;
+        }
       }
     }.bind(this);
   }
