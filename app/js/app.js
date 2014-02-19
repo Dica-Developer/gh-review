@@ -34,6 +34,17 @@ define([
 
   GHReview.prototype = Backbone.Events;
 
+  GHReview.prototype.announceRepositories = function () {
+    var repositories = [];
+    this.reviewCollection.each(function (repo) {
+      repositories.push('https://api.github.com/repos/' + repo.get('user') + '/' + repo.get('repo') + '/comments');
+    });
+    this.commentCollector.postMessage({
+      type: 'repositories',
+      repositories: repositories
+    });
+  };
+
   GHReview.prototype.init = function () {
     if (hasLocalStorage() && localStorage.accessToken) {
       var message = {
@@ -53,6 +64,7 @@ define([
             this.router.navigate('#reviews', {
               trigger: true
             });
+            this.announceRepositories();
             this.showIndicator(false);
           }.bind(this));
       }.bind(this));

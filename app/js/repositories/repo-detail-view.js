@@ -108,6 +108,7 @@ define([
     },
     addReview: function () {
       app.reviewCollection.create(this.reviewModel);
+      app.announceRepositories();
     },
     getFurtherInformations: function () {
       var promises = [];

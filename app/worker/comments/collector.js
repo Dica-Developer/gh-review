@@ -1,11 +1,11 @@
 /*global onmessage, XMLHttpRequest, postMessage, analyzeComments*/
 var _accessToken = null;
 
+var _urls = null;
+
 function getPageLinks(link) {
   'use strict';
   var links = {};
-  // link format:
-  // '<https://api.github.com/users/aseemk/followers?page=2>; rel="next", <https://api.github.com/users/aseemk/followers?page=2>; rel="last"'
   link.replace(/<([^>]*)>;\s*rel="([\w]*)\"/g, function (m, uri, type) {
     links[type] = uri;
   });
@@ -20,7 +20,6 @@ function errorCallback() {
 function successCallback(event) {
   'use strict';
   var xhr = event.currentTarget;
-  // TODO parse out the link header and the next url
   var links = xhr.getResponseHeader('Link');
   if (links && links !== '' && links.indexOf(':') !== -1) {
     var next = getPageLinks(links).next;
@@ -52,11 +51,9 @@ function analyzeComments(url) {
 
 function start() {
   'use strict';
-  // TODO get all filtered repositories and fetch there comments
-  var urls = ['https://api.github.com/repos/Dica-Developer/gh-review/comments'];
   var idx = 0;
-  for (idx = 0; idx < urls.length; idx++) {
-    analyzeComments(urls[idx]);
+  for (idx = 0; _urls !== null && idx < _urls.length; idx++) {
+    analyzeComments(_urls[idx]);
   }
 }
 
@@ -64,6 +61,11 @@ onmessage = function (event) {
   'use strict';
   if ('token' === event.data.type) {
     _accessToken = event.data.token;
+    start();
+    // TODO use setTimeout and start it after the last analyzeComments call
+    setInterval(start, 60000);
+  } else if ('repositories' === event.data.type) {
+    _urls = event.data.repositories;
     start();
   }
 };
