@@ -3,7 +3,11 @@
         <ol class="breadcrumb">
             <li><%= reviewData.user %></li>
             <li><%= reviewData.repo %></li>
-            <li><a href="#review/<%= reviewData.id %>"><%= reviewData.branch %></a></li>
+            <% if (reviewData.branch) {%>
+                <li><a href="#review/<%= reviewData.id %>"><%= reviewData.branch %></a></li>
+            <%} else {%>
+                <li><a href="#review/<%= reviewData.id %>">master</a></li>
+            <%}%>
             <li><%= model.sha %></li>
         </ol>
     </div>

@@ -2,7 +2,9 @@
     <li><%= user %></li>
     <li><%= repo %></li>
     <%if (branch) {%>
-      <li><%= branch %></li>
+        <li><%= branch %></li>
+    <%} else {%>
+        <li>master</li>
     <%}%>
 </ol>
 <div class="btn-group clearfix">
