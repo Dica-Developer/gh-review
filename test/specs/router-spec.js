@@ -17,7 +17,7 @@ define([
 ], function (Backbone, when, app, Router, RepoCollection, RepoView, RepoDetailView, ReviewOverview, ReviewListView, ReviewDetailView, CommentView, oauthHandler, loginLogout) {
   'use strict';
 
-  afterEach(function(){
+  afterEach(function () {
     localStorage.clear();
     app.authenticated = false;
   });
@@ -76,12 +76,11 @@ define([
       });
 
       it('.clear should remove view if present', function () {
+        $('<div id="main"><p>here</p></div>').appendTo('body');
         var View = Backbone.View.extend();
         router.view = new View();
-        spyOn(View.prototype, 'remove');
         router.clear();
-
-        expect(View.prototype.remove).toHaveBeenCalled();
+        expect($('#main').find('p').length).toBe(0);
       });
 
       xit('.login should init new #loginLogout', function () {
