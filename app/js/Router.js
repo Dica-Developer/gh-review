@@ -1,4 +1,4 @@
-/*global define*/
+/*global define, window*/
 define(function (require) {
   'use strict';
   var $ = require('jquery');
@@ -13,6 +13,7 @@ define(function (require) {
   var oauthHandler = require('OauthHandler');
   var loginLogout = require('loginLogout');
   var WhoAmI = require('WhoAmI');
+  var UserModel = require('UserModel');
 
   var Router = Backbone.Router.extend({
     view: null,
@@ -115,8 +116,12 @@ define(function (require) {
     whoami: function () {
       this.trigger('ajaxIndicator', true);
       this.clear();
-      this.view = new WhoAmI();
-      this.view.render();
+      var model = new UserModel();
+      this.view = new WhoAmI(model);
+      model.getUserData().then(function () {
+        this.view.render();
+      }.bind(this));
+      
     },
     initialize: function () {}
   });

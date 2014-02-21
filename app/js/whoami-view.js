@@ -5,9 +5,12 @@ define(['backbone', 'underscore', 'app', 'text!templates/whoami.html'], function
   return Backbone.View.extend({
     el: '#main',
     template: _.template(template),
+    initialize: function (model) {
+      this.model = model;
+    },
     render: function () {
       this.$el.html(this.template({
-        user: app.user
+        user: this.model.attributes
       }));
       app.showIndicator(false);
     }

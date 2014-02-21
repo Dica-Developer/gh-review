@@ -1,20 +1,24 @@
 /*global define*/
-define(['backbone', 'app'], function (Backbone, app) {
+define(['backbone', 'when', 'app'], function (Backbone, when, app) {
   'use strict';
 
   var UserModel = Backbone.Model.extend({
-    initialize: function () {
-      this.getUserData();
-    },
+    initialize: function () {},
     getUserData: function () {
+      var defer = when.defer();
       var _this = this;
       app.github.user.get({}, function (error, res) {
-        _this.handleResponse(error, res);
+        if (error) {
+          defer.reject(error);
+        } else {
+          _this.handleResponse(res);
+          defer.resolve(res);
+        }
       });
+      return defer.promise;
     },
-    handleResponse: function (error, res) {
+    handleResponse: function (res) {
       this.set(res);
-      app.user = res;
     }
   });
 
