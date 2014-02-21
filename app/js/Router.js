@@ -87,9 +87,8 @@ define(function (require) {
         .then(this.view.render.bind(this.view));
     },
     clear: function () {
-      if (this.view) {
-        $('#main').html('');
-      }
+      $('#main').html('');
+      $('#main').off();
     },
     login: loginLogout.login.bind(loginLogout),
     logout: loginLogout.logout.bind(loginLogout),
