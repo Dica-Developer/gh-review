@@ -14,7 +14,8 @@ define([
     template: _.template(showTemplate),
     tagName: 'tr',
     events: {
-      'click .remove': 'removeComment'
+      'click .remove': 'removeComment',
+      'click .edit': 'editComment'
     },
     initialize: function () {
       var path = this.model.get('path');
@@ -40,6 +41,20 @@ define([
       app.github.repos.deleteCommitComment(message, function (error) {
         if (!error) {
           this.remove();
+        }
+      }.bind(this));
+    },
+    editComment: function() {
+      var message = {
+        owner: app.currentReviewData.user,
+        repo: app.currentReviewData.repo,
+        id: this.model.get('id')
+      };
+      app.github.repos.updateCommitComment(message, function (error) {
+        if (!error) {
+          // TODO take existing comment
+          // TODO show edit comment box instead of show comment box
+          // submit only if changed
         }
       }.bind(this));
     }
