@@ -25,7 +25,7 @@ define([
     setAvatarAndLogout: function () {
       var container = this.$('#loginLogoutContainer');
       var parent = container.parent();
-//      var avatarUrl = this.model.get('avatar_url');
+      //var avatarUrl = this.model.get('avatar_url');
       parent.html(this.topRightTemplate({
         userName: this.model.get('name')
       }));
@@ -36,7 +36,9 @@ define([
     showRepoDetail: function (event) {
       var target = $(event.target),
         option = $('#repositories').find('option[value="' + target.val() + '"]');
-      app.router.navigate('#repo/' + option.data('id'), {trigger: true});
+      app.router.navigate('#repo/' + option.data('id'), {
+        trigger: true
+      });
     },
     render: function () {
       this.$el.html(this.template());
