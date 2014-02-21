@@ -17,8 +17,10 @@ define([
     initialize: function () {
       if (app.authenticated) {
         this.model = new UserModel();
-        this.model.getUserData();
-        this.model.on('change', this.setAvatarAndLogout, this);
+        this.model.getUserData().then(function (user) {
+          this.setAvatarAndLogout();
+          app.user = user;
+        }.bind(this));
       }
       this.render();
     },
