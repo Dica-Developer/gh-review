@@ -1,4 +1,4 @@
-/*global define, describe, it, expect, beforeEach, afterEach, spyOn, localStorage*/
+/*global define, describe, it, expect, beforeEach, afterEach, spyOn, localStorage, xit*/
 define([
   'backbone',
   'when',
