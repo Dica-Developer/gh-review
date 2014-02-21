@@ -32,7 +32,6 @@ define([
       return this;
     },
     removeComment: function () {
-      var _this = this;
       var message = {
         id: this.model.get('id'),
         user: app.currentReviewData.user,
@@ -40,9 +39,9 @@ define([
       };
       app.github.repos.deleteCommitComment(message, function (error) {
         if (!error) {
-          _this.remove();
+          this.remove();
         }
-      });
+      }.bind(this));
     }
   });
 
