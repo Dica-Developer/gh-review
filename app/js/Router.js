@@ -121,7 +121,6 @@ define(function (require) {
       model.getUserData().then(function () {
         this.view.render();
       }.bind(this));
-      
     },
     initialize: function () {}
   });
