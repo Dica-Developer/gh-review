@@ -1,0 +1,6 @@
+<a href="javascript: void 0;" data-id="<%= id %>" class="list-group-item">
+    <% if(typeof repo !== 'undefined'){ %><strong>Repository: </strong><%= repo %> <%}%>
+    <% if(typeof branch !== 'undefined'){ %><strong>Branch: </strong><%= branch %> <%}%>
+    <% if(typeof contributor !== 'undefined'){ %><strong>Author: </strong><%= contributor %><%}%>
+    <span class="destroy glyphicon glyphicon-remove-circle pull-right"></span>
+</a>

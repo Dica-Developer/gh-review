@@ -1,9 +1,9 @@
 <div class="row">
     <div class="col-sm-12">
         <ol class="breadcrumb">
-            <li><%= reviewData.user %></li>
+            <li><%= reviewData.owner %></li>
             <li><%= reviewData.repo %></li>
-            <li><a href="#review/<%= reviewData.id %>"><%= reviewData.branch %></a></li>
+            <li><a href="#commits/<%= reviewData.owner %>/<%= reviewData.repo %>/<%= reviewData.branch %>"><%= reviewData.branch %></a></li>
             <li><%= model.sha %></li>
         </ol>
     </div>
