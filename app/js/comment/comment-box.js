@@ -76,13 +76,12 @@ define([
       return this;
     },
     submitLineComment: function () {
-      var _this = this;
       var comment = this.$el.find('#commentBox > textarea').val();
       if (comment !== '') {
         when(this.model.addLineComment(this.options.fileIndex, this.options.position, comment))
           .then(function () {
-            _this.remove();
-          });
+            this.remove();
+          }.bind(this));
       }
     },
     cancelCommenting: function () {
