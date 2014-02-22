@@ -56,7 +56,7 @@ define(function (require) {
     commitList: function (owner, repo, branch) {
       this.prepareView('reviewLink');
       var model = app.currentFilter;
-      if(owner !== model.get('owner') || repo !== model.get('repo') || branch !== model.get('branch')){
+      if (owner !== model.get('owner') || repo !== model.get('repo') || branch !== model.get('branch')) {
         model = new FilterModel({
           owner: owner,
           repo: repo,
@@ -120,7 +120,7 @@ define(function (require) {
         this.view.render();
       }.bind(this));
     },
-    prepareView: function(activeLink){
+    prepareView: function (activeLink) {
       this.trigger('ajaxIndicator', true);
       this.clear();
       $('li[name="ghr-top-menu-links"]').removeClass('active');
