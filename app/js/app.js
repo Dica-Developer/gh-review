@@ -19,7 +19,7 @@ define([
     this.user = null;
     this.github = new GitHub({});
     this.repoCollection = null;
-    this.reviewCollection = null;
+    this.filterCollection = null;
     this.commentCache = {};
     this.commentCollector = new Worker('worker/comments/collector.js');
     this.commentCollector.onmessage = function (event) {
@@ -36,8 +36,8 @@ define([
 
   GHReview.prototype.announceRepositories = function () {
     var repositories = [];
-    this.reviewCollection.each(function (repo) {
-      repositories.push('https://api.github.com/repos/' + repo.get('user') + '/' + repo.get('repo') + '/comments');
+    this.filterCollection.each(function (repo) {
+      repositories.push('https://api.github.com/repos/' + repo.get('owner') + '/' + repo.get('repo') + '/comments');
     });
     this.commentCollector.postMessage({
       type: 'repositories',
@@ -55,13 +55,13 @@ define([
       this.showIndicator(true);
       this.authenticated = true;
       this.github.authenticate(message);
-      requirejs(['RepoCollection', 'reviewCollection'], function (RepoCollection, ReviewCollection) {
+      requirejs(['RepoCollection', 'FilterCollection'], function (RepoCollection, FilterCollection) {
         this.repoCollection = new RepoCollection();
-        this.reviewCollection = new ReviewCollection();
+        this.filterCollection = new FilterCollection();
         when.all(this.repoCollection.getRepos())
           .then(function () {
             Backbone.history.start();
-            this.router.navigate('#reviews', {
+            this.router.navigate('#filter', {
               trigger: true
             });
             this.announceRepositories();

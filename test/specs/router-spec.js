@@ -1,23 +1,24 @@
 /*global define, describe, it, expect, beforeEach, afterEach, spyOn, localStorage, xit*/
-define([
-  'backbone',
-  'when',
-  'app',
-  'Router',
-  'RepoCollection',
-  'RepoView',
-  'repoDetailView',
-  'ReviewOverview',
-  'ReviewListView',
-  'reviewDetailView',
-  'CommentView',
-  'OauthHandler',
-  'loginLogout',
-  'backboneLocalStorage'
-], function (Backbone, when, app, Router, RepoCollection, RepoView, RepoDetailView, ReviewOverview, ReviewListView, ReviewDetailView, CommentView, oauthHandler, loginLogout) {
+define(function (require) {
   'use strict';
 
-  afterEach(function () {
+  var Backbone = require('backbone');
+  var when = require('when');
+  var app = require('app');
+  var Router = require('Router');
+  var RepoView = require('RepoView');
+  var RepoDetailView = require('repoDetailView');
+  var RepoCollection = require('RepoCollection');
+  var RepoModel = require('RepoModel');
+  var FilterOverview = require('FilterOverview');
+  var CommentView = require('CommentView');
+  var oauthHandler = require('OauthHandler');
+  var loginLogout = require('loginLogout');
+  var WhoAmI = require('WhoAmI');
+
+  require('backboneLocalStorage');
+
+  afterEach(function(){
     localStorage.clear();
     app.authenticated = false;
   });
@@ -45,14 +46,64 @@ define([
         routerClearSpy = null;
       });
 
-      it('.reviewOverview should init new #ReviewOverview', function () {
-        var reviewOverviewSpy = spyOn(ReviewOverview.prototype, 'initialize');
-        spyOn(ReviewOverview.prototype, 'render');
-        router.reviewOverview();
+      it('.repositories should init new #RepoView if app.authenticated true', function () {
+        app.authenticated = true;
+        var repoViewSpy = spyOn(RepoView.prototype, 'initialize');
+        router.repositories();
 
         expect(routerClearSpy).toHaveBeenCalled();
-        expect(reviewOverviewSpy).toHaveBeenCalled();
-        expect(router.view instanceof ReviewOverview).toBeTruthy();
+        expect(repoViewSpy).toHaveBeenCalled();
+        expect(router.view instanceof RepoView).toBeTruthy();
+
+      });
+
+      it('.repositories should not init new #RepoView if app.authenticated false', function () {
+        var repoViewSpy = spyOn(RepoView.prototype, 'initialize');
+        router.repositories();
+
+        expect(routerClearSpy).not.toHaveBeenCalled();
+        expect(repoViewSpy).not.toHaveBeenCalled();
+        expect(router.view instanceof RepoView).toBeFalsy();
+
+      });
+
+      it('.repoDetail should init new #RepoDetailView if app.authenticated true', function () {
+        app.authenticated = true;
+        app.repoCollection = new RepoCollection();
+        var repoModel = new RepoModel({
+          owner: {
+            login: 'TEST'
+          }
+        });
+        app.repoCollection.add(repoModel);
+        var repoDetailViewSpy = spyOn(RepoDetailView.prototype, 'initialize');
+        router.repoDetail('TEST');
+
+        expect(routerClearSpy).toHaveBeenCalled();
+        expect(repoDetailViewSpy).toHaveBeenCalled();
+        expect(router.view instanceof RepoDetailView).toBeTruthy();
+        app.repoCollection = null;
+
+      });
+
+      it('.repoDetail should not init new #RepoDetailView if app.authenticated false', function () {
+        var repoDetailViewSpy = spyOn(RepoDetailView.prototype, 'initialize');
+        router.repoDetail();
+
+        expect(routerClearSpy).not.toHaveBeenCalled();
+        expect(repoDetailViewSpy).not.toHaveBeenCalled();
+        expect(router.view instanceof RepoDetailView).toBeFalsy();
+
+      });
+
+      it('.filter should init new #FilterOverview', function () {
+        var filterOverviewSpy = spyOn(FilterOverview.prototype, 'initialize');
+        spyOn(FilterOverview.prototype, 'render');
+        router.filter();
+
+        expect(routerClearSpy).toHaveBeenCalled();
+        expect(filterOverviewSpy).toHaveBeenCalled();
+        expect(router.view instanceof FilterOverview).toBeTruthy();
 
       });
 
@@ -110,6 +161,16 @@ define([
 
         expect(routerClearSpy).toHaveBeenCalled();
         expect(oauthCallbackSpy).toHaveBeenCalled();
+
+      });
+
+      it('.whoami should call new #WhoAmI', function () {
+        var whoAmISpy = spyOn(WhoAmI.prototype, 'initialize');
+
+        router.whoami();
+
+        expect(routerClearSpy).toHaveBeenCalled();
+        expect(whoAmISpy).toHaveBeenCalled();
 
       });
 

@@ -9,17 +9,18 @@ define(function(require){
   var app = require('app');
   var CommentView = require('CommentView');
   var CommitModel = require('commitModel');
-  var ReviewCollection = require('reviewCollection');
-  var ReviewItemModel = require('reviewItemModel');
+  var FilterModel = require('FilterModel');
 
   describe('#CommentView', function(){
 
     var commentView = null;
 
     beforeEach(function(){
-      app.reviewCollection = new ReviewCollection();
-      app.reviewCollection.create(new ReviewItemModel());
-      app.reviewId = app.reviewCollection.models[0].id;
+      app.currentFilter = new FilterModel({
+        owner: 'TEST',
+        repo: 'testRepo',
+        branch: 'master'
+      });
 
       var commitModel = new CommitModel({
         sha: '12test345',

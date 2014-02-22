@@ -3,11 +3,11 @@ define([
   'backbone',
   'underscore',
   'app',
-  'text!templates/quickreview.html'
+  'text!templates/quickfilter.html'
 ], function(Backbone, _, app, template){
   'use strict';
 
-  var QuickReview = Backbone.View.extend({
+  var QuickFilter = Backbone.View.extend({
     el: '#quickReview',
     template: _.template(template),
     collection: null,
@@ -69,5 +69,5 @@ define([
     }
   });
 
-  return QuickReview;
+  return QuickFilter;
 });

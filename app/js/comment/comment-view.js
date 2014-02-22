@@ -23,9 +23,7 @@ define(function (require) {
       'click .added,.deleted': 'commentLine',
       'click .approveCommit': 'approveCommit'
     },
-    initialize: function(){
-      this.reviewModel = app.reviewCollection.get(app.reviewId);
-    },
+    initialize: function(){},
     getDiffAndComments: function () {
       return this.model.getDiff()
         .then(this.computeChunk.bind(this))
@@ -84,7 +82,7 @@ define(function (require) {
       this.$el.html(this.template({
         model: this.model.toJSON(),
         files: this.files,
-        reviewData: this.reviewModel.toJSON()
+        reviewData: app.currentFilter.toJSON()
       }));
       this.renderComments();
       app.showIndicator(false);

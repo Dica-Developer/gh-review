@@ -21,8 +21,8 @@ define([
     initialize: function () {
       var attributes = this.model.toJSON();
       app.currentReviewData = {};
-      if (!_.isEmpty(attributes.user)) {
-        app.currentReviewData.user = attributes.user;
+      if (!_.isEmpty(attributes.owner)) {
+        app.currentReviewData.user = attributes.owner;
       }
       if (!_.isEmpty(attributes.repo)) {
         app.currentReviewData.repo = attributes.repo;

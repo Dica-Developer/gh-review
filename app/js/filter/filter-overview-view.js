@@ -3,10 +3,10 @@ define([
   'backbone',
   'underscore',
   'app',
-  'ReviewListView',
-  'QuickReview',
-  'text!templates/review-overview.html'
-], function (Backbone, _, app, ReviewListView, QuickReview, template) {
+  'FilterListView',
+  'QuickFilter',
+  'text!templates/filter-overview.html'
+], function(Backbone, _, app, FilterListView, QuickFilter, template){
   'use strict';
 
   var ReviewOverview = Backbone.View.extend({
@@ -14,12 +14,10 @@ define([
     template: _.template(template),
     render: function () {
       this.$el.html(this.template());
-      var quickReview = new QuickReview();
-      quickReview.render();
+      var quickFilter = new QuickFilter();
+      quickFilter.render();
 
-      var reviewListView = new ReviewListView({
-        collection: app.reviewCollection
-      });
+      var reviewListView = new FilterListView({collection: app.filterCollection});
       reviewListView.render();
       reviewListView.fetchReviews();
     }

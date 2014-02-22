@@ -27,13 +27,12 @@
       chunk: 'chunk',
       TopMenuView: 'top-menu/top-menu-view',
 
-      reviewCollection: 'review/review-collection',
-      reviewItemModel: 'review/review-item-model',
-      ReviewListView: 'review/review-list-view',
-      reviewListItemView: 'review/review-list-item-view',
-      reviewDetailView: 'review/review-detail-view',
-      ReviewOverview: 'review/review-overview-view',
-      QuickReview: 'review/review-quick-review-view',
+      FilterCollection: 'filter/filter-collection',
+      FilterModel: 'filter/filter-model',
+      FilterListView: 'filter/filter-list-view',
+      FilterOverview: 'filter/filter-overview-view',
+
+      QuickFilter: 'filter/filter-quick-view',
 
       RepoModel: 'repositories/repo-model',
       RepoCollection: 'repositories/repo-collection',
@@ -43,6 +42,7 @@
       commitModel: 'commits/commit-model',
       commitCollection: 'commits/commit-collection',
       commitListItemView: 'commits/commit-list-item-view',
+      CommitListView: 'commits/commit-list-view',
 
       CommentView: 'comment/comment-view',
       commentBox: 'comment/comment-box',

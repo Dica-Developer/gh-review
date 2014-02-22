@@ -6,8 +6,9 @@ define(function (require) {
   var app = require('app');
   var RepoView = require('RepoView');
   var RepoDetailView = require('repoDetailView');
-  var ReviewOverview = require('ReviewOverview');
-  var ReviewDetailView = require('reviewDetailView');
+  var FilterOverview = require('FilterOverview');
+  var FilterModel = require('FilterModel');
+  var CommitListView = require('CommitListView');
   var commitCollection = require('commitCollection');
   var CommentView = require('CommentView');
   var oauthHandler = require('OauthHandler');
@@ -19,10 +20,10 @@ define(function (require) {
     view: null,
     routes: {
       '': 'root',
-      'reviews': 'reviewOverview',
+      'filter': 'filter',
       'repositories': 'repositories',
       'repository/:name': 'repoDetail',
-      'review/:id': 'reviewDetail',
+      'commits/:owner/:repo/:branch': 'commitList',
       'commit/:id': 'showCommit',
       'login': 'login',
       'logout': 'logout',
@@ -30,43 +31,40 @@ define(function (require) {
       'oauth/callback': 'callback',
       'whoami': 'whoami'
     },
-    reviewOverview: function () {
-      this.trigger('ajaxIndicator', true);
-      this.clear();
-      this.view = new ReviewOverview();
+    filter: function () {
+      this.prepareView('reviewLink');
+      this.view = new FilterOverview();
       this.view.render();
-      $('li[name="ghr-top-menu-links"]').removeClass('active');
-      $('#reviewLink').addClass('active');
     },
     repositories: function () {
-      this.trigger('ajaxIndicator', true);
       if (app.authenticated) {
-        this.clear();
+        this.prepareView('repositoryLink');
         this.view = new RepoView({
           collection: app.repoCollection
         });
-        $('li[name="ghr-top-menu-links"]').removeClass('active');
-        $('#repositoryLink').addClass('active');
       }
     },
     repoDetail: function (name) {
-      this.trigger('ajaxIndicator', true);
       if (app.authenticated) {
-        this.clear();
+        this.prepareView('repositoryLink');
         var model = app.repoCollection.getRepoByName(name);
         this.view = new RepoDetailView({
           model: model
         });
-        $('li[name="ghr-top-menu-links"]').removeClass('active');
-        $('#repositoryLink').addClass('active');
       }
     },
-    reviewDetail: function (id) {
-      this.trigger('ajaxIndicator', true);
-      this.clear();
-      app.reviewId = id;
-      var model = app.reviewCollection.get(id);
-      this.view = new ReviewDetailView({
+    commitList: function (owner, repo, branch) {
+      this.prepareView('reviewLink');
+      var model = app.currentFilter;
+      if(owner !== model.get('owner') || repo !== model.get('repo') || branch !== model.get('branch')){
+        model = new FilterModel({
+          owner: owner,
+          repo: repo,
+          branch: branch
+        });
+        app.currentFilter = model;
+      }
+      this.view = new CommitListView({
         model: model
       });
       this.view.getCommits()
@@ -74,12 +72,9 @@ define(function (require) {
           this.view.render();
           this.view.renderAllCommits();
         }.bind(this));
-      $('li[name="ghr-top-menu-links"]').removeClass('active');
-      $('#reviewLink').addClass('active');
     },
     showCommit: function (id) {
-      this.trigger('ajaxIndicator', true);
-      this.clear();
+      this.prepareView('reviewLink');
       var model = commitCollection.get(id);
       this.view = new CommentView({
         model: model
@@ -88,8 +83,9 @@ define(function (require) {
         .then(this.view.render.bind(this.view));
     },
     clear: function () {
-      $('#main').html('');
-      $('#main').off();
+      var main = $('#main');
+      main.html('');
+      main.off();
     },
     login: loginLogout.login.bind(loginLogout),
     logout: loginLogout.logout.bind(loginLogout),
@@ -121,6 +117,12 @@ define(function (require) {
       model.getUserData().then(function () {
         this.view.render();
       }.bind(this));
+    },
+    prepareView: function(activeLink){
+      this.trigger('ajaxIndicator', true);
+      this.clear();
+      $('li[name="ghr-top-menu-links"]').removeClass('active');
+      $('#' + activeLink).addClass('active');
     },
     initialize: function () {}
   });

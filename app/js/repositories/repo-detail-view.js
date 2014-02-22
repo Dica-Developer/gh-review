@@ -4,20 +4,20 @@ define([
   'underscore',
   'when',
   'app',
-  'reviewItemModel',
+  'FilterModel',
   'text!templates/repo-detail-view.html'
-], function (Backbone, _, when, app, ReviewItemModel, template) {
+], function (Backbone, _, when, app, FilterModel, template) {
   'use strict';
 
   var RepoView = Backbone.View.extend({
     el: '#main',
     template: _.template(template),
     initialize: function () {
-      this.reviewModel = new ReviewItemModel();
-      this.reviewModel.set('user', this.model.get('owner').login);
-      this.reviewModel.set('repo', this.model.get('name'));
-      app.reviewCollection.on('all', this.render, this);
-      this.listenTo(this.reviewModel, 'change', this.render);
+      this.filterModel = new FilterModel();
+      this.filterModel.set('owner', this.model.get('owner').login);
+      this.filterModel.set('repo', this.model.get('name'));
+      app.filterCollection.on('all', this.render, this);
+      this.listenTo(this.filterModel, 'change', this.render);
       when.all(this.getFurtherInformations(), this.render.bind(this));
     },
     events: {
@@ -28,17 +28,17 @@ define([
       'click .filter': 'addFilter'
     },
     serialize: function () {
-      var existingReviews = app.reviewCollection.where({
+      var existingReviews = app.filterCollection.where({
         repo: this.model.get('name')
       });
       return {
         existingReviews: existingReviews,
         repo: this.model.toJSON(),
-        filter: this.reviewModel.toJSON()
+        filter: this.filterModel.toJSON()
       };
     },
     checkAlreadyExist: function () {
-      var alreadyExist = app.reviewCollection.where(this.reviewModel.toJSON());
+      var alreadyExist = app.filterCollection.where(this.filterModel.toJSON());
       if (alreadyExist.length > 0) {
         this.disableButton();
       } else {
@@ -56,43 +56,43 @@ define([
       this['change' + filter].call(this, target);
     },
     addBranch: function () {
-      this.reviewModel.set('branch', 'master');
+      this.filterModel.set('branch', 'master');
     },
     addContributor: function () {
-      this.reviewModel.set('contributor', ' ');
+      this.filterModel.set('contributor', ' ');
     },
     addSince: function () {
-      this.reviewModel.set('since', {
+      this.filterModel.set('since', {
         amount: 1,
         pattern: 'weeks'
       });
     },
     addUntil: function () {
-      this.reviewModel.set('until', _.moment());
+      this.filterModel.set('until', _.moment());
     },
     addPath: function () {
-      this.reviewModel.set('path', ' ');
+      this.filterModel.set('path', ' ');
     },
     changeBranch: function (target) {
-      this.reviewModel.set('branch', target.val());
+      this.filterModel.set('branch', target.val());
     },
     changeContributor: function (target) {
-      this.reviewModel.set('contributor', target.val());
+      this.filterModel.set('contributor', target.val());
     },
     changeSince: function (target) {
-      var since = this.reviewModel.get('since');
+      var since = this.filterModel.get('since');
       if (target.is('input')) {
         since.amount = target.val();
       } else if (target.is('select')) {
         since.pattern = target.find(':selected').val();
       }
-      this.reviewModel.set('since', since);
+      this.filterModel.set('since', since);
     },
     changeUntil: function () {
-      this.reviewModel.set('until', _.moment());
+      this.filterModel.set('until', _.moment());
     },
     changePath: function () {
-      this.reviewModel.set('path', ' ');
+      this.filterModel.set('path', ' ');
     },
     disableButton: function () {
       this.$('#addReview').attr('disabled', 'disabled');
@@ -108,11 +108,11 @@ define([
     },
     removeReview: function (event) {
       var modelCid = $(event.target).data('cid');
-      var model = app.reviewCollection.get(modelCid);
+      var model = app.filterCollection.get(modelCid);
       model.destroy();
     },
     addReview: function () {
-      app.reviewCollection.create(this.reviewModel);
+      app.filterCollection.create(this.filterModel);
       app.announceRepositories();
     },
     getFurtherInformations: function () {

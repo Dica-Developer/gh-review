@@ -2,11 +2,12 @@
 define(['backbone'], function (Backbone) {
   'use strict';
 
-  var ReviewItemModel = Backbone.Model.extend({
+  var FilterModel = Backbone.Model.extend({
     defaults: {
+      owner: '',
       repo: '',
       contributor: '',
-      branch: '',
+      branch: 'master',
       since: {
         amount: 0,
         pattern: ''
@@ -16,5 +17,5 @@ define(['backbone'], function (Backbone) {
     }
   });
 
-  return ReviewItemModel;
+  return FilterModel;
 });
