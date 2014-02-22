@@ -64,7 +64,7 @@
       CommentModel: '../app/js/comment/comment-model',
       CommentCollection: '../app/js/comment/Comment-collection',
 
-      userModel: '../app/js/user-model',
+      UserModel: '../app/js/user-model',
 
       loginLogout: '../app/js/login/loginLogout',
       OauthHandler: '../app/js/oauth/oauth-handler',
