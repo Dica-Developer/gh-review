@@ -113,7 +113,9 @@ define(function (require) {
       this.trigger('ajaxIndicator', true);
       this.clear();
       var model = new UserModel();
-      this.view = new WhoAmI(model);
+      this.view = new WhoAmI({
+        model: model
+      });
       model.getUserData().then(function () {
         this.view.render();
       }.bind(this));
