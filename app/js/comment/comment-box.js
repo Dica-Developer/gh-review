@@ -52,7 +52,8 @@ define([
       };
       app.github.repos.updateCommitComment(message, function (error) {
         if (!error) {
-          // TODO take existing comment
+          var commentMessage = this.model.get('commentMessage');
+          console.log('commentmessage', commentMessage);
           // TODO show edit comment box instead of show comment box
           // submit only if changed
         }
