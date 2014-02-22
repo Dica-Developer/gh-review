@@ -684,9 +684,10 @@ define(['github/util', 'github/api/index'], function (Util, Api) {
     }
     Object.keys(msg.headers).forEach(function (header) {
       var headerLC = header.toLowerCase();
-      if (self.requestHeaders.indexOf(headerLC) === -1) {
-        return;
-      }
+      //disabled because it overrides also the 'accept' header
+//      if (self.requestHeaders.indexOf(headerLC) === -1) {
+//        return;
+//      }
       headers[headerLC] = msg.headers[header];
     });
 

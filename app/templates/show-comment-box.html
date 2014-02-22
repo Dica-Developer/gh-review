@@ -1,5 +1,5 @@
 <td colspan="2"> </td>
-<td>
+<td class="comment-holder">
     <div class="panel panel-default">
         <div class="panel-heading">
             <div class="media">
@@ -23,7 +23,7 @@
             </div>
         </div>
         <div class="panel-body">
-            <%= _.str.escapeHTML(body).replace('\n', '<br />') %>
+            <%= body_html %>
         </div>
     </div>
 </td>

@@ -27,7 +27,7 @@ define(function (require) {
     getDiffAndComments: function () {
       return this.model.getDiff()
         .then(this.computeChunk.bind(this))
-        .then(this.model.getCommitComments.bind(this.model));
+        .then(this.model.getHtmlCommitComments.bind(this.model));
     },
     computeChunk: function () {
       this.chunkDefer = when.defer();

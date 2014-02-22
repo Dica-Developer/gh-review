@@ -39,13 +39,16 @@ define([
 
       return defer.promise;
     },
-    getCommitComments: function () {
+    getHtmlCommitComments: function () {
       var _this = this;
       this.getCommitCommentsDefer = when.defer();
       app.github.repos.getCommitComments({
         user: app.currentReviewData.user,
         repo: app.currentReviewData.repo,
-        sha: _this.get('sha')
+        sha: _this.get('sha'),
+        headers: {
+          'Accept': 'application/vnd.github-commitcomment.html+json'
+        }
       }, this.getCommitCommentCallback.bind(this));
       return this.getCommitCommentsDefer.promise;
     },

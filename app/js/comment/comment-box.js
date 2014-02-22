@@ -13,6 +13,9 @@ define([
   var ShowCommentBoxView = Backbone.View.extend({
     template: _.template(showTemplate),
     tagName: 'tr',
+    attributes: {
+      'class': 'comment-row'
+    },
     events: {
       'click .remove': 'removeComment',
       'click .edit': 'editComment'
