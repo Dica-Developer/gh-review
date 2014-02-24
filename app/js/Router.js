@@ -5,7 +5,7 @@ define(function (require) {
   var Backbone = require('backbone');
   var app = require('app');
   var RepoView = require('RepoView');
-  var RepoDetailView = require('repoDetailView');
+  var RepoDetailView = require('RepoDetailView');
   var FilterOverview = require('FilterOverview');
   var FilterModel = require('FilterModel');
   var CommitListView = require('CommitListView');

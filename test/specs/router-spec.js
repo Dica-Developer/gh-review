@@ -7,7 +7,7 @@ define(function (require) {
   var app = require('app');
   var Router = require('Router');
   var RepoView = require('RepoView');
-  var RepoDetailView = require('repoDetailView');
+  var RepoDetailView = require('RepoDetailView');
   var RepoCollection = require('RepoCollection');
   var RepoModel = require('RepoModel');
   var FilterOverview = require('FilterOverview');
