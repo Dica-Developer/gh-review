@@ -1,0 +1,221 @@
+/*global define, describe, it, expect, spyOn, beforeEach, afterEach*/
+define(function(require){
+  'use strict';
+
+  var $ = require('jquery');
+  var app = require('app');
+  var _ = require('underscore');
+  var moment = require('moment');
+  var RepoDetailView = require('RepoDetailView');
+  var FilterModel = require('FilterModel');
+  var RepoModel = require('RepoModel');
+  _.moment = moment;
+  describe('#RepoDetailView', function(){
+    var repoModel = new RepoModel({name: 'test', owner: {login: 'test2'}});
+    var filterModelSpy = null;
+    beforeEach(function(){
+      filterModelSpy = spyOn(FilterModel.prototype, 'initialize');
+      app.filterCollection = {
+        on: function(){}
+      };
+    });
+
+    afterEach(function(){
+      app.filterCollection = null;
+    });
+
+    it('Should be defined', function(){
+      expect(RepoDetailView).toBeDefined();
+    });
+
+    describe('.initialize', function(){
+
+      it('should call #FilterModel.initialize', function(){
+        new RepoDetailView({model: repoModel});
+        expect(filterModelSpy).toHaveBeenCalled();
+      });
+
+      it('should call #FilterModel.set with {owner: "test2"}', function(){
+        var filterModelSetSpy = spyOn(FilterModel.prototype, 'set');
+        new RepoDetailView({model: repoModel});
+        expect(filterModelSetSpy.calls[1].args).toEqual([ 'owner', 'test2' ]);
+      });
+
+      it('should call #FilterModel.set with {repo: "test"}', function(){
+        var filterModelSetSpy = spyOn(FilterModel.prototype, 'set');
+        new RepoDetailView({model: repoModel});
+        expect(filterModelSetSpy.calls[2].args).toEqual([ 'repo', 'test' ]);
+      });
+
+      it('should call #RepoDetailView.getFurtherInformations', function(){
+        var getFurtherInformationSpy = spyOn(RepoDetailView.prototype, 'getFurtherInformations');
+        new RepoDetailView({model: repoModel});
+        expect(getFurtherInformationSpy).toHaveBeenCalled();
+      });
+
+    });
+
+    describe('.checkAlreadyExist', function(){
+
+      beforeEach(function(){
+        app.filterCollection = {
+          where: function(){},
+          on: function(){}
+        };
+      });
+
+      afterEach(function(){
+        app.filterCollection = null;
+      });
+
+      it('should call #RepoDetailView.disableButton if filter already exist', function(){
+        app.filterCollection.where = function(){
+          return [1];
+        };
+
+        var disableButtonSpy = spyOn(RepoDetailView.prototype, 'disableButton');
+        var repoDetailView = new RepoDetailView({model: repoModel});
+        repoDetailView.checkAlreadyExist();
+        expect(disableButtonSpy).toHaveBeenCalled();
+
+      });
+
+      it('should not call #RepoDetailView.disableButton if filter not exist', function(){
+        app.filterCollection.where = function(){
+          return [];
+        };
+
+        var disableButtonSpy = spyOn(RepoDetailView.prototype, 'disableButton');
+        var repoDetailView = new RepoDetailView({model: repoModel});
+        repoDetailView.checkAlreadyExist();
+        expect(disableButtonSpy).not.toHaveBeenCalled();
+
+      });
+
+    });
+
+    describe('.addBranch', function(){
+
+      it('should call #RepoDetailView.set with ["branch", "master" ]', function(){
+        var repoDetailView = new RepoDetailView({model: repoModel});
+        var setSpy = spyOn(FilterModel.prototype, 'set');
+        repoDetailView.addBranch();
+        expect(setSpy).toHaveBeenCalledWith('branch', 'master');
+      });
+
+    });
+
+    describe('.addContributor', function(){
+
+      it('should call #RepoDetailView.set with ["contributor", " " ]', function(){
+        var repoDetailView = new RepoDetailView({model: repoModel});
+        var setSpy = spyOn(FilterModel.prototype, 'set');
+        repoDetailView.addContributor();
+        expect(setSpy).toHaveBeenCalledWith('contributor', ' ');
+      });
+
+    });
+
+    describe('.addSince', function(){
+
+      it('should call #RepoDetailView.set with ["since", { amount : 1, pattern : "weeks" } ]', function(){
+        var repoDetailView = new RepoDetailView({model: repoModel});
+        var setSpy = spyOn(FilterModel.prototype, 'set');
+        repoDetailView.addSince();
+        expect(setSpy).toHaveBeenCalledWith('since', {amount: 1, pattern: 'weeks'});
+      });
+
+    });
+
+    describe('.addUntil', function(){
+
+      it('should call #RepoDetailView.set with ["until", < current moment object > ]', function(){
+        var repoDetailView = new RepoDetailView({model: repoModel});
+        var setSpy = spyOn(FilterModel.prototype, 'set');
+        var currentMoment = moment();
+        repoDetailView.addUntil();
+        expect(setSpy).toHaveBeenCalledWith('until', currentMoment);
+      });
+
+    });
+
+    describe('.addPath', function(){
+
+      it('should call #RepoDetailView.set with ["path", " "]', function(){
+        var repoDetailView = new RepoDetailView({model: repoModel});
+        var setSpy = spyOn(FilterModel.prototype, 'set');
+        repoDetailView.addPath();
+        expect(setSpy).toHaveBeenCalledWith('path', ' ');
+      });
+
+    });
+
+    describe('.changeUntil', function(){
+
+      it('should call #RepoDetailView.set with ["until", < current moment object > ]', function(){
+        var repoDetailView = new RepoDetailView({model: repoModel});
+        var setSpy = spyOn(FilterModel.prototype, 'set');
+        var currentMoment = moment();
+        repoDetailView.changeUntil();
+        expect(setSpy).toHaveBeenCalledWith('until', currentMoment);
+      });
+
+    });
+
+    describe('.changePath', function(){
+
+      it('should call #RepoDetailView.set with ["path", " "]', function(){
+        var repoDetailView = new RepoDetailView({model: repoModel});
+        var setSpy = spyOn(FilterModel.prototype, 'set');
+        repoDetailView.changePath();
+        expect(setSpy).toHaveBeenCalledWith('path', ' ');
+      });
+
+    });
+
+    describe('.changeBranch', function(){
+
+      it('should call #RepoDetailView.set with ["branch", "test"]', function(){
+        var repoDetailView = new RepoDetailView({model: repoModel});
+        var setSpy = spyOn(FilterModel.prototype, 'set');
+        var target = $('<select><option value="test" selected="selected"></option></select>');
+        repoDetailView.changeBranch(target);
+        expect(setSpy).toHaveBeenCalledWith('branch', 'test');
+      });
+
+    });
+
+    describe('.changeContributor', function(){
+
+      it('should call #RepoDetailView.set with ["contributor", "test"]', function(){
+        var repoDetailView = new RepoDetailView({model: repoModel});
+        var setSpy = spyOn(FilterModel.prototype, 'set');
+        var target = $('<select><option value="test" selected="selected"></option></select>');
+        repoDetailView.changeContributor(target);
+        expect(setSpy).toHaveBeenCalledWith('contributor', 'test');
+      });
+
+    });
+
+    describe('.changeSince', function(){
+
+      it('should call #RepoDetailView.set with [ "since", {amount: 0, pattern: "year"}]', function(){
+        var repoDetailView = new RepoDetailView({model: repoModel});
+        var setSpy = spyOn(FilterModel.prototype, 'set');
+        var target = $('<select><option value="year" selected="selected"></option></select>');
+        repoDetailView.changeSince(target);
+        expect(setSpy).toHaveBeenCalledWith('since', {amount: 0, pattern: 'year'});
+      });
+
+      it('should call #RepoDetailView.set with [ "since", {amount: "23", pattern : "year"}]', function(){
+        var repoDetailView = new RepoDetailView({model: repoModel});
+        var setSpy = spyOn(FilterModel.prototype, 'set');
+        var target = $('<input type="text" value="23" />');
+        repoDetailView.changeSince(target);
+        expect(setSpy).toHaveBeenCalledWith('since', {amount: '23', pattern: 'year'});
+      });
+
+    });
+
+  });
+});

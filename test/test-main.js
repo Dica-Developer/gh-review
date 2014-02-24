@@ -52,7 +52,7 @@
       RepoModel: '../app/js/repositories/repo-model',
       RepoCollection: '../app/js/repositories/repo-collection',
       RepoView: '../app/js/repositories/repo-view',
-      repoDetailView: '../app/js/repositories/repo-detail-view',
+      RepoDetailView: '../app/js/repositories/repo-detail-view',
 
       commitModel: '../app/js/commits/commit-model',
       commitCollection: '../app/js/commits/commit-collection',
