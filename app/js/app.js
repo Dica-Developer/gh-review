@@ -20,13 +20,13 @@ define([
     this.github = new GitHub({});
     this.repoCollection = null;
     this.filterCollection = null;
-    this.commentCache = {};
+    this.commitApproved = {};
     this.commentCollector = new Worker('worker/comments/collector.js');
     this.commentCollector.onmessage = function (event) {
       if ('comment' === event.data.type) {
         if (event.data.comment.body && event.data.comment.body.indexOf('Approved by @') > -1) {
           /*jshint camelcase:false*/
-          this.commentCache[event.data.comment.commit_id] = true;
+          this.commitApproved[event.data.comment.commit_id] = event.data.comment;
         }
       }
     }.bind(this);
