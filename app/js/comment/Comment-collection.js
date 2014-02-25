@@ -2,12 +2,11 @@
 define(
   [
     'backbone',
-    'underscore',
     'app',
     'CommentModel',
     'commentBox'
   ],
-  function (Backbone, _, app, CommentModel, CommentBoxes) {
+  function (Backbone, app, CommentModel, CommentBoxes) {
     'use strict';
 
     var ShowCommentBoxView = CommentBoxes.show;
@@ -17,8 +16,7 @@ define(
       initialize: function () {},
       addComments: function () {
         this.each(function (model) {
-          var comment = app.commitApproved[model.get('commit_id')];
-          if (_.isNull(comment) || _.isUndefined(comment) || (comment.id !== model.get('id'))) {
+          if ((true !== app.commitApproved[model.get('commit_id')]) || (true !== app.approveComments[model.get('id')])) {
             new ShowCommentBoxView({
               model: model
             });
@@ -28,4 +26,5 @@ define(
     });
 
     return CommentCollection;
-  });
+  }
+);

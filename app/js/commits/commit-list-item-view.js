@@ -13,7 +13,7 @@ define([
     },
     serialize: function () {
       var commit = this.model.get('commit');
-      var approved = (!_.isUndefined(app.commitApproved[this.model.get('sha')]) && !_.isNull(app.commitApproved[this.model.get('sha')]));
+      var approved = (true === app.commitApproved[this.model.get('sha')]);
       return {
         message: this.model.commitMessage(),
         authorDate: commit.author.date,

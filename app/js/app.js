@@ -21,12 +21,18 @@ define([
     this.repoCollection = null;
     this.filterCollection = null;
     this.commitApproved = {};
+    this.approveComments = {};
     this.commentCollector = new Worker('worker/comments/collector.js');
     this.commentCollector.onmessage = function (event) {
       if ('comment' === event.data.type) {
         if (event.data.comment.body && event.data.comment.body.indexOf('Approved by @') > -1) {
           /*jshint camelcase:false*/
-          this.commitApproved[event.data.comment.commit_id] = event.data.comment;
+          if (true !== this.commitApproved[event.data.comment.commit_id]) {
+            this.commitApproved[event.data.comment.commit_id] = true;
+          }
+          if (true !== this.approveComments[event.data.comment.id]) {
+            this.approveComments[event.data.comment.id] = true;
+          }
         }
       }
     }.bind(this);
