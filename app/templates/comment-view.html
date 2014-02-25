@@ -78,7 +78,7 @@
 <% }); %>
 <% if (approvedByUser) { %>
     <div class="pull-right">
-        <button type="button" class="btn btn-danger unApproveCommit">Unapprove Commit</button>
+        <button id="unApproveCommitButton" type="button" class="btn btn-danger unApproveCommit" data-commentid="<%= approveCommentId%>">Unapprove Commit</button>
     </div>
 <% } else { %>
     <div class="pull-right">

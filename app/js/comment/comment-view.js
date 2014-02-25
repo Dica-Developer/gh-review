@@ -21,9 +21,13 @@ define(function (require) {
     commentBox: null,
     events: {
       'click .added,.deleted': 'commentLine',
-      'click .approveCommit': 'approveCommit'
+      'click .approveCommit': 'approveCommit',
+      'click #unApproveCommitButton': 'unApproveCommit'
     },
     initialize: function () {},
+    unApproveCommit: function (event) {
+      this.model.comments.removeComment($(event.target).data('commentid'));
+    },
     getDiffAndComments: function () {
       return this.model.getDiff()
         .then(this.computeChunk.bind(this))
@@ -86,7 +90,8 @@ define(function (require) {
         reviewData: app.currentFilter.toJSON(),
         approved: (true !== app.commitApproved[this.model.get('commit_id')]),
         approvers: approvers,
-        approvedByUser: (_.indexOf(approvers, app.user.login) !== -1)
+        approvedByUser: _.contains(approvers, app.user.login),
+        approveCommentId: this.model.comments.getApproveCommentId(app.user.login)
       }));
       this.renderComments();
       app.showIndicator(false);

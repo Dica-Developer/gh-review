@@ -31,6 +31,32 @@ define(
           }
         });
         return approvers;
+      },
+      getApproveCommentId: function (login) {
+        var approveCommentId = null;
+        this.each(function (model) {
+          if ((true === app.commitApproved[model.get('commit_id')]) && (true === app.approveComments[model.get('id')])) {
+            if (model.get('user').login === login) {
+              approveCommentId = model.get('id');
+            }
+          }
+        });
+        return approveCommentId;
+      },
+      removeComment: function (commentId) {
+        var message = {
+          id: commentId,
+          user: app.currentReviewData.user,
+          repo: app.currentReviewData.repo
+        };
+        app.github.repos.deleteCommitComment(message, function (error) {
+          if (!error) {
+            var model = this.findWhere({
+              id: commentId
+            });
+            console.log(model);
+          }
+        }.bind(this));
       }
     });
 
