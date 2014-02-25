@@ -5,7 +5,7 @@ define(['backbone', 'FilterModel'], function (Backbone, FilterModel) {
   var FilterCollection = Backbone.Collection.extend({
     model: FilterModel,
     localStorage: new Backbone.LocalStorage('filter'),
-    initialize: function(){
+    initialize: function () {
       this.fetch();
     }
   });
