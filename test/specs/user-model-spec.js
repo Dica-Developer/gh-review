@@ -41,6 +41,18 @@ define(['server', 'githubResponses', 'app', 'UserModel'], function(server, githu
 
       });
 
+
+      it('After github api call failure handleResponse should not be called', function(){
+        var githubGithubUserSpy = spyOn(app.github.user, 'get').andCallFake(function(msg,callback){
+          callback('error', null);
+        });
+        var userModel = new UserModel();
+        userModel.getUserData();
+        expect(githubGithubUserSpy).toHaveBeenCalled();
+        var handleResponseSpy = spyOn(userModel, 'handleResponse');
+        expect(handleResponseSpy).not.toHaveBeenCalled();
+      });
+
       it('.handleResponse should store res', function(){
         var userModel = new UserModel();
         var expectedResponse = githubResponses.userGet;
