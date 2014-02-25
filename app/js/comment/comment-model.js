@@ -13,7 +13,7 @@ define(['backbone', 'moment', 'app'], function (Backbone, moment, app) {
       this.set('isCommentEditable', isCommentEditable);
       var id = this.get('id');
       this.set('commentId', id);
-      var commentMessage = this.get('body');
+      var commentMessage = this.get('body_html');
       this.set('commentMessage', commentMessage);
     }
   });
