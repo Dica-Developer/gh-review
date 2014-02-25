@@ -25,9 +25,6 @@ define(function (require) {
       'click #unApproveCommitButton': 'unApproveCommit'
     },
     initialize: function () {},
-    unApproveCommit: function (event) {
-      this.model.comments.removeComment($(event.target).data('commentid'));
-    },
     getDiffAndComments: function () {
       return this.model.getDiff()
         .then(this.computeChunk.bind(this))
@@ -80,7 +77,19 @@ define(function (require) {
       this.model.comments.renderComments();
     },
     approveCommit: function () {
-      this.model.approveCommit();
+      this.model.approveCommit()
+        .then(this.render.bind(this), this.handleError);
+    },
+    unApproveCommit: function (event) {
+      this.model.comments.removeComment($(event.target).data('commentid'))
+        .then(this.removeCommentFromCollection.bind(this), this.handleError);
+    },
+    removeCommentFromCollection: function(model){
+      this.model.comments.remove(model);
+      this.render();
+    },
+    handleError: function(error){
+      console.log(error);
     },
     render: function () {
       var approvers = this.model.comments.getApprovers();
