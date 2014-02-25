@@ -2,11 +2,12 @@
 define(
   [
     'backbone',
+    'when',
     'app',
     'CommentModel',
     'commentBox'
   ],
-  function (Backbone, app, CommentModel, CommentBoxes) {
+  function (Backbone, when, app, CommentModel, CommentBoxes) {
     'use strict';
 
     var ShowCommentBoxView = CommentBoxes.show;
@@ -44,6 +45,7 @@ define(
         return approveCommentId;
       },
       removeComment: function (commentId) {
+        var defer = when.defer();
         var message = {
           id: commentId,
           user: app.currentReviewData.user,
@@ -54,8 +56,12 @@ define(
             var model = this.findWhere({
               id: commentId
             });
+            defer.resolve(model);
+          } else {
+            defer.reject(error);
           }
         }.bind(this));
+        return defer.promise;
       }
     });
 
