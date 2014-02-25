@@ -64,7 +64,7 @@ define(function (require) {
     });
 
     it('.renderComments should call #CommentView.model.comments.addComments', function () {
-      spyOn(commentView.model.comments, 'addComments');
+      spyOn(commentView.model.comments, 'renderComments');
       commentView.renderComments();
       expect(commentView.model.comments.renderComments).toHaveBeenCalled();
     });
