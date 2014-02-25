@@ -56,7 +56,7 @@ define(function (require) {
     commitList: function (owner, repo, branch) {
       this.prepareView('reviewLink');
       var model = app.currentFilter;
-      if (owner !== model.get('owner') || repo !== model.get('repo') || branch !== model.get('branch')) {
+      if (null !== model || owner !== model.get('owner') || repo !== model.get('repo') || branch !== model.get('branch')) {
         model = new FilterModel({
           owner: owner,
           repo: repo,
