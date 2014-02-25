@@ -10,18 +10,26 @@ define(function(require){
   var FilterModel = require('FilterModel');
   var RepoModel = require('RepoModel');
   _.moment = moment;
+
+  var sandbox = null;
+
   describe('#RepoDetailView', function(){
     var repoModel = new RepoModel({name: 'test', owner: {login: 'test2'}});
     var filterModelSpy = null;
     beforeEach(function(){
+      spyOn(RepoModel.prototype, 'getBranches');
+      spyOn(RepoModel.prototype, 'getContributors');
       filterModelSpy = spyOn(FilterModel.prototype, 'initialize');
       app.filterCollection = {
         on: function(){}
       };
+      sandbox = $('<div id="main"></div>');
+      sandbox.appendTo('body');
     });
 
     afterEach(function(){
       app.filterCollection = null;
+      sandbox.remove();
     });
 
     it('Should be defined', function(){
@@ -213,6 +221,80 @@ define(function(require){
         var target = $('<input type="text" value="23" />');
         repoDetailView.changeSince(target);
         expect(setSpy).toHaveBeenCalledWith('since', {amount: '23', pattern: 'year'});
+      });
+
+    });
+
+    describe('.addFilter', function(){
+
+      it('should call #RepoDetailView.addBranch', function(){
+        var repoDetailView = new RepoDetailView({model: repoModel});
+        var addBranchSpy = spyOn(RepoDetailView.prototype, 'addBranch');
+        var button = $('<button class="filter" data-filter="branch"></button>');
+        repoDetailView.$el.append(button);
+        button.click();
+        expect(addBranchSpy).toHaveBeenCalled();
+      });
+
+    });
+
+    describe('.changeFilter', function(){
+
+      it('should call #RepoDetailView.addBranch', function(){
+        var repoDetailView = new RepoDetailView({model: repoModel});
+        var changeFilterSpy = spyOn(RepoDetailView.prototype, 'changeBranch');
+        var input = $('<input type="text" class="filterSelector" data-filter="branch" />');
+        repoDetailView.$el.append(input);
+        input.change();
+        expect(changeFilterSpy).toHaveBeenCalled();
+      });
+
+    });
+
+    describe('.disableButton', function(){
+
+      it('should disable button', function(){
+        var repoDetailView = new RepoDetailView({model: repoModel});
+        var button = $('<button id="addReview"></button>');
+        expect(button.is(':disabled')).toBeFalsy();
+        repoDetailView.$el.append(button);
+        repoDetailView.disableButton();
+        expect(button.is(':disabled')).toBeTruthy();
+      });
+
+    });
+
+    describe('.enableButton', function(){
+
+      it('should enable button', function(){
+        var repoDetailView = new RepoDetailView({model: repoModel});
+        var button = $('<button id="addReview" disabled="disabled"></button>');
+        expect(button.is(':disabled')).toBeTruthy();
+        sandbox.append(button);
+        repoDetailView.enableButton();
+        expect(button.is(':disabled')).toBeFalsy();
+      });
+
+    });
+
+    describe('.getBranch', function(){
+
+      it('should return "test"', function(){
+        var repoDetailView = new RepoDetailView({model: repoModel});
+        var select = $('<select id="branchList"><option value="bla"></option><option value="test" selected="selected"></option></select>');
+        sandbox.append(select);
+        expect(repoDetailView.getBranch()).toBe('test');
+      });
+
+    });
+
+    describe('.getContributor', function(){
+
+      it('should return "test"', function(){
+        var repoDetailView = new RepoDetailView({model: repoModel});
+        var select = $('<select id="contributorsList"><option value="bla"></option><option value="test" selected="selected"></option></select>');
+        sandbox.append(select);
+        expect(repoDetailView.getContributor()).toBe('test');
       });
 
     });
