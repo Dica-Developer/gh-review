@@ -84,14 +84,20 @@ define(function (require) {
     },
     render: function () {
       var approvers = this.model.comments.getApprovers();
+      var approvedByUser = false;
+      var approveCommentId = -1;
+      if (!_.isUndefined(app.user) && !_.isNull(app.user)) {
+        approvedByUser = _.contains(approvers, app.user.login);
+        approveCommentId = this.model.comments.getApproveCommentId(app.user.login);
+      }
       this.$el.html(this.template({
         model: this.model.toJSON(),
         files: this.files,
         reviewData: app.currentFilter.toJSON(),
         approved: (true !== app.commitApproved[this.model.get('commit_id')]),
         approvers: approvers,
-        approvedByUser: _.contains(approvers, app.user.login),
-        approveCommentId: this.model.comments.getApproveCommentId(app.user.login)
+        approvedByUser: approvedByUser,
+        approveCommentId: approveCommentId
       }));
       this.renderComments();
       app.showIndicator(false);
