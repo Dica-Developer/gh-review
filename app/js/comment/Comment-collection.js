@@ -14,7 +14,7 @@ define(
     var CommentCollection = Backbone.Collection.extend({
       model: CommentModel,
       initialize: function () {},
-      addComments: function () {
+      renderComments: function () {
         this.each(function (model) {
           if ((true !== app.commitApproved[model.get('commit_id')]) || (true !== app.approveComments[model.get('id')])) {
             new ShowCommentBoxView({
@@ -22,6 +22,15 @@ define(
             });
           }
         });
+      },
+      getApprovers: function () {
+        var approvers = [];
+        this.each(function (model) {
+          if ((true === app.commitApproved[model.get('commit_id')]) && (true === app.approveComments[model.get('id')])) {
+            approvers.push(model.get('user').login);
+          }
+        });
+        return approvers;
       }
     });
 

@@ -16,6 +16,14 @@
             <img height="24px" class="media-object pull-left" src="<%= model.author.avatar_url %>" title="<%= model.author.login %>"/>
             <div class="media-body">
                 <strong><%= model.author.login %></strong> <span class="text-muted">authored <%= _.moment(model.commit.author.date).fromNow() %></span>
+                <span class="pull-right">
+                    <% if (approved) { %>
+                        approved by
+                        <% _.each(approvers, function (approver) { %>
+                            <a href="https://github.com/<%= approver%>" class="user-mention">@<%= approver%></a>
+                        <% }); %>
+                    <% } %>
+                </span>
             </div>
         </div>
     </div>
@@ -68,6 +76,12 @@
     </div>
 </div>
 <% }); %>
-<div class="pull-right">
-    <button type="button" class="btn btn-success approveCommit">Approve Commit</button>
-</div>
+<% if (approvedByUser) { %>
+    <div class="pull-right">
+        <button type="button" class="btn btn-danger unApproveCommit">Unapprove Commit</button>
+    </div>
+<% } else { %>
+    <div class="pull-right">
+        <button type="button" class="btn btn-success approveCommit">Approve Commit</button>
+    </div>
+<% } %>

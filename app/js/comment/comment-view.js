@@ -23,7 +23,7 @@ define(function (require) {
       'click .added,.deleted': 'commentLine',
       'click .approveCommit': 'approveCommit'
     },
-    initialize: function(){},
+    initialize: function () {},
     getDiffAndComments: function () {
       return this.model.getDiff()
         .then(this.computeChunk.bind(this))
@@ -73,16 +73,20 @@ define(function (require) {
       });
     },
     renderComments: function () {
-      this.model.comments.addComments();
+      this.model.comments.renderComments();
     },
     approveCommit: function () {
       this.model.approveCommit();
     },
     render: function () {
+      var approvers = this.model.comments.getApprovers();
       this.$el.html(this.template({
         model: this.model.toJSON(),
         files: this.files,
-        reviewData: app.currentFilter.toJSON()
+        reviewData: app.currentFilter.toJSON(),
+        approved: (true !== app.commitApproved[this.model.get('commit_id')]),
+        approvers: approvers,
+        approvedByUser: (_.indexOf(approvers, app.user.login) !== -1)
       }));
       this.renderComments();
       app.showIndicator(false);
