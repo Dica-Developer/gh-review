@@ -98,7 +98,6 @@ define([
           defer.resolve();
         } else {
           defer.reject();
-          app.logger.error(error);
         }
       });
       return defer.promise;
