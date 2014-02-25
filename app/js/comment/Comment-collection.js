@@ -54,7 +54,6 @@ define(
             var model = this.findWhere({
               id: commentId
             });
-            console.log(model);
           }
         }.bind(this));
       }
