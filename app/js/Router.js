@@ -105,12 +105,17 @@ define(function (require) {
       var url = window.location.href;
       var error = url.match(/[&\?]error=([^&]+)/);
       var code = url.match(/[&\?]code=([\w\/\-]+)/);
-      if (!app.authenticated && (error || code)) {
-        oauthHandler.callback();
-      } else if(app.authenticated && app.filterCollection.length > 0){
-        this.navigate('filter', {trigger: true});
+
+      if(!app.authenticated){
+        if(error || code){
+          oauthHandler.callback();
+        }
       } else {
-        this.showWelcomeScreen();
+        if(app.filterCollection.length < 1){
+          this.showWelcomeScreen();
+        } else {
+          this.navigate('filter', {trigger: true});
+        }
       }
       this.trigger('ajaxIndicator', false);
     },
@@ -118,6 +123,7 @@ define(function (require) {
       this.prepareView();
       this.view = new WelcomeView();
       this.view.render();
+      this.trigger('ajaxIndicator', false);
     },
     whoami: function () {
       this.trigger('ajaxIndicator', true);
