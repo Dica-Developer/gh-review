@@ -1,4 +1,4 @@
-/*global onmessage, XMLHttpRequest, postMessage, analyzeComments*/
+/*global onmessage:true, XMLHttpRequest, postMessage, analyzeComments*/
 var _accessToken = null;
 
 var _urls = null;
