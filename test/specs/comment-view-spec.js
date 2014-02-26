@@ -2,9 +2,6 @@
 define(function (require) {
   'use strict';
 
-  require('backboneLocalStorage');
-  require('underscore');
-  require('underscore.string');
   var when = require('when');
   var app = require('app');
   var CommentView = require('CommentView');
@@ -70,7 +67,11 @@ define(function (require) {
     });
 
     it('.approveCommit should call #CommentView.model.approveCommit', function () {
-      spyOn(commentView.model, 'approveCommit');
+      spyOn(commentView.model, 'approveCommit').andReturn(
+        when.promise(function (resolve) {
+          resolve();
+        })
+      );
       commentView.approveCommit();
       expect(commentView.model.approveCommit).toHaveBeenCalled();
     });
