@@ -1,7 +1,8 @@
 /*global define*/
 define(['backbone', 'when', 'app'], function (Backbone, when, app) {
   'use strict';
-  var RepoModel = Backbone.Model.extend({
+
+  return Backbone.Model.extend({
     getBranchesDefer: null,
     getContributorsDefer: null,
     initialize: function () {
@@ -41,6 +42,4 @@ define(['backbone', 'when', 'app'], function (Backbone, when, app) {
       this.getContributorsDefer.resolve();
     }
   });
-
-  return RepoModel;
 });

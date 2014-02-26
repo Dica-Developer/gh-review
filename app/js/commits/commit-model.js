@@ -7,7 +7,7 @@ define([
   'CommentCollection'
 ], function (Backbone, _, app, when, CommentCollection) {
   'use strict';
-  var CommitModel = Backbone.Model.extend({
+  return Backbone.Model.extend({
     comments: new CommentCollection(),
     getCommitCommentsDefer: null,
     initialize: function () {
@@ -110,6 +110,4 @@ define([
       return message;
     }
   });
-
-  return CommitModel;
 });

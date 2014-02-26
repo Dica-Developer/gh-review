@@ -12,7 +12,7 @@ define(
 
     var ShowCommentBoxView = CommentBoxes.show;
 
-    var CommentCollection = Backbone.Collection.extend({
+    return Backbone.Collection.extend({
       model: CommentModel,
       initialize: function () {
       },
@@ -65,7 +65,4 @@ define(
         return defer.promise;
       }
     });
-
-    return CommentCollection;
-  }
-);
+  });

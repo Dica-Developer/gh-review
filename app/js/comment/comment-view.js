@@ -13,7 +13,7 @@ define(function (require) {
   var chunkHeadingRegExp = new RegExp('@@.*?[-+](\\d+)(,\\d+){0,1}\\s[-+](\\d+)(,\\d+){0,1} @@', 'g');
   var EditCommentBox = CommentBoxes.edit;
 
-  var CommentView = Backbone.View.extend({
+  return Backbone.View.extend({
     el: '#main',
     template: _.template(template),
     files: [],
@@ -113,6 +113,4 @@ define(function (require) {
       app.showIndicator(false);
     }
   });
-
-  return CommentView;
 });

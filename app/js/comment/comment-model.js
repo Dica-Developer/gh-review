@@ -2,7 +2,7 @@
 define(['backbone', 'moment', 'app'], function (Backbone, moment, app) {
   'use strict';
 
-  var CommentModel = Backbone.Model.extend({
+  return Backbone.Model.extend({
     initialize: function () {
       var date = moment(this.get('created_at'));
       this.set('commentFromNow', date.fromNow());
@@ -17,6 +17,4 @@ define(['backbone', 'moment', 'app'], function (Backbone, moment, app) {
       this.set('commentMessage', commentMessage);
     }
   });
-
-  return CommentModel;
 });

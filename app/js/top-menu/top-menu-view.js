@@ -9,7 +9,7 @@ define([
 ], function (Backbone, _, app, UserModel, template, topRightTemplate) {
   'use strict';
 
-  var TopMenuView = Backbone.View.extend({
+  return Backbone.View.extend({
     el: '#topMenu',
     model: null,
     template: _.template(template),
@@ -46,6 +46,4 @@ define([
       this.$el.html(this.template());
     }
   });
-
-  return TopMenuView;
 });

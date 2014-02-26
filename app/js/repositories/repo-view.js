@@ -8,7 +8,7 @@ define([
 ], function (Backbone, _, app, moment, template) {
   'use strict';
 
-  var RepoView = Backbone.View.extend({
+  return Backbone.View.extend({
     el: '#main',
     template: _.template(template),
     serialize: function () {
@@ -48,6 +48,4 @@ define([
       app.showIndicator(false);
     }
   });
-
-  return RepoView;
 });

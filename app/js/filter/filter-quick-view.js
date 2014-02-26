@@ -7,7 +7,7 @@ define([
 ], function (Backbone, _, app, template) {
   'use strict';
 
-  var QuickFilter = Backbone.View.extend({
+  return Backbone.View.extend({
     el: '#quickReview',
     template: _.template(template),
     collection: null,
@@ -68,6 +68,4 @@ define([
       }
     }
   });
-
-  return QuickFilter;
 });

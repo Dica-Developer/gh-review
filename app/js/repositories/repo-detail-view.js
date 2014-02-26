@@ -9,7 +9,7 @@ define([
 ], function (Backbone, _, when, app, FilterModel, template) {
   'use strict';
 
-  var RepoDetailView = Backbone.View.extend({
+  return Backbone.View.extend({
     el: '#main',
     template: _.template(template),
     initialize: function () {
@@ -132,6 +132,4 @@ define([
       app.showIndicator(false);
     }
   });
-
-  return RepoDetailView;
 });

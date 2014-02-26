@@ -15,7 +15,7 @@ define([
 //      event.preventDefault();
 //      this.model.destroy();
 
-  var FilterListView = Backbone.View.extend({
+  return Backbone.View.extend({
     el: '#reviewList',
     listItemTemplate: _.template(listItemTemplate),
     events: {
@@ -59,6 +59,4 @@ define([
     render: function () {
     }
   });
-
-  return FilterListView;
 });

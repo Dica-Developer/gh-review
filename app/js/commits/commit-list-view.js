@@ -9,7 +9,7 @@ define([
   'text!templates/review-detail.html'
 ], function (Backbone, app, _, when, commitCollection, CommitListItemView, template) {
   'use strict';
-  var ReviewDetailView = Backbone.View.extend({
+  return Backbone.View.extend({
     el: '#main',
     template: _.template(template),
     getCommitsRefer: null,
@@ -110,6 +110,4 @@ define([
       this.$el.html(this.template(this.model.toJSON()));
     }
   });
-
-  return ReviewDetailView;
 });

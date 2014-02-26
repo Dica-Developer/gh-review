@@ -2,7 +2,7 @@
 define(['backbone', 'when', 'app'], function (Backbone, when, app) {
   'use strict';
 
-  var UserModel = Backbone.Model.extend({
+  return Backbone.Model.extend({
     initialize: function () {
     },
     getUserData: function () {
@@ -22,6 +22,4 @@ define(['backbone', 'when', 'app'], function (Backbone, when, app) {
       this.set(res);
     }
   });
-
-  return UserModel;
 });

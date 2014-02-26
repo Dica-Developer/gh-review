@@ -2,7 +2,7 @@
 define(['backbone'], function (Backbone) {
   'use strict';
 
-  var FilterModel = Backbone.Model.extend({
+  return Backbone.Model.extend({
     defaults: {
       owner: '',
       repo: '',
@@ -16,6 +16,4 @@ define(['backbone'], function (Backbone) {
       path: ''
     }
   });
-
-  return FilterModel;
 });

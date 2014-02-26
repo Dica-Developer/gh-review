@@ -8,7 +8,7 @@ define([
 ], function (Backbone, _, when, app, RepoModel) {
   'use strict';
 
-  var RepoCollection = Backbone.Collection.extend({
+  return Backbone.Collection.extend({
     model: RepoModel,
     organizations: {},
     getReposDefer: when.defer(),
@@ -44,6 +44,4 @@ define([
       return this.findWhere({name: name});
     }
   });
-
-  return RepoCollection;
 });

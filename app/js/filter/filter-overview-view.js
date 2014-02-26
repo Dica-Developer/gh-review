@@ -9,7 +9,7 @@ define([
 ], function (Backbone, _, app, FilterListView, QuickFilter, template) {
   'use strict';
 
-  var ReviewOverview = Backbone.View.extend({
+  return Backbone.View.extend({
     el: '#main',
     template: _.template(template),
     render: function () {
@@ -22,7 +22,4 @@ define([
       reviewListView.fetchReviews();
     }
   });
-
-  return ReviewOverview;
-
 });

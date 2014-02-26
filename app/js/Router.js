@@ -17,7 +17,7 @@ define(function (require) {
   var UserModel = require('UserModel');
   var WelcomeView = require('WelcomeView');
 
-  var Router = Backbone.Router.extend({
+  return Backbone.Router.extend({
     view: null,
     routes: {
       '': 'root',
@@ -147,5 +147,4 @@ define(function (require) {
     initialize: function () {
     }
   });
-  return Router;
 });

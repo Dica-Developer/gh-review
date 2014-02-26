@@ -530,8 +530,7 @@ define(['github/util', 'github/api/index'], function (Util, Api) {
             if (header !== '' && header.indexOf(':') !== -1) {
               var dividerIndex = header.indexOf(':');
               var key = header.substring(0, dividerIndex).trim().toLowerCase();
-              var value = header.substring(dividerIndex + 1).trim();
-              res.headers[key] = value;
+              res.headers[key] = header.substring(dividerIndex + 1).trim();
             }
           }
           res.data = xhr.responseText;
@@ -718,8 +717,7 @@ define(['github/util', 'github/api/index'], function (Util, Api) {
             if (header !== '' && header.indexOf(':') !== -1) {
               var dividerIndex = header.indexOf(':');
               var key = header.substring(0, dividerIndex).trim().toLowerCase();
-              var value = header.substring(dividerIndex + 1).trim();
-              res.headers[key] = value;
+              res.headers[key] = header.substring(dividerIndex + 1).trim();
             }
           }
           res.data = xhr.responseText;
