@@ -3,7 +3,7 @@ var _accessToken = null;
 
 var _urls = null;
 
-function getPageLinks(link) {
+function getPageLinks (link) {
   'use strict';
   var links = {};
   link.replace(/<([^>]*)>;\s*rel="([\w]*)\"/g, function (m, uri, type) {
@@ -12,12 +12,12 @@ function getPageLinks(link) {
   return links;
 }
 
-function errorCallback() {
+function errorCallback () {
   'use strict';
   // TODO post to application and print in UI
 }
 
-function successCallback(event) {
+function successCallback (event) {
   'use strict';
   var xhr = event.currentTarget;
   var links = xhr.getResponseHeader('Link');
@@ -37,7 +37,7 @@ function successCallback(event) {
   });
 }
 
-function analyzeComments(url) {
+function analyzeComments (url) {
   'use strict';
   var xhr = new XMLHttpRequest();
   xhr.open('GET', url, true);
@@ -49,10 +49,10 @@ function analyzeComments(url) {
   xhr.send();
 }
 
-function start() {
+function start () {
   'use strict';
   var idx = 0;
-  for (idx = 0; _urls !== null && idx < _urls.length; idx++) {
+  for (; _urls !== null && idx < _urls.length; idx++) {
     analyzeComments(_urls[idx]);
   }
 }
@@ -63,7 +63,7 @@ onmessage = function (event) {
     _accessToken = event.data.token;
     start();
     // TODO use setTimeout and start it after the last analyzeComments call
-    setInterval(start, 60000);
+    window.setInterval(start, 60000);
   } else if ('repositories' === event.data.type) {
     _urls = event.data.repositories;
     start();
