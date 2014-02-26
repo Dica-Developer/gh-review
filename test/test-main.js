@@ -42,6 +42,8 @@
       chunk: '../app/js/chunk',
       topMenuView: 'top-menu/top-menu-view',
 
+      WelcomeView: '../app/js/welcome-view',
+
       FilterCollection: '../app/js/filter/filter-collection',
       FilterModel: '../app/js/filter/filter-model',
       FilterListView: '../app/js/filter/filter-list-view',
@@ -114,6 +116,15 @@
     deps: tests,
 
     // start test run, once Require.js is done
-    callback: window.__karma__.start
+    callback: function(){
+      require([
+        'underscore',
+        'moment',
+        'underscore.string'
+      ], function(_, moment){
+        _.moment = moment;
+        window.__karma__.start();
+      });
+    }
   });
 }());

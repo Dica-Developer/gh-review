@@ -4,12 +4,9 @@ define(function(require){
 
   var $ = require('jquery');
   var app = require('app');
-  var _ = require('underscore');
-  var moment = require('moment');
   var RepoDetailView = require('RepoDetailView');
   var FilterModel = require('FilterModel');
   var RepoModel = require('RepoModel');
-  _.moment = moment;
 
   var sandbox = null;
 
