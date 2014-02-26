@@ -67,9 +67,6 @@ define([
         when.all(this.repoCollection.getRepos())
           .then(function () {
             Backbone.history.start();
-            this.router.navigate('#filter', {
-              trigger: true
-            });
             this.announceRepositories();
             this.showIndicator(false);
           }.bind(this));
