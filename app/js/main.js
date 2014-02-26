@@ -27,6 +27,8 @@
       chunk: 'chunk',
       TopMenuView: 'top-menu/top-menu-view',
 
+      WelcomeView: 'welcome-view',
+
       FilterCollection: 'filter/filter-collection',
       FilterModel: 'filter/filter-model',
       FilterListView: 'filter/filter-list-view',

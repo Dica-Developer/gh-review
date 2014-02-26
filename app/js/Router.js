@@ -15,6 +15,7 @@ define(function (require) {
   var loginLogout = require('loginLogout');
   var WhoAmI = require('WhoAmI');
   var UserModel = require('UserModel');
+  var WelcomeView = require('WelcomeView');
 
   var Router = Backbone.Router.extend({
     view: null,
@@ -106,8 +107,17 @@ define(function (require) {
       var code = url.match(/[&\?]code=([\w\/\-]+)/);
       if (!app.authenticated && (error || code)) {
         oauthHandler.callback();
+      } else if(app.authenticated && app.filterCollection.length > 0){
+        this.navigate('filter', {trigger: true});
+      } else {
+        this.showWelcomeScreen();
       }
       this.trigger('ajaxIndicator', false);
+    },
+    showWelcomeScreen: function(){
+      this.prepareView();
+      this.view = new WelcomeView();
+      this.view.render();
     },
     whoami: function () {
       this.trigger('ajaxIndicator', true);
@@ -124,7 +134,9 @@ define(function (require) {
       this.trigger('ajaxIndicator', true);
       this.clear();
       $('li[name="ghr-top-menu-links"]').removeClass('active');
-      $('#' + activeLink).addClass('active');
+      if(activeLink){
+        $('#' + activeLink).addClass('active');
+      }
     },
     initialize: function () {}
   });
