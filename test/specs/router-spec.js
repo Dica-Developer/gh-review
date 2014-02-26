@@ -18,7 +18,7 @@ define(function (require) {
 
   require('backboneLocalStorage');
 
-  afterEach(function(){
+  afterEach(function () {
     localStorage.clear();
     app.authenticated = false;
   });
@@ -35,7 +35,8 @@ define(function (require) {
 
       beforeEach(function () {
         var TmpRouter = Router.extend({
-          initialize: function () {}
+          initialize: function () {
+          }
         });
         router = new TmpRouter();
         routerClearSpy = spyOn(router, 'clear').andCallThrough();

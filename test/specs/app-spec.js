@@ -2,7 +2,7 @@
 define(['jquery', 'underscore', 'app', 'Router', 'bootstrap'], function ($, _, app, Router) {
   'use strict';
 
-  afterEach(function(){
+  afterEach(function () {
     localStorage.clear();
     app.authenticated = false;
   });
@@ -64,7 +64,8 @@ define(['jquery', 'underscore', 'app', 'Router', 'bootstrap'], function ($, _, a
       var tmpApp = null, router = null;
 
       beforeEach(function () {
-        var TmpRouter = Router.extend({initialize: function(){}});
+        var TmpRouter = Router.extend({initialize: function () {
+        }});
         router = new TmpRouter();
         tmpApp = _.extend({}, app);
       });
@@ -73,7 +74,7 @@ define(['jquery', 'underscore', 'app', 'Router', 'bootstrap'], function ($, _, a
         tmpApp = null;
       });
 
-      describe('existing access token', function(){
+      describe('existing access token', function () {
         it('authenticated', function () {
           tmpApp.router = router;
           localStorage.accessToken = 'fdgdfgDFG';
@@ -82,7 +83,7 @@ define(['jquery', 'underscore', 'app', 'Router', 'bootstrap'], function ($, _, a
         });
       });
 
-      describe('no access token', function(){
+      describe('no access token', function () {
         it('not authenticated', function () {
           tmpApp.router = router;
           tmpApp.init();

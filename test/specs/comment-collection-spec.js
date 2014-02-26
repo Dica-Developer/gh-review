@@ -1,14 +1,14 @@
 /*global define, describe, it, expect, spyOn, xit*/
-define(['CommentCollection', 'commentBox'], function(CommentCollection, commentBox){
+define(['CommentCollection', 'commentBox'], function (CommentCollection, commentBox) {
   'use strict';
 
-  describe('#CommentCollection', function(){
+  describe('#CommentCollection', function () {
 
-    it('Should be defined', function(){
+    it('Should be defined', function () {
       expect(CommentCollection).toBeDefined();
     });
 
-    xit('.addComments should initiate new commentBox twice', function(){
+    xit('.addComments should initiate new commentBox twice', function () {
       var commentBoxSpy = spyOn(commentBox.show.prototype, 'initialize');
       var collection = new CommentCollection([
         {

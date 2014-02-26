@@ -1,7 +1,7 @@
 /*global define, describe, it, expect, spyOn*/
-define(['app', 'moment', 'CommentModel'], function(app, moment, CommentModel){
+define(['app', 'moment', 'CommentModel'], function (app, moment, CommentModel) {
   'use strict';
-  
+
   var exampleCommentResponse = {
     'url': 'https://api.github.com/repos/Dica-Developer/gh-review/comments/5479503',
     'html_url': 'https://github.com/Dica-Developer/gh-review/commit/c88aab3067c50c1a904fee575592aead4bc59904#commitcomment-5479503',
@@ -34,27 +34,27 @@ define(['app', 'moment', 'CommentModel'], function(app, moment, CommentModel){
     'body_html': '<p>Approved by <a href=\"https://github.com/JayGray\" class=\"user-mention\">@JayGray</a></p>'
   };
 
-  describe('#CommentModel', function(){
-    it('Should be defined', function(){
+  describe('#CommentModel', function () {
+    it('Should be defined', function () {
       expect(CommentModel).toBeDefined();
     });
   });
 
-  describe('.initialize', function(){
+  describe('.initialize', function () {
 
-    it('Should call #CommentModel.set with [ "commentFromNow", "a few seconds ago" ]', function(){
+    it('Should call #CommentModel.set with [ "commentFromNow", "a few seconds ago" ]', function () {
       var setSpy = spyOn(CommentModel.prototype, 'set');
       new CommentModel(exampleCommentResponse);
       expect(setSpy.calls[1].args).toEqual(['commentFromNow', 'a few seconds ago']);
     });
 
-    it('Should call #CommentModel.set with [ "isCommentEditable", "false" ]', function(){
+    it('Should call #CommentModel.set with [ "isCommentEditable", "false" ]', function () {
       var setSpy = spyOn(CommentModel.prototype, 'set');
       new CommentModel(exampleCommentResponse);
       expect(setSpy.calls[2].args).toEqual(['isCommentEditable', false]);
     });
 
-    it('Should call #CommentModel.set with [ "isCommentEditable", "true" ]', function(){
+    it('Should call #CommentModel.set with [ "isCommentEditable", "true" ]', function () {
       app.authenticated = true;
       app.user = {
         login: 'JayGray'
@@ -66,13 +66,13 @@ define(['app', 'moment', 'CommentModel'], function(app, moment, CommentModel){
       app.user = null;
     });
 
-    it('Should call #CommentModel.set with [ "commentId", "5479503" ]', function(){
+    it('Should call #CommentModel.set with [ "commentId", "5479503" ]', function () {
       var setSpy = spyOn(CommentModel.prototype, 'set').andCallThrough();
       new CommentModel(exampleCommentResponse);
       expect(setSpy.calls[3].args).toEqual(['commentId', 5479503]);
     });
 
-    it('Should call #CommentModel.set with [ "commentMessage", "<p>Approved by <a href=\"https://github.com/JayGray\" class=\"user-mention\">@JayGray</a></p>" ]', function(){
+    it('Should call #CommentModel.set with [ "commentMessage", "<p>Approved by <a href=\"https://github.com/JayGray\" class=\"user-mention\">@JayGray</a></p>" ]', function () {
       var setSpy = spyOn(CommentModel.prototype, 'set').andCallThrough();
       new CommentModel(exampleCommentResponse);
       expect(setSpy.calls[4].args).toEqual(['commentMessage', '<p>Approved by <a href=\"https://github.com/JayGray\" class=\"user-mention\">@JayGray</a></p>']);

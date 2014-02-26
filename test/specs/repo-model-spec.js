@@ -1,29 +1,29 @@
 /*global define, describe, it, expect, spyOn, beforeEach, afterEach, localStorage*/
-define(['app', 'RepoModel'], function(app, RepoModel){
+define(['app', 'RepoModel'], function (app, RepoModel) {
   'use strict';
 
-  afterEach(function(){
+  afterEach(function () {
     localStorage.clear();
     app.authenticated = false;
   });
 
-  describe('#RepoModel', function(){
+  describe('#RepoModel', function () {
     var repoModel = null;
 
-    beforeEach(function(){
+    beforeEach(function () {
       repoModel = new RepoModel({name: 'test', owner: {login: 'test2'}});
     });
 
-    afterEach(function(){
+    afterEach(function () {
       repoModel = null;
       localStorage.clear();
     });
 
-    it('Should be defined', function(){
+    it('Should be defined', function () {
       expect(RepoModel).toBeDefined();
     });
 
-    it('.getBranches should call github api if no branch is present', function(){
+    it('.getBranches should call github api if no branch is present', function () {
       var githubreposGetBranchesSpy = spyOn(app.github.repos, 'getBranches');
 
       repoModel.getBranches();
@@ -32,7 +32,7 @@ define(['app', 'RepoModel'], function(app, RepoModel){
 
     });
 
-    it('.getBranches should not call github api if branch is present', function(){
+    it('.getBranches should not call github api if branch is present', function () {
       var githubreposGetBranchesSpy = spyOn(app.github.repos, 'getBranches');
 
       repoModel.set('branches', true);
@@ -42,7 +42,7 @@ define(['app', 'RepoModel'], function(app, RepoModel){
 
     });
 
-    it('.getContributors should call github api if no contributors is present', function(){
+    it('.getContributors should call github api if no contributors is present', function () {
       var githubreposGetContributorsSpy = spyOn(app.github.repos, 'getContributors');
 
       repoModel.getContributors();
@@ -50,7 +50,7 @@ define(['app', 'RepoModel'], function(app, RepoModel){
       expect(githubreposGetContributorsSpy).toHaveBeenCalled();
     });
 
-    it('.getContributors should not call github api if contributors is present', function(){
+    it('.getContributors should not call github api if contributors is present', function () {
       var githubreposGetContributorsSpy = spyOn(app.github.repos, 'getContributors');
 
       repoModel.set('contributors', true);
@@ -60,7 +60,7 @@ define(['app', 'RepoModel'], function(app, RepoModel){
 
     });
 
-    it('.getContributorsCallback should save response to model', function(){
+    it('.getContributorsCallback should save response to model', function () {
       spyOn(app.github.repos, 'getContributors');
 
       repoModel.set('contributors', true);
@@ -71,7 +71,7 @@ define(['app', 'RepoModel'], function(app, RepoModel){
 
     });
 
-    it('.getBranchesCallback should save response to model', function(){
+    it('.getBranchesCallback should save response to model', function () {
       spyOn(app.github.repos, 'getBranches');
 
       repoModel.set('branches', true);

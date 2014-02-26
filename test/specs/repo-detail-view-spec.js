@@ -1,5 +1,5 @@
 /*global define, describe, it, expect, spyOn, beforeEach, afterEach*/
-define(function(require){
+define(function (require) {
   'use strict';
 
   var $ = require('jquery');
@@ -10,49 +10,50 @@ define(function(require){
 
   var sandbox = null;
 
-  describe('#RepoDetailView', function(){
+  describe('#RepoDetailView', function () {
     var repoModel = new RepoModel({name: 'test', owner: {login: 'test2'}});
     var filterModelSpy = null;
-    beforeEach(function(){
+    beforeEach(function () {
       spyOn(RepoModel.prototype, 'getBranches');
       spyOn(RepoModel.prototype, 'getContributors');
       filterModelSpy = spyOn(FilterModel.prototype, 'initialize');
       app.filterCollection = {
-        on: function(){}
+        on: function () {
+        }
       };
       sandbox = $('<div id="main"></div>');
       sandbox.appendTo('body');
     });
 
-    afterEach(function(){
+    afterEach(function () {
       app.filterCollection = null;
       sandbox.remove();
     });
 
-    it('Should be defined', function(){
+    it('Should be defined', function () {
       expect(RepoDetailView).toBeDefined();
     });
 
-    describe('.initialize', function(){
+    describe('.initialize', function () {
 
-      it('should call #FilterModel.initialize', function(){
+      it('should call #FilterModel.initialize', function () {
         new RepoDetailView({model: repoModel});
         expect(filterModelSpy).toHaveBeenCalled();
       });
 
-      it('should call #FilterModel.set with {owner: "test2"}', function(){
+      it('should call #FilterModel.set with {owner: "test2"}', function () {
         var filterModelSetSpy = spyOn(FilterModel.prototype, 'set');
         new RepoDetailView({model: repoModel});
         expect(filterModelSetSpy.calls[1].args).toEqual([ 'owner', 'test2' ]);
       });
 
-      it('should call #FilterModel.set with {repo: "test"}', function(){
+      it('should call #FilterModel.set with {repo: "test"}', function () {
         var filterModelSetSpy = spyOn(FilterModel.prototype, 'set');
         new RepoDetailView({model: repoModel});
         expect(filterModelSetSpy.calls[2].args).toEqual([ 'repo', 'test' ]);
       });
 
-      it('should call #RepoDetailView.getFurtherInformations', function(){
+      it('should call #RepoDetailView.getFurtherInformations', function () {
         var getFurtherInformationSpy = spyOn(RepoDetailView.prototype, 'getFurtherInformations');
         new RepoDetailView({model: repoModel});
         expect(getFurtherInformationSpy).toHaveBeenCalled();
@@ -60,21 +61,23 @@ define(function(require){
 
     });
 
-    describe('.checkAlreadyExist', function(){
+    describe('.checkAlreadyExist', function () {
 
-      beforeEach(function(){
+      beforeEach(function () {
         app.filterCollection = {
-          where: function(){},
-          on: function(){}
+          where: function () {
+          },
+          on: function () {
+          }
         };
       });
 
-      afterEach(function(){
+      afterEach(function () {
         app.filterCollection = null;
       });
 
-      it('should call #RepoDetailView.disableButton if filter already exist', function(){
-        app.filterCollection.where = function(){
+      it('should call #RepoDetailView.disableButton if filter already exist', function () {
+        app.filterCollection.where = function () {
           return [1];
         };
 
@@ -85,8 +88,8 @@ define(function(require){
 
       });
 
-      it('should not call #RepoDetailView.disableButton if filter not exist', function(){
-        app.filterCollection.where = function(){
+      it('should not call #RepoDetailView.disableButton if filter not exist', function () {
+        app.filterCollection.where = function () {
           return [];
         };
 
@@ -99,9 +102,9 @@ define(function(require){
 
     });
 
-    describe('.addBranch', function(){
+    describe('.addBranch', function () {
 
-      it('should call #RepoDetailView.set with ["branch", "master" ]', function(){
+      it('should call #RepoDetailView.set with ["branch", "master" ]', function () {
         var repoDetailView = new RepoDetailView({model: repoModel});
         var setSpy = spyOn(FilterModel.prototype, 'set');
         repoDetailView.addBranch();
@@ -110,9 +113,9 @@ define(function(require){
 
     });
 
-    describe('.addContributor', function(){
+    describe('.addContributor', function () {
 
-      it('should call #RepoDetailView.set with ["contributor", " " ]', function(){
+      it('should call #RepoDetailView.set with ["contributor", " " ]', function () {
         var repoDetailView = new RepoDetailView({model: repoModel});
         var setSpy = spyOn(FilterModel.prototype, 'set');
         repoDetailView.addContributor();
@@ -121,9 +124,9 @@ define(function(require){
 
     });
 
-    describe('.addSince', function(){
+    describe('.addSince', function () {
 
-      it('should call #RepoDetailView.set with ["since", { amount : 1, pattern : "weeks" } ]', function(){
+      it('should call #RepoDetailView.set with ["since", { amount : 1, pattern : "weeks" } ]', function () {
         var repoDetailView = new RepoDetailView({model: repoModel});
         var setSpy = spyOn(FilterModel.prototype, 'set');
         repoDetailView.addSince();
@@ -132,9 +135,9 @@ define(function(require){
 
     });
 
-    describe('.addUntil', function(){
+    describe('.addUntil', function () {
 
-      it('should call #RepoDetailView.set with ["until", < current moment object > ]', function(){
+      it('should call #RepoDetailView.set with ["until", < current moment object > ]', function () {
         var repoDetailView = new RepoDetailView({model: repoModel});
         var setSpy = spyOn(FilterModel.prototype, 'set');
         var currentMoment = moment();
@@ -144,9 +147,9 @@ define(function(require){
 
     });
 
-    describe('.addPath', function(){
+    describe('.addPath', function () {
 
-      it('should call #RepoDetailView.set with ["path", " "]', function(){
+      it('should call #RepoDetailView.set with ["path", " "]', function () {
         var repoDetailView = new RepoDetailView({model: repoModel});
         var setSpy = spyOn(FilterModel.prototype, 'set');
         repoDetailView.addPath();
@@ -155,9 +158,9 @@ define(function(require){
 
     });
 
-    describe('.changeUntil', function(){
+    describe('.changeUntil', function () {
 
-      it('should call #RepoDetailView.set with ["until", < current moment object > ]', function(){
+      it('should call #RepoDetailView.set with ["until", < current moment object > ]', function () {
         var repoDetailView = new RepoDetailView({model: repoModel});
         var setSpy = spyOn(FilterModel.prototype, 'set');
         var currentMoment = moment();
@@ -167,9 +170,9 @@ define(function(require){
 
     });
 
-    describe('.changePath', function(){
+    describe('.changePath', function () {
 
-      it('should call #RepoDetailView.set with ["path", " "]', function(){
+      it('should call #RepoDetailView.set with ["path", " "]', function () {
         var repoDetailView = new RepoDetailView({model: repoModel});
         var setSpy = spyOn(FilterModel.prototype, 'set');
         repoDetailView.changePath();
@@ -178,9 +181,9 @@ define(function(require){
 
     });
 
-    describe('.changeBranch', function(){
+    describe('.changeBranch', function () {
 
-      it('should call #RepoDetailView.set with ["branch", "test"]', function(){
+      it('should call #RepoDetailView.set with ["branch", "test"]', function () {
         var repoDetailView = new RepoDetailView({model: repoModel});
         var setSpy = spyOn(FilterModel.prototype, 'set');
         var target = $('<select><option value="test" selected="selected"></option></select>');
@@ -190,9 +193,9 @@ define(function(require){
 
     });
 
-    describe('.changeContributor', function(){
+    describe('.changeContributor', function () {
 
-      it('should call #RepoDetailView.set with ["contributor", "test"]', function(){
+      it('should call #RepoDetailView.set with ["contributor", "test"]', function () {
         var repoDetailView = new RepoDetailView({model: repoModel});
         var setSpy = spyOn(FilterModel.prototype, 'set');
         var target = $('<select><option value="test" selected="selected"></option></select>');
@@ -202,9 +205,9 @@ define(function(require){
 
     });
 
-    describe('.changeSince', function(){
+    describe('.changeSince', function () {
 
-      it('should call #RepoDetailView.set with [ "since", {amount: 0, pattern: "year"}]', function(){
+      it('should call #RepoDetailView.set with [ "since", {amount: 0, pattern: "year"}]', function () {
         var repoDetailView = new RepoDetailView({model: repoModel});
         var setSpy = spyOn(FilterModel.prototype, 'set');
         var target = $('<select><option value="year" selected="selected"></option></select>');
@@ -212,7 +215,7 @@ define(function(require){
         expect(setSpy).toHaveBeenCalledWith('since', {amount: 0, pattern: 'year'});
       });
 
-      it('should call #RepoDetailView.set with [ "since", {amount: "23", pattern : "year"}]', function(){
+      it('should call #RepoDetailView.set with [ "since", {amount: "23", pattern : "year"}]', function () {
         var repoDetailView = new RepoDetailView({model: repoModel});
         var setSpy = spyOn(FilterModel.prototype, 'set');
         var target = $('<input type="text" value="23" />');
@@ -222,9 +225,9 @@ define(function(require){
 
     });
 
-    describe('.addFilter', function(){
+    describe('.addFilter', function () {
 
-      it('should call #RepoDetailView.addBranch', function(){
+      it('should call #RepoDetailView.addBranch', function () {
         var repoDetailView = new RepoDetailView({model: repoModel});
         var addBranchSpy = spyOn(RepoDetailView.prototype, 'addBranch');
         var button = $('<button class="filter" data-filter="branch"></button>');
@@ -235,9 +238,9 @@ define(function(require){
 
     });
 
-    describe('.changeFilter', function(){
+    describe('.changeFilter', function () {
 
-      it('should call #RepoDetailView.addBranch', function(){
+      it('should call #RepoDetailView.addBranch', function () {
         var repoDetailView = new RepoDetailView({model: repoModel});
         var changeFilterSpy = spyOn(RepoDetailView.prototype, 'changeBranch');
         var input = $('<input type="text" class="filterSelector" data-filter="branch" />');
@@ -248,9 +251,9 @@ define(function(require){
 
     });
 
-    describe('.disableButton', function(){
+    describe('.disableButton', function () {
 
-      it('should disable button', function(){
+      it('should disable button', function () {
         var repoDetailView = new RepoDetailView({model: repoModel});
         var button = $('<button id="addReview"></button>');
         expect(button.is(':disabled')).toBeFalsy();
@@ -261,9 +264,9 @@ define(function(require){
 
     });
 
-    describe('.enableButton', function(){
+    describe('.enableButton', function () {
 
-      it('should enable button', function(){
+      it('should enable button', function () {
         var repoDetailView = new RepoDetailView({model: repoModel});
         var button = $('<button id="addReview" disabled="disabled"></button>');
         expect(button.is(':disabled')).toBeTruthy();
@@ -274,9 +277,9 @@ define(function(require){
 
     });
 
-    describe('.getBranch', function(){
+    describe('.getBranch', function () {
 
-      it('should return "test"', function(){
+      it('should return "test"', function () {
         var repoDetailView = new RepoDetailView({model: repoModel});
         var select = $('<select id="branchList"><option value="bla"></option><option value="test" selected="selected"></option></select>');
         sandbox.append(select);
@@ -285,9 +288,9 @@ define(function(require){
 
     });
 
-    describe('.getContributor', function(){
+    describe('.getContributor', function () {
 
-      it('should return "test"', function(){
+      it('should return "test"', function () {
         var repoDetailView = new RepoDetailView({model: repoModel});
         var select = $('<select id="contributorsList"><option value="bla"></option><option value="test" selected="selected"></option></select>');
         sandbox.append(select);
