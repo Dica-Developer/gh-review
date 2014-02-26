@@ -30,7 +30,7 @@ define([
             _this.set('diff', res);
             defer.resolve();
           } else {
-            defer.reject();
+            defer.reject(error);
           }
         });
       } else {
@@ -77,7 +77,7 @@ define([
           // FIXME its never called in case of error
           defer.resolve();
         } else {
-          defer.reject();
+          defer.reject(error);
         }
       });
       return defer.promise;
@@ -96,7 +96,7 @@ define([
         if (!error) {
           defer.resolve();
         } else {
-          defer.reject();
+          defer.reject(error);
         }
       });
       return defer.promise;
