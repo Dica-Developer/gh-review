@@ -63,7 +63,7 @@ onmessage = function (event) {
     _accessToken = event.data.token;
     start();
     // TODO use setTimeout and start it after the last analyzeComments call
-    window.setInterval(start, 60000);
+    setInterval(start, 60000);
   } else if ('repositories' === event.data.type) {
     _urls = event.data.repositories;
     start();
