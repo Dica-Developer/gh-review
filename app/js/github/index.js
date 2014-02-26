@@ -170,7 +170,7 @@ define(['github/util', 'github/api/index'], function (Util, Api) {
    *          ...
    *      }
    **/
-  function Client(config) {
+  function Client (config) {
     this.config = config;
     this.debug = Util.isTrue(config.debug);
 
@@ -218,14 +218,14 @@ define(['github/util', 'github/api/index'], function (Util, Api) {
     });
     delete routes.defines;
 
-    function trim(s) {
+    function trim (s) {
       if (typeof s !== 'string') {
         return s;
       }
       return s.replace(/^[\s\t\r\n]+/, '').replace(/[\s\t\r\n]+$/, '');
     }
 
-    function parseParams(msg, paramsStruct) {
+    function parseParams (msg, paramsStruct) {
       var params = Object.keys(paramsStruct);
       var paramName, def, value, type;
       for (var i = 0, l = params.length; i < l; ++i) {
@@ -287,7 +287,7 @@ define(['github/util', 'github/api/index'], function (Util, Api) {
       }
     }
 
-    function prepareApi(struct, baseType) {
+    function prepareApi (struct, baseType) {
       if (!baseType) {
         baseType = '';
       }
@@ -403,7 +403,7 @@ define(['github/util', 'github/api/index'], function (Util, Api) {
     this.auth = options;
   };
 
-  function getPageLinks(link) {
+  function getPageLinks (link) {
     if (typeof link === 'object' && (link.link || link.meta.link)) {
       link = link.link || link.meta.link;
     }
@@ -589,7 +589,7 @@ define(['github/util', 'github/api/index'], function (Util, Api) {
     this.getPage(link, 'first', callback);
   };
 
-  function getQueryAndUrl(msg, def, format) {
+  function getQueryAndUrl (msg, def, format) {
     var ret = {
       url: def.url,
       query: format === 'json' ? {} : []
@@ -667,15 +667,15 @@ define(['github/util', 'github/api/index'], function (Util, Api) {
     }
     if (this.auth) {
       switch (this.auth.type) {
-      case 'oauth':
-        path += (path.indexOf('?') === -1 ? '?' : '&') +
-          'access_token=' + encodeURIComponent(this.auth.token);
-        break;
-      case 'token':
-        headers.authorization = 'token ' + this.auth.token;
-        break;
-      default:
-        break;
+        case 'oauth':
+          path += (path.indexOf('?') === -1 ? '?' : '&') +
+            'access_token=' + encodeURIComponent(this.auth.token);
+          break;
+        case 'token':
+          headers.authorization = 'token ' + this.auth.token;
+          break;
+        default:
+          break;
       }
     }
 

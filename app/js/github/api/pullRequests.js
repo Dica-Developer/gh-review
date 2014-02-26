@@ -720,6 +720,6 @@ define(function () {
     };
 
   }).call(pullRequests.pullRequests);
-  
+
   return pullRequests;
 });

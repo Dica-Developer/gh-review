@@ -6,7 +6,7 @@ define([
   'FilterListView',
   'QuickFilter',
   'text!templates/filter-overview.html'
-], function(Backbone, _, app, FilterListView, QuickFilter, template){
+], function (Backbone, _, app, FilterListView, QuickFilter, template) {
   'use strict';
 
   var ReviewOverview = Backbone.View.extend({

@@ -106,12 +106,12 @@ define(function (require) {
       var error = url.match(/[&\?]error=([^&]+)/);
       var code = url.match(/[&\?]code=([\w\/\-]+)/);
 
-      if(!app.authenticated){
-        if(error || code){
+      if (!app.authenticated) {
+        if (error || code) {
           oauthHandler.callback();
         }
       } else {
-        if(app.filterCollection.length < 1){
+        if (app.filterCollection.length < 1) {
           this.showWelcomeScreen();
         } else {
           this.navigate('filter', {trigger: true});
@@ -119,7 +119,7 @@ define(function (require) {
       }
       this.trigger('ajaxIndicator', false);
     },
-    showWelcomeScreen: function(){
+    showWelcomeScreen: function () {
       this.prepareView();
       this.view = new WelcomeView();
       this.view.render();
@@ -140,11 +140,12 @@ define(function (require) {
       this.trigger('ajaxIndicator', true);
       this.clear();
       $('li[name="ghr-top-menu-links"]').removeClass('active');
-      if(activeLink){
+      if (activeLink) {
         $('#' + activeLink).addClass('active');
       }
     },
-    initialize: function () {}
+    initialize: function () {
+    }
   });
   return Router;
 });

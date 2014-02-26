@@ -3,7 +3,8 @@ define(['backbone', 'when', 'app'], function (Backbone, when, app) {
   'use strict';
 
   var UserModel = Backbone.Model.extend({
-    initialize: function () {},
+    initialize: function () {
+    },
     getUserData: function () {
       var defer = when.defer();
       var _this = this;

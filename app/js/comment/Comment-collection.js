@@ -14,7 +14,8 @@ define(
 
     var CommentCollection = Backbone.Collection.extend({
       model: CommentModel,
-      initialize: function () {},
+      initialize: function () {
+      },
       renderComments: function () {
         this.each(function (model) {
           if ((true !== app.commitApproved[model.get('commit_id')]) || (true !== app.approveComments[model.get('id')])) {

@@ -33,14 +33,14 @@ define([
     },
     getRepoFromOrgCallback: function (error, res) {
       _.forEach(res, function (repo) {
-        if(!_.isUndefined(this.organizations[repo.owner.login])){
+        if (!_.isUndefined(this.organizations[repo.owner.login])) {
           _.extend(repo, {organization: this.organizations[repo.owner.login]});
         }
         this.add(repo);
       }, this);
       this.getOrgReposDefer.resolve();
     },
-    getRepoByName: function(name){
+    getRepoByName: function (name) {
       return this.findWhere({name: name});
     }
   });

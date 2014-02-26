@@ -292,7 +292,7 @@ define(function () {
         if (!ret) {
           ret = {};
         }
-        if (!ret.meta){
+        if (!ret.meta) {
           ret.meta = {};
         }
         ['x-ratelimit-limit', 'x-ratelimit-remaining', 'x-oauth-scopes', 'link', 'location', 'last-modified', 'etag', 'status'].forEach(function (header) {
@@ -1033,7 +1033,7 @@ define(function () {
         if (!ret) {
           ret = {};
         }
-        if (!ret.meta){
+        if (!ret.meta) {
           ret.meta = {};
         }
         ['x-ratelimit-limit', 'x-ratelimit-remaining', 'x-oauth-scopes', 'link', 'location', 'last-modified', 'etag', 'status'].forEach(function (header) {

@@ -6,7 +6,7 @@ define([
 ], function (OAuth, app, options) {
   'use strict';
 
-  function hasLocalStorage() {
+  function hasLocalStorage () {
     return (localStorage !== 'undefined');
   }
 
@@ -32,7 +32,7 @@ define([
       app.authenticated = true;
       this.redirectToRoot();
     },
-    redirectToRoot: function(){
+    redirectToRoot: function () {
       window.location.href = window.location.protocol + '//' + window.location.host + window.location.pathname;
     }
   };

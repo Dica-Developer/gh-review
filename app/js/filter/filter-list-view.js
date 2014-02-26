@@ -22,7 +22,7 @@ define([
       'click a.list-group-item': 'showDetail',
       'click .destroy': 'clear'
     },
-    fetchReviews: function(){
+    fetchReviews: function () {
       if (this.collection.length) {
         this.addAll();
       } else {
@@ -31,18 +31,18 @@ define([
     },
     showDetail: function (event) {
       var target = $(event.target);
-      if(!target.is('a')){
+      if (!target.is('a')) {
         target = target.closest('a');
       }
       var modelId = target.data('id');
       app.currentFilter = this.collection.get(modelId);
       app.router.navigate(
         'commits/' +
-        app.currentFilter.get('owner') +
-        '/' +
-        app.currentFilter.get('repo') +
-        '/' +
-        app.currentFilter.get('branch'),
+          app.currentFilter.get('owner') +
+          '/' +
+          app.currentFilter.get('repo') +
+          '/' +
+          app.currentFilter.get('branch'),
         {trigger: true});
     },
     addOne: function (model) {
@@ -56,7 +56,8 @@ define([
     showHint: function () {
       //TODO show help text for first filter
     },
-    render: function () {}
+    render: function () {
+    }
   });
 
   return FilterListView;

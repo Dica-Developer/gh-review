@@ -47,7 +47,7 @@ define([
         }
       }.bind(this));
     },
-    editComment: function() {
+    editComment: function () {
       var message = {
         owner: app.currentReviewData.user,
         repo: app.currentReviewData.repo,

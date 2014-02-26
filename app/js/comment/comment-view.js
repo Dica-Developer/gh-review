@@ -24,7 +24,8 @@ define(function (require) {
       'click .approveCommit': 'approveCommit',
       'click #unApproveCommitButton': 'unApproveCommit'
     },
-    initialize: function () {},
+    initialize: function () {
+    },
     getDiffAndComments: function () {
       return this.model.getDiff()
         .then(this.computeChunk.bind(this))
@@ -84,11 +85,11 @@ define(function (require) {
       this.model.comments.removeComment($(event.target).data('commentid'))
         .then(this.removeCommentFromCollection.bind(this), this.handleError);
     },
-    removeCommentFromCollection: function(model){
+    removeCommentFromCollection: function (model) {
       this.model.comments.remove(model);
       this.render();
     },
-    handleError: function(error){
+    handleError: function (error) {
       console.log(error);
     },
     render: function () {

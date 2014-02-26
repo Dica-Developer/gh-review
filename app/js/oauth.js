@@ -2,7 +2,7 @@
 (function () {
   'use strict';
 
-  function OAuth2(config) {
+  function OAuth2 (config) {
     this.clientId = config.clientId;
     this.apiScope = config.apiScope;
     this.redirectUri = config.redirectUri;

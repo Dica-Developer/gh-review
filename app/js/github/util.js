@@ -13,7 +13,8 @@ define(function () {
    *  Author: Mike de Boer <mike@c9.io>
    **/
 
-  function Utils() {}
+  function Utils () {
+  }
 
   /**
    *  Util#extend(dest, src, noOverwrite) -> Object
@@ -27,7 +28,7 @@ define(function () {
    **/
   Utils.prototype.extend = function (dest, src, noOverwrite) {
     for (var prop in src) {
-      if (!noOverwrite || typeof dest[prop] === 'undefined'){
+      if (!noOverwrite || typeof dest[prop] === 'undefined') {
         dest[prop] = src[prop];
       }
     }
@@ -62,7 +63,7 @@ define(function () {
     str = str.toLowerCase().replace(/(?:(^.)|(\s+.)|(-.))/g, function (match) {
       return match.charAt(match.length - 1).toUpperCase();
     });
-    if (upper){
+    if (upper) {
       return str;
     }
     return str.charAt(0).toLowerCase() + str.substr(1);
