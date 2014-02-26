@@ -1,5 +1,5 @@
 /*global define*/
-define(['backbone', 'FilterModel'], function (Backbone, FilterModel) {
+define(['backbone', 'FilterModel', 'backboneLocalStorage'], function (Backbone, FilterModel) {
   'use strict';
 
   var FilterCollection = Backbone.Collection.extend({
