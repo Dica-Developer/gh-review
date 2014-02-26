@@ -2,8 +2,6 @@
 (function () {
   'use strict';
 
-  window.require = window.nodeRequire;
-
   requirejs.config({
     basePath: '../js',
     paths: {
