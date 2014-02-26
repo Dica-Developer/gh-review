@@ -667,15 +667,15 @@ define(['github/util', 'github/api/index'], function (Util, Api) {
     }
     if (this.auth) {
       switch (this.auth.type) {
-        case 'oauth':
-          path += (path.indexOf('?') === -1 ? '?' : '&') +
-            'access_token=' + encodeURIComponent(this.auth.token);
-          break;
-        case 'token':
-          headers.authorization = 'token ' + this.auth.token;
-          break;
-        default:
-          break;
+      case 'oauth':
+        path += (path.indexOf('?') === -1 ? '?' : '&') +
+          'access_token=' + encodeURIComponent(this.auth.token);
+        break;
+      case 'token':
+        headers.authorization = 'token ' + this.auth.token;
+        break;
+      default:
+        break;
       }
     }
 
