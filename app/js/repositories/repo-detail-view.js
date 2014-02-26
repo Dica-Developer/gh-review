@@ -18,7 +18,7 @@ define([
       this.filterModel.set('repo', this.model.get('name'));
       app.filterCollection.on('all', this.render, this);
       this.listenTo(this.filterModel, 'change', this.render);
-      when.all(this.getFurtherInformations(), this.render.bind(this));
+      when.all(this.getFurtherInformations()).then(this.render.bind(this));
     },
     events: {
       'click #addReview': 'addReview',
