@@ -15,6 +15,7 @@
       templates: '../templates',
       when: '../bower_components/when/when',
       moment: '../bower_components/moment/min/moment-with-langs.min',
+      base64: '../bower_components/requirejs-base64/base64.min',
 
       option: 'options',
 
@@ -53,7 +54,8 @@
 
       loginLogout: 'login/loginLogout',
       OauthHandler: 'oauth/oauth-handler',
-      WhoAmI: 'whoami-view'
+      WhoAmI: 'whoami-view',
+      AboutView: 'about-view'
     },
     shim: {
       underscore: {

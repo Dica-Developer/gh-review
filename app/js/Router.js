@@ -16,6 +16,7 @@ define(function (require) {
   var WhoAmI = require('WhoAmI');
   var UserModel = require('UserModel');
   var WelcomeView = require('WelcomeView');
+  var AboutView = require('AboutView');
 
   return Backbone.Router.extend({
     view: null,
@@ -30,7 +31,8 @@ define(function (require) {
       'logout': 'logout',
       'oauth/accesstoken': 'getAccessToken',
       'oauth/callback': 'callback',
-      'whoami': 'whoami'
+      'whoami': 'whoami',
+      'about': 'about'
     },
     filter: function () {
       this.prepareView('reviewLink');
@@ -135,6 +137,13 @@ define(function (require) {
       model.getUserData().then(function () {
         this.view.render();
       }.bind(this));
+    },
+    about: function(){
+      this.trigger('ajaxIndicator', true);
+      this.clear();
+      this.view = new AboutView();
+      this.view.getChangeLog()
+        .then(this.view.render.bind(this.view));
     },
     prepareView: function (activeLink) {
       this.trigger('ajaxIndicator', true);
