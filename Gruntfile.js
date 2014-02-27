@@ -231,6 +231,35 @@ module.exports = function (grunt) {
     });
   });
 
+  grunt.registerTask('version', function(versionString){
+    var pkg = grunt.file.readJSON('package.json');
+    var versionSplit = pkg.version.split('.');
+    var major = parseInt(versionSplit[0], 10);
+    var minor = parseInt(versionSplit[1], 10);
+    var patch = parseInt(versionSplit[2], 10);
+    switch(versionString){
+    case 'major':
+      major = major + 1;
+      versionSplit[0] = major;
+      versionSplit[1] = 0;
+      versionSplit[2] = 0;
+      break;
+    case 'minor':
+      minor = minor + 1;
+      versionSplit[1] = minor;
+      versionSplit[2] = 0;
+      break;
+    case 'patch':
+      patch = patch + 1;
+      versionSplit[2] = patch;
+      break;
+    default:
+      versionSplit = versionString.split('.');
+    }
+    pkg.version = versionSplit.join('.');
+    grunt.file.write('package.json', JSON.stringify(pkg, null, 2));
+  });
+
   grunt.registerTask('cleanDeploy', function () {
     var done = this.async();
     var childProcess = require('child_process');
