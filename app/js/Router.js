@@ -143,7 +143,10 @@ define(function (require) {
       this.clear();
       this.view = new AboutView();
       this.view.getChangeLog()
-        .then(this.view.render.bind(this.view));
+        .then(function(){
+          this.view.render();
+          this.trigger('ajaxIndicator', false);
+        }.bind(this));
     },
     prepareView: function (activeLink) {
       this.trigger('ajaxIndicator', true);
