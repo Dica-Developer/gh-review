@@ -1,10 +1,16 @@
 Changelog
 =========
 
-Version 0.2.0
+Version 0.3.0
 -------------
 
 Release: TBA
+
+
+Version 0.2.0
+-------------
+
+Release: 27 Feb 2014
 
 * inform user about updates
 * #60 Show change log in about view
