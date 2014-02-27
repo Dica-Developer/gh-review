@@ -2,9 +2,14 @@
 define([], function(){
   'use strict';
   return {
-    clientId: '<%= clientId %>',
-    apiScope: '<%= apiScope %>',
-    redirectUri: '<%= redirectUri %>',
-    accessTokenUrl: '<%= accessTokenUrl %>'
+    github: {
+      clientId: '<%= clientId %>',
+      apiScope: '<%= apiScope %>',
+      redirectUri: '<%= redirectUri %>',
+      accessTokenUrl: '<%= accessTokenUrl %>'
+    },
+    'ghReview': {
+      version: '<%= version %>'
+    }
   };
 });

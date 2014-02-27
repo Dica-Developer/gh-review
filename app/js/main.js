@@ -78,11 +78,14 @@
     'TopMenuView',
     'underscore',
     'moment',
+    'options',
     'underscore.string',
     'bootstrap'
-  ], function ($, app, Router, TopMenuView, _, moment) {
+  ], function ($, app, Router, TopMenuView, _, moment, options) {
     //add moment to underscore to have access to moment in templates
     _.moment = moment;
+
+    app.options = options;
 
     app.ajaxIndicator = $('#ajaxIndicator').modal({
       backdrop: true,

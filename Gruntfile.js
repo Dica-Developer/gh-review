@@ -180,9 +180,11 @@ module.exports = function (grunt) {
   grunt.registerTask('processTmpl', function (target) {
     var options = config.distOptions;
     var tmpl = grunt.file.read('build-templates/options.tmpl');
+    var pkg = grunt.file.readJSON('package.json');
     if ('dev' === target) {
       options = config.devOptions;
     }
+    options.version = pkg.version;
     var processedTmpl = grunt.template.process(tmpl, {
       data: options
     });

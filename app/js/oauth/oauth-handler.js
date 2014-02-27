@@ -1,9 +1,8 @@
 /*global define, localStorage*/
 define([
   'OAuth',
-  'app',
-  'options'
-], function (OAuth, app, options) {
+  'app'
+], function (OAuth, app) {
   'use strict';
 
   function hasLocalStorage() {
@@ -12,11 +11,11 @@ define([
 
   return {
     getAccessToken: function () {
-      var oauth = new OAuth(options);
+      var oauth = new OAuth(app.options.github);
       oauth.startAuthentication();
     },
     callback: function () {
-      var oauth = new OAuth(options);
+      var oauth = new OAuth(app.options.github);
       oauth.finishAuthentication(this.accessTokenReceived.bind(this));
     },
     accessTokenReceived: function (response) {
