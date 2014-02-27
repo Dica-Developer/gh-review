@@ -13,7 +13,7 @@ define(function () {
    *  Author: Mike de Boer <mike@c9.io>
    **/
 
-  function Utils () {
+  function Utils() {
   }
 
   /**

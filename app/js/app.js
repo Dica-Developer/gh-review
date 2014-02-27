@@ -7,11 +7,11 @@ define([
 ], function (Backbone, when, GitHub) {
   'use strict';
 
-  function hasLocalStorage () {
+  function hasLocalStorage() {
     return (localStorage !== undefined);
   }
 
-  function GHReview () {
+  function GHReview() {
     this.authenticated = false;
     this.ajaxIndicator = null;
     this.ajaxIndicatorTimeoutId = null;

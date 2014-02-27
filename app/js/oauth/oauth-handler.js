@@ -6,7 +6,7 @@ define([
 ], function (OAuth, app, options) {
   'use strict';
 
-  function hasLocalStorage () {
+  function hasLocalStorage() {
     return (localStorage !== 'undefined');
   }
 

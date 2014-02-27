@@ -10,7 +10,7 @@ define([], function () {
 
   var chunkHeadingRegExp = new RegExp('@@.*?[-+](\\d+)(,\\d+){0,1}\\s[-+](\\d+)(,\\d+){0,1} @@', 'g');
 
-  function Chunk (chunkLine) {
+  function Chunk(chunkLine) {
     this.leftNr = 0;
     this.rightNr = 0;
     this.extractChunk(chunkLine);
