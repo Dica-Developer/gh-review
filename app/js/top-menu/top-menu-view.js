@@ -29,7 +29,8 @@ define([
       var parent = container.parent();
       //var avatarUrl = this.model.get('avatar_url');
       parent.html(this.topRightTemplate({
-        userName: this.model.get('name')
+        userName: this.model.get('name'),
+        informUserAboutUpdate: app.informUserAboutUpdate
       }));
     },
     events: {

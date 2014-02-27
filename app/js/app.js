@@ -22,6 +22,7 @@ define([
     this.filterCollection = null;
     this.commitApproved = {};
     this.approveComments = {};
+    this.informUserAboutUpdate = false;
     this.commentCollector = new Worker('worker/comments/collector.js');
     this.commentCollector.onmessage = function (event) {
       if ('comment' === event.data.type) {
@@ -64,6 +65,7 @@ define([
       requirejs(['RepoCollection', 'FilterCollection'], function (RepoCollection, FilterCollection) {
         this.repoCollection = new RepoCollection();
         this.filterCollection = new FilterCollection();
+        this.checkForUpdates();
         when.all(this.repoCollection.getRepos())
           .then(function () {
             Backbone.history.start();
@@ -73,6 +75,16 @@ define([
       }.bind(this));
     } else {
       Backbone.history.start();
+    }
+  };
+
+  GHReview.prototype.checkForUpdates = function () {
+    if (hasLocalStorage()) {
+      var version = localStorage.version;
+      if (version && (version !== this.options.ghReview.version)) {
+        this.informUserAboutUpdate = true;
+      }
+      localStorage.version = this.options.ghReview.version;
     }
   };
 
