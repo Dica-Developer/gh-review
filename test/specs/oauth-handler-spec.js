@@ -1,10 +1,15 @@
 /*global define, describe, it, expect, beforeEach, afterEach, spyOn, localStorage*/
-define(['app', 'OauthHandler', 'OAuth'], function (app, oauthHandler, OAuth) {
+define(['app', 'OauthHandler', 'OAuth', 'options'], function (app, oauthHandler, OAuth, options) {
   'use strict';
+
+  beforeEach(function(){
+    app.options= options;
+  });
 
   afterEach(function () {
     localStorage.clear();
     app.authenticated = false;
+    delete app.options;
   });
 
   describe('#oauthHandler', function () {

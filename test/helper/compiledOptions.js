@@ -2,9 +2,14 @@
 define([], function(){
   'use strict';
   return {
-    clientId: '12345',
-    apiScope: 'user, repo',
-    redirectUri: 'http://dontexist.com',
-    accessTokenUrl: 'http://dontexist.com/auth'
+    github: {
+      clientId: '12345',
+      apiScope: 'user, repo',
+      redirectUri: 'http://dontexist.com',
+      accessTokenUrl: 'http://dontexist.com/auth'
+    },
+    ghReview: {
+      version: '0.0.0'
+    }
   };
 });
