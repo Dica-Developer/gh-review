@@ -27,6 +27,7 @@
       text: '../app/bower_components/requirejs-text/text',
       when: '../app/bower_components/when/when',
       moment: '../app/bower_components/moment/min/moment-with-langs.min',
+      base64: '../app/bower_components/requirejs-base64/base64.min',
       sinon: '../test/lib/sinon',
       server: '../test/helper/server',
       githubResponses: '../test/helper/githubResponses',
@@ -70,7 +71,8 @@
 
       loginLogout: '../app/js/login/loginLogout',
       OauthHandler: '../app/js/oauth/oauth-handler',
-      WhoAmI: '../app/js/whoami-view'
+      WhoAmI: '../app/js/whoami-view',
+      AboutView: '../app/js/about-view'
     },
     map: {
       GitHub: {
