@@ -104,7 +104,7 @@ define(function (require) {
         model: this.model.toJSON(),
         files: this.files,
         reviewData: app.currentFilter.toJSON(),
-        approved: (true !== app.commitApproved[this.model.get('commit_id')]),
+        approved: (true === app.commitApproved[this.model.get('sha')]),
         approvers: approvers,
         approvedByUser: approvedByUser,
         approveCommentId: approveCommentId
