@@ -109,6 +109,7 @@ define(function (require) {
       }
       this.$el.html(this.template({
         model: this.model.toJSON(),
+        message: this.model.commitMessage(),
         files: this.files,
         reviewData: app.currentFilter.toJSON(),
         approved: (true === app.commitApproved[this.model.get('sha')]),

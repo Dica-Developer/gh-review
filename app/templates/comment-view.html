@@ -10,7 +10,7 @@
 </div>
 
 <div class="panel panel-info">
-    <div class="panel-heading"><h5><%= model.commit.message %></h5></div>
+    <div class="panel-heading"><h5><%= message.join('<br/>') %></h5></div>
     <div class="panel-body">
         <div class="media">
             <img height="24px" class="media-object pull-left" src="<%= model.author.avatar_url %>" title="<%= model.author.login %>"/>
