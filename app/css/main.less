@@ -34,6 +34,13 @@ body {
 .table-row-variant(chunk-header; @state-info-bg;);
 
 table {
+  &.commit-comments {
+    border: none;
+
+    tr {
+      td{ border-top: none; }
+    }
+  }
   &.comments {
     tr {
       td {
