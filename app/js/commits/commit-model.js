@@ -102,7 +102,7 @@ define([
       return defer.promise;
     },
     commitMessage: function () {
-      var message = this.get('commit').message;
+      var message = _.str.escapeHTML(this.get('commit').message);
       var splits = _.str.lines(message);
       if (splits && splits.length > 0) {
         message = splits;
