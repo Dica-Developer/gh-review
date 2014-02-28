@@ -6,6 +6,11 @@ Version 0.3.0
 
 Release: TBA
 
+* use full screen width to render commit list and commit
+* minor style changes in commit list view
+* limit commit message in commit list view to one line
+* minor bug fixes to commit list view
+* fix error while showing approved badge
 
 Version 0.2.0
 -------------
