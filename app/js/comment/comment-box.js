@@ -6,12 +6,14 @@ define([
   'when',
   'app',
   'text!templates/edit-comment-box.html',
-  'text!templates/show-comment-box.html'
-], function ($, Backbone, _, when, app, editTemplate, showTemplate) {
+  'text!templates/show-comment-box.html',
+  'text!templates/commit-comment-box.html'
+], function ($, Backbone, _, when, app, editTemplate, showTemplate, commitCommentTemplate) {
   'use strict';
 
   var ShowCommentBoxView = Backbone.View.extend({
     template: _.template(showTemplate),
+    commitCommentTemplate: _.template(commitCommentTemplate),
     tagName: 'tr',
     attributes: {
       'class': 'comment-row'
@@ -23,16 +25,17 @@ define([
     initialize: function () {
       var path = this.model.get('path');
       var position = this.model.get('position');
-      if (position) {
-        this.position = $('[data-path="' + path + '"][data-line="' + position + '"]');
-      } else {
-        this.position = $('.approveCommit').parent().prev();
-      }
+      this.position = $('[data-path="' + path + '"][data-line="' + position + '"]');
       this.render();
     },
     render: function () {
-      this.$el.html(this.template(this.model.toJSON()));
-      this.position.after(this.$el);
+      if (this.model.get('commitComment')) {
+        this.$el.html(this.commitCommentTemplate(this.model.toJSON()));
+        $('.commit-comments').append(this.$el);
+      } else {
+        this.$el.html(this.template(this.model.toJSON()));
+        this.position.after(this.$el);
+      }
       return this;
     },
     removeComment: function () {

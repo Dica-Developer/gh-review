@@ -1,5 +1,5 @@
 /*global define*/
-define(['backbone', 'moment', 'app'], function (Backbone, moment, app) {
+define(['backbone', 'underscore', 'moment', 'app'], function (Backbone, _, moment, app) {
   'use strict';
 
   return Backbone.Model.extend({
@@ -15,6 +15,7 @@ define(['backbone', 'moment', 'app'], function (Backbone, moment, app) {
       this.set('commentId', id);
       var commentMessage = this.get('body_html');
       this.set('commentMessage', commentMessage);
+      this.set('commitComment', (_.isNull(this.get('line')) && _.isNull(this.get('position'))));
     }
   });
 });
