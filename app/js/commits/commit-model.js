@@ -103,11 +103,7 @@ define([
     },
     commitMessage: function () {
       var message = _.str.escapeHTML(this.get('commit').message);
-      var splits = _.str.lines(message);
-      if (splits && splits.length > 0) {
-        message = splits;
-      }
-      return message;
+      return _.str.lines(message);
     }
   });
 });
