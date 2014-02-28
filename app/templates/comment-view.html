@@ -29,59 +29,70 @@
     </div>
 </div>
 
-<div>
-    <small>
-        Showing <strong><%= model.diff.files.length %> changed
-        <% if(model.diff.files.length === 1) {%>
-            file
-        <% }else{%>
-            files
-        <% }%>
-        </strong> with
-        <strong><%= model.diff.stats.additions %> additions</strong> and
-        <strong><%= model.diff.stats.deletions %> deletions</strong>
-    </small>
+<div class="row">
+    <div class="col-sm-12">
+        <small>
+            Showing <strong><%= model.diff.files.length %> changed
+            <% if(model.diff.files.length === 1) {%>
+                file
+            <% }else{%>
+                files
+            <% }%>
+            </strong> with
+            <strong><%= model.diff.stats.additions %> additions</strong> and
+            <strong><%= model.diff.stats.deletions %> deletions</strong>
+        </small>
+    </div>
 </div>
 
-<% _.forEach(model.diff.files, function(file, fileIndex){ %>
-<div class="panel panel-default">
-    <div class="panel-heading">
-        File: <%= file.filename %>
-        <div class="pull-right">
-            <span class="label label-success">
-                <span class="glyphicon glyphicon-plus"></span> <%= file.additions %>
-            </span>
-            <span class="label label-danger">
-                <span class="glyphicon glyphicon-minus"></span> <%= file.deletions %>
-            </span>
-            <span class="label label-info">
-                <span class="glyphicon glyphicon-transfer"></span> <%= file.changes %>
-            </span>
-        </div>
-    </div>
-    <div class="table-responsive">
-        <table class="comments table table-condensed table-hover">
-            <% var lineIndex = 0; %>
-            <% _.forEach(files[fileIndex].chunks, function(chunk){%>
-                <% _.forEach(chunk.lines, function(line){%>
-                    <tr class="<%= line.format %>" data-path="<%= file.filename %>" data-line="<%= lineIndex %>">
-                        <td class="lineNr"><%= line.lineNrLeft %></td>
-                        <td class="lineNr"><%= line.lineNrRight %></td>
-                        <td><pre data-position="<%= lineIndex %>" data-fileindex="<%= fileIndex %>"><%= line.text %></pre></td>
-                    </tr>
-                <% lineIndex++; %>
-                <% }); %>
-            <% }); %>
-        </table>
+<div class="row">
+    <div class="col-sm-12">
+        <% _.forEach(model.diff.files, function(file, fileIndex){ %>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    File: <%= file.filename %>
+                    <div class="pull-right">
+                        <span class="label label-success">
+                            <span class="glyphicon glyphicon-plus"></span> <%= file.additions %>
+                        </span>
+                        <span class="label label-danger">
+                            <span class="glyphicon glyphicon-minus"></span> <%= file.deletions %>
+                        </span>
+                        <span class="label label-info">
+                            <span class="glyphicon glyphicon-transfer"></span> <%= file.changes %>
+                        </span>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="comments table table-condensed table-hover">
+                        <% var lineIndex = 0; %>
+                        <% _.forEach(files[fileIndex].chunks, function(chunk){%>
+                            <% _.forEach(chunk.lines, function(line){%>
+                                <tr class="<%= line.format %>" data-path="<%= file.filename %>" data-line="<%= lineIndex %>">
+                                    <td class="lineNr"><%= line.lineNrLeft %></td>
+                                    <td class="lineNr"><%= line.lineNrRight %></td>
+                                    <td><pre data-position="<%= lineIndex %>" data-fileindex="<%= fileIndex %>"><%= line.text %></pre></td>
+                                </tr>
+                            <% lineIndex++; %>
+                            <% }); %>
+                        <% }); %>
+                    </table>
+                </div>
+            </div>
+        <% }); %>
     </div>
 </div>
-<% }); %>
-<% if (approvedByUser) { %>
-    <div class="pull-right">
-        <button id="unApproveCommitButton" type="button" class="btn btn-danger unApproveCommit" data-commentid="<%= approveCommentId%>">Unapprove Commit</button>
+
+<div class="row">
+    <div class="col-sm-12">
+        <% if (approvedByUser) { %>
+            <div class="pull-right">
+                <button id="unApproveCommitButton" type="button" class="btn btn-danger unApproveCommit" data-commentid="<%= approveCommentId%>">Unapprove Commit</button>
+            </div>
+        <% } else { %>
+            <div class="pull-right">
+                <button type="button" class="btn btn-success approveCommit">Approve Commit</button>
+            </div>
+        <% } %>
     </div>
-<% } else { %>
-    <div class="pull-right">
-        <button type="button" class="btn btn-success approveCommit">Approve Commit</button>
-    </div>
-<% } %>
+</div>
