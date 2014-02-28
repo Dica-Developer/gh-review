@@ -8,7 +8,7 @@ define(function (require) {
     app = require('app'),
     Chunk = require('chunk'),
     CommentBoxes = require('commentBox'),
-    template = require('text!templates/comment-view.html');
+    template = require('text!templates/commit-view.html');
 
   var chunkHeadingRegExp = new RegExp('@@.*?[-+](\\d+)(,\\d+){0,1}\\s[-+](\\d+)(,\\d+){0,1} @@', 'g');
   var EditCommentBox = CommentBoxes.edit;
