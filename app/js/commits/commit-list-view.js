@@ -6,7 +6,7 @@ define([
   'when',
   'commitCollection',
   'commitListItemView',
-  'text!templates/review-detail.html'
+  'text!templates/commit-list.html'
 ], function (Backbone, app, _, when, commitCollection, CommitListItemView, template) {
   'use strict';
   return Backbone.View.extend({
