@@ -1,0 +1,28 @@
+<td class="comment-holder">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="media">
+                <img height="24px" class="media-object pull-left" src="<%= user.avatar_url %>" title="<%= user.login %>"/>
+                <div class="media-body">
+                    <strong><%= user.login %></strong>
+                    <div class="pull-right">
+                        <span class="text-muted">authored <%= commentFromNow %></span>
+                        <% if (isCommentEditable) {%>
+                        <div class="btn-group btn-group-xs">
+                            <button type="button" class="btn btn-default edit">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                            </button>
+                            <button type="button" class="btn btn-default remove" data-commentid="<%= commentId %>">
+                                <span class="glyphicon glyphicon-remove-circle"></span>
+                            </button>
+                        </div>
+                        <%}%>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <%= body_html %>
+        </div>
+    </div>
+</td>
