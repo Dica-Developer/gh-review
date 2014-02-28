@@ -92,9 +92,9 @@ define([
         /*jshint camelcase: false*/
         commit_id: this.get('sha'),
         body: comment
-      }, function (error) {
+      }, function (error, resp) {
         if (!error) {
-          defer.resolve();
+          defer.resolve(resp);
         } else {
           defer.reject(error);
         }

@@ -79,11 +79,18 @@ define(function (require) {
     },
     approveCommit: function () {
       this.model.approveCommit()
-        .then(this.render.bind(this), this.handleError);
+        .then(this.addCommentToCollection.bind(this), this.handleError.bind(this));
+    },
+    addCommentToCollection: function (comment) {
+      /*jshint camelcase:false*/
+      app.commitApproved[comment.commit_id] = true;
+      app.approveComments[comment.id] = true;
+      this.model.comments.add(comment);
+      this.render();
     },
     unApproveCommit: function (event) {
       this.model.comments.removeComment($(event.target).data('commentid'))
-        .then(this.removeCommentFromCollection.bind(this), this.handleError);
+        .then(this.removeCommentFromCollection.bind(this), this.handleError.bind(this));
     },
     removeCommentFromCollection: function (model) {
       this.model.comments.remove(model);
