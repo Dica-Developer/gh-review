@@ -7,6 +7,7 @@ define(function (require) {
   var CommentView = require('CommentView');
   var CommitModel = require('commitModel');
   var FilterModel = require('FilterModel');
+  var Chunk = require('chunk');
 
   describe('#CommentView', function () {
 
@@ -146,6 +147,49 @@ define(function (require) {
 
     });
 
-  });
+    describe('#CommentView.addLine', function () {
+      it('add new chunk', function () {
+        commentView.addLine('@@ -64,7 +64,7 @@');
+        expect(commentView.files.length).toBe(1);
+        expect(commentView.files[0].chunks.length).toBe(1);
+        commentView.addLine('@@ -647 +64,7 @@');
+        expect(commentView.files.length).toBe(1);
+        expect(commentView.files[0].chunks.length).toBe(2);
+        commentView.addLine('@@ -64,7 +647 @@');
+        expect(commentView.files.length).toBe(1);
+        expect(commentView.files[0].chunks.length).toBe(3);
+      });
 
+      it('add new line', function () {
+        commentView.files = [{
+          chunks: [new Chunk()]
+        }];
+
+        commentView.addLine(' @@ -64,7 +64,7 @@');
+        expect(commentView.files.length).toBe(1);
+        expect(commentView.files[0].chunks.length).toBe(1);
+        expect(commentView.files[0].chunks[0].lines.length).toBe(2);
+        commentView.addLine('@@ -64,7 +64,7 @');
+        expect(commentView.files.length).toBe(1);
+        expect(commentView.files[0].chunks.length).toBe(1);
+        expect(commentView.files[0].chunks[0].lines.length).toBe(3);
+        commentView.addLine(' @@ 64,7 +64,7 @@');
+        expect(commentView.files.length).toBe(1);
+        expect(commentView.files[0].chunks.length).toBe(1);
+        expect(commentView.files[0].chunks[0].lines.length).toBe(4);
+        commentView.addLine(' @@ -64,7 64,7 @@');
+        expect(commentView.files.length).toBe(1);
+        expect(commentView.files[0].chunks.length).toBe(1);
+        expect(commentView.files[0].chunks[0].lines.length).toBe(5);
+        commentView.addLine('f @@ -64,7 +64,7 @@');
+        expect(commentView.files.length).toBe(1);
+        expect(commentView.files[0].chunks.length).toBe(1);
+        expect(commentView.files[0].chunks[0].lines.length).toBe(6);
+        commentView.addLine('was komplett anderes');
+        expect(commentView.files.length).toBe(1);
+        expect(commentView.files[0].chunks.length).toBe(1);
+        expect(commentView.files[0].chunks[0].lines.length).toBe(7);
+      });
+    });
+  });
 });
