@@ -89,8 +89,6 @@ define([
         user: app.currentReviewData.user,
         repo: app.currentReviewData.repo,
         sha: this.get('sha'),
-        /*jshint camelcase: false*/
-        commit_id: this.get('sha'),
         body: comment
       }, function (error, resp) {
         if (!error) {
