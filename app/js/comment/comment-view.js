@@ -83,7 +83,7 @@ define(function (require) {
     },
     addCommentToCollection: function (comment) {
       /*jshint camelcase:false*/
-      app.commitApproved[comment.commit_id] = true;
+      app.commitApproved[comment.sha] = true;
       app.approveComments[comment.id] = true;
       this.model.comments.add(comment);
       this.render();

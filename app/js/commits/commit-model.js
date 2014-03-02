@@ -96,7 +96,10 @@ define([
       app.github.repos.createCommitComment({
         user: app.currentReviewData.user,
         repo: app.currentReviewData.repo,
+        // TODO sha and commit ifd are the same. Why do we need both?
         sha: this.get('sha'),
+        /*jslint camelcase:false*/
+        commit_id: this.get('sha'),
         body: comment
       }, function (error, resp) {
         if (!error) {
