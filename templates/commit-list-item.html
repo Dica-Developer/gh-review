@@ -3,18 +3,16 @@
         <img height="36px" class="media-object pull-left" src="<%= authorAvatar %>" title="<%= authorName %>"/>
 
         <div class="media-body">
-            <%if(_.isArray(message)){%>
-                <% _.each(message, function(message){%>
-                    <strong class="breakLine"><%= _.str.escapeHTML(message) %></strong><br/>
-                <% }); %>
-            <%} else {%>
-                <strong><%= _.str.escapeHTML(message) %></strong><br/>
-            <%}%>
-            <%= authorName %>
-            <small>authored <%= _.moment(authorDate).fromNow() %></small>
-            <%if (approved) {%>
-                <span class="label label-success">approved</span>
-            <%}%>
+            <div class="commit-message" title="<%= message.join('\n') %>">
+                <strong class="breakLine"><%= message.join('<br/>') %></strong>
+            </div>
+            <div class="commit-meta">
+                <%= authorName %>
+                <small>authored <%= _.moment(authorDate).fromNow() %></small>
+                <%if (approved) {%>
+                    <span class="label label-success">approved</span>
+                <%}%>
+            </div>
             <span class="badge pull-right"><%= commentCount %></span>
         </div>
     </div>

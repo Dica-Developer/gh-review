@@ -1,0 +1,39 @@
+<div class="row">
+    <div class="col-md-12">
+        <ol class="breadcrumb">
+            <li><%= owner %></li>
+            <li><%= repo %></li>
+            <%if (branch) {%>
+                <li><%= branch %></li>
+            <%} else {%>
+                <li>master</li>
+            <%}%>
+        </ol>
+    </div>
+</div>
+
+<div class="row commit-list-buttons-top">
+    <div class="col-md-12">
+        <div class="btn-group clearfix">
+            <button type="button" class="btn btn-default first" <% if(!hasFirst){%>disabled="disabled"<%}%>>First</button>
+            <button type="button" class="btn btn-default previous" <% if(!hasPrevious){%>disabled="disabled"<%}%>>Previous</button>
+            <button type="button" class="btn btn-default next" <% if(!hasNext){%>disabled="disabled"<%}%>>Next</button>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <ul id="commitList" class="list-group"></ul>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="btn-group">
+            <button type="button" class="btn btn-default first" <% if(!hasFirst){%>disabled="disabled"<%}%>>First</button>
+            <button type="button" class="btn btn-default previous" <% if(!hasPrevious){%>disabled="disabled"<%}%>>Previous</button>
+            <button type="button" class="btn btn-default next" <% if(!hasNext){%>disabled="disabled"<%}%>>Next</button>
+        </div>
+    </div>
+</div>
