@@ -23,21 +23,20 @@ define(function (require) {
         sha: '12test345',
         author: 'test',
         diff: {
-          'files': [
-            {
-              'sha': 'cc09446e24b4881902a395ebb1b6e030cf5fc5fa',
-              'filename': 'test/test-main.js',
-              'status': 'modified',
-              'additions': 1,
-              'deletions': 1,
-              'changes': 2,
-              'blob_url': 'https://github.com/Dica-Developer/gh-review/blob/31126e18d1e4e2072676602a1e85cbc388b1de86/test/test-main.js',
-              'raw_url': 'https://github.com/Dica-Developer/gh-review/raw/31126e18d1e4e2072676602a1e85cbc388b1de86/test/test-main.js',
-              'contents_url': 'https://api.github.com/repos/Dica-Developer/gh-review/contents/test/test-main.js?ref=31126e18d1e4e2072676602a1e85cbc388b1de86',
-              'patch': '@@ -64,7 +64,7 @@\n \n       userModel: \'../app/js/user-model\',\n \n-      loginLogout: \'../app/js/login/loginLogout \',\n+      loginLogout: \'../app/js/login/loginLogout\',\n       OauthView: \'../app/js/oauth/oauth-view\'\n     },\n     map: {'
-            }
-          ]
-        }
+          'files': [{
+            'sha': 'cc09446e24b4881902a395ebb1b6e030cf5fc5fa',
+            'filename': 'test/test-main.js',
+            'status': 'modified',
+            'additions': 1,
+            'deletions': 1,
+            'changes': 2,
+            'blob_url': 'https://github.com/Dica-Developer/gh-review/blob/31126e18d1e4e2072676602a1e85cbc388b1de86/test/test-main.js',
+            'raw_url': 'https://github.com/Dica-Developer/gh-review/raw/31126e18d1e4e2072676602a1e85cbc388b1de86/test/test-main.js',
+            'contents_url': 'https://api.github.com/repos/Dica-Developer/gh-review/contents/test/test-main.js?ref=31126e18d1e4e2072676602a1e85cbc388b1de86',
+            'patch': '@@ -64,7 +64,7 @@\n \n       userModel: \'../app/js/user-model\',\n \n-      loginLogout: \'../app/js/login/loginLogout \',\n+      loginLogout: \'../app/js/login/loginLogout\',\n       OauthView: \'../app/js/oauth/oauth-view\'\n     },\n     map: {'
+          }]
+        },
+        commit: ''
       });
       commentView = new CommentView({
         model: commitModel
@@ -56,7 +55,8 @@ define(function (require) {
       var getDiffSpy = spyOn(commentView.model, 'getDiff').andReturn(when.promise(
         function (resolve) {
           resolve();
-        }));
+        }
+      ));
       commentView.getDiffAndComments();
 
       expect(getDiffSpy).toHaveBeenCalled();
