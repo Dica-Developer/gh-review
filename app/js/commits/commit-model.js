@@ -56,6 +56,8 @@ define([
       if (!error) {
         this.comments.reset(resp);
         this.getCommitCommentsDefer.resolve();
+      } else {
+        this.getCommitCommentsDefer.reject(error);
       }
     },
     addLineComment: function (fileIndex, position, comment) {
@@ -84,7 +86,13 @@ define([
     },
     approveCommit: function () {
       var defer = when.defer();
-      var comment = 'Approved by @' + app.user.login;
+      var commitState = {
+        version: app.options.ghReview.version,
+        approved: true,
+        approver: app.user.login,
+        approvalDate: Date.now()
+      };
+      var comment = '```json\n' + JSON.stringify(commitState, null, 2) + '\n```';
       app.github.repos.createCommitComment({
         user: app.currentReviewData.user,
         repo: app.currentReviewData.repo,

@@ -11,6 +11,16 @@ define([
     return (localStorage !== undefined);
   }
 
+  function approveCommit(ghreview, comment) {
+    /*jshint camelcase:false*/
+    if (true !== ghreview.commitApproved[comment.commit_id]) {
+      ghreview.commitApproved[comment.commit_id] = true;
+    }
+    if (true !== ghreview.approveComments[comment.id]) {
+      ghreview.approveComments[comment.id] = true;
+    }
+  }
+
   function GHReview() {
     this.authenticated = false;
     this.ajaxIndicator = null;
@@ -26,13 +36,19 @@ define([
     this.commentCollector = new Worker('worker/comments/collector.js');
     this.commentCollector.onmessage = function (event) {
       if ('comment' === event.data.type) {
-        if (event.data.comment.body && event.data.comment.body.indexOf('Approved by @') > -1) {
-          /*jshint camelcase:false*/
-          if (true !== this.commitApproved[event.data.comment.commit_id]) {
-            this.commitApproved[event.data.comment.commit_id] = true;
-          }
-          if (true !== this.approveComments[event.data.comment.id]) {
-            this.approveComments[event.data.comment.id] = true;
+        var comment = event.data.comment.body;
+        if (comment) {
+          if (comment.indexOf('```json') > -1) {
+            comment = comment.substring(7, (comment.length - 3));
+            comment = JSON.parse(comment);
+            if (true === comment.approved) {
+              approveCommit(this, event.data.comment);
+            }
+          } else {
+            // TODO pre 0.2.0 release can and should be removed with one of the next versions
+            if (comment.indexOf('Approved by @') > -1) {
+              approveCommit(this, event.data.comment);
+            }
           }
         }
       }
