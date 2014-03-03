@@ -21,7 +21,10 @@ define([
     getOrgRepos: function (res) {
       _.forEach(res, function (org) {
         this.organizations[org.login] = org;
-        app.github.repos.getFromOrg({'org': org.login, 'type': 'all'}, this.getRepoFromOrgCallback.bind(this));
+        app.github.repos.getFromOrg({
+          'org': org.login,
+          'type': 'all'
+        }, this.getRepoFromOrgCallback.bind(this));
       }, this);
     },
     getAllReposCallback: function (error, res) {
@@ -34,14 +37,18 @@ define([
     getRepoFromOrgCallback: function (error, res) {
       _.forEach(res, function (repo) {
         if (!_.isUndefined(this.organizations[repo.owner.login])) {
-          _.extend(repo, {organization: this.organizations[repo.owner.login]});
+          _.extend(repo, {
+            organization: this.organizations[repo.owner.login]
+          });
         }
         this.add(repo);
       }, this);
       this.getOrgReposDefer.resolve();
     },
     getRepoByName: function (name) {
-      return this.findWhere({name: name});
+      return this.findWhere({
+        name: name
+      });
     }
   });
 });
