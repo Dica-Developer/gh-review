@@ -1,9 +1,10 @@
-/*globals define, describe, it, expect, beforeEach, afterEach, spyOn*/
+/*globals define, describe, it, expect, beforeEach, afterEach, spyOn, waitsFor, runs*/
 define(function (require) {
   'use strict';
 
   var when = require('when');
   var app = require('app');
+  var _ = require('underscore');
   var CommentView = require('CommentView');
   var CommitModel = require('commitModel');
   var FilterModel = require('FilterModel');
@@ -80,8 +81,16 @@ define(function (require) {
       );
       commentView.approveCommit();
       expect(commentView.model.approveCommit).toHaveBeenCalled();
-      //expect(app.commitApproved['123abc']).toBeTruthy();
-      //expect(app.approveComments[123]).toBeTruthy();
+
+      waitsFor(function(){
+        return _.size(app.commitApproved) > 1;
+      }, 'local commit approval', 5000);
+
+
+      runs(function(){
+        expect(app.commitApproved['123abc']).toBeTruthy();
+        expect(app.approveComments[123]).toBeTruthy();
+      });
     });
 
     describe('#CommentView.computeChunk', function () {
