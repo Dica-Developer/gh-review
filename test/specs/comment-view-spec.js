@@ -83,7 +83,7 @@ define(function (require) {
       expect(commentView.model.approveCommit).toHaveBeenCalled();
 
       waitsFor(function(){
-        return _.size(app.commitApproved) > 1;
+        return (_.size(app.commitApproved) > 0);
       }, 'local commit approval', 5000);
 
 
