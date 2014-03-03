@@ -7,6 +7,7 @@ define(function (require) {
   var RepoDetailView = require('RepoDetailView');
   var FilterModel = require('FilterModel');
   var RepoModel = require('RepoModel');
+  var moment = require('moment');
 
   var sandbox = null;
 
@@ -140,9 +141,15 @@ define(function (require) {
       it('should call #RepoDetailView.set with ["until", < current moment object > ]', function () {
         var repoDetailView = new RepoDetailView({model: repoModel});
         var setSpy = spyOn(FilterModel.prototype, 'set');
-        var currentMoment = moment();
+
         repoDetailView.addUntil();
-        expect(setSpy).toHaveBeenCalledWith('until', currentMoment);
+        var currentMoment = moment().unix();
+
+        expect(setSpy).toHaveBeenCalled();
+
+        var argsMilliseconds = setSpy.argsForCall[0][1].unix();
+        expect(argsMilliseconds).toBeGreaterThan(currentMoment - 10);
+        expect(argsMilliseconds).toBeLessThan(currentMoment + 10);
       });
 
     });
