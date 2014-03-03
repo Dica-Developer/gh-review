@@ -69,14 +69,19 @@ define(function (require) {
       expect(commentView.model.comments.renderComments).toHaveBeenCalled();
     });
 
-    it('.approveCommit should call #CommentView.model.approveCommit', function () {
+    it('.approveCommit should call #CommentView.model.approveCommit and instantly mark commit as approved', function () {
       spyOn(commentView.model, 'approveCommit').andReturn(
         when.promise(function (resolve) {
-          resolve();
+          resolve({
+            sha: '123abc',
+            id: 123
+          });
         })
       );
       commentView.approveCommit();
       expect(commentView.model.approveCommit).toHaveBeenCalled();
+      //expect(app.commitApproved['123abc']).toBeTruthy();
+      //expect(app.approveComments[123]).toBeTruthy();
     });
 
     describe('#CommentView.computeChunk', function () {
