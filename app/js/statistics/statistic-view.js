@@ -14,7 +14,6 @@ define([
     template: _.template(template),
     approvedPieChart: null,
     commitsPerDayChart: null,
-    commitBarChart: null,
     commitsPerAuthorChart: null,
     events: {
       'click a.reset': 'resetChart'
@@ -41,8 +40,6 @@ define([
       _.each(rawData, function (data) {
         data.commit.date = new Date(data.commit.author.date);
         data.commit.day = d3.time.day(data.commit.date);
-        data.commit.hour = d3.time.hour(data.commit.date);
-        data.commit.minute = d3.time.minute(data.commit.date);
       });
       var data = crossfilter(rawData);
       var all = data.groupAll();
@@ -53,20 +50,11 @@ define([
       var commentedCommitsGroup = commentedCommits.group();
 
       var commentedCommitsAuthor = data.dimension(function (data) {
-        /*jshint camelcase:false*/
         return data.commit.author.name;
       });
       var commentedCommitsAuthorGroup = commentedCommitsAuthor.group();
 
-      var minuteDimension = data.dimension(function (data) {
-        /*jshint camelcase:false*/
-        return data.commit.minute;
-      });
-
-      var minuteDimensionGroup = minuteDimension.group();
-
       var dayDimension = data.dimension(function (data) {
-        /*jshint camelcase:false*/
         return data.commit.day;
       });
 
@@ -78,12 +66,7 @@ define([
       }
       this.addPieChart(all, commentedCommits, commentedCommitsGroup);
       this.addCommitsPerAuthorChart(all, commentedCommitsAuthor, commentedCommitsAuthorGroup);
-      try {
-        this.addBarChart(dayDimension, dayDimensionGroup);
-      } catch (e) {
-        console.log(e);
-      }
-      this.addCommitsPerDayChart(minuteDimension, minuteDimensionGroup);
+      this.addCommitsPerDayChart(dayDimension, dayDimensionGroup);
 
       dc.renderAll();
     },
@@ -119,34 +102,22 @@ define([
         .minAngleForLabel(0)
         .colors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb']);
     },
-    addCommitsPerDayChart: function (minuteDimension, minuteDimensionGroup) {
+    addCommitsPerDayChart: function (dayDimension, dayDimensionGroup) {
       this.commitsPerDayChart = dc.barChart('#commitsPerDay-chart');
+      var oneMonthAgo = moment().subtract('weeks', 4).toISOString();
+      var now = moment().toISOString();
       this.commitsPerDayChart
         .width(900)
         .height(250)
         .margins({top: 20, right: 50, bottom: 20, left: 40})
-        .rangeChart(this.commitBarChart)
         .elasticY(true)
         .renderHorizontalGridLines(true)
-        .legend(dc.legend().x(700).y(10).itemHeight(13).gap(5))
-        .dimension(minuteDimension)
-        .group(minuteDimensionGroup, 'Commit count per hour')
-        .centerBar(true)
-        .gap(1)
-        .mouseZoomable(true)
-        .x(d3.time.scale().domain([new Date(moment().subtract('weeks', 2).toISOString()), new Date(moment().toISOString())]))
-        .xUnits(d3.time.second);
-    },
-    addBarChart: function (dayDimension, dayDimensionGroup) {
-      this.commitBarChart = dc.barChart('#commit-bar-chart');
-      this.commitBarChart
-        .width(900)
-        .height(140)
-        .margins({top: 20, right: 50, bottom: 20, left: 40})
         .dimension(dayDimension)
         .group(dayDimensionGroup)
         .centerBar(true)
-        .x(d3.time.scale().domain([new Date(moment().subtract('weeks', 2).toISOString()), new Date(moment().toISOString())]))
+        .gap(1)
+        .mouseZoomable(true)
+        .x(d3.time.scale().domain([new Date(oneMonthAgo), new Date(now)]))
         .xUnits(d3.time.day);
     },
     render: function () {

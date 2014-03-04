@@ -4,7 +4,7 @@ define(['backbone', 'when', 'underscore', 'app', 'moment'], function (Backbone, 
 
   return Backbone.Model.extend({
     defaults: {
-      since: moment().subtract('weeks', 2).toISOString(),
+      since: moment().subtract('weeks', 4).toISOString(),
       commits: [],
       commentedCommits: []
     },
