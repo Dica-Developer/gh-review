@@ -108,7 +108,7 @@ define([
         .group(commentedCommitsAuthorGroup)
         .radius(120)
         .minAngleForLabel(0)
-        .colors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb']);
+        .colors(d3.scale.category20c());
     },
     addCommitsPerDayChart: function (dayDimension, dayDimensionGroup) {
       this.commitsPerDayChart = dc.barChart('#commitsPerDay-chart');
