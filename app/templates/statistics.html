@@ -1,0 +1,11 @@
+<div class="row review-overview">
+    <div class="col-lg-12">
+        <ul id="statisticList" class="list-group">
+            <% _.each(models, function(model){ %>
+                <a href="#statistic/<%= model.owner %>/<%= model.repo %>/<%= model.branch %>" class="list-group-item">
+                    <%= model.owner %>/<%= model.repo %>/<%= model.branch %>
+                </a>
+            <% }); %>
+        </ul>
+    </div>
+</div>

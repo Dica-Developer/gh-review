@@ -17,6 +17,9 @@ define(function (require) {
   var UserModel = require('UserModel');
   var WelcomeView = require('WelcomeView');
   var AboutView = require('AboutView');
+  var StatisticsOverviewView = require('StatisticsOverviewView');
+  var StatisticView = require('StatisticView');
+  var StatisticModel = require('StatisticModel');
 
   return Backbone.Router.extend({
     view: null,
@@ -32,7 +35,9 @@ define(function (require) {
       'oauth/accesstoken': 'getAccessToken',
       'oauth/callback': 'callback',
       'whoami': 'whoami',
-      'about': 'about'
+      'about': 'about',
+      'statistics': 'statisticsOverview',
+      'statistic/:owner/:repo/:branch': 'statistic'
     },
     filter: function () {
       this.prepareView('reviewLink');
@@ -142,6 +147,27 @@ define(function (require) {
       this.prepareView();
       this.view = new AboutView();
       this.view.getChangeLog()
+        .then(function(){
+          this.view.render();
+          this.trigger('ajaxIndicator', false);
+        }.bind(this));
+    },
+    statisticsOverview: function(){
+      this.prepareView('statisticsLink');
+      this.view = new StatisticsOverviewView();
+      this.view.render();
+      this.trigger('ajaxIndicator', false);
+    },
+    statistic: function(owner, repo, branch){
+      this.prepareView('statisticsLink');
+      console.log(owner, repo, branch);
+      var model = new StatisticModel({
+        owner: owner,
+        repo: repo,
+        branch: branch
+      });
+      this.view = new StatisticView({model: model});
+      this.view.model.computeStatistics()
         .then(function(){
           this.view.render();
           this.trigger('ajaxIndicator', false);

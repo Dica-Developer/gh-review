@@ -16,6 +16,9 @@
       when: '../bower_components/when/when',
       moment: '../bower_components/moment/min/moment-with-langs.min',
       base64: '../bower_components/requirejs-base64/base64.min',
+      d3: '../bower_components/d3/d3.min',
+      crossfilter: '../bower_components/crossfilter/crossfilter.min',
+      dc: '../bower_components/dc.js/dc.min',
 
       option: 'options',
 
@@ -50,6 +53,10 @@
       CommentModel: 'comment/comment-model',
       CommentCollection: 'comment/Comment-collection',
 
+      StatisticsOverviewView: 'statistics/statistics-overview-view',
+      StatisticView: 'statistics/statistic-view',
+      StatisticModel: 'statistics/statistic-model',
+
       UserModel: 'user-model',
 
       loginLogout: 'login/loginLogout',
@@ -69,7 +76,17 @@
         ],
         exports: 'Backbone'
       },
-      bootstrap: ['jquery']
+      bootstrap: ['jquery'],
+      crossfilter: {
+        exports: 'crossfilter'
+      },
+      d3: {
+        exports: 'd3'
+      },
+      dc: {
+        deps: ['d3', 'crossfilter'],
+        exports: 'dc'
+      }
     }
   });
 

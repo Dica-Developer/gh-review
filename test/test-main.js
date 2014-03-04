@@ -28,6 +28,11 @@
       when: '../app/bower_components/when/when',
       moment: '../app/bower_components/moment/min/moment-with-langs.min',
       base64: '../app/bower_components/requirejs-base64/base64.min',
+      d3: '../app/bower_components/d3/d3.min',
+      crossfilter: '../app/bower_components/crossfilter/crossfilter.min',
+      dc: '../app/bower_components/dc.js/dc.min',
+
+
       sinon: '../test/lib/sinon',
       server: '../test/helper/server',
       githubResponses: '../test/helper/githubResponses',
@@ -66,6 +71,10 @@
       commentBox: '../app/js/comment/comment-box',
       CommentModel: '../app/js/comment/comment-model',
       CommentCollection: '../app/js/comment/Comment-collection',
+
+      StatisticsOverviewView: '../app/js/statistics/statistics-overview-view',
+      StatisticView: '../app/js/statistics/statistic-view',
+      StatisticModel: '../app/js/statistics/statistic-model',
 
       UserModel: '../app/js/user-model',
 
@@ -111,7 +120,17 @@
         ],
         exports: 'Backbone'
       },
-      bootstrap: ['jquery']
+      bootstrap: ['jquery'],
+      crossfilter: {
+        exports: 'crossfilter'
+      },
+      d3: {
+        exports: 'd3'
+      },
+      dc: {
+        deps: ['d3', 'crossfilter'],
+        exports: 'dc'
+      }
     },
 
     // ask Require.js to load these files (all our tests)
