@@ -68,12 +68,33 @@ define([
       app.github.repos.createCommitComment({
         user: app.currentReviewData.user,
         repo: app.currentReviewData.repo,
+        // TODO sha and commit ifd are the same. Why do we need both?
         sha: this.get('sha'),
         body: comment,
         /* jshint camelcase:false */
         commit_id: file.sha,
         path: file.filename,
         position: position
+      }, function (error) {
+        if (!error) {
+          // FIXME its never called in case of error
+          defer.resolve();
+        } else {
+          defer.reject(error);
+        }
+      });
+      return defer.promise;
+    },
+    addCommitComment: function (comment) {
+      var defer = when.defer();
+      app.github.repos.createCommitComment({
+        user: app.currentReviewData.user,
+        repo: app.currentReviewData.repo,
+        // TODO sha and commit id are the same. Why do we need both?
+        sha: this.get('sha'),
+        body: comment,
+        /*jshint camelcase:false */
+        commit_id: this.get('sha')
       }, function (error) {
         if (!error) {
           // FIXME its never called in case of error
@@ -96,9 +117,9 @@ define([
       app.github.repos.createCommitComment({
         user: app.currentReviewData.user,
         repo: app.currentReviewData.repo,
-        // TODO sha and commit ifd are the same. Why do we need both?
+        // TODO sha and commit id are the same. Why do we need both?
         sha: this.get('sha'),
-        /*jslint camelcase:false*/
+        /*jshint camelcase:false*/
         commit_id: this.get('sha'),
         body: comment
       }, function (error, resp) {

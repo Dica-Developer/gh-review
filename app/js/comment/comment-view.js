@@ -22,10 +22,10 @@ define(function (require) {
     events: {
       'click .added,.deleted': 'commentLine',
       'click .approveCommit': 'approveCommit',
-      'click #unApproveCommitButton': 'unApproveCommit'
+      'click #unApproveCommitButton': 'unApproveCommit',
+      'click #submitCommitComment': 'commentCommit'
     },
-    initialize: function () {
-    },
+    initialize: function () {},
     getDiffAndComments: function () {
       return this.model.getDiff()
         .then(this.computeChunk.bind(this))
@@ -73,6 +73,15 @@ define(function (require) {
         position: position,
         fileIndex: fileIndex
       });
+    },
+    commentCommit: function () {
+      var comment = this.$el.find('#commitCommentBox > textarea').val();
+      if (comment !== '') {
+        when(this.model.addCommitComment(comment))
+          .then(function () {
+            this.render();
+          }.bind(this));
+      }
     },
     renderComments: function () {
       this.model.comments.renderComments();
