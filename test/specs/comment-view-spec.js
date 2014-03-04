@@ -43,6 +43,7 @@ define(function (require) {
       commentView = new CommentView({
         model: commitModel
       });
+      commentView.model.comments.reset();
     });
 
     afterEach(function () {
@@ -74,20 +75,21 @@ define(function (require) {
       spyOn(commentView.model, 'approveCommit').andReturn(
         when.promise(function (resolve) {
           resolve({
-            sha: '123abc',
-            id: 123
+            /*jshint camelcase:false*/
+            commit_id: '123abc',
+            id: 123,
+            user: ''
           });
         })
       );
       commentView.approveCommit();
       expect(commentView.model.approveCommit).toHaveBeenCalled();
 
-      waitsFor(function(){
+      waitsFor(function () {
         return (_.size(app.commitApproved) > 0);
       }, 'local commit approval', 5000);
 
-
-      runs(function(){
+      runs(function () {
         expect(app.commitApproved['123abc']).toBeTruthy();
         expect(app.approveComments[123]).toBeTruthy();
       });
