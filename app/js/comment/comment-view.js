@@ -91,8 +91,9 @@ define(function (require) {
         .then(this.addCommentToCollection.bind(this), this.handleError.bind(this));
     },
     addCommentToCollection: function (comment) {
+      // here it is commit_id instead of sha because this is a comment returned from create comment call
       /*jshint camelcase:false*/
-      app.commitApproved[comment.sha] = true;
+      app.commitApproved[comment.commit_id] = true;
       app.approveComments[comment.id] = true;
       this.model.comments.add(comment);
       this.render();
