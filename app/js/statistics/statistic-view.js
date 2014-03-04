@@ -45,7 +45,15 @@ define([
       var all = data.groupAll();
       var commentedCommits = data.dimension(function (data) {
         /*jshint camelcase:false*/
-        return data.commit.comment_count > 0 ? 'Reviewed' : 'Not reviewed';
+        var commented = data.commit.comment_count > 0;
+        var approved = app.commitApproved[data.sha] || false;
+        if(commented && approved){
+          return 'Approved';
+        }else if(commented && !approved){
+          return 'Not approved';
+        } else {
+          return 'Not reviewed';
+        }
       });
       var commentedCommitsGroup = commentedCommits.group();
 
@@ -82,7 +90,7 @@ define([
         .group(commentedCommitsGroup)
         .radius(120)
         .minAngleForLabel(0)
-        .colors(['#a60000', '#2EC73B'])
+        .colors(['#2EC73B', '#4EACF6', '#a60000'])
         .label(function (d) {
           if (chart.hasFilter() && !chart.hasFilter(d.data.key)) {
             return d.data.key + '(0%)';
