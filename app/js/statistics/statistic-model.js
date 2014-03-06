@@ -8,8 +8,11 @@ define(['backbone', 'when', 'underscore', 'app', 'moment'], function (Backbone, 
       commits: [],
       commentedCommits: []
     },
-    getCommitDefer: when.defer(),
+    getCommitDefer: null,
     nextPage: true,
+    initialize: function(){
+      this.getCommitDefer = when.defer();
+    },
     getCommits: function (link) {
       var callback = function (error, resp) {
         if (!error) {
