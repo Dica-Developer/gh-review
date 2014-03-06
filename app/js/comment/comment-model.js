@@ -13,7 +13,13 @@ define(['backbone', 'underscore', 'moment', 'app'], function (Backbone, _, momen
       this.set('isCommentEditable', isCommentEditable);
       var id = this.get('id');
       this.set('commentId', id);
-      var commentMessage = this.get('body_html');
+      var commentMessage = '';
+      if (this.has('body_html')) {
+        commentMessage = this.get('body_html');
+      } else if (this.has('body')) {
+        commentMessage = this.get('body');
+      }
+
       this.set('commentMessage', commentMessage);
       this.set('commitComment', (_.isNull(this.get('line')) && _.isNull(this.get('position'))));
     }

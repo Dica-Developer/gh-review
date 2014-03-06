@@ -75,9 +75,9 @@ define([
         commit_id: file.sha,
         path: file.filename,
         position: position
-      }, function (error) {
+      }, function (error, resp) {
         if (!error) {
-          defer.resolve();
+          defer.resolve(resp);
         } else {
           defer.reject(error);
         }
@@ -94,10 +94,9 @@ define([
         body: comment,
         /*jshint camelcase:false */
         commit_id: this.get('sha')
-      }, function (error) {
+      }, function (error, resp) {
         if (!error) {
-          // FIXME its never called in case of error
-          defer.resolve();
+          defer.resolve(resp);
         } else {
           defer.reject(error);
         }

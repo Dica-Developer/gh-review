@@ -78,7 +78,8 @@ define(function (require) {
       var comment = this.$el.find('#commitCommentBox > textarea').val();
       if (comment !== '') {
         when(this.model.addCommitComment(comment))
-          .then(function () {
+          .then(function (cmt) {
+            this.model.comments.add(cmt);
             this.render();
           }.bind(this));
       }

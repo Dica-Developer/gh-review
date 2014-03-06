@@ -5,10 +5,11 @@ define([
   'underscore',
   'when',
   'app',
+  'CommentModel',
   'text!templates/edit-comment-box.html',
   'text!templates/show-comment-box.html',
   'text!templates/commit-comment-box.html'
-], function ($, Backbone, _, when, app, editTemplate, showTemplate, commitCommentTemplate) {
+], function ($, Backbone, _, when, app, Comment, editTemplate, showTemplate, commitCommentTemplate) {
   'use strict';
 
   var ShowCommentBoxView = Backbone.View.extend({
@@ -86,8 +87,11 @@ define([
       var comment = this.$el.find('#commentBox > textarea').val();
       if (comment !== '') {
         when(this.model.addLineComment(this.options.fileIndex, this.options.position, comment))
-          .then(function () {
+          .then(function (cmt) {
             this.remove();
+            new ShowCommentBoxView({
+              model: new Comment(cmt)
+            });
           }.bind(this));
       }
     },
