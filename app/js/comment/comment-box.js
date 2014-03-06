@@ -48,6 +48,7 @@ define([
       app.github.repos.deleteCommitComment(message, function (error) {
         if (!error) {
           this.remove();
+          this.model.collection.remove(this.model);
         }
       }.bind(this));
     },
