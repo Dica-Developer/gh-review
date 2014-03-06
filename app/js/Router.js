@@ -160,14 +160,13 @@ define(function (require) {
     },
     statistic: function(owner, repo, branch){
       this.prepareView('statisticsLink');
-      console.log(owner, repo, branch);
       var model = new StatisticModel({
         owner: owner,
         repo: repo,
         branch: branch
       });
       this.view = new StatisticView({model: model});
-      this.view.model.computeStatistics()
+      this.view.model.getData()
         .then(function(){
           this.view.render();
           this.trigger('ajaxIndicator', false);

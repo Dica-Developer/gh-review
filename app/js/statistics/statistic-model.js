@@ -39,7 +39,7 @@ define(['backbone', 'when', 'underscore', 'app', 'moment'], function (Backbone, 
       }
       return this.getCommitDefer.promise;
     },
-    computeStatistics: function () {
+    getData: function () {
       var defer = when.defer();
       this.getCommits()
         .then(function () {
