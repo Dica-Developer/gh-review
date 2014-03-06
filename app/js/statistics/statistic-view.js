@@ -18,6 +18,12 @@ define([
     events: {
       'click a.reset': 'resetChart'
     },
+    STATES: {
+      0: 'Not Reviewed',
+      1: 'Not Approved',
+      2: 'Approved',
+      3: 'Undefined'
+    },
     resetChart: function (event) {
       var target = this.$(event.target);
       var chart = target.data('chart');
@@ -47,13 +53,15 @@ define([
         /*jshint camelcase:false*/
         var commented = data.commit.comment_count > 0;
         var approved = app.commitApproved[data.sha] || false;
-        if(commented && approved){
-          return 'Approved';
+        var state = 4;
+        if(!commented){
+          state = 0;
         }else if(commented && !approved){
-          return 'Not approved';
-        } else {
-          return 'Not reviewed';
+          state = 1;
+        } else if(commented && approved){
+          state = 2;
         }
+        return state;
       });
       var commentedCommitsGroup = commentedCommits.group();
 
@@ -79,6 +87,7 @@ define([
       dc.renderAll();
     },
     addPieChart: function (all, commentedCommits, commentedCommitsGroup) {
+      var view = this;
       this.approvedPieChart = dc.pieChart('#approved-pie-chart');
       var chart = this.approvedPieChart;
       this.approvedPieChart
@@ -90,12 +99,17 @@ define([
         .group(commentedCommitsGroup)
         .radius(120)
         .minAngleForLabel(0)
-        .colors(['#2EC73B', '#4EACF6', '#a60000'])
+        .colors(['#a60000', '#4EACF6', '#2EC73B'])
+        .colorAccessor(function(d){
+          return d.data.key;
+        })
         .label(function (d) {
+          var percentage = (d.data.value / all.value() * 100);
+          var percentageString = '(' + (Math.round(percentage * 100) / 100) + '%)';
           if (chart.hasFilter() && !chart.hasFilter(d.data.key)) {
-            return d.data.key + '(0%)';
+            percentageString = '(0%)';
           }
-          return d.data.key + '(' + Math.floor(d.data.value / all.value() * 100) + '%)';
+          return view.STATES[d.data.key] + percentageString;
         });
     },
     addCommitsPerAuthorChart: function (all, commentedCommitsAuthor, commentedCommitsAuthorGroup) {
