@@ -23,7 +23,8 @@ define([
         authorAvatar: this.model.get('author').avatar_url,
         commentCount: commit.comment_count,
         sha: this.model.get('sha'),
-        approved: approved
+        approved: approved,
+        isFeatureCommit: this.model.get('featureCommit')
       };
     },
     render: function () {

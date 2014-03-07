@@ -13,6 +13,7 @@ define([
     el: '#main',
     template: _.template(template),
     getCommitsRefer: null,
+    featureMergeEnd: null,
     events: {
       'click .previous': 'getPreviousPage',
       'click .next': 'getNextPage',
@@ -100,9 +101,29 @@ define([
       });
       this.$('#commitList').append(view.render());
     },
+    markAsFeatureMerge: function (commit) {
+      if (commit.get('parents').length > 1) {
+        this.featureMergeEnd = commit.get('parents')[0].sha;
+      } else {
+        if (commit.id === this.featureMergeEnd) {
+          this.featureMergeEnd = null;
+        }
+      }
+      if (!_.isNull(this.featureMergeEnd)) {
+        commit.set('featureCommit', true);
+      } else {
+        commit.set('featureCommit', false);
+      }
+    },
+    isNotAMergeCommit: function (commit) {
+      return (1 === commit.get('parents').length);
+    },
     renderAllCommits: function () {
       commitCollection.each(function (commit) {
-        this.renderOneCommit(commit);
+        this.markAsFeatureMerge(commit);
+        if (this.isNotAMergeCommit(commit)) {
+          this.renderOneCommit(commit);
+        }
       }, this);
       app.showIndicator(false);
     },

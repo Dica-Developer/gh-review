@@ -12,6 +12,9 @@
                 <%if (approved) {%>
                     <span class="label label-success">approved</span>
                 <%}%>
+                <%if (isFeatureCommit) {%>
+                    <span class="label label-primary">feature</span>
+                <%}%>
             </div>
             <span class="badge pull-right"><%= commentCount %></span>
         </div>
