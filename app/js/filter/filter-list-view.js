@@ -7,13 +7,13 @@ define([
 ], function (Backbone, _, app, listItemTemplate) {
   'use strict';
 
-// TODO
-//      this.listenTo(this.model, 'change', this.render);
-//      this.listenTo(this.model, 'destroy', this.remove);
-//    clear: function (event) {
-//      event.stopPropagation();
-//      event.preventDefault();
-//      this.model.destroy();
+  // TODO
+  // this.listenTo(this.model, 'change', this.render);
+  // this.listenTo(this.model, 'destroy', this.remove);
+  // clear: function (event) {
+  // event.stopPropagation();
+  // event.preventDefault();
+  // this.model.destroy();
 
   return Backbone.View.extend({
     el: '#reviewList',
@@ -36,14 +36,10 @@ define([
       }
       var modelId = target.data('id');
       app.currentFilter = this.collection.get(modelId);
-      app.router.navigate(
-        'commits/' +
-          app.currentFilter.get('owner') +
-          '/' +
-          app.currentFilter.get('repo') +
-          '/' +
-          app.currentFilter.get('branch'),
-        {trigger: true});
+      app.router.navigate('commits/' + encodeURIComponent(app.currentFilter.get('owner')) + '/' + encodeURIComponent(app.currentFilter.get('repo')) +
+        '/' + encodeURIComponent(app.currentFilter.get('branch')), {
+          trigger: true
+        });
     },
     addOne: function (model) {
       var view = this.listItemTemplate(model.toJSON());
@@ -56,7 +52,6 @@ define([
     showHint: function () {
       //TODO show help text for first filter
     },
-    render: function () {
-    }
+    render: function () {}
   });
 });
