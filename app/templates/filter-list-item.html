@@ -2,5 +2,5 @@
     <% if(!_.isUndefined(repo) &&  !_.isUndefined(repo) && !_.isEmpty(repo)){ %><strong>Repository: </strong><%= repo %> <%}%>
     <% if(!_.isUndefined(branch) &&  !_.isUndefined(branch) && !_.isEmpty(branch)){ %><strong>Branch: </strong><%= branch %> <%}%>
     <% if(!_.isUndefined(contributor) &&  !_.isUndefined(contributor) && !_.isEmpty(contributor)){ %><strong>Author: </strong><%= contributor %><%}%>
-    <span class="destroy glyphicon glyphicon-remove-circle pull-right"></span>
+    <span class="destroy glyphicon glyphicon-remove-circle pull-right" data-id="<%= id %>"></span>
 </a>

@@ -7,20 +7,20 @@ define([
 ], function (Backbone, _, app, listItemTemplate) {
   'use strict';
 
-  // TODO
-  // this.listenTo(this.model, 'change', this.render);
-  // this.listenTo(this.model, 'destroy', this.remove);
-  // clear: function (event) {
-  // event.stopPropagation();
-  // event.preventDefault();
-  // this.model.destroy();
-
   return Backbone.View.extend({
     el: '#reviewList',
     listItemTemplate: _.template(listItemTemplate),
     events: {
       'click a.list-group-item': 'showDetail',
-      'click .destroy': 'clear'
+      'click .destroy': 'removeFilter'
+    },
+    removeFilter: function (event) {
+      event.stopPropagation();
+      var modelId = $(event.target).data('id');
+      var model = app.filterCollection.get(modelId);
+      if (model) {
+        model.destroy();
+      }
     },
     fetchReviews: function () {
       if (this.collection.length) {
