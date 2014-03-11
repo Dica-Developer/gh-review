@@ -62,14 +62,17 @@ define([
         this.getCommitsRefer.resolve();
       }
     },
+    displayCommits: function (commits) {
+      this.storeMetaToModel(commits);
+      commitCollection.reset(commits);
+      this.render();
+      this.renderAllCommits();
+    },
     getPreviousPage: function () {
       var _this = this;
       app.github.getPreviousPage(this.model.get('currentLink'), function (error, commits) {
         if (!error) {
-          _this.storeMetaToModel(commits);
-          commitCollection.reset(commits);
-          _this.render();
-          _this.renderAllCommits();
+          _this.displayCommits(commits);
         }
       });
     },
@@ -77,10 +80,7 @@ define([
       var _this = this;
       app.github.getNextPage(this.model.get('currentLink'), function (error, commits) {
         if (!error) {
-          _this.storeMetaToModel(commits);
-          commitCollection.reset(commits);
-          _this.render();
-          _this.renderAllCommits();
+          _this.displayCommits(commits);
         }
       });
     },
@@ -88,10 +88,7 @@ define([
       var _this = this;
       app.github.getFirstPage(this.model.get('currentLink'), function (error, commits) {
         if (!error) {
-          _this.storeMetaToModel(commits);
-          commitCollection.reset(commits);
-          _this.render();
-          _this.renderAllCommits();
+          _this.displayCommits(commits);
         }
       });
     },
