@@ -21,12 +21,20 @@ define([
     },
     events: {
       'click .repoDropdown': 'selectRepo',
-      'click .branchDropdown': 'selectBranch'
+      'click .branchDropdown': 'selectBranch',
+      'click #quickFilterButton': 'findCommit'
+    },
+    findCommit: function () {
+      var filterValue = $('#quickFilterValue').val();
+      app.router.navigate('commit/' + encodeURIComponent(this.repo.owner) + '/' + encodeURIComponent(this.repo.name) + '/' + encodeURIComponent(filterValue), {
+        trigger: true
+      });
     },
     selectRepo: function (event) {
       var target = $(event.target);
       this.repo.id = target.data('id');
       this.repo.name = target.data('name');
+      this.repo.owner = target.data('owner');
       this.branch = {
         sha: null,
         name: ''
@@ -47,13 +55,14 @@ define([
         repos: this.collection.toJSON(),
         branches: branches,
         branch: this.branch,
-        repo: this.repo,
-        value: this.repo.name + '/' + this.branch.name
+        repo: this.repo
       };
     },
     render: function () {
       if (!_.isNull(this.repo.id)) {
-        var repo = this.collection.findWhere({id: this.repo.id});
+        var repo = this.collection.findWhere({
+          id: this.repo.id
+        });
         repo.getBranches()
           .then(function () {
             var branches = repo.get('branches');

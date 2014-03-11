@@ -20,6 +20,7 @@ define(function (require) {
   var StatisticsOverviewView = require('StatisticsOverviewView');
   var StatisticView = require('StatisticView');
   var StatisticModel = require('StatisticModel');
+  var CommitModel = require('commitModel');
 
   return Backbone.Router.extend({
     view: null,
@@ -30,6 +31,7 @@ define(function (require) {
       'repository/:name': 'repoDetail',
       'commits/:owner/:repo/:branch': 'commitList',
       'commit/:id': 'showCommit',
+      'commit/:owner/:repo/:sha': 'showOneCommit',
       'login': 'login',
       'logout': 'logout',
       'oauth/accesstoken': 'getAccessToken',
@@ -90,6 +92,30 @@ define(function (require) {
       this.view.getDiffAndComments()
         .then(this.view.render.bind(this.view));
     },
+    showOneCommit: function (owner, repo, sha) {
+      var _this = this;
+      this.prepareView('reviewLink');
+      var message = {
+        headers: [],
+        sha: sha,
+        user: owner,
+        repo: repo
+      };
+      app.github.repos.getCommit(message, function (error, commit) {
+        if (!error) {
+          app.currentReviewData = {
+            user: owner,
+            repo: repo
+          };
+          app.currentFilter = new FilterModel(commit);
+          _this.view = new CommentView({
+            model: new CommitModel(commit)
+          });
+          _this.view.getDiffAndComments()
+            .then(_this.view.render.bind(_this.view));
+        }
+      });
+    },
     clear: function () {
       var main = $('#main');
       main.html('');
@@ -121,7 +147,9 @@ define(function (require) {
         if (app.filterCollection.length < 1) {
           this.showWelcomeScreen();
         } else {
-          this.navigate('filter', {trigger: true});
+          this.navigate('filter', {
+            trigger: true
+          });
         }
       }
       this.trigger('ajaxIndicator', false);
@@ -143,31 +171,33 @@ define(function (require) {
         this.view.render();
       }.bind(this));
     },
-    about: function(){
+    about: function () {
       this.prepareView();
       this.view = new AboutView();
       this.view.getChangeLog()
-        .then(function(){
+        .then(function () {
           this.view.render();
           this.trigger('ajaxIndicator', false);
         }.bind(this));
     },
-    statisticsOverview: function(){
+    statisticsOverview: function () {
       this.prepareView('statisticsLink');
       this.view = new StatisticsOverviewView();
       this.view.render();
       this.trigger('ajaxIndicator', false);
     },
-    statistic: function(owner, repo, branch){
+    statistic: function (owner, repo, branch) {
       this.prepareView('statisticsLink');
       var model = new StatisticModel({
         owner: owner,
         repo: repo,
         branch: branch
       });
-      this.view = new StatisticView({model: model});
+      this.view = new StatisticView({
+        model: model
+      });
       this.view.model.getData()
-        .then(function(){
+        .then(function () {
           this.view.render();
           this.trigger('ajaxIndicator', false);
         }.bind(this));
@@ -180,7 +210,6 @@ define(function (require) {
         $('#' + activeLink).addClass('active');
       }
     },
-    initialize: function () {
-    }
+    initialize: function () {}
   });
 });
