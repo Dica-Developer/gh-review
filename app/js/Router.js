@@ -107,7 +107,11 @@ define(function (require) {
             user: owner,
             repo: repo
           };
-          app.currentFilter = new FilterModel(commit);
+          app.currentFilter = new FilterModel({
+            owner: owner,
+            repo: repo,
+            contributor: commit.author.login
+          });
           _this.view = new CommentView({
             model: new CommitModel(commit)
           });
