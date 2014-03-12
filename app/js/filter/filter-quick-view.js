@@ -10,7 +10,6 @@ define([
   return Backbone.View.extend({
     el: '#quickReview',
     template: _.template(template),
-    collection: null,
     repo: {
       id: null,
       name: ''
@@ -47,12 +46,10 @@ define([
       this.branch.name = target.data('name');
       this.render();
     },
-    initialize: function () {
-      this.collection = app.repoCollection;
-    },
+    initialize: function () {},
     serialize: function (branches) {
       return {
-        repos: this.collection.toJSON(),
+        repos: app.repoCollection.toJSONSortedByName(),
         branches: branches,
         branch: this.branch,
         repo: this.repo
@@ -60,7 +57,7 @@ define([
     },
     render: function () {
       if (!_.isNull(this.repo.id)) {
-        var repo = this.collection.findWhere({
+        var repo = app.repoCollection.findWhere({
           id: this.repo.id
         });
         repo.getBranches()

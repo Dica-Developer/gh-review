@@ -11,7 +11,7 @@
             </button>
             <ul class="dropdown-menu">
                 <% _.each(repos, function(repo){ %>
-                    <li><a href="javascript:void(0)" data-id="<%= repo.id %>" data-name="<%= repo.name %>" data-owner="<%= repo.owner.login %>" class="repoDropdown"><%= repo.name %></a></li>
+                    <li><a href="javascript:void(0)" data-id="<%= repo.id %>" data-name="<%= repo.name %>" data-owner="<%= repo.login %>" class="repoDropdown"><%= repo.name %></a></li>
                 <% }); %>
             </ul>
         </div>

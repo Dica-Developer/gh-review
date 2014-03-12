@@ -49,6 +49,20 @@ define([
       return this.findWhere({
         name: name
       });
+    },
+    toJSONSortedByName: function () {
+      var result = [];
+      this.forEach(function (model) {
+        result.push({
+          name: model.get('name'),
+          id: model.get('id'),
+          login: model.get('owner').login
+        });
+      }, this);
+      result = _.sortBy(result, function (model) {
+        return model.name.toLowerCase();
+      });
+      return result;
     }
   });
 });
