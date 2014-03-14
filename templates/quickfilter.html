@@ -2,20 +2,20 @@
     <div class="input-group">
         <div class="input-group-btn">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                <% if(repo.name !== ''){ %>
+                <%if (repo.name !== '') {%>
                     <%= repo.name %>
-                <%}else{%>
+                <%} else {%>
                     Repository
                 <%}%>
-                <span
-                    class="caret"></span></button>
+                <span class="caret"></span>
+            </button>
             <ul class="dropdown-menu">
                 <% _.each(repos, function(repo){ %>
-                    <li><a href="javascript:void(0)" data-id="<%= repo.id %>" data-name="<%= repo.name %>" class="repoDropdown"><%= repo.name %></a></li>
+                    <li><a href="javascript:void(0)" data-id="<%= repo.id %>" data-name="<%= repo.name %>" data-owner="<%= repo.login %>" class="repoDropdown"><%= repo.name %></a></li>
                 <% }); %>
             </ul>
         </div>
-        <div class="input-group-btn">
+        <!-- div class="input-group-btn">
             <button type="button" class="btn btn-default dropdown-toggle branchButton" data-toggle="dropdown"
             <% if(_.isNull(branches)){%>disabled="disabled"<%}%>>
                 <% if(branch.name !== ''){ %>
@@ -28,13 +28,13 @@
                 <% if(!_.isNull(branches)){%>
                     <% _.each(branches, function(branch){ %>
                         <li><a href="javascript:void(0)" class="branchDropdown" data-name="<%= branch.name %>" data-sha="<%= branch.commit.sha %>"><%= branch.name %></a></li>
-                    <% }); %>
+                    <%});%>
                 <% } %>
             </ul>
-        </div>
-        <input type="text" class="form-control" <% if(value !== '/') {%> value="<%= value %>"<%}%>>
+        </div -->
+        <input id="quickFilterValue" type="text" class="form-control" placeholder="find a commit to a commit id in the selected repository" />
         <div class="input-group-btn">
-            <button type="button" class="btn btn-default">Review</button>
+            <button id="quickFilterButton" type="button" class="btn btn-default">Review</button>
         </div>
     </div>
 </div>
