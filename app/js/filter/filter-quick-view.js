@@ -21,7 +21,13 @@ define([
     events: {
       'click .repoDropdown': 'selectRepo',
       'click .branchDropdown': 'selectBranch',
-      'click #quickFilterButton': 'findCommit'
+      'click #quickFilterButton': 'findCommit',
+      'keypress #quickFilterValue': 'findCommitKeyHandler'
+    },
+    findCommitKeyHandler: function (event) {
+      if (13 === event.keyCode) {
+        this.findCommit();
+      }
     },
     findCommit: function () {
       var filterValue = $('#quickFilterValue').val();
