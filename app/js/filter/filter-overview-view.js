@@ -17,7 +17,9 @@ define([
       var quickFilter = new QuickFilter();
       quickFilter.render();
 
-      var reviewListView = new FilterListView({collection: app.filterCollection});
+      var reviewListView = new FilterListView({
+        collection: app.filterCollection
+      });
       reviewListView.render();
       reviewListView.fetchReviews();
     }
