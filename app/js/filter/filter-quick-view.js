@@ -31,9 +31,11 @@ define([
     },
     findCommit: function () {
       var filterValue = $('#quickFilterValue').val();
-      app.router.navigate('commit/' + encodeURIComponent(this.repo.owner) + '/' + encodeURIComponent(this.repo.name) + '/' + encodeURIComponent(filterValue), {
-        trigger: true
-      });
+      if (!_.isNull(this.repo.owner) && !_.isUndefined(this.repo.owner) && !_.isEmpty(this.repo.owner) && !_.isNull(this.repo.name) && !_.isUndefined(this.repo.name) && !_.isEmpty(this.repo.name) && !_.isEmpty(filterValue)) {
+        app.router.navigate('commit/' + encodeURIComponent(this.repo.owner) + '/' + encodeURIComponent(this.repo.name) + '/' + encodeURIComponent(filterValue), {
+          trigger: true
+        });
+      }
     },
     selectRepo: function (event) {
       var target = $(event.target);
