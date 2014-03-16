@@ -2927,6 +2927,34 @@ define(function () {
             'description': 'Email address'
           }
         }
+      },
+
+      'code': {
+        'url': '/search/code',
+        'method': 'GET',
+        'params': {
+          'q': {
+            'type': 'String',
+            'required': true,
+            'validation': '',
+            'invalidmsg': '',
+            'description': 'Search query'
+          },
+          'sort': {
+            'type': 'String',
+            'required': false,
+            'validation': '',
+            'invalidmsg': '',
+            'description': ''
+          },
+          'order': {
+            'type': 'String',
+            'required': false,
+            'validation': '',
+            'invalidmsg': '',
+            'description': ''
+          }
+        }
       }
     },
 

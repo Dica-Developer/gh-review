@@ -21,12 +21,14 @@ define(function (require) {
   var StatisticView = require('StatisticView');
   var StatisticModel = require('StatisticModel');
   var CommitModel = require('commitModel');
+  var ModulesOverview = require('ModulesOverview');
 
   return Backbone.Router.extend({
     view: null,
     routes: {
       '': 'root',
       'filter': 'filter',
+      'filter/modules': 'filterModules',
       'repositories': 'repositories',
       'repository/:name': 'repoDetail',
       'commits/:owner/:repo/:branch': 'commitList',
@@ -45,6 +47,12 @@ define(function (require) {
       this.prepareView('reviewLink');
       this.view = new FilterOverview();
       this.view.render();
+    },
+    filterModules: function () {
+      this.prepareView('reviewModulesLink');
+      this.view = new ModulesOverview();
+      this.view.render();
+      this.trigger('ajaxIndicator', false);
     },
     repositories: function () {
       if (app.authenticated) {

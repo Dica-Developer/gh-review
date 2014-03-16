@@ -62,7 +62,10 @@
       loginLogout: 'login/loginLogout',
       OauthHandler: 'oauth/oauth-handler',
       WhoAmI: 'whoami-view',
-      AboutView: 'about-view'
+      AboutView: 'about-view',
+
+      ModulesOverview: 'review/modules/overview-view',
+      Search: 'review/modules/search-view'
     },
     shim: {
       underscore: {
