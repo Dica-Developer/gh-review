@@ -2,7 +2,6 @@
 (function () {
   'use strict';
 
-
   var tests = [];
   /*jshint camelcase:false*/
   for (var file in window.__karma__.files) {
@@ -31,7 +30,6 @@
       d3: '../app/bower_components/d3/d3.min',
       crossfilter: '../app/bower_components/crossfilter/crossfilter.min',
       dc: '../app/bower_components/dc.js/dc.min',
-
 
       sinon: '../test/lib/sinon',
       server: '../test/helper/server',
@@ -81,7 +79,10 @@
       loginLogout: '../app/js/login/loginLogout',
       OauthHandler: '../app/js/oauth/oauth-handler',
       WhoAmI: '../app/js/whoami-view',
-      AboutView: '../app/js/about-view'
+      AboutView: '../app/js/about-view',
+
+      ModulesOverview: '../app/js/review/modules/overview-view',
+      Search: '../app/js/review/modules/search-view'
     },
     map: {
       GitHub: {
@@ -137,12 +138,12 @@
     deps: tests,
 
     // start test run, once Require.js is done
-    callback: function(){
+    callback: function () {
       require([
         'underscore',
         'moment',
         'underscore.string'
-      ], function(_, moment){
+      ], function (_, moment) {
         _.moment = moment;
         window.__karma__.start();
       });
