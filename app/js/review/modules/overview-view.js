@@ -5,7 +5,7 @@ define(function (require) {
   var Backbone = require('backbone');
   var _ = require('underscore');
   var Search = require('Search');
-  var template = require('text!review/modules/templates/overview.html');
+  var template = require('text!reviewModulesTemplates/overview.html');
 
   return Backbone.View.extend({
     el: '#main',
