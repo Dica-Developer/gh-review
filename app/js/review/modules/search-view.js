@@ -17,21 +17,17 @@ define(function (require) {
       var searchValue = $('#searchValue').val();
       app.github.search.code({
         q: searchValue
-      }, this.callback);
+      }, this.callback.bind(this));
     },
     callback: function (error, resp) {
-      console.log(resp);
-      $('<h1>').text(resp.total_count + ' results found ' + resp.meta['x-ratelimit-remaining'] + ' queries left of ' + resp.meta['x-ratelimit-limit']).appendTo($('#search'));
+      this.render(resp);
     },
     initialize: function () {},
-    serialize: function () {
-      return {
-        repos: app.repoCollection.toJSONSortedByName(),
-        repo: this.repo
+    render: function (results) {
+      results = results || {
+        items: []
       };
-    },
-    render: function () {
-      this.$el.html(this.template(this.serialize()));
+      this.$el.html(this.template(results));
     }
   });
 });

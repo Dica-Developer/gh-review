@@ -5,4 +5,15 @@
             <button id="searchButton" type="button" class="btn btn-default">Search</button>
         </div>
     </div>
+    <div class="row">
+    <div class="col-md-12">
+        <ul id="commitList" class="list-group">
+          <% _.each(items, function (item) { %>
+            <a href="#file/<%=_.escape(item.repository.owner.login)%>/<%=_.escape(item.repository.name)%>/<%=_.escape(item.path)%>" class="list-group-item">
+              <%=item.path%>
+            </a>
+          <% }); %>
+        </ul>
+    </div>
+</div>
 </div>

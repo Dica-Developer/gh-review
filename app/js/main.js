@@ -66,7 +66,10 @@
 
       ModulesOverview: 'review/modules/overview-view',
       Search: 'review/modules/search-view',
-      reviewModulesTemplates: 'review/modules/templates'
+      reviewModulesTemplates: 'review/modules/templates',
+
+      FileView: 'file/views/file',
+      fileTemplates: 'file/templates'
     },
     shim: {
       underscore: {

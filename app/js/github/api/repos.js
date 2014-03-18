@@ -12,7 +12,6 @@ define(function () {
    *  Author: Mike de Boer <info@mikedeboer.nl>
    **/
 
-
   var repos = {
     repos: {}
   };
@@ -1393,11 +1392,17 @@ define(function () {
         }
 
         var ret;
-        try {
-          ret = res.data && JSON.parse(res.data);
-        } catch (ex) {
-          console.error(ex.message, res);
-          return;
+        if (res.headers['content-type'].indexOf('application/vnd.github.v3.raw') > -1) {
+          ret = {
+            data: res.data
+          };
+        } else {
+          try {
+            ret = res.data && JSON.parse(res.data);
+          } catch (ex) {
+            console.error(ex.message, res);
+            return;
+          }
         }
 
         if (!ret) {

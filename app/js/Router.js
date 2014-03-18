@@ -22,6 +22,7 @@ define(function (require) {
   var StatisticModel = require('StatisticModel');
   var CommitModel = require('commitModel');
   var ModulesOverview = require('ModulesOverview');
+  var FileView = require('FileView');
 
   return Backbone.Router.extend({
     view: null,
@@ -41,7 +42,8 @@ define(function (require) {
       'whoami': 'whoami',
       'about': 'about',
       'statistics': 'statisticsOverview',
-      'statistic/:owner/:repo/:branch': 'statistic'
+      'statistic/:owner/:repo/:branch': 'statistic',
+      'file/:owner/:repo/:path': 'showFile'
     },
     filter: function () {
       this.prepareView('reviewLink');
@@ -125,6 +127,28 @@ define(function (require) {
           });
           _this.view.getDiffAndComments()
             .then(_this.view.render.bind(_this.view));
+        }
+      });
+    },
+    showFile: function (owner, repo, path) {
+      var _this = this;
+      this.prepareView('reviewLink');
+      var message = {
+        headers: [],
+        path: path,
+        user: owner,
+        repo: repo
+      };
+      app.github.repos.getCommits(message, function (error, commits) {
+        if (!error) {
+          _this.view = new FileView({
+            model: {
+              user: owner,
+              repo: repo,
+              path: path
+            }
+          });
+          _this.view.render(commits);
         }
       });
     },
