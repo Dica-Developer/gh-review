@@ -7,6 +7,4 @@ before_script:
   - bower install --config.interactive=false
 notifications:
   email:
-    - audica-dev@freelists.org
-  on_success: change
-  on_failure: always
+    - ci@dica-developer.org
