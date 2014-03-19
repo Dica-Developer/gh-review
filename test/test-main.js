@@ -83,7 +83,10 @@
 
       ModulesOverview: '../app/js/review/modules/overview-view',
       Search: '../app/js/review/modules/search-view',
-      reviewModulesTemplates: '../app/js/review/modules/templates'
+      reviewModulesTemplates: '../app/js/review/modules/templates',
+
+      FileView: '../app/js/file/views/file',
+      fileTemplates: '../app/js/file/templates'
     },
     map: {
       GitHub: {
