@@ -10,7 +10,6 @@ define(function (require) {
     CommentBoxes = require('commentBox'),
     template = require('text!templates/commit-view.html');
 
-  var chunkHeadingRegExp = new RegExp('^@@.*?[-+](\\d+)(,\\d+){0,1}\\s[-+](\\d+)(,\\d+){0,1} @@', 'g');
   var EditCommentBox = CommentBoxes.edit;
 
   return Backbone.View.extend({
@@ -52,7 +51,7 @@ define(function (require) {
       line = _.str.escapeHTML(line);
       var file = this.files[this.files.length - 1];
       var chunks = file.chunks;
-      if (line.match(chunkHeadingRegExp)) {
+      if ((new Chunk()).isMatchingChunkHeading(line)) {
         chunks.push(new Chunk(line));
       } else {
         chunks[chunks.length - 1].addLine(line);

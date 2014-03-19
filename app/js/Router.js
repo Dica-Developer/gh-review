@@ -133,24 +133,14 @@ define(function (require) {
     showFile: function (owner, repo, path) {
       var _this = this;
       this.prepareView('reviewLink');
-      var message = {
-        headers: [],
-        path: path,
-        user: owner,
-        repo: repo
-      };
-      app.github.repos.getCommits(message, function (error, commits) {
-        if (!error) {
-          _this.view = new FileView({
-            model: {
-              user: owner,
-              repo: repo,
-              path: path
-            }
-          });
-          _this.view.render(commits);
+      _this.view = new FileView({
+        model: {
+          user: owner,
+          repo: repo,
+          path: path
         }
       });
+      _this.view.render();
     },
     clear: function () {
       var main = $('#main');

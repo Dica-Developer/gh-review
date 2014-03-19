@@ -8,20 +8,19 @@ define([], function () {
     };
   }
 
-  var chunkHeadingRegExp = new RegExp('@@.*?[-+](\\d+)(,\\d+){0,1}\\s[-+](\\d+)(,\\d+){0,1} @@', 'g');
+  var chunkHeadingRegExp = new RegExp('^@@.*?[-+](\\d+)(,\\d+){0,1}\\s[-+](\\d+)(,\\d+){0,1} @@', 'g');
 
   function Chunk(chunkLine) {
-    this.leftNr = 0;
-    this.rightNr = 0;
-    this.extractChunk(chunkLine);
-    this.lines = [
-      {
-        lineNrLeft: '...',
-        lineNrRight: '...',
-        format: 'chunk-header',
-        text: chunkLine
-      }
-    ];
+    var lineNrs = this.extractChunk(chunkLine);
+    this.leftNr = lineNrs.leftNr;
+    this.rightNr = lineNrs.rightNr;
+
+    this.lines = [{
+      lineNrLeft: '...',
+      lineNrRight: '...',
+      format: 'chunk-header',
+      text: chunkLine
+    }];
     this.addLine = function (line) {
       var computedLine = null;
       if (line.startsWith('-')) {
@@ -37,8 +36,10 @@ define([], function () {
 
   Chunk.prototype.extractChunk = function (line) {
     chunkHeadingRegExp.exec(line);
-    this.leftNr = parseInt(RegExp.$1, 10);
-    this.rightNr = parseInt(RegExp.$3, 10);
+    return {
+      leftNr: parseInt(RegExp.$1, 10),
+      rightNr: parseInt(RegExp.$3, 10)
+    };
   };
 
   Chunk.prototype.addDeletedLine = function (line) {
@@ -66,6 +67,18 @@ define([], function () {
       format: '',
       text: line
     };
+  };
+
+  Chunk.prototype.isMatchingChunkHeading = function (line) {
+    return line.match(chunkHeadingRegExp);
+  };
+
+  Chunk.prototype.isAddition = function (line) {
+    return line.startsWith('+');
+  };
+
+  Chunk.prototype.isSame = function (line) {
+    return line.startsWith('+');
   };
 
   return Chunk;
