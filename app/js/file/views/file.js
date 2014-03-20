@@ -17,31 +17,29 @@ define(function (require) {
       var _this = this;
       var chunk = new Chunk();
       _.forEach(commits, function (commit) {
-        console.log(commit.sha + ' < plain');
         app.github.repos.getCommit({
           sha: commit.sha,
           user: _this.model.user,
           repo: _this.model.repo
         }, function (error, commitWithDiff) {
           if (!error) {
-            console.log(commit.sha + ' < diff');
-            // TODO use the file with thew correct name
-            if (commitWithDiff.files[0].additions > 0) {
-              var lineNumber = -1;
-              var lines = _.str.lines(commitWithDiff.files[0].patch);
-              _.forEach(lines, function (line) {
-                if (chunk.isMatchingChunkHeading(line)) {
-                  lineNumber = chunk.extractChunk(line).rightNr;
-                } else {
-                  if (chunk.isAddition(line)) {
-                    if ($('#line_' + lineNumber + '_sha').text().trim() === '') {
-                      $('#line_' + lineNumber + '_sha').text(commitWithDiff.sha.substr(0, 8));
-                    }
-                    lineNumber++;
+            var lineNumber = -1;
+            // TODO use the file with the correct name
+            var lines = _.str.lines(commitWithDiff.files[0].patch);
+            _.forEach(lines, function (line) {
+              if (chunk.isMatchingChunkHeading(line)) {
+                lineNumber = chunk.extractChunk(line).rightNr;
+              } else {
+                if (chunk.isAddition(line)) {
+                  if ($('#line_' + lineNumber + '_sha').text().trim() === '') {
+                    $('#line_' + lineNumber + '_sha').text(commitWithDiff.sha.substr(0, 8));
                   }
+                  lineNumber++;
+                } else if (chunk.isSame(line)) {
+                  lineNumber++;
                 }
-              });
-            }
+              }
+            });
           } else {}
         });
       });
