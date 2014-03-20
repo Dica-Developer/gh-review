@@ -78,7 +78,7 @@ define([], function () {
   };
 
   Chunk.prototype.isSame = function (line) {
-    return line.startsWith('+');
+    return line.startsWith(' ');
   };
 
   return Chunk;
