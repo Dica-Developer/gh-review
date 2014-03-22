@@ -23,12 +23,14 @@ define(function (require) {
   var CommitModel = require('commitModel');
   var ModulesOverview = require('ModulesOverview');
   var FileView = require('FileView');
+  var FilterView = require('_FilterView');
 
   return Backbone.Router.extend({
     view: null,
     routes: {
       '': 'root',
       'filter': 'filter',
+      '_filter': '_filter',
       'filter/modules': 'filterModules',
       'repositories': 'repositories',
       'repository/:name': 'repoDetail',
@@ -48,6 +50,11 @@ define(function (require) {
     filter: function () {
       this.prepareView('reviewLink');
       this.view = new FilterOverview();
+      this.view.render();
+    },
+    _filter: function () {
+      this.prepareView('_filterLink');
+      this.view = new FilterView();
       this.view.render();
     },
     filterModules: function () {

@@ -57,6 +57,9 @@
       StatisticView: 'statistics/statistic-view',
       StatisticModel: 'statistics/statistic-model',
 
+      _FilterView: '_filter/filter-view',
+      _FilterModel: '_filter/filter-model',
+
       UserModel: 'user-model',
 
       loginLogout: 'login/loginLogout',
