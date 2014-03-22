@@ -59,6 +59,7 @@
 
       _FilterView: '_filter/filter-view',
       _FilterModel: '_filter/filter-model',
+      _ExtendedFilterView: '_filter/extended-filter-view',
 
       UserModel: 'user-model',
 

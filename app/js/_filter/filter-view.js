@@ -5,8 +5,9 @@ define([
   'moment',
   'dc',
   'app',
+  '_ExtendedFilterView',
   'text!templates/_filter.html'
-], function (Backbone, _, moment, dc, app, template) {
+], function (Backbone, _, moment, dc, app, ExtendedFilterView, template) {
   'use strict';
 
   return Backbone.View.extend({
@@ -65,12 +66,19 @@ define([
         .render();
     },
     selectRepo: function (event) {
-      console.log($(event.target));
+      var target = $(event.target);
+      this.$('tr.success').removeClass('success');
+      var tr = target.closest('tr');
+      tr.addClass('success');
+
+      var repo = tr.find('td').eq(0).text();
+      /*jshint camelcase:false*/
+      var repoModel = app.repoCollection.findWhere({full_name: repo});
+      new ExtendedFilterView({model: repoModel});
     },
     repoData: function () {
       var rawData = app.repoCollection.toJSON();
       _.each(rawData, function (data) {
-        console.log(data);
         if (!data.private && !data.organization) {
           data.access = 'Public';
         } else if (data.private && !data.organization) {
