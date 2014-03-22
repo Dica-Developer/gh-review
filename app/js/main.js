@@ -18,7 +18,7 @@
       base64: '../bower_components/requirejs-base64/base64.min',
       d3: '../bower_components/d3/d3.min',
       crossfilter: '../bower_components/crossfilter/crossfilter.min',
-      dc: '../bower_components/dc.js/dc.min',
+      dc: '../bower_components/dcjs/dc.min',
 
       option: 'options',
 
