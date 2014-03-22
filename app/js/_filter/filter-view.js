@@ -14,11 +14,35 @@ define([
     repoTable: null,
     events: {
       'click #repo-data-table .dc-table-row': 'selectRepo',
+      'change #tableGroup': 'changeRepotableGroup',
       'click .sortRepoTable': 'sortRepoTable'
     },
     template: _.template(template),
     initialize: function () {
       this.listenTo(app.repoCollection, 'add', this.render);
+    },
+    changeRepotableGroup: function(event){
+      var target = $(event.target);
+      var groupValue = target.val();
+      this.repoTable
+        .group(function(data){
+          var group;
+          switch(groupValue){
+          case 'owner':
+            group = data.owner.login;
+            break;
+          case 'created':
+            group = _.moment(data.created).format('MM/YYYY');
+            break;
+          case 'updated':
+            group = _.moment(data.updated).format('MM/YYYY');
+            break;
+          default:
+            group = data[groupValue];
+          }
+          return  group;
+        })
+        .render();
     },
     sortRepoTable: function(event){
       var target = $(event.target);
