@@ -9,6 +9,16 @@ define(['backbone', 'when', 'app'], function (Backbone, when, app) {
       this.user = this.get('owner').login;
       this.repo = this.get('name');
     },
+    getAdditionalInformations: function(){
+      var defer = when.defer();
+      var promises = [];
+      promises.push(this.getBranches());
+      promises.push(this.getContributors());
+      when.all(promises, function(){
+        defer.resolve();
+      });
+      return defer.promise;
+    },
     getBranches: function () {
       this.getBranchesDefer = when.defer();
       if (this.get('branches')) {
