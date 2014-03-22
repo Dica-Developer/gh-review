@@ -97,8 +97,9 @@ define([
           return d.value;
         })
         .legend(dc.legend().x(5).y(5).itemHeight(13).gap(5))
-        .render();
-      d3.select('#repo-access-chart > svg > g').attr('transform', 'translate(200,75)');
+        .renderlet(function(chart){
+          chart.select('svg > g').attr('transform', 'translate(200,75)');
+        });
     },
     addRepoOwnerChart: function (all, repoOwner, repoOwnerGroup) {
       var availWidth = this.$('#repoFilterCharts').width();
@@ -115,8 +116,9 @@ define([
           return d.value;
         })
         .legend(dc.legend().x(5).y(5).itemHeight(13).gap(5))
-        .render();
-      d3.select('#repo-owner-chart > svg > g').attr('transform', 'translate(200,75)');
+        .renderlet(function(chart){
+          chart.select('svg > g').attr('transform', 'translate(200,75)');
+        });
     },
     addRepoTable: function (repoUpdatedDimension) {
       this.repoTable = dc.dataTable('#repo-data-table')
@@ -146,19 +148,19 @@ define([
           }
         ])
         .sortBy(function (d) {
+          //d.updated is a Date object with the leading '+' Date is converted into milliseconds
           return +d.updated;
         })
         .order(d3.descending)
         .renderlet(function (table) {
           table.selectAll('.dc-table-group').classed('info', true);
-        })
-        .render();
+        });
     },
     render: function () {
       this.$el.html(this.template());
       this.repoData();
       app.router.trigger('ajaxIndicator', false);
-//      dc.renderAll();
+      dc.renderAll();
     }
   });
 
