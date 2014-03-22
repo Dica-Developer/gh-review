@@ -11,7 +11,16 @@
         </div>
         <div class="collapse navbar-collapse" id="ghr-top-menu">
             <ul class="nav navbar-nav">
-                <li name="ghr-top-menu-links" id="reviewLink"><a href="#filter">Reviews</a></li>
+                <li name="ghr-top-menu-links" class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        Review
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li name="ghr-top-menu-links" id="reviewModulesLink"><a href="#filter/modules">Modules</a></li>
+                        <li name="ghr-top-menu-links" id="reviewLink"><a href="#filter">Commits</a></li>
+                    </ul>
+                </li>
                 <li name="ghr-top-menu-links" id="repositoryLink"><a href="#repositories">Repositories</a></li>
                 <li name="ghr-top-menu-links" id="statisticsLink"><a href="#statistics">Statistics</a></li>
             </ul>
