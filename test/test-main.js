@@ -86,7 +86,11 @@
       reviewModulesTemplates: '../app/js/review/modules/templates',
 
       FileView: '../app/js/file/views/file',
-      fileTemplates: '../app/js/file/templates'
+      fileTemplates: '../app/js/file/templates',
+
+      _FilterView: '../app/js/_filter/filter-view',
+      _FilterModel: '../app/js/_filter/filter-model',
+      _ExtendedFilterView: '../app/js/_filter/extended-filter-view',
     },
     map: {
       GitHub: {
