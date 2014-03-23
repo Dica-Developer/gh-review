@@ -29,7 +29,7 @@
       base64: '../app/bower_components/requirejs-base64/base64.min',
       d3: '../app/bower_components/d3/d3.min',
       crossfilter: '../app/bower_components/crossfilter/crossfilter.min',
-      dc: '../app/bower_components/dc.js/dc.min',
+      dc: '../bower_components/dcjs/dc.min',
 
       sinon: '../test/lib/sinon',
       server: '../test/helper/server',
