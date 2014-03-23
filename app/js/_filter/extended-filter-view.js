@@ -38,25 +38,25 @@ define([
         .then(this.renderBranchesAndContributors.bind(this));
       this.render();
     },
-    applyTimeChartSettings: function(){
+    applyTimeChartSettings: function () {
       var method = this.$('#timeChartMethod').find(':selected').val();
-      if('sliding' === method){
+      if ('sliding' === method) {
         var amount = this.$('#timeChartSlidingAmount').val();
         var pattern = this.$('#timeChartSlidingPattern').find(':selected').val();
         this.commitFilter.since = moment().subtract(pattern, amount).toISOString();
       } else {
-        if(this.commitFilter.since){
+        if (this.commitFilter.since) {
           delete this.commitFilter.since;
         }
-        if(this.commitFilter.until){
+        if (this.commitFilter.until) {
           delete this.commitFilter.until;
         }
         var start = this.$('#timeChartFixedStart').val();
         var end = this.$('#timeChartFixedEnd').val();
-        if('' !== start){
+        if ('' !== start) {
           this.commitFilter.since = moment(start).toISOString();
         }
-        if('' !== end){
+        if ('' !== end) {
           this.commitFilter.until = moment(end).toISOString();
         }
       }
@@ -64,14 +64,14 @@ define([
       this.getCommitsWithCurrentFilter()
         .then(this.processData.bind(this));
     },
-    changeTimeChartMethod: function(event){
+    changeTimeChartMethod: function (event) {
       var target = this.$(event.target);
       var value = target.find(':selected').val();
-      if('sliding' === value){
+      if ('sliding' === value) {
         this.$('#timeChartFixedSettings').hide();
         //.show() doesn't work here because .show() sets display to 'block' but we need 'inline-block'
         this.$('#timeChartSlidingSettings').css('display', 'inline-block');
-      }else{
+      } else {
         this.$('#timeChartSlidingSettings').hide();
         //.show() doesn't work here because .show() sets display to 'block' but we need 'inline-block'
         this.$('#timeChartFixedSettings').css('display', 'inline-block');
@@ -173,7 +173,7 @@ define([
         .brushOn(false)
         .render();
     },
-    applyHelperTooltips: function(){
+    applyHelperTooltips: function () {
       var tooltipOptions = {
         placement: 'top',
         trigger: 'hover',
