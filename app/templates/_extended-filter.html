@@ -50,6 +50,25 @@
         <div id="time-chart">
 
         </div>
+        <div class="clear-fix"></div>
+        <div class="table-responsive" id="tree-folder-table-container">
+            <table id="tree-folder-table" class="table table-striped table-bordered table-condensed table-hover">
+                <thead>
+                <tr class="header">
+                    <th class="sortRepoTable" data-sortby="full_name" data-sortdir="descending">
+                        Path
+                        <span class="glyphicon glyphicon-sort-by-alphabet-alt pull-right sorticon descending" style="display:none;"></span>
+                        <span class="glyphicon glyphicon-sort-by-alphabet pull-right sorticon ascending" style="display:none;"></span>
+                    </th>
+                    <th class="sortRepoTable" data-sortby="full_name" data-sortdir="descending">
+                        SHA
+                        <span class="glyphicon glyphicon-sort-by-alphabet-alt pull-right sorticon descending" style="display:none;"></span>
+                        <span class="glyphicon glyphicon-sort-by-alphabet pull-right sorticon ascending" style="display:none;"></span>
+                    </th>
+                </tr>
+                </thead>
+            </table>
+        </div>
     </div>
     <div class="col-sm-4" id="commitFilterCharts">
         <div class="well well-sm">Filter commits by author or review state</div>

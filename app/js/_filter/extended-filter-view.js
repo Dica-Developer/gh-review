@@ -147,9 +147,45 @@ define([
       });
       var commentedCommitsGroup = commentedCommits.group();
 
+      var treeRawData = this.model.get('tree').tree;
+      var treeData = crossfilter(treeRawData);
+//      var treeAll = treeData.group();
+
+      var folder = treeData.dimension(function (data) {
+        return data.type;
+      });
+
+//      var folderGroup = folder.group();
+
       this.renderTimeChart(commitsByDay, commitsByDayGroup, smallestGreatestDateOfCommits);
       this.renderCommitsPerAuthorChart(commitsByAuthor, commitsByAuthorGroup);
       this.renderReviewStateChart(all, commentedCommits, commentedCommitsGroup);
+      this.renderFolderTable(folder);
+    },
+    renderFolderTable: function (folder) {
+      var table = dc.dataTable('#tree-folder-table');
+      table.dimension(folder);
+      table.size(100);
+      table.group(function (d) {
+        return d.path.split('/')[0];
+      });
+      table.columns([
+        function (d) {
+          return d.path;
+        },
+        function(d){
+          return d.sha;
+        }
+      ]);
+      table.sortBy(function (d) {
+        return d.path.length;
+      });
+      table.order(d3.ascending);
+      table.renderlet(function (table) {
+        table.selectAll('.dc-table-group').classed('info', true);
+      });
+      table.filter('tree');
+      table.render();
     },
     renderReviewStateChart: function (all, commentedCommits, commentedCommitsGroup) {
       var availWidth = this.$('#commitFilterCharts').width();
