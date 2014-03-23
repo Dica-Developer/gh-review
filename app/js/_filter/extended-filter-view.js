@@ -45,6 +45,12 @@ define([
         var pattern = this.$('#timeChartSlidingPattern').find(':selected').val();
         this.commitFilter.since = moment().subtract(pattern, amount).toISOString();
       } else {
+        if(this.commitFilter.since){
+          delete this.commitFilter.since;
+        }
+        if(this.commitFilter.until){
+          delete this.commitFilter.until;
+        }
         var start = this.$('#timeChartFixedStart').val();
         var end = this.$('#timeChartFixedEnd').val();
         if('' !== start){
@@ -104,7 +110,7 @@ define([
         data.commitDay = d3.time.day(data.commitDate);
       }, this);
       var data = crossfilter(rawData);
-//        var all = data.groupAll();
+//      var all = data.groupAll();
 
       var sortedDate = _.sortBy(rawData, function (data) {
         return data.commitDate.getTime();
@@ -120,7 +126,33 @@ define([
       });
       var commitsByDayGroup = commitsByDay.group();
 
+      var commitsByAuthor = data.dimension(function (data) {
+        return data.commit.author.name;
+      });
+      var commitsByAuthorGroup = commitsByAuthor.group();
+
       this.renderTimeChart(commitsByDay, commitsByDayGroup, smallestGreatestDateOfCommits);
+      this.renderCommitsPerAuthorChart(commitsByAuthor, commitsByAuthorGroup);
+    },
+    renderCommitsPerAuthorChart: function (commitsByAuthor, commitsByAuthorGroup) {
+      var availWidth = this.$('#repoFilterCharts').width();
+      dc.pieChart('#commitsPerAuthor-chart')
+        .width(availWidth)
+        .height(150)
+        .transitionDuration(1000)
+        .dimension(commitsByAuthor)
+        .group(commitsByAuthorGroup)
+        .radius(70)
+        .minAngleForLabel(0)
+        .colors(d3.scale.category10())
+        .label(function (d) {
+          return d.value;
+        })
+        .legend(dc.legend().x(5).y(5).itemHeight(13).gap(5))
+        .renderlet(function(chart){
+          chart.select('svg > g').attr('transform', 'translate(200,75)');
+        })
+        .render();
     },
     renderTimeChart: function (commitsByDay, commitsByDayGroup, smallestGreatestDateOfCommits) {
       var availableWidth = this.$('#timeWindowFilter').width();
@@ -137,6 +169,7 @@ define([
         .alwaysUseRounding(true)
         .x(d3.time.scale().domain([smallestGreatestDateOfCommits.smallest, smallestGreatestDateOfCommits.greatest]))
         .xUnits(d3.time.day)
+        .elasticY(true)
         .brushOn(false)
         .render();
     },

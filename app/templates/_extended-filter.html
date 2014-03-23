@@ -44,10 +44,22 @@
                     <input id="timeChartFixedEnd" type="date" class="form-control input-sm">
                 </div>
                 <button class="btn btn-primary btn-sm pull-right" id="applyTimeChartSettings">Apply</button>
+                <div class="clear-fix"></div>
             </form>
         </div>
         <div id="time-chart">
 
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="well well-sm">Filter commits by author</div>
+        <div id="commitsPerAuthor-chart">
+            <span class="text-primary">Filter by author</span>
+                <span class="reset pull-right" style="display: none;">
+                    Showing : <span class="filter"></span>
+                    <a class="reset" href="javascript: void 0;" data-chart="repo-access-chart" style="display:none;">Reset
+                        filter</a>
+                </span>
         </div>
     </div>
 </div>
