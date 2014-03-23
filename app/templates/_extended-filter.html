@@ -51,8 +51,8 @@
 
         </div>
     </div>
-    <div class="col-sm-4">
-        <div class="well well-sm">Filter commits by author</div>
+    <div class="col-sm-4" id="commitFilterCharts">
+        <div class="well well-sm">Filter commits by author or review state</div>
         <div id="commitsPerAuthor-chart">
             <span class="text-primary">Filter by author</span>
                 <span class="reset pull-right" style="display: none;">
@@ -60,6 +60,16 @@
                     <a class="reset" href="javascript: void 0;" data-chart="repo-access-chart" style="display:none;">Reset
                         filter</a>
                 </span>
+            <div class="clear-fix"></div>
+        </div>
+        <div id="review-state-chart">
+            <span class="text-primary">Filter by review state</span>
+                <span class="reset pull-right" style="display: none;">
+                    Showing : <span class="filter"></span>
+                    <a class="reset" href="javascript: void 0;" data-chart="review-state-chart" style="display:none;">Reset
+                        filter</a>
+                </span>
+            <div class="clear-fix"></div>
         </div>
     </div>
 </div>

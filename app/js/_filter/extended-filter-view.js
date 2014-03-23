@@ -110,7 +110,7 @@ define([
         data.commitDay = d3.time.day(data.commitDate);
       }, this);
       var data = crossfilter(rawData);
-//      var all = data.groupAll();
+      var all = data.groupAll();
 
       var sortedDate = _.sortBy(rawData, function (data) {
         return data.commitDate.getTime();
@@ -131,28 +131,70 @@ define([
       });
       var commitsByAuthorGroup = commitsByAuthor.group();
 
+      var commentedCommits = data.dimension(function (data) {
+        /*jshint camelcase:false*/
+        var commented = data.commit.comment_count > 0;
+        var approved = app.commitApproved[data.sha] || false;
+        var state = 'Undefined';
+        if (!commented) {
+          state = 'Not Reviewed';
+        } else if (commented && !approved) {
+          state = 'Not Approved';
+        } else if (commented && approved) {
+          state = 'Approved';
+        }
+        return state;
+      });
+      var commentedCommitsGroup = commentedCommits.group();
+
       this.renderTimeChart(commitsByDay, commitsByDayGroup, smallestGreatestDateOfCommits);
       this.renderCommitsPerAuthorChart(commitsByAuthor, commitsByAuthorGroup);
+      this.renderReviewStateChart(all, commentedCommits, commentedCommitsGroup);
+    },
+    renderReviewStateChart: function (all, commentedCommits, commentedCommitsGroup) {
+      var availWidth = this.$('#commitFilterCharts').width();
+      var chart = dc.pieChart('#review-state-chart');
+      chart.width(availWidth);
+      chart.height(150);
+      chart.transitionDuration(1000);
+      chart.dimension(commentedCommits);
+      chart.group(commentedCommitsGroup);
+      chart.radius(70);
+      chart.minAngleForLabel(0);
+      chart.colors(d3.scale.ordinal().range(['#2EC73B', '#4EACF6', '#a60000']));
+      chart.label(function (d) {
+        var percentage = (d.value / all.value() * 100);
+        var percentageString = '(' + (Math.round(percentage * 100) / 100) + '%)';
+        if (chart.hasFilter() && !chart.hasFilter(d.key)) {
+          percentageString = '(0%)';
+        }
+        return percentageString;
+      });
+      chart.legend(dc.legend().x(5).y(5).itemHeight(13).gap(5));
+      chart.renderlet(function (chart) {
+        chart.select('svg > g').attr('transform', 'translate(200,75)');
+      });
+      chart.render();
     },
     renderCommitsPerAuthorChart: function (commitsByAuthor, commitsByAuthorGroup) {
-      var availWidth = this.$('#repoFilterCharts').width();
-      dc.pieChart('#commitsPerAuthor-chart')
-        .width(availWidth)
-        .height(150)
-        .transitionDuration(1000)
-        .dimension(commitsByAuthor)
-        .group(commitsByAuthorGroup)
-        .radius(70)
-        .minAngleForLabel(0)
-        .colors(d3.scale.category10())
-        .label(function (d) {
-          return d.value;
-        })
-        .legend(dc.legend().x(5).y(5).itemHeight(13).gap(5))
-        .renderlet(function(chart){
-          chart.select('svg > g').attr('transform', 'translate(200,75)');
-        })
-        .render();
+      var availWidth = this.$('#commitFilterCharts').width();
+      var chart = dc.pieChart('#commitsPerAuthor-chart');
+      chart.width(availWidth);
+      chart.height(150);
+      chart.transitionDuration(1000);
+      chart.dimension(commitsByAuthor);
+      chart.group(commitsByAuthorGroup);
+      chart.radius(70);
+      chart.minAngleForLabel(0);
+      chart.colors(d3.scale.category10());
+      chart.label(function (d) {
+        return d.value;
+      });
+      chart.legend(dc.legend().x(5).y(5).itemHeight(13).gap(5));
+      chart.renderlet(function (chart) {
+        chart.select('svg > g').attr('transform', 'translate(200,75)');
+      });
+      chart.render();
     },
     renderTimeChart: function (commitsByDay, commitsByDayGroup, smallestGreatestDateOfCommits) {
       var availableWidth = this.$('#timeWindowFilter').width();
