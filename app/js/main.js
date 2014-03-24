@@ -44,7 +44,7 @@
       RepoDetailView: 'repositories/repo-detail-view',
 
       commitModel: 'commits/commit-model',
-      commitCollection: 'commits/commit-collection',
+      CommitCollection: 'commits/commit-collection',
       commitListItemView: 'commits/commit-list-item-view',
       CommitListView: 'commits/commit-list-view',
 
@@ -73,7 +73,9 @@
       reviewModulesTemplates: 'review/modules/templates',
 
       FileView: 'file/views/file',
-      fileTemplates: 'file/templates'
+      fileTemplates: 'file/templates',
+
+      Charts: 'charts/charts'
     },
     shim: {
       underscore: {

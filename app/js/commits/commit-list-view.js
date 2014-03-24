@@ -4,14 +4,16 @@ define([
   'app',
   'underscore',
   'when',
-  'commitCollection',
+  'CommitCollection',
   'commitListItemView',
   'text!templates/commit-list.html'
-], function (Backbone, app, _, when, commitCollection, CommitListItemView, template) {
+], function (Backbone, app, _, when, CommitCollection, CommitListItemView, template) {
   'use strict';
+
   return Backbone.View.extend({
     el: '#main',
     template: _.template(template),
+    commitCollection: new CommitCollection(),
     getCommitsRefer: null,
     featureMergeEnd: null,
     events: {
@@ -58,13 +60,13 @@ define([
     getCommitsCallback: function (error, commits) {
       if (!error) {
         this.storeMetaToModel(commits);
-        commitCollection.reset(commits);
+        this.commitCollection.reset(commits);
         this.getCommitsRefer.resolve();
       }
     },
     displayCommits: function (commits) {
       this.storeMetaToModel(commits);
-      commitCollection.reset(commits);
+      this.commitCollection.reset(commits);
       this.render();
       this.renderAllCommits();
     },
@@ -116,7 +118,7 @@ define([
       return (1 === commit.get('parents').length);
     },
     renderAllCommits: function () {
-      commitCollection.each(function (commit) {
+      this.commitCollection.each(function (commit) {
         this.markAsFeatureMerge(commit);
         if (this.isNotAMergeCommit(commit)) {
           this.renderOneCommit(commit);

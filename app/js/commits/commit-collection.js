@@ -8,5 +8,5 @@ define(['backbone', 'commitModel'], function (Backbone, CommitModel) {
     }
   });
 
-  return new CommitsCollection();
+  return CommitsCollection;
 });

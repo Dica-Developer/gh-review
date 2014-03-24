@@ -9,7 +9,6 @@ define(function (require) {
   var FilterOverview = require('FilterOverview');
   var FilterModel = require('FilterModel');
   var CommitListView = require('CommitListView');
-  var commitCollection = require('commitCollection');
   var CommentView = require('CommentView');
   var oauthHandler = require('OauthHandler');
   var loginLogout = require('loginLogout');
@@ -102,7 +101,10 @@ define(function (require) {
     },
     showCommit: function (id) {
       this.prepareView('reviewLink');
-      var model = commitCollection.get(id);
+      var model = null;
+      if(this.view instanceof CommitListView){
+        model = this.view.commitCollection.get(id);
+      }
       this.view = new CommentView({
         model: model
       });
