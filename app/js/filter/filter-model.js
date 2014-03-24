@@ -1,7 +1,7 @@
 /*global define*/
 define(['backbone', 'underscore', 'when', 'app', 'CommitCollection'], function (Backbone, _, when, app, CommitCollection) {
   'use strict';
-
+  var tmpCommits = {};
   return Backbone.Model.extend({
     defaults: {},
     customFilter: {},
@@ -50,12 +50,38 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection'], function (
     setQuery: function (query) {
       this.query = query;
     },
+    setSHA: function (sha) {
+      this.set('sha', sha);
+    },
+    getNextPage: function () {
+      this.getCommitsRefer = when.defer();
+      app.github.getNextPage(tmpCommits, this.getCommitsCallback.bind(this));
+      return this.getCommitsRefer.promise;
+    },
+    getFirstPage: function () {
+      this.getCommitsRefer = when.defer();
+      app.github.getFirstPage(tmpCommits, this.getCommitsCallback.bind(this));
+      return this.getCommitsRefer.promise;
+    },
     getCommits: function () {
       this.getCommitsRefer = when.defer();
       app.github.repos.getCommits(this.toJSON(), this.getCommitsCallback.bind(this));
       return this.getCommitsRefer.promise;
     },
+    setHeader: function (header, value) {
+      var headers = this.get('headers');
+      if (!headers) {
+        headers = {};
+      }
+
+      if (!headers[header]) {
+        headers[header] = value;
+        this.set('headers', headers);
+      }
+    },
     getCommitsCallback: function (error, commits) {
+      /*jshint camelcase:false*/
+      this.setHeader('If-Modified-Since', commits.meta['last-modified']);
       if (!error) {
         commits = this.extractMeta(commits);
         this.commitCollection.reset(commits);
@@ -63,6 +89,7 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection'], function (
       }
     },
     extractMeta: function (commits) {
+      tmpCommits = _.extend({}, commits);
       this.hasNextPage = app.github.hasNextPage(commits);
       this.hasPreviousPage = app.github.hasPreviousPage(commits);
       this.hasFirstPage = app.github.hasFirstPage(commits);
