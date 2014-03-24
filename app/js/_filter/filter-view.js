@@ -20,6 +20,7 @@ define([
     },
     template: _.template(template),
     initialize: function () {
+      dc.chartRegistry.clear();
       this.listenTo(app.repoCollection, 'add', this.render);
     },
     changeRepotableGroup: function(event){
