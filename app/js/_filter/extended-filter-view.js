@@ -8,8 +8,10 @@ define([
   'Charts',
   'app',
   'CommitCollection',
+  'CommitListView',
+  'FilterModel',
   'text!templates/_extended-filter.html'
-], function ($, Backbone, _, moment, when, Charts, app, CommitCollection, template) {
+], function ($, Backbone, _, moment, when, Charts, app, CommitCollection, CommitListView, FilterModel, template) {
   'use strict';
 
   return Backbone.View.extend({
@@ -25,7 +27,8 @@ define([
     events: {
       'change #timeChartMethod': 'changeTimeChartMethod',
       'click #applyTimeChartSettings': 'applyTimeChartSettings',
-      'click #applyPathFilter': 'applyPathFilter'
+      'click #applyPathFilter': 'applyPathFilter',
+      'click #preview': 'showPreview'
     },
     template: _.template(template),
     commits: new CommitCollection(),
@@ -40,6 +43,21 @@ define([
       this.model.getAdditionalInformations()
         .then(this.renderBranchesAndContributors.bind(this));
       this.render();
+    },
+    showPreview: function () {
+      var model = new FilterModel(this.currentFilter);
+      model.set('hasNext', false);
+      model.set('hasPrevious', false);
+      model.set('hasFirst', false);
+      model.set('currentLink', false);
+      var view = new CommitListView({
+        model: model,
+        el: '#commitList'
+      });
+      view.commitCollection = this.commits;
+      view.render();
+      view.renderAllCommits();
+      $('#peviewModal').modal('show');
     },
     applyTimeChartSettings: function () {
       var method = this.$('#timeChartMethod').find(':selected').val();
