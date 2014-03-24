@@ -73,11 +73,8 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection'], function (
       if (!headers) {
         headers = {};
       }
-
-      if (!headers[header]) {
-        headers[header] = value;
-        this.set('headers', headers);
-      }
+      headers[header] = value;
+      this.set('headers', headers);
     },
     getCommitsCallback: function (error, commits) {
       /*jshint camelcase:false*/
