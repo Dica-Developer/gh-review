@@ -9,7 +9,6 @@ define(function (require) {
   var FilterOverview = require('FilterOverview');
   var FilterModel = require('FilterModel');
   var CommitListView = require('CommitListView');
-  var commitCollection = require('commitCollection');
   var CommentView = require('CommentView');
   var oauthHandler = require('OauthHandler');
   var loginLogout = require('loginLogout');
@@ -87,20 +86,16 @@ define(function (require) {
       this.view = new CommitListView({
         model: model
       });
-      this.view.getCommits()
-        .then(function () {
-          this.view.render();
-          this.view.renderAllCommits();
-        }.bind(this));
+      this.view.renderAllCommits();
     },
-    showCommit: function (id) {
+    showCommit: function (/*id*/) {
       this.prepareView('reviewLink');
-      var model = commitCollection.get(id);
-      this.view = new CommentView({
-        model: model
-      });
-      this.view.getDiffAndComments()
-        .then(this.view.render.bind(this.view));
+//      var model = commitCollection.get(id);
+//      this.view = new CommentView({
+//        model: model
+//      });
+//      this.view.getDiffAndComments()
+//        .then(this.view.render.bind(this.view));
     },
     showOneCommit: function (owner, repo, sha) {
       var _this = this;
