@@ -132,7 +132,13 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection'], function (
     getCommitsCallback: function (error, commits) {
 //      this.setHeader('If-Modified-Since', commits.meta['last-modified']);
       if (!error) {
-        commits = this.extractMeta(commits);
+        if (!_.isUndefined(commits.meta)) {
+          commits = this.extractMeta(commits);
+        }
+        //indicates that this is a getAll request in that case we dont need to if there is a pagination option
+        if (!_.isUndefined(this.tmpCommits)) {
+          delete this.tmpCommits;
+        }
         if (_.size(this.customFilter) > 0) {
           this.processCustomFilter(commits);
         } else {
@@ -156,19 +162,19 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection'], function (
         _.each(commits, function (commit) {
           switch (state) {
           case 'approved':
-            if(app.commitApproved[commit.sha]){
+            if (app.commitApproved[commit.sha]) {
               tmpCommits.push(commit);
             }
             break;
           case 'reviewed':
             /*jshint camelcase:false*/
-            if(!app.commitApproved[commit.sha] && commit.commit.comment_count > 0){
+            if (!app.commitApproved[commit.sha] && commit.commit.comment_count > 0) {
               tmpCommits.push(commit);
             }
             break;
           case 'unseen':
             /*jshint camelcase:false*/
-            if(commit.commit.comment_count === 0){
+            if (commit.commit.comment_count === 0) {
               tmpCommits.push(commit);
             }
             break;
