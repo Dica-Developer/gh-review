@@ -40,7 +40,7 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection'], function (
     setRepo: function (repo) {
       this.set('repo', repo);
     },
-    setAuthor: function(author){
+    setAuthor: function (author) {
       this.set('author', author);
     },
     setContributor: function (contributor) {
@@ -104,8 +104,12 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection'], function (
 //      this.setHeader('If-Modified-Since', commits.meta['last-modified']);
       if (!error) {
         commits = this.extractMeta(commits);
-        this.commitCollection.reset(commits);
-        this.getCommitsRefer.resolve(this.commitCollection);
+        if (_.size(this.customFilter) > 0) {
+          this.processCustomFilter(commits);
+        } else {
+          this.commitCollection.reset(commits);
+          this.getCommitsRefer.resolve(this.commitCollection);
+        }
       }
     },
     extractMeta: function (commits) {
@@ -115,6 +119,35 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection'], function (
       this.hasFirstPage = app.github.hasFirstPage(commits);
       delete commits.meta;
       return commits;
+    },
+    processCustomFilter: function (commits) {
+      var tmpCommits = [];
+      var state = this.customFilter.state;
+      if (!_.isUndefined(state)) {
+        _.each(commits, function (commit) {
+          switch (state) {
+          case 'approved':
+            if(app.commitApproved[commit.sha]){
+              tmpCommits.push(commit);
+            }
+            break;
+          case 'reviewed':
+            /*jshint camelcase:false*/
+            if(!app.commitApproved[commit.sha] && commit.commit.comment_count > 0){
+              tmpCommits.push(commit);
+            }
+            break;
+          case 'unseen':
+            /*jshint camelcase:false*/
+            if(commit.commit.comment_count === 0){
+              tmpCommits.push(commit);
+            }
+            break;
+          }
+        });
+      }
+      this.commitCollection.reset(tmpCommits);
+      this.getCommitsRefer.resolve(this.commitCollection);
     }
   });
 });
