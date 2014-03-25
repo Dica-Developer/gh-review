@@ -40,6 +40,9 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection'], function (
     setRepo: function (repo) {
       this.set('repo', repo);
     },
+    setAuthor: function(author){
+      this.set('author', author);
+    },
     setContributor: function (contributor) {
       this.set('contributor', contributor);
     },

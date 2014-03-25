@@ -90,18 +90,26 @@ define(function (require) {
     },
     showCommit: function (owner, repo, branch, id, filterId) {
       this.prepareView('reviewLink');
+      var filter = null;
+      var model = null;
       if (filterId) {
-        var filter = app.filterCollection.get(filterId);
-        var model = filter.getCollection().get(id);
-        model.user = filter.get('user');
-        model.repo = filter.get('repo');
-        this.view = new CommentView({
-          model: model
-        });
-        this.view.filter = filter;
-        this.view.getDiffAndComments()
-          .then(this.view.render.bind(this.view));
+        filter = app.filterCollection.get(filterId);
+        model = filter.getCollection().get(id);
+      } else {
+        filter = new FilterModel();
+        filter.setOwner('owner');
+        filter.setRepo('repo');
+        filter.setBranch('branch');
+        model = new CommitModel();
       }
+      model.user = filter.get('user');
+      model.repo = filter.get('repo');
+      this.view = new CommentView({
+        model: model
+      });
+      this.view.filter = filter;
+      this.view.getDiffAndComments()
+        .then(this.view.render.bind(this.view));
     },
     showOneCommit: function (owner, repo, sha) {
       var _this = this;
