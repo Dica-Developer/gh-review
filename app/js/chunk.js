@@ -77,6 +77,10 @@ define([], function () {
     return line.startsWith('+');
   };
 
+  Chunk.prototype.isDeletion = function (line) {
+    return line.startsWith('-');
+  };
+
   Chunk.prototype.isSame = function (line) {
     return line.startsWith(' ');
   };
