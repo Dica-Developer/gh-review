@@ -15,6 +15,24 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection'], function (
       if (this.get('owner')) {
         this.setOwner(this.get('owner'));
       }
+      var since = this.get('since');
+      if (since && _.isObject(since)) {
+        if (since.amount > 0) {
+          this.setSinceObject(since);
+        } else {
+          this.unset('since');
+        }
+      }
+
+      var until = this.get('until');
+      if (!_.isNull(until) && _.str.isBlank(until)) {
+        this.unset('until');
+      }
+
+      var path = this.get('path');
+      if (!_.isNull(path) && _.str.isBlank(path)) {
+        this.unset('path');
+      }
     },
     setOwner: function (owner) {
       this.set('user', owner);
