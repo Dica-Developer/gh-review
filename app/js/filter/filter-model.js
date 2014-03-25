@@ -98,8 +98,7 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection'], function (
       this.set('headers', headers);
     },
     getCommitsCallback: function (error, commits) {
-      /*jshint camelcase:false*/
-      this.setHeader('If-Modified-Since', commits.meta['last-modified']);
+//      this.setHeader('If-Modified-Since', commits.meta['last-modified']);
       if (!error) {
         commits = this.extractMeta(commits);
         this.commitCollection.reset(commits);
