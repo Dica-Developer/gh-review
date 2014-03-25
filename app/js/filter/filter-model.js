@@ -94,6 +94,30 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection'], function (
       app.github.repos.getCommits(this.toJSON(), this.getCommitsCallback.bind(this));
       return this.getCommitsRefer.promise;
     },
+    getAllCommits: function (link) {
+      var callback = function (error, resp) {
+        if (!error) {
+          var link = resp.meta.link;
+          var hasNext = app.github.hasNextPage(link);
+          delete resp.meta;
+          this.tmpCommits = this.tmpCommits.concat(resp);
+          if (hasNext) {
+            this.getAllCommits(link);
+          } else {
+            this.getCommitsCallback(error, this.tmpCommits);
+          }
+        }
+      }.bind(this);
+
+      if (!link) {
+        this.tmpCommits = [];
+        this.getCommitsRefer = when.defer();
+        app.github.repos.getCommits(this.toJSON(), callback);
+      } else {
+        app.github.getNextPage(link, callback);
+      }
+      return this.getCommitsRefer.promise;
+    },
     getCollection: function () {
       return this.commitCollection;
     },
