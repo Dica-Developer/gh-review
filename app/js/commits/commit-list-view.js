@@ -4,7 +4,6 @@ define([
   'app',
   'underscore',
   'when',
-  'CommitCollection',
   'commitListItemView',
   'text!templates/commit-list.html'
 ], function (Backbone, app, _, when, CommitListItemView, template) {
