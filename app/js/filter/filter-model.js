@@ -52,6 +52,9 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection'], function (
     setSince: function (since) {
       this.set('since', since);
     },
+    unsetSince: function () {
+      this.unset('since');
+    },
     setSinceObject: function (sinceObject) {
       var since = _.moment().subtract(sinceObject.pattern, sinceObject.amount).toISOString();
       this.set('since', since);
@@ -59,8 +62,14 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection'], function (
     setUntil: function (until) {
       this.set('until', until);
     },
+    unsetUntil: function () {
+      this.unset('until');
+    },
     setPath: function (path) {
       this.set('path', path);
+    },
+    unsetPath: function () {
+      this.unset('path');
     },
     setState: function (state) {
       /**
