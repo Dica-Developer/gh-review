@@ -33,7 +33,7 @@ define([
       this.filter.setRepo(this.model.get('name'));
       this.filter.setOwner(this.model.get('owner').login);
       this.filter.setSince(twoWeeksAgo);
-      this.filter.getCommits()
+      this.filter.getAllCommits()
         .then(this.processDataAndRenderCharts.bind(this));
       this.model.getAdditionalInformations()
         .then(this.renderBranchesAndContributors.bind(this));
@@ -66,7 +66,7 @@ define([
           this.filter.setUntil(moment(end).toISOString());
         }
       }
-      this.filter.getCommits()
+      this.filter.getAllCommits()
         .then(this.processDataAndRenderCharts.bind(this));
     },
     applyPathFilter: function () {
@@ -76,7 +76,7 @@ define([
       } else if ('' === path) {
         this.filter.unsetPath();
       }
-      this.filter.getCommits()
+      this.filter.getAllCommits()
         .then(this.processDataAndRenderCharts.bind(this));
     },
     changeTimeChartMethod: function (event) {
