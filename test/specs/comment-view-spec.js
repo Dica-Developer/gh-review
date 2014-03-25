@@ -12,15 +12,13 @@ define(function (require) {
 
   describe('#CommentView', function () {
 
-    var commentView = null;
+    var commentView = null, filter = null;
 
     beforeEach(function () {
-      app.currentFilter = new FilterModel({
-        owner: 'TEST',
-        repo: 'testRepo',
-        branch: 'master'
-      });
-
+      filter = new FilterModel();
+      filter.setOwner('TEST');
+      filter.setRepo('testRepo');
+      filter.setBranch('master');
       var commitModel = new CommitModel({
         sha: '12test345',
         author: 'test',
@@ -43,6 +41,7 @@ define(function (require) {
       commentView = new CommentView({
         model: commitModel
       });
+      commentView.filter = filter;
       commentView.model.comments.reset();
     });
 

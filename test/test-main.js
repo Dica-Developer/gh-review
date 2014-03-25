@@ -61,7 +61,7 @@
       RepoDetailView: '../app/js/repositories/repo-detail-view',
 
       commitModel: '../app/js/commits/commit-model',
-      commitCollection: '../app/js/commits/commit-collection',
+      CommitCollection: '../app/js/commits/commit-collection',
       commitListItemView: '../app/js/commits/commit-list-item-view',
       CommitListView: '../app/js/commits/commit-list-view',
 

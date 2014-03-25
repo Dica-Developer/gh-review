@@ -33,8 +33,8 @@ define(function (require) {
       'filter/modules': 'filterModules',
       'repositories': 'repositories',
       'repository/:name': 'repoDetail',
-      'commits/:owner/:repo/:branch': 'commitList',
-      'commit/:id': 'showCommit',
+      'commits/:owner/:repo/:branch(/filter-:filterCid)': 'commitList',
+      'commit/:owner/:repo/:branch/:id(/filter-:filterId)': 'showCommit',
       'commit/:owner/:repo/:sha': 'showOneCommit',
       'login': 'login',
       'logout': 'logout',
@@ -79,35 +79,42 @@ define(function (require) {
         });
       }
     },
-    commitList: function (owner, repo, branch) {
+    commitList: function (owner, repo, branch, filterCid) {
       this.prepareView('reviewLink');
-      var model = app.currentFilter;
-      if (null !== model || owner !== model.get('owner') || repo !== model.get('repo') || branch !== model.get('branch')) {
-        model = new FilterModel({
-          owner: owner,
-          repo: repo,
-          branch: branch
-        });
-        app.currentFilter = model;
+      var filter = null;
+      if (!filterCid) {
+        filter = new FilterModel();
+        filter.setOwner(owner);
+        filter.setRepo(repo);
+        filter.setBranch(branch);
+      } else {
+        filter = app.filterCollection.get(filterCid);
       }
       this.view = new CommitListView({
-        model: model
+        model: filter
       });
-      this.view.getCommits()
-        .then(function () {
-          this.view.render();
-          this.view.renderAllCommits();
-        }.bind(this));
+      this.view.getAllCommits();
     },
-    showCommit: function (id) {
+    showCommit: function (owner, repo, branch, id, filterId) {
       this.prepareView('reviewLink');
+      var filter = null;
       var model = null;
-      if(this.view instanceof CommitListView){
-        model = this.view.commitCollection.get(id);
+      if (filterId) {
+        filter = app.filterCollection.get(filterId);
+        model = filter.getCollection().get(id);
+      } else {
+        filter = new FilterModel();
+        filter.setOwner('owner');
+        filter.setRepo('repo');
+        filter.setBranch('branch');
+        model = new CommitModel();
       }
+      model.user = filter.get('user');
+      model.repo = filter.get('repo');
       this.view = new CommentView({
         model: model
       });
+      this.view.filter = filter;
       this.view.getDiffAndComments()
         .then(this.view.render.bind(this.view));
     },
@@ -245,6 +252,7 @@ define(function (require) {
         $('#' + activeLink).addClass('active');
       }
     },
-    initialize: function () {}
+    initialize: function () {
+    }
   });
 });

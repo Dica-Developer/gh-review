@@ -11,7 +11,6 @@ define([
     el: '#reviewList',
     listItemTemplate: _.template(listItemTemplate),
     events: {
-      'click a.list-group-item': 'showDetail',
       'click .destroy': 'removeFilter'
     },
     removeFilter: function (event) {
@@ -28,18 +27,6 @@ define([
       } else {
         this.showHint();
       }
-    },
-    showDetail: function (event) {
-      var target = $(event.target);
-      if (!target.is('a')) {
-        target = target.closest('a');
-      }
-      var modelId = target.data('id');
-      app.currentFilter = this.collection.get(modelId);
-      app.router.navigate('commits/' + encodeURIComponent(app.currentFilter.get('owner')) + '/' + encodeURIComponent(app.currentFilter.get('repo')) +
-        '/' + encodeURIComponent(app.currentFilter.get('branch')), {
-          trigger: true
-        });
     },
     addOne: function (model) {
       var view = this.listItemTemplate(model.toJSON());

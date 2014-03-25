@@ -2,7 +2,6 @@
 define(function (require) {
   'use strict';
 
-  var app = require('app');
   var CommentListView = require('CommitListView');
   var FilterModel = require('FilterModel');
 
@@ -23,38 +22,31 @@ define(function (require) {
     });
 
     it('Init empty', function () {
-      var filterModel = new FilterModel({});
-      commentListView = new CommentListView({
-        model: filterModel
-      });
-      expect(_.size(app.currentReviewData)).toBe(2);
-      expect(app.currentReviewData.sha).toBe('master');
-      expect(app.currentReviewData.since).toBeDefined();
+      var filterModel = new FilterModel();
+      var filter = filterModel.toJSON();
+      expect(_.size(filter)).toBe(0);
     });
 
     it('Init not empty', function () {
-      var filterModel = new FilterModel({
-        owner: 'owner',
-        repo: 'repo',
-        branch: 'branch',
-        contributor: 'contributor',
-        since: {
-          pattern: 'YYYY-MM-dd',
-          amount: '24'
-        },
-        until: 'until',
-        path: 'path'
+      var filterModel = new FilterModel();
+      filterModel.setOwner('owner');
+      filterModel.setRepo('repo');
+      filterModel.setBranch('branch');
+      filterModel.setContributor('contributor');
+      filterModel.setSinceObject({
+        pattern: 'YYYY-MM-dd',
+        amount: '24'
       });
-      commentListView = new CommentListView({
-        model: filterModel
-      });
-      expect(app.currentReviewData.user).toBe('owner');
-      expect(app.currentReviewData.repo).toBe('repo');
-      expect(app.currentReviewData.sha).toBe('branch');
-      expect(app.currentReviewData.author).toBe('contributor');
-      expect(app.currentReviewData.until).toBe('until');
-      expect(app.currentReviewData.path).toBe('path');
-      expect(app.currentReviewData.since).toBeDefined();
+      filterModel.setUntil('until');
+      filterModel.setPath('path');
+      var filterModelJson = filterModel.toJSON();
+      expect(filterModelJson.user).toBe('owner');
+      expect(filterModelJson.repo).toBe('repo');
+      expect(filterModelJson.branch).toBe('branch');
+      expect(filterModelJson.contributor).toBe('contributor');
+      expect(filterModelJson.until).toBe('until');
+      expect(filterModelJson.path).toBe('path');
+      expect(filterModelJson.since).toBeDefined();
     });
   });
 });

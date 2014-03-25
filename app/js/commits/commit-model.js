@@ -22,8 +22,8 @@ define([
         _this = this;
       if (!this.get('diff')) {
         app.github.repos.getCommit({
-          user: app.currentReviewData.user,
-          repo: app.currentReviewData.repo,
+          user: this.user,
+          repo: this.repo,
           sha: _this.get('sha')
         }, function (error, res) {
           if (!error) {
@@ -43,8 +43,8 @@ define([
       var _this = this;
       this.getCommitCommentsDefer = when.defer();
       app.github.repos.getCommitComments({
-        user: app.currentReviewData.user,
-        repo: app.currentReviewData.repo,
+        user: this.user,
+        repo: this.repo,
         sha: _this.get('sha'),
         headers: {
           'Accept': 'application/vnd.github-commitcomment.html+json'
@@ -66,8 +66,8 @@ define([
       var files = diff.files;
       var file = files[fileIndex];
       app.github.repos.createCommitComment({
-        user: app.currentReviewData.user,
-        repo: app.currentReviewData.repo,
+        user: this.user,
+        repo: this.repo,
         // TODO sha and commit ifd are the same. Why do we need both?
         sha: this.get('sha'),
         body: comment,
@@ -87,8 +87,8 @@ define([
     addCommitComment: function (comment) {
       var defer = when.defer();
       app.github.repos.createCommitComment({
-        user: app.currentReviewData.user,
-        repo: app.currentReviewData.repo,
+        user: this.user,
+        repo: this.repo,
         // TODO sha and commit id are the same. Why do we need both?
         sha: this.get('sha'),
         body: comment,
@@ -113,8 +113,8 @@ define([
       };
       var comment = '```json\n' + JSON.stringify(commitState, null, 2) + '\n```';
       app.github.repos.createCommitComment({
-        user: app.currentReviewData.user,
-        repo: app.currentReviewData.repo,
+        user: this.user,
+        repo: this.repo,
         // TODO sha and commit id are the same. Why do we need both?
         sha: this.get('sha'),
         /*jshint camelcase:false*/
