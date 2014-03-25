@@ -86,6 +86,9 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection'], function (
       app.github.repos.getCommits(this.toJSON(), this.getCommitsCallback.bind(this));
       return this.getCommitsRefer.promise;
     },
+    getCollection: function () {
+      return this.commitCollection;
+    },
     setHeader: function (header, value) {
       var headers = this.get('headers');
       if (!headers) {
