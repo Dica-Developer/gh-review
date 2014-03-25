@@ -20,38 +20,22 @@ define([
     },
     initialize: function () {},
     getPreviousPage: function () {
-      this.model.getPreviousPage();
-      this.renderAllCommits();
-//      var _this = this;
-//      app.github.getPreviousPage(this.model.get('currentLink'), function (error, commits) {
-//        if (!error) {
-//          _this.displayCommits(commits);
-//        }
-//      });
+      this.model.getPreviousPage()
+      .then(this.renderAllCommits.bind(this));
     },
     getNextPage: function () {
-      this.model.getNextPage();
-      this.renderAllCommits();
-//      var _this = this;
-//      app.github.getNextPage(this.model.get('currentLink'), function (error, commits) {
-//        if (!error) {
-//          _this.displayCommits(commits);
-//        }
-//      });
+      this.model.getNextPage()
+        .then(this.renderAllCommits.bind(this));
     },
     getFirstPage: function () {
-      this.model.getFirstPage();
-      this.renderAllCommits();
-//      app.github.getFirstPage(this.model.get('currentLink'), function (error, commits) {
-//        if (!error) {
-//          _this.displayCommits(commits);
-//        }
-//      });
+      this.model.getFirstPage()
+        .then(this.renderAllCommits.bind(this));
     },
     renderOneCommit: function (commit) {
       var view = new CommitListItemView({
         model: commit
       });
+      view.filter = this.model;
       this.$('#commitList').append(view.render());
     },
     markAsFeatureMerge: function (commit) {
@@ -71,23 +55,18 @@ define([
     isNotAMergeCommit: function (commit) {
       return (1 === commit.get('parents').length);
     },
-    renderAllCommits: function () {
-      var view = this;
+    renderAllCommits: function(commits){
+      this.render();
+      commits.each(function (commit) {
+        this.markAsFeatureMerge(commit);
+        if (this.isNotAMergeCommit(commit)) {
+          this.renderOneCommit(commit);
+        }
+      }, this);
+    },
+    getAllCommits: function () {
       this.model.getCommits()
-        .then(function(commits){
-          try{
-            console.log(view.model.toJSON());
-            view.render();
-          }catch(e){
-            console.log(e);
-          }
-          commits.each(function (commit) {
-            this.markAsFeatureMerge(commit);
-            if (this.isNotAMergeCommit(commit)) {
-              this.renderOneCommit(commit);
-            }
-          }, view);
-        });
+        .then(this.renderAllCommits.bind(this));
     },
     serialize: function(){
       return {
