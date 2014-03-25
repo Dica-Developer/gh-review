@@ -6,7 +6,7 @@
   /*jshint camelcase:false*/
   for (var file in window.__karma__.files) {
     if (window.__karma__.files.hasOwnProperty(file)) {
-      if (/-spec\.js$/.test(file)) {
+      if (/specs\S*-spec\.js$/.test(file)) {
         tests.push(file);
       }
     }
@@ -61,7 +61,7 @@
       RepoDetailView: '../app/js/repositories/repo-detail-view',
 
       commitModel: '../app/js/commits/commit-model',
-      commitCollection: '../app/js/commits/commit-collection',
+      CommitCollection: '../app/js/commits/commit-collection',
       commitListItemView: '../app/js/commits/commit-list-item-view',
       CommitListView: '../app/js/commits/commit-list-view',
 
