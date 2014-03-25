@@ -5,7 +5,6 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection'], function (
   return Backbone.Model.extend({
     defaults: {},
     customFilter: {},
-    query: '',
     hasNextPage: false,
     hasPreviousPage: false,
     hasFirstPage: false,
@@ -76,9 +75,6 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection'], function (
        * @type {String} possible states approved|reviewed|clean
        */
       this.customFilter.state = state;
-    },
-    setQuery: function (query) {
-      this.query = query;
     },
     setSHA: function (sha) {
       this.set('sha', sha);
