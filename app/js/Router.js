@@ -31,8 +31,8 @@ define(function (require) {
       'filter/modules': 'filterModules',
       'repositories': 'repositories',
       'repository/:name': 'repoDetail',
-      'commits/:owner/:repo/:branch': 'commitList',
-      'commit/:id': 'showCommit',
+      'commits/:owner/:repo/:branch(/filter-:filterCid)': 'commitList',
+      'commit/:owner/:repo/:branch/:id(/filter-:filterId)': 'showCommit',
       'commit/:owner/:repo/:sha': 'showOneCommit',
       'login': 'login',
       'logout': 'logout',
@@ -72,30 +72,36 @@ define(function (require) {
         });
       }
     },
-    commitList: function (owner, repo, branch) {
+    commitList: function (owner, repo, branch, filterCid) {
       this.prepareView('reviewLink');
-      var model = app.currentFilter;
-      if (null !== model || owner !== model.get('owner') || repo !== model.get('repo') || branch !== model.get('branch')) {
-        model = new FilterModel({
-          owner: owner,
-          repo: repo,
-          branch: branch
-        });
-        app.currentFilter = model;
+      var filter = null;
+      if (!filterCid) {
+        filter = new FilterModel();
+        filter.setOwner(owner);
+        filter.setRepo(repo);
+        filter.setBranch(branch);
+      } else {
+        filter = app.filterCollection.get(filterCid);
       }
       this.view = new CommitListView({
-        model: model
+        model: filter
       });
-      this.view.renderAllCommits();
+      this.view.getAllCommits();
     },
-    showCommit: function (/*id*/) {
+    showCommit: function (owner, repo, branch, id, filterId) {
       this.prepareView('reviewLink');
-//      var model = commitCollection.get(id);
-//      this.view = new CommentView({
-//        model: model
-//      });
-//      this.view.getDiffAndComments()
-//        .then(this.view.render.bind(this.view));
+      if (filterId) {
+        var filter = app.filterCollection.get(filterId);
+        var model = filter.getCollection().get(id);
+        model.user = filter.get('user');
+        model.repo = filter.get('repo');
+        this.view = new CommentView({
+          model: model
+        });
+        this.view.filter = filter;
+        this.view.getDiffAndComments()
+          .then(this.view.render.bind(this.view));
+      }
     },
     showOneCommit: function (owner, repo, sha) {
       var _this = this;
@@ -231,6 +237,7 @@ define(function (require) {
         $('#' + activeLink).addClass('active');
       }
     },
-    initialize: function () {}
+    initialize: function () {
+    }
   });
 });
