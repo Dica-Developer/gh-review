@@ -12,6 +12,7 @@ define(function (require) {
   return Backbone.View.extend({
     el: '#main',
     template: _.template(template),
+    lines: [],
     initialize: function () {},
     annotateLinesPre: function (commits) {
       this.annotateLines(commits);
@@ -27,16 +28,21 @@ define(function (require) {
       }, function (error, commitWithDiff) {
         if (!error) {
           var lineNumber = -1;
-          // TODO use the file with the correct name
-          var lines = _.str.lines(commitWithDiff.files[0].patch);
-          _.forEach(lines, function (line) {
+          var file = null;
+          commitWithDiff.files.forEach(function (fileInList) {
+            if (_this.model.path === fileInList.filename) {
+              file = fileInList;
+            }
+          });
+          var lines = _.str.lines(file.patch);
+          lines.forEach(function (line) {
             if (chunk.isMatchingChunkHeading(line)) {
               lineNumber = chunk.extractChunk(line).rightNr;
             } else {
-              if (chunk.isAddition(line)) {
-                //if ($('#line_' + lineNumber + '_sha').text().trim() === '') {
-                $('#line_' + lineNumber + '_sha').text(commitWithDiff.sha.substr(0, 8));
-                //}
+              if (chunk.isDeletion(line)) {
+                _this.lines.splice((lineNumber - 1), 1);
+              } else if (chunk.isAddition(line)) {
+                _this.lines.splice((lineNumber - 1), 0, commitWithDiff);
                 lineNumber++;
               } else if (chunk.isSame(line)) {
                 lineNumber++;
@@ -45,8 +51,14 @@ define(function (require) {
           });
           if (commits.length > 0) {
             _this.annotateLines(commits);
+          } else {
+            _this.lines.forEach(function (commit, lineNumber) {
+              $('#line_' + (lineNumber + 1) + '_sha').text(commit.sha.substr(0, 8) + ' ' + commit.commit.author.date);
+            });
           }
-        } else {}
+        } else {
+          // TODO handle error
+        }
       });
     },
     render: function () {
@@ -81,7 +93,6 @@ define(function (require) {
           if (!error) {
             // TODO implement paging
             deferred.promise.then(function () {
-              // TODO start with the oldest and write only additions
               _this.annotateLinesPre(commits);
             });
           } else {
