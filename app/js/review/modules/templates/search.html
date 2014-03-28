@@ -9,7 +9,7 @@
     <div class="col-md-12">
         <ul id="commitList" class="list-group">
           <% _.each(items, function (item) { %>
-            <a href="#file/<%=_.escape(item.repository.owner.login)%>/<%=_.escape(item.repository.name)%>/<%=_.escape(item.path)%>" class="list-group-item">
+            <a href="#file/<%=encodeURIComponent(item.repository.owner.login)%>/<%=encodeURIComponent(item.repository.name)%>/<%=encodeURIComponent(item.path)%>" class="list-group-item">
               <%=item.path%>
             </a>
           <% }); %>
