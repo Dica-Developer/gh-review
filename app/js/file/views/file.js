@@ -14,6 +14,11 @@ define(function (require) {
     template: _.template(template),
     lines: [],
     initialize: function () {},
+    fillUpMissingLines: function (lineNumbers) {
+      if (this.lines.length < lineNumbers) {
+        this.lines.push(null);
+      }
+    },
     annotateLinesPre: function (commits) {
       this.annotateLines(commits);
     },
@@ -34,26 +39,38 @@ define(function (require) {
               file = fileInList;
             }
           });
-          var lines = _.str.lines(file.patch);
-          lines.forEach(function (line) {
-            if (chunk.isMatchingChunkHeading(line)) {
-              lineNumber = chunk.extractChunk(line).rightNr;
-            } else {
-              if (chunk.isDeletion(line)) {
-                _this.lines.splice((lineNumber - 1), 1);
-              } else if (chunk.isAddition(line)) {
-                _this.lines.splice((lineNumber - 1), 0, commitWithDiff);
-                lineNumber++;
-              } else if (chunk.isSame(line)) {
-                lineNumber++;
+          if (file && _.has(file, 'patch')) {
+            var lines = _.str.lines(file.patch);
+            lines.forEach(function (line) {
+              if (chunk.isMatchingChunkHeading(line)) {
+                lineNumber = chunk.extractChunk(line).rightNr;
+              } else {
+                if (chunk.isDeletion(line)) {
+                  _this.lines.splice((lineNumber - 1), 1);
+                } else if (chunk.isAddition(line)) {
+                  _this.lines.splice((lineNumber - 1), 0, commitWithDiff);
+                  lineNumber++;
+                } else if (chunk.isSame(line)) {
+                  lineNumber++;
+                }
               }
-            }
-          });
+              _this.fillUpMissingLines(lineNumber);
+            });
+          } else {
+            $('div[name="uncompleteDiffWarning"]').show();
+          }
           if (commits.length > 0) {
             _this.annotateLines(commits);
           } else {
             _this.lines.forEach(function (commit, lineNumber) {
-              $('#line_' + (lineNumber + 1) + '_sha').text(commit.sha.substr(0, 8) + ' ' + commit.commit.author.date);
+              var commitDescEncoded = '';
+              var commitTitle = '';
+              if (null !== commit && undefined !== commit) {
+                commitDescEncoded = '<a href="#commit/' + encodeURIComponent(_this.model.user) + '/' + encodeURIComponent(_this.model.repo) + '/' + encodeURIComponent(commit.sha) + '">' + _.escape(commit.sha.substr(0, 8)) + '</a>';
+                commitTitle = 'commited at ' + commit.commit.author.date + ' by ' + commit.commit.author.name + '(' + commit.commit.author.email + ')';
+              }
+              $('#line_' + (lineNumber + 1) + '_sha').html(commitDescEncoded);
+              $('#line_' + (lineNumber + 1) + '_sha').attr('title', commitTitle);
             });
           }
         } else {
@@ -63,6 +80,7 @@ define(function (require) {
     },
     render: function () {
       var _this = this;
+      this.lines = [];
       try {
         var deferred = when.defer();
 
@@ -91,7 +109,6 @@ define(function (require) {
           repo: _this.model.repo
         }, function (error, commits) {
           if (!error) {
-            // TODO implement paging
             deferred.promise.then(function () {
               _this.annotateLinesPre(commits);
             });

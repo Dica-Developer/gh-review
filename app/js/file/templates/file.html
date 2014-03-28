@@ -1,6 +1,7 @@
 <div class="row">
     <div class="col-sm-12">
       <div class="panel panel-default">
+        <div class="alert alert-warning display-none" name="uncompleteDiffWarning">Diff is very big! Diff is not complete!</div>
         <div class="table-responsive">
           <table class="comments table table-condensed table-hover">
             <%var lineIndex = 1;%>
@@ -14,6 +15,7 @@
             <%});%>
           </table>
         </div>
+        <div class="alert alert-warning display-none alert-warning-bottom" name="uncompleteDiffWarning">Diff is very big! Diff is not complete!</div>
       </div>
     </div>
 </div>
