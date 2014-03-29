@@ -7,6 +7,10 @@ define([
   'CommentCollection'
 ], function (Backbone, _, app, when, CommentCollection) {
   'use strict';
+
+  // TODO refactor
+  // commit property contains the same like the diff property
+
   return Backbone.Model.extend({
     comments: new CommentCollection(),
     getCommitCommentsDefer: null,
@@ -68,7 +72,7 @@ define([
       app.github.repos.createCommitComment({
         user: app.currentReviewData.user,
         repo: app.currentReviewData.repo,
-        // TODO sha and commit ifd are the same. Why do we need both?
+        // TODO sha and commit id are the same. Why do we need both?
         sha: this.get('sha'),
         body: comment,
         /* jshint camelcase:false */
