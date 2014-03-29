@@ -231,13 +231,13 @@ module.exports = function (grunt) {
     });
   });
 
-  grunt.registerTask('version', function(versionString){
+  grunt.registerTask('version', function (versionString) {
     var pkg = grunt.file.readJSON('package.json');
     var versionSplit = pkg.version.split('.');
     var major = parseInt(versionSplit[0], 10);
     var minor = parseInt(versionSplit[1], 10);
     var patch = parseInt(versionSplit[2], 10);
-    switch(versionString){
+    switch (versionString) {
     case 'major':
       major = major + 1;
       versionSplit[0] = major;
