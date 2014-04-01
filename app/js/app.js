@@ -60,7 +60,8 @@ define([
   GHReview.prototype.announceRepositories = function () {
     var repositories = [];
     this.filterCollection.each(function (repo) {
-      repositories.push('https://api.github.com/repos/' + repo.get('owner') + '/' + repo.get('repo') + '/comments');
+      var url = repo.getCommentsUrl();
+      repositories.push(url);
     });
     this.commentCollector.postMessage({
       type: 'repositories',
