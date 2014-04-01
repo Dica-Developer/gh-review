@@ -75,6 +75,7 @@
                         <% _.forEach(files[fileIndex].chunks, function(chunk){%>
                             <% _.forEach(chunk.lines, function(line){%>
                                 <tr class="<%= line.format %>" data-path="<%= file.filename %>" data-line="<%= lineIndex %>">
+                                    <td class="commitMarker"></td>
                                     <td class="lineNr"><%= line.lineNrLeft %></td>
                                     <td class="lineNr"><%= line.lineNrRight %></td>
                                     <td><pre data-position="<%= lineIndex %>" data-fileindex="<%= fileIndex %>"><%= line.text %></pre></td>
