@@ -26,6 +26,10 @@ The app can then be found under:
 
     ./dist/
 
+## Color ranges ##
+
+http://jsfiddle.net/V5BHc/
+
 ## License ##
 
 GitHub Review - Source code review Tool.

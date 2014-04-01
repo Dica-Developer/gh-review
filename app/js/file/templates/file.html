@@ -8,6 +8,7 @@
             <%_.forEach(_.str.lines(content), function (line) {%>
               <tr id="line_<%=lineIndex%>" data-line="<%=lineIndex%>">
                 <td id="line_<%=lineIndex%>_sha">&nbsp;</td>
+                <td id="line_<%=lineIndex%>_color" class="commitMarker"></td>
                 <td class="lineNr"><%=lineIndex%></td>
                 <td><pre><%=_.escape(line)%></pre></td>
               </tr>

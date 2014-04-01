@@ -13,6 +13,8 @@ define(function (require) {
   var CommitModel = require('commitModel');
 
   return Backbone.View.extend({
+    historyColorRange: ['#fff5f0', '#fee0d2', '#fcbba1', '#fc9272', '#fb6a4a', '#ef3b2c', '#cb181d', '#a50f15', '#67000d'],
+    commitHistory: [],
     el: '#main',
     commentBox: null,
     template: _.template(template),
@@ -21,6 +23,7 @@ define(function (require) {
     initialize: function () {
       this.lines = [];
       this.commitModel = {};
+      this.commitHistory = [];
     },
     events: {
       'click .commentable': 'commentLine'
@@ -70,6 +73,7 @@ define(function (require) {
             }
           });
           if (file && _.has(file, 'patch')) {
+            _this.commitHistory.push(commitWithDiff.sha);
             var lines = _.str.lines(file.patch);
             lines.forEach(function (line) {
               if (chunk.isMatchingChunkHeading(line)) {
@@ -97,6 +101,7 @@ define(function (require) {
               var commitDescEncoded = '&nbsp;';
               var commitTitle = '';
               if (null !== commit && undefined !== commit) {
+                $('#line_' + (lineNumber + 1) + '_color').css('background-color', _this.historyColorRange[_this.commitHistory.indexOf(commit.sha)]);
                 commitDescEncoded = '<a href="#commit/' + encodeURIComponent(_this.model.user) + '/' + encodeURIComponent(_this.model.repo) + '/' + encodeURIComponent(commit.sha) + '">' + _.escape(commit.sha.substr(0, 8)) + '</a>';
                 commitTitle = 'commited at ' + commit.commit.author.date + ' by ' + commit.commit.author.name + '(' + commit.commit.author.email + ')';
                 $('#line_' + (lineNumber + 1)).addClass('commentable');
