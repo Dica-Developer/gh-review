@@ -39,6 +39,24 @@ define([
       this.model.getAdditionalInformations()
         .then(this.renderBranchesAndContributors.bind(this));
       this.render();
+      this.listenTo(app, 'add:filter:byEmail', this.addFilterByEmail);
+      this.listenTo(app, 'add:filter:byState', this.addFilterByState);
+
+    },
+    addFilterByEmail: function (filter) {
+      this.filter.setAuthor(filter);
+    },
+    addFilterByState: function (filter) {
+      switch (filter) {
+      case 'Approved':
+        this.filter.setState('approved');
+        break;
+      case 'Not Approved':
+        this.filter.setState('reviewed');
+        break;
+      default:
+        this.filter.setState('unseen');
+      }
     },
     showPreview: function () {
       var view = new CommitListView({
@@ -144,7 +162,7 @@ define([
       var timeChartFilterSinceTooltip = _.extend({title: 'Optional: If you leave blank and only until'}, tooltipOptions);
       this.$('#timeChartFixedStartLabel').tooltip(timeChartFilterSinceTooltip);
     },
-    save: function(){
+    save: function () {
       app.filterCollection.create(this.filter);
     },
     render: function () {

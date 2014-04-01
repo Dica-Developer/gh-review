@@ -67,6 +67,9 @@ define(['underscore', 'dc', 'd3', 'crossfilter', 'app'], function (_, dc, d3, cr
     chart.renderlet(function (chart) {
       chart.select('svg > g').attr('transform', 'translate(200,75)');
     });
+    chart.on('filtered', function (chart, filter) {
+      app.trigger('add:filter:byState', filter);
+    });
     this.set('reviewStateChart', chart);
     return chart;
   };
@@ -87,6 +90,9 @@ define(['underscore', 'dc', 'd3', 'crossfilter', 'app'], function (_, dc, d3, cr
     chart.legend(dc.legend().x(5).y(5).itemHeight(13).gap(5));
     chart.renderlet(function (chart) {
       chart.select('svg > g').attr('transform', 'translate(200,75)');
+    });
+    chart.on('filtered', function (chart, filter) {
+      app.trigger('add:filter:byEmail', filter);
     });
     this.set('commitsPerAuthor', chart);
     return chart;
