@@ -138,14 +138,14 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection'], function (
     getCollection: function () {
       return this.commitCollection;
     },
-    setHeader: function (header, value) {
-      var headers = this.get('headers');
-      if (!headers) {
-        headers = {};
-      }
-      headers[header] = value;
-      this.set('headers', headers);
-    },
+//    setHeader: function (header, value) {
+//      var headers = this.get('headers');
+//      if (!headers) {
+//        headers = {};
+//      }
+//      headers[header] = value;
+//      this.set('headers', headers);
+//    },
     getCommitsCallback: function (error, commits) {
 //      this.setHeader('If-Modified-Since', commits.meta['last-modified']);
       if (!error) {
