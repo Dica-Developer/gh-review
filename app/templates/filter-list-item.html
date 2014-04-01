@@ -1,6 +1,6 @@
-<a href="#commits/<%= encodeURIComponent(user) %>/<%= encodeURIComponent(repo) %>/<%= encodeURIComponent(branch) %>/filter-<%= id %>" class="list-group-item">
+<a href="#commits/filter/<%= id %>" class="list-group-item">
     <strong>Repository: </strong><%= repo %>
-    <strong>Branch: </strong><%= branch %>
-    <% if(!_.isUndefined(contributor) &&  !_.isUndefined(contributor) && !_.isEmpty(contributor)){ %><strong>Author: </strong><%= contributor %><%}%>
+    <%if(typeof branch !== 'undefined'){%><strong>Branch: </strong><%= branch %><%}%>
+    <% if(typeof contributor !== 'undefined' && !_.isBlank(contributor)){ %><strong>Author: </strong><%= contributor %><%}%>
     <span class="destroy glyphicon glyphicon-remove-circle pull-right" data-id="<%= id %>"></span>
 </a>
