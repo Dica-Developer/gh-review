@@ -23,7 +23,8 @@ define([
       'change #timeChartMethod': 'changeTimeChartMethod',
       'click #applyTimeChartSettings': 'applyTimeChartSettings',
       'click #applyPathFilter': 'applyPathFilter',
-      'click #preview': 'showPreview'
+      'click #preview': 'showPreview',
+      'click #save': 'save'
     },
     template: _.template(template),
     commits: new CommitCollection(),
@@ -142,6 +143,9 @@ define([
       };
       var timeChartFilterSinceTooltip = _.extend({title: 'Optional: If you leave blank and only until'}, tooltipOptions);
       this.$('#timeChartFixedStartLabel').tooltip(timeChartFilterSinceTooltip);
+    },
+    save: function(){
+      app.filterCollection.create(this.filter);
     },
     render: function () {
       this.$el.html(this.template());
