@@ -36,8 +36,14 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection'], function (
     setOwner: function (owner) {
       this.set('user', owner);
     },
+    getOwner: function () {
+      return this.get('user');
+    },
     setRepo: function (repo) {
       this.set('repo', repo);
+    },
+    getRepo: function(){
+      return this.get('repo');
     },
     setAuthor: function (author) {
       this.set('author', author);
@@ -78,6 +84,17 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection'], function (
     },
     setSHA: function (sha) {
       this.set('sha', sha);
+    },
+    getCommentsUrl: function(){
+      var repo = this.getRepo();
+      var owner = this.getOwner();
+      var url = 'https://api.github.com/repos/';
+      if(owner && !_.str.isBlank(owner)){
+        url += owner + '/';
+      }
+      url += repo + '/comments';
+      console.log(url);
+      return url;
     },
     getNextPage: function () {
       this.getCommitsRefer = when.defer();
