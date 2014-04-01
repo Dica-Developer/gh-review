@@ -13,7 +13,7 @@ define(function (require) {
   var CommitModel = require('commitModel');
 
   return Backbone.View.extend({
-    historyColorRange: ['#fff5f0', '#fee0d2', '#fcbba1', '#fc9272', '#fb6a4a', '#ef3b2c', '#cb181d', '#a50f15', '#67000d'],
+    historyColorRange: ['#67000d', '#a50f15', '#cb181d', '#ef3b2c', '#fb6a4a', '#fc9272', '#fcbba1', '#fee0d2', '#fff5f0'],
     commitHistory: [],
     el: '#main',
     commentBox: null,
@@ -73,7 +73,7 @@ define(function (require) {
             }
           });
           if (file && _.has(file, 'patch')) {
-            _this.commitHistory.push(commitWithDiff.sha);
+            _this.commitHistory.unshift(commitWithDiff.sha);
             var lines = _.str.lines(file.patch);
             lines.forEach(function (line) {
               if (chunk.isMatchingChunkHeading(line)) {
