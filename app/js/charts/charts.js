@@ -138,7 +138,7 @@ define(['underscore', 'dc', 'd3', 'crossfilter', 'app'], function (_, dc, d3, cr
     this.data.commitsByDayGroup = this.data.commitsByDay.group();
 
     this.data.commitsByAuthor = data.dimension(function (data) {
-      return data.commit.author.name;
+      return data.commit.author.email;
     });
     this.data.commitsByAuthorGroup = this.data.commitsByAuthor.group();
 
