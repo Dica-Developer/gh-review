@@ -24,7 +24,6 @@ define([
         sha: this.model.get('sha'),
         approved: approved,
         isFeatureCommit: this.model.get('featureCommit'),
-        filterCid: this.filter.cid,
         filterId: this.filter.get('id'),
         owner: this.filter.get('user'),
         repo: this.filter.get('repo'),
