@@ -1,5 +1,5 @@
 /*global define*/
-define(['backbone', 'underscore', 'when', 'app', 'CommitCollection'], function (Backbone, _, when, app, CommitCollection) {
+define(['backbone', 'underscore', 'when', 'app', 'CommitCollection', 'underscore.string'], function (Backbone, _, when, app, CommitCollection) {
   'use strict';
   var tmpCommits = {};
   return Backbone.Model.extend({
