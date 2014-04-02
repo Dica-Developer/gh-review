@@ -90,7 +90,9 @@
 
       _FilterView: '../app/js/_filter/filter-view',
       _FilterModel: '../app/js/_filter/filter-model',
-      _ExtendedFilterView: '../app/js/_filter/extended-filter-view'
+      _ExtendedFilterView: '../app/js/_filter/extended-filter-view',
+
+      Charts: '../app/js/charts/charts'
     },
     map: {
       GitHub: {
