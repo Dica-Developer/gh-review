@@ -24,7 +24,7 @@ define(function (require) {
     it('Init empty', function () {
       var filterModel = new FilterModel();
       var filter = filterModel.toJSON();
-      expect(_.size(filter)).toBe(0);
+      expect(_.size(filter)).toBe(1);
     });
 
     it('Init not empty', function () {
