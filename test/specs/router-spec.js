@@ -6,10 +6,6 @@ define(function (require) {
   var when = require('when');
   var app = require('app');
   var Router = require('Router');
-  var RepoView = require('RepoView');
-  var RepoDetailView = require('RepoDetailView');
-  var RepoCollection = require('RepoCollection');
-  var RepoModel = require('RepoModel');
   var FilterOverview = require('FilterOverview');
   var CommentView = require('CommentView');
   var oauthHandler = require('OauthHandler');
@@ -45,56 +41,6 @@ define(function (require) {
       afterEach(function () {
         router = null;
         routerClearSpy = null;
-      });
-
-      it('.repositories should init new #RepoView if app.authenticated true', function () {
-        app.authenticated = true;
-        var repoViewSpy = spyOn(RepoView.prototype, 'initialize');
-        router.repositories();
-
-        expect(routerClearSpy).toHaveBeenCalled();
-        expect(repoViewSpy).toHaveBeenCalled();
-        expect(router.view instanceof RepoView).toBeTruthy();
-
-      });
-
-      it('.repositories should not init new #RepoView if app.authenticated false', function () {
-        var repoViewSpy = spyOn(RepoView.prototype, 'initialize');
-        router.repositories();
-
-        expect(routerClearSpy).not.toHaveBeenCalled();
-        expect(repoViewSpy).not.toHaveBeenCalled();
-        expect(router.view instanceof RepoView).toBeFalsy();
-
-      });
-
-      it('.repoDetail should init new #RepoDetailView if app.authenticated true', function () {
-        app.authenticated = true;
-        app.repoCollection = new RepoCollection();
-        var repoModel = new RepoModel({
-          owner: {
-            login: 'TEST'
-          }
-        });
-        app.repoCollection.add(repoModel);
-        var repoDetailViewSpy = spyOn(RepoDetailView.prototype, 'initialize');
-        router.repoDetail('TEST');
-
-        expect(routerClearSpy).toHaveBeenCalled();
-        expect(repoDetailViewSpy).toHaveBeenCalled();
-        expect(router.view instanceof RepoDetailView).toBeTruthy();
-        app.repoCollection = null;
-
-      });
-
-      it('.repoDetail should not init new #RepoDetailView if app.authenticated false', function () {
-        var repoDetailViewSpy = spyOn(RepoDetailView.prototype, 'initialize');
-        router.repoDetail();
-
-        expect(routerClearSpy).not.toHaveBeenCalled();
-        expect(repoDetailViewSpy).not.toHaveBeenCalled();
-        expect(router.view instanceof RepoDetailView).toBeFalsy();
-
       });
 
       it('.filter should init new #FilterOverview', function () {
