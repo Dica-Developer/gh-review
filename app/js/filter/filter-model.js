@@ -97,7 +97,6 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection'], function (
         url += owner + '/';
       }
       url += repo + '/comments';
-      console.log(url);
       return url;
     },
     getNextPage: function () {
