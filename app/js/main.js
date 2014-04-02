@@ -51,10 +51,6 @@
       CommentModel: 'comment/comment-model',
       CommentCollection: 'comment/Comment-collection',
 
-      StatisticsOverviewView: 'statistics/statistics-overview-view',
-      StatisticView: 'statistics/statistic-view',
-      StatisticModel: 'statistics/statistic-model',
-
       _FilterView: '_filter/filter-view',
       _FilterModel: '_filter/filter-model',
       _ExtendedFilterView: '_filter/extended-filter-view',

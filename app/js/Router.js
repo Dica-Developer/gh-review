@@ -14,9 +14,6 @@ define(function (require) {
   var UserModel = require('UserModel');
   var WelcomeView = require('WelcomeView');
   var AboutView = require('AboutView');
-  var StatisticsOverviewView = require('StatisticsOverviewView');
-  var StatisticView = require('StatisticView');
-  var StatisticModel = require('StatisticModel');
   var CommitModel = require('commitModel');
   var ModulesOverview = require('ModulesOverview');
   var FileView = require('FileView');
@@ -222,28 +219,6 @@ define(function (require) {
       this.prepareView();
       this.view = new AboutView();
       this.view.getChangeLog()
-        .then(function () {
-          this.view.render();
-          this.trigger('ajaxIndicator', false);
-        }.bind(this));
-    },
-    statisticsOverview: function () {
-      this.prepareView('statisticsLink');
-      this.view = new StatisticsOverviewView();
-      this.view.render();
-      this.trigger('ajaxIndicator', false);
-    },
-    statistic: function (owner, repo, branch) {
-      this.prepareView('statisticsLink');
-      var model = new StatisticModel({
-        owner: owner,
-        repo: repo,
-        branch: branch
-      });
-      this.view = new StatisticView({
-        model: model
-      });
-      this.view.model.getData()
         .then(function () {
           this.view.render();
           this.trigger('ajaxIndicator', false);
