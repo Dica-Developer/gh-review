@@ -54,7 +54,8 @@ define(function (require) {
 
       });
 
-      it('.showCommit should init new #CommentView', function () {
+      //disabled until the commit view w/o filter is up again
+      xit('.showCommit should init new #CommentView', function () {
         var commentViewSpy = spyOn(CommentView.prototype, 'initialize');
         var getDiffAndCommentsSpy = spyOn(CommentView.prototype, 'getDiffAndComments').andReturn(
           when.promise(function (resolve) {
