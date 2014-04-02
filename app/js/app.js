@@ -11,16 +11,6 @@ define([
     return (localStorage !== undefined);
   }
 
-  function approveCommit(ghreview, comment) {
-    /*jshint camelcase:false*/
-    if (true !== ghreview.commitApproved[comment.commit_id]) {
-      ghreview.commitApproved[comment.commit_id] = true;
-    }
-    if (true !== ghreview.approveComments[comment.id]) {
-      ghreview.approveComments[comment.id] = true;
-    }
-  }
-
   function GHReview() {
     this.authenticated = false;
     this.ajaxIndicator = null;
@@ -34,28 +24,45 @@ define([
     this.approveComments = {};
     this.informUserAboutUpdate = false;
     this.commentCollector = new Worker('worker/comments/collector.js');
-    this.commentCollector.onmessage = function (event) {
-      if ('comment' === event.data.type) {
-        var comment = event.data.comment.body;
-        if (comment) {
-          if (comment.indexOf('```json') > -1) {
-            comment = comment.substring(7, (comment.length - 3));
-            comment = JSON.parse(comment);
-            if (true === comment.approved) {
-              approveCommit(this, event.data.comment);
-            }
-          } else {
-            // TODO pre 0.2.0 release can and should be removed with one of the next versions
-            if (comment.indexOf('Approved by @') > -1) {
-              approveCommit(this, event.data.comment);
-            }
-          }
-        }
-      }
-    }.bind(this);
+    this.commentCollector.onmessage = this.sortOutApproveComments.bind(this);
   }
 
   GHReview.prototype = Backbone.Events;
+
+  GHReview.prototype.sortOutApproveComments = function (eventOrComment) {
+    var approveCommit = function(comment) {
+      /*jshint camelcase:false*/
+      if (true !== this.commitApproved[comment.commit_id]) {
+        this.commitApproved[comment.commit_id] = true;
+      }
+      if (true !== this.approveComments[comment.id]) {
+        this.approveComments[comment.id] = true;
+      }
+    }.bind(this);
+
+    var commentBody, comment;
+    if (typeof eventOrComment.data === 'undefined') {
+      commentBody = eventOrComment.body;
+      comment = eventOrComment;
+    } else if ('comment' === event.data.type) {
+      commentBody = event.data.comment.body;
+      comment = event.data.comment;
+    }
+    if (commentBody) {
+      if (commentBody.indexOf('```json') > -1) {
+        commentBody = commentBody.substring(7, (commentBody.length - 3));
+        commentBody = JSON.parse(commentBody);
+        if (true === commentBody.approved) {
+          approveCommit(comment);
+        }
+      } else {
+        // TODO pre 0.2.0 release can and should be removed with one of the next versions
+        if (commentBody.indexOf('Approved by @') > -1) {
+          approveCommit(comment);
+        }
+      }
+    }
+  };
 
   GHReview.prototype.announceRepositories = function () {
     var repositories = [];
