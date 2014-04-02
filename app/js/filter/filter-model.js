@@ -3,12 +3,14 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection'], function (
   'use strict';
   var tmpCommits = {};
   return Backbone.Model.extend({
-    defaults: {},
-    customFilter: {},
+    defaults: {
+      customFilter: {}
+    },
     hasNextPage: false,
     hasPreviousPage: false,
     hasFirstPage: false,
     commitCollection: new CommitCollection(),
+    tmpCommits: [],
     initialize: function () {
       //this can be removed if we start with a new filter model in localStorage
       if (this.get('owner')) {
@@ -80,11 +82,13 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection'], function (
       /**
        * @type {String} possible states approved|reviewed|clean
        */
-      this.customFilter.state = state;
+      var customFilter = this.get('customFilter');
+      customFilter.state = state;
+      this.set('customFilter', customFilter);
     },
-    setSHA: function (sha) {
-      this.set('sha', sha);
-    },
+//    setSHA: function (sha) {
+//      this.set('sha', sha);
+//    },
     getCommentsUrl: function(){
       var repo = this.getRepo();
       var owner = this.getOwner();
@@ -156,7 +160,7 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection'], function (
         if (!_.isUndefined(this.tmpCommits)) {
           delete this.tmpCommits;
         }
-        if (_.size(this.customFilter) > 0) {
+        if (_.size(this.get('customFilter')) > 0) {
           this.processCustomFilter(commits);
         } else {
           this.commitCollection.reset(commits);
@@ -172,9 +176,36 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection'], function (
       delete commits.meta;
       return commits;
     },
+    getAllComments: function(link){
+      link = link || null;
+      var callback = function (error, resp) {
+        if (!error) {
+          var link = resp.meta.link;
+          var hasNext = app.github.hasNextPage(link);
+          delete resp.meta;
+          _.each(resp, function(value){
+            app.sortOutApproveComments(value);
+          });
+          if (hasNext) {
+            this.getAllComments(link);
+          } else {
+            this.getCommentsRefer.resolve();
+          }
+        }
+      }.bind(this);
+
+      if (!link) {
+        this.getCommentsRefer = when.defer();
+        app.github.repos.getAllCommitComments(this.toJSON(), callback);
+      } else {
+        app.github.getNextPage(link, callback);
+      }
+      return this.getCommentsRefer.promise;
+    },
     processCustomFilter: function (commits) {
       var tmpCommits = [];
-      var state = this.customFilter.state;
+      var customFilter = this.get('customFilter');
+      var state = customFilter.state;
       if (!_.isUndefined(state)) {
         _.each(commits, function (commit) {
           switch (state) {
