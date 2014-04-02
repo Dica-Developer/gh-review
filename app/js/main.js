@@ -40,8 +40,6 @@
 
       RepoModel: 'repositories/repo-model',
       RepoCollection: 'repositories/repo-collection',
-      RepoView: 'repositories/repo-view',
-      RepoDetailView: 'repositories/repo-detail-view',
 
       commitModel: 'commits/commit-model',
       CommitCollection: 'commits/commit-collection',

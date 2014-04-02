@@ -4,8 +4,6 @@ define(function (require) {
   var $ = require('jquery');
   var Backbone = require('backbone');
   var app = require('app');
-  var RepoView = require('RepoView');
-  var RepoDetailView = require('RepoDetailView');
   var FilterOverview = require('FilterOverview');
   var FilterModel = require('FilterModel');
   var CommitListView = require('CommitListView');
@@ -31,8 +29,6 @@ define(function (require) {
       'filter': 'filter',
       '_filter': '_filter',
       'filter/modules': 'filterModules',
-      'repositories': 'repositories',
-      'repository/:name': 'repoDetail',
       'commits/filter/:filterID': 'commitListByFilter',
 //      'commits/:owner/:repo/:branch': 'commitList',
       'commit/filter/:commitId': 'showCommitByFilter',
@@ -63,23 +59,6 @@ define(function (require) {
       this.view = new ModulesOverview();
       this.view.render();
       this.trigger('ajaxIndicator', false);
-    },
-    repositories: function () {
-      if (app.authenticated) {
-        this.prepareView('repositoryLink');
-        this.view = new RepoView({
-          collection: app.repoCollection
-        });
-      }
-    },
-    repoDetail: function (name) {
-      if (app.authenticated) {
-        this.prepareView('repositoryLink');
-        var model = app.repoCollection.getRepoByName(name);
-        this.view = new RepoDetailView({
-          model: model
-        });
-      }
     },
     commitListByFilter: function (commitId) {
       this.prepareView('reviewLink');
