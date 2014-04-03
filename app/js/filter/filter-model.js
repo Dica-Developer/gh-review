@@ -9,31 +9,10 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection', 'underscore
     hasNextPage: false,
     hasPreviousPage: false,
     hasFirstPage: false,
-    commitCollection: new CommitCollection(),
+    commitCollection: null,
     tmpCommits: [],
     initialize: function () {
-      //this can be removed if we start with a new filter model in localStorage
-      if (this.get('owner')) {
-        this.setOwner(this.get('owner'));
-      }
-      var since = this.get('since');
-      if (since && _.isObject(since)) {
-        if (since.amount > 0) {
-          this.setSinceObject(since);
-        } else {
-          this.unset('since');
-        }
-      }
-
-      var until = this.get('until');
-      if (!_.isNull(until) && _.str.isBlank(until)) {
-        this.unset('until');
-      }
-
-      var path = this.get('path');
-      if (!_.isNull(path) && _.str.isBlank(path)) {
-        this.unset('path');
-      }
+      this.commitCollection = new CommitCollection();
     },
     setOwner: function (owner) {
       this.set('user', owner);
@@ -54,7 +33,7 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection', 'underscore
       this.set('contributor', contributor);
     },
     setBranch: function (branch) {
-      this.set('branch', branch);
+      this.set('sha', branch);
     },
     setSince: function (since) {
       this.set('since', since);
