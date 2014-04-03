@@ -16,9 +16,8 @@ define([
 
   return Backbone.View.extend({
     el: '#extendedFilterView',
-    charts: new Charts(),
-    /*jshint camelcase:false  */
-    filter: new FilterModel(),
+    charts: null,
+    filter: null,
     events: {
       'change #timeChartMethod': 'changeTimeChartMethod',
       'click #applyTimeChartSettings': 'applyTimeChartSettings',
@@ -30,6 +29,9 @@ define([
     commits: new CommitCollection(),
     getCommitDefer: null,
     initialize: function () {
+      this.filter = new FilterModel();
+      this.charts = new Charts();
+
       var twoWeeksAgo = moment().subtract('weeks', 2).toISOString();
       this.filter.setRepo(this.model.get('name'));
       this.filter.setOwner(this.model.get('owner').login);
