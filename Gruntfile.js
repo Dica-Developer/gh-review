@@ -174,6 +174,16 @@ module.exports = function (grunt) {
         debug: true,
         coverage_dir: 'coverage'
       }
+    },
+    jsdoc : {
+      dist : {
+        src: ['<%= config.app %>/js/**/*.js'],
+        options: {
+          destination: 'doc',
+          configure: 'jsdoc.conf.json',
+          template: 'node_modules/grunt-jsdoc/node_modules/ink-docstrap/template'
+        }
+      }
     }
   });
 
