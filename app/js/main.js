@@ -22,7 +22,7 @@
 
       option: 'options',
 
-      GitHub: 'github/index',
+      githubjs: '../bower_components/github-js/dist/github.min',
       OAuth: 'oauth',
       app: 'app',
       Router: 'Router',

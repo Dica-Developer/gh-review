@@ -2,7 +2,7 @@
 define([
   'backbone',
   'when',
-  'GitHub',
+  'githubjs',
   'backboneLocalStorage'
 ], function (Backbone, when, GitHub) {
   'use strict';
