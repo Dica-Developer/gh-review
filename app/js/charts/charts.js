@@ -2,23 +2,45 @@
 define(['underscore', 'dc', 'd3', 'crossfilter', 'app'], function (_, dc, d3, crossfilter, app) {
   'use strict';
 
+  /**
+   * @class Charts
+   * @contructs Charts
+   */
   var Charts = function () {
     this.charts = {};
     this.data = {};
   };
 
+  /**
+   * @memberof Charts#
+   * @returns {{}|*}
+   */
   Charts.prototype.getAll = function () {
     return this.charts;
   };
 
+  /**
+   * @memberof Charts#
+   * @param chartName
+   * @returns {*}
+   */
   Charts.prototype.get = function (chartName) {
     return this.charts[chartName];
   };
 
+  /**
+   * @memberof Charts#
+   * @param chartName
+   * @param chart
+   */
   Charts.prototype.set = function (chartName, chart) {
     this.charts[chartName] = chart;
   };
 
+  /**
+   * @memberof Charts#
+   * @returns {*}
+   */
   Charts.prototype.fileTypeChart = function () {
     var chart = dc.rowChart('#file-type-chart');
     chart.width(180);
@@ -44,6 +66,11 @@ define(['underscore', 'dc', 'd3', 'crossfilter', 'app'], function (_, dc, d3, cr
     return chart;
   };
 
+  /**
+   * @memberof Charts#
+   * @param availableWidth
+   * @returns {*}
+   */
   Charts.prototype.reviewStateChart = function (availableWidth) {
     var all = this.data.all;
     var chart = dc.pieChart('#review-state-chart');
@@ -74,6 +101,11 @@ define(['underscore', 'dc', 'd3', 'crossfilter', 'app'], function (_, dc, d3, cr
     return chart;
   };
 
+  /**
+   * @memberof Charts#
+   * @param availableWidth
+   * @returns {*}
+   */
   Charts.prototype.commitsPerAuthorChart = function (availableWidth) {
     var chart = dc.pieChart('#commitsPerAuthor-chart');
     chart.width(availableWidth);
@@ -98,6 +130,11 @@ define(['underscore', 'dc', 'd3', 'crossfilter', 'app'], function (_, dc, d3, cr
     return chart;
   };
 
+  /**
+   * @memberof Charts#
+   * @param availableWidth
+   * @returns {*}
+   */
   Charts.prototype.timeChart = function (availableWidth) {
     var chart = dc.barChart('#time-chart');
     chart.width(availableWidth);
@@ -119,6 +156,10 @@ define(['underscore', 'dc', 'd3', 'crossfilter', 'app'], function (_, dc, d3, cr
     return chart;
   };
 
+  /**
+   * @memberof Charts#
+   * @param rawData
+   */
   Charts.prototype.processCommitData = function (rawData) {
     _.each(rawData, function (data) {
       data.commitDate = new Date(data.commit.author.date);
@@ -165,6 +206,10 @@ define(['underscore', 'dc', 'd3', 'crossfilter', 'app'], function (_, dc, d3, cr
     this.data.commentedCommitsGroup = this.data.commentedCommits.group();
   };
 
+  /**
+   * @memberof Charts#
+   * @param treeRawData
+   */
   Charts.prototype.processTreeData = function (treeRawData) {
     _.each(treeRawData, function (data) {
       var split = data.path.split('.');
