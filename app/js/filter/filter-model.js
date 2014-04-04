@@ -15,8 +15,9 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection', 'underscore
       initialize: function () {
         this.commitCollection = new CommitCollection();
       },
-      defaults: {
-        customFilter: {}
+      defaults: function () {
+        this.setBranch('master');
+        this.set('customFilter', {});
       },
       hasNextPage: false,
       hasPreviousPage: false,
