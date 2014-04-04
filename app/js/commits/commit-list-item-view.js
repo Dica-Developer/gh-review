@@ -9,9 +9,8 @@ define([
 
   return Backbone.View.extend({
     template: _.template(template),
-    initialize: function () {
-      this.render();
-    },
+    filter: null,
+    initialize: function () {},
     serialize: function () {
       var commit = this.model.get('commit');
       var approved = (true === app.commitApproved[this.model.get('sha')]);
@@ -24,12 +23,17 @@ define([
         commentCount: commit.comment_count,
         sha: this.model.get('sha'),
         approved: approved,
-        isFeatureCommit: this.model.get('featureCommit')
+        isFeatureCommit: this.model.get('featureCommit'),
+        filterId: this.filter.get('id'),
+        owner: this.filter.get('user'),
+        repo: this.filter.get('repo'),
+        branch: this.filter.get('branch')
       };
     },
     render: function () {
       app.showIndicator(false);
-      return this.template(this.serialize());
+      var data = this.serialize();
+      return this.template(data);
     }
   });
 });

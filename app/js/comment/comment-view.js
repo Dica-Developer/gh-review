@@ -24,7 +24,8 @@ define(function (require) {
       'click #unApproveCommitButton': 'unApproveCommit',
       'click #submitCommitComment': 'commentCommit'
     },
-    initialize: function () {},
+    initialize: function () {
+    },
     getDiffAndComments: function () {
       return this.model.getDiff()
         .then(this.computeChunk.bind(this))
@@ -121,7 +122,8 @@ define(function (require) {
         model: this.model.toJSON(),
         message: this.model.commitMessage(),
         files: this.files,
-        reviewData: app.currentFilter.toJSON(),
+        reviewData: this.filter.toJSON(),
+        filterCid: this.filter.cid,
         approved: (true === app.commitApproved[this.model.get('sha')]),
         approvers: approvers,
         approvedByUser: approvedByUser,

@@ -18,11 +18,11 @@
       base64: '../bower_components/requirejs-base64/base64.min',
       d3: '../bower_components/d3/d3.min',
       crossfilter: '../bower_components/crossfilter/crossfilter.min',
-      dc: '../bower_components/dc.js/dc.min',
+      dc: '../bower_components/dcjs/dc.min',
 
       option: 'options',
 
-      GitHub: 'github/index',
+      githubjs: '../bower_components/github-js/dist/github.min',
       OAuth: 'oauth',
       app: 'app',
       Router: 'Router',
@@ -40,11 +40,9 @@
 
       RepoModel: 'repositories/repo-model',
       RepoCollection: 'repositories/repo-collection',
-      RepoView: 'repositories/repo-view',
-      RepoDetailView: 'repositories/repo-detail-view',
 
       commitModel: 'commits/commit-model',
-      commitCollection: 'commits/commit-collection',
+      CommitCollection: 'commits/commit-collection',
       commitListItemView: 'commits/commit-list-item-view',
       CommitListView: 'commits/commit-list-view',
 
@@ -53,9 +51,9 @@
       CommentModel: 'comment/comment-model',
       CommentCollection: 'comment/Comment-collection',
 
-      StatisticsOverviewView: 'statistics/statistics-overview-view',
-      StatisticView: 'statistics/statistic-view',
-      StatisticModel: 'statistics/statistic-model',
+      _FilterView: '_filter/filter-view',
+      _FilterModel: '_filter/filter-model',
+      _ExtendedFilterView: '_filter/extended-filter-view',
 
       UserModel: 'user-model',
 
@@ -69,7 +67,9 @@
       reviewModulesTemplates: 'review/modules/templates',
 
       FileView: 'file/views/file',
-      fileTemplates: 'file/templates'
+      fileTemplates: 'file/templates',
+
+      Charts: 'charts/charts'
     },
     shim: {
       underscore: {

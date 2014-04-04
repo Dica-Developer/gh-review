@@ -4,12 +4,9 @@ define(function (require) {
   var $ = require('jquery');
   var Backbone = require('backbone');
   var app = require('app');
-  var RepoView = require('RepoView');
-  var RepoDetailView = require('RepoDetailView');
   var FilterOverview = require('FilterOverview');
   var FilterModel = require('FilterModel');
   var CommitListView = require('CommitListView');
-  var commitCollection = require('commitCollection');
   var CommentView = require('CommentView');
   var oauthHandler = require('OauthHandler');
   var loginLogout = require('loginLogout');
@@ -17,23 +14,22 @@ define(function (require) {
   var UserModel = require('UserModel');
   var WelcomeView = require('WelcomeView');
   var AboutView = require('AboutView');
-  var StatisticsOverviewView = require('StatisticsOverviewView');
-  var StatisticView = require('StatisticView');
-  var StatisticModel = require('StatisticModel');
   var CommitModel = require('commitModel');
   var ModulesOverview = require('ModulesOverview');
   var FileView = require('FileView');
+  var FilterView = require('_FilterView');
 
   return Backbone.Router.extend({
     view: null,
     routes: {
       '': 'root',
       'filter': 'filter',
+      '_filter': '_filter',
       'filter/modules': 'filterModules',
-      'repositories': 'repositories',
-      'repository/:name': 'repoDetail',
-      'commits/:owner/:repo/:branch': 'commitList',
-      'commit/:id': 'showCommit',
+      'commits/filter/:filterID': 'commitListByFilter',
+//      'commits/:owner/:repo/:branch': 'commitList',
+      'commit/filter/:commitId': 'showCommitByFilter',
+//      'commit/:owner/:repo/:branch/:id': 'showCommit',
       'commit/:owner/:repo/:sha': 'showOneCommit',
       'login': 'login',
       'logout': 'logout',
@@ -50,58 +46,80 @@ define(function (require) {
       this.view = new FilterOverview();
       this.view.render();
     },
+    _filter: function () {
+      this.prepareView('_filterLink');
+      this.view = new FilterView();
+      this.view.render();
+    },
     filterModules: function () {
       this.prepareView('reviewModulesLink');
       this.view = new ModulesOverview();
       this.view.render();
       this.trigger('ajaxIndicator', false);
     },
-    repositories: function () {
-      if (app.authenticated) {
-        this.prepareView('repositoryLink');
-        this.view = new RepoView({
-          collection: app.repoCollection
-        });
-      }
-    },
-    repoDetail: function (name) {
-      if (app.authenticated) {
-        this.prepareView('repositoryLink');
-        var model = app.repoCollection.getRepoByName(name);
-        this.view = new RepoDetailView({
-          model: model
-        });
-      }
-    },
-    commitList: function (owner, repo, branch) {
+    commitListByFilter: function (commitId) {
       this.prepareView('reviewLink');
-      var model = app.currentFilter;
-      if (null !== model || owner !== model.get('owner') || repo !== model.get('repo') || branch !== model.get('branch')) {
-        model = new FilterModel({
-          owner: owner,
-          repo: repo,
-          branch: branch
-        });
-        app.currentFilter = model;
+      var filter = app.filterCollection.get(commitId);
+      if (typeof app.currentFilter === 'undefined') {
+        app.currentFilter = filter;
+      } else if(app.currentFilter.get('id') === filter.get('id')){
+        filter = app.currentFilter;
+      } else {
+        app.currentFilter = filter;
       }
       this.view = new CommitListView({
-        model: model
+        model: filter
       });
-      this.view.getCommits()
-        .then(function () {
-          this.view.render();
-          this.view.renderAllCommits();
-        }.bind(this));
+      this.view.getAllCommits();
     },
-    showCommit: function (id) {
-      this.prepareView('reviewLink');
-      var model = commitCollection.get(id);
+//    todo not used yet but later to type needed information manually in browser address bar
+//    commitList: function (owner, repo, branch) {
+//      this.prepareView('reviewLink');
+//      var filter = new FilterModel();
+//      filter.setOwner(owner);
+//      filter.setRepo(repo);
+//      filter.setBranch(branch);
+//      app.currentFilter = filter;
+//      this.view = new CommitListView({
+//        model: filter
+//      });
+//      this.view.getAllCommits();
+//    },
+    showCommitByFilter: function(commitId){
+      var model = app.currentFilter.getCollection().findWhere({sha: commitId});
+      model.user = app.currentFilter.get('user');
+      model.repo = app.currentFilter.get('repo');
       this.view = new CommentView({
         model: model
       });
+      this.view.filter = app.currentFilter;
       this.view.getDiffAndComments()
         .then(this.view.render.bind(this.view));
     },
+//    todo not used yet but later to type needed information manually in browser address bar
+//    showCommit: function (owner, repo, branch, id, filterId) {
+//      this.prepareView('reviewLink');
+//      var filter = null;
+//      var model = null;
+//      if (filterId) {
+//        filter = app.filterCollection.get(filterId);
+//        model = filter.getCollection().get(id);
+//      } else {
+//        filter = new FilterModel();
+//        filter.setOwner('owner');
+//        filter.setRepo('repo');
+//        filter.setBranch('branch');
+//        model = new CommitModel();
+//      }
+//      model.user = filter.get('user');
+//      model.repo = filter.get('repo');
+//      this.view = new CommentView({
+//        model: model
+//      });
+//      this.view.filter = filter;
+//      this.view.getDiffAndComments()
+//        .then(this.view.render.bind(this.view));
+//    },
     showOneCommit: function (owner, repo, sha) {
       var _this = this;
       this.prepareView('reviewLink');
@@ -206,28 +224,6 @@ define(function (require) {
           this.trigger('ajaxIndicator', false);
         }.bind(this));
     },
-    statisticsOverview: function () {
-      this.prepareView('statisticsLink');
-      this.view = new StatisticsOverviewView();
-      this.view.render();
-      this.trigger('ajaxIndicator', false);
-    },
-    statistic: function (owner, repo, branch) {
-      this.prepareView('statisticsLink');
-      var model = new StatisticModel({
-        owner: owner,
-        repo: repo,
-        branch: branch
-      });
-      this.view = new StatisticView({
-        model: model
-      });
-      this.view.model.getData()
-        .then(function () {
-          this.view.render();
-          this.trigger('ajaxIndicator', false);
-        }.bind(this));
-    },
     prepareView: function (activeLink) {
       this.trigger('ajaxIndicator', true);
       this.clear();
@@ -236,6 +232,7 @@ define(function (require) {
         $('#' + activeLink).addClass('active');
       }
     },
-    initialize: function () {}
+    initialize: function () {
+    }
   });
 });

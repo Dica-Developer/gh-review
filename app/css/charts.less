@@ -1,5 +1,34 @@
-.chart {
-  &#commitsPerAuthor-chart {
-    text { fill:black; }
+#table-data-group { label {margin: 0;} }
+#repo-data-table-container {
+
+  height: 330px; overflow-y: auto;
+
+
+  #repo-data-table {
+    .dc-table-row, th {
+      cursor: pointer;
+    }
+  }
+}
+
+#repo-access-chart,
+#repo-owner-chart{
+  svg {
+    border: 1px solid #ddd;
+  }
+}
+
+#timeWindowFilter {
+  #timeChartFixedSettings {
+    display: none;
+  }
+}
+
+#path-filter {
+  .form-group {
+    width: 100%;
+    #path-filter-input {
+      width: 70%;
+    }
   }
 }

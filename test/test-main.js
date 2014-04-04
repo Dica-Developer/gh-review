@@ -6,7 +6,7 @@
   /*jshint camelcase:false*/
   for (var file in window.__karma__.files) {
     if (window.__karma__.files.hasOwnProperty(file)) {
-      if (/-spec\.js$/.test(file)) {
+      if (/specs\S*-spec\.js$/.test(file)) {
         tests.push(file);
       }
     }
@@ -29,7 +29,7 @@
       base64: '../app/bower_components/requirejs-base64/base64.min',
       d3: '../app/bower_components/d3/d3.min',
       crossfilter: '../app/bower_components/crossfilter/crossfilter.min',
-      dc: '../app/bower_components/dc.js/dc.min',
+      dc: '../app/bower_components/dcjs/dc.min',
 
       sinon: '../test/lib/sinon',
       server: '../test/helper/server',
@@ -61,7 +61,7 @@
       RepoDetailView: '../app/js/repositories/repo-detail-view',
 
       commitModel: '../app/js/commits/commit-model',
-      commitCollection: '../app/js/commits/commit-collection',
+      CommitCollection: '../app/js/commits/commit-collection',
       commitListItemView: '../app/js/commits/commit-list-item-view',
       CommitListView: '../app/js/commits/commit-list-view',
 
@@ -86,7 +86,13 @@
       reviewModulesTemplates: '../app/js/review/modules/templates',
 
       FileView: '../app/js/file/views/file',
-      fileTemplates: '../app/js/file/templates'
+      fileTemplates: '../app/js/file/templates',
+
+      _FilterView: '../app/js/_filter/filter-view',
+      _FilterModel: '../app/js/_filter/filter-model',
+      _ExtendedFilterView: '../app/js/_filter/extended-filter-view',
+
+      Charts: '../app/js/charts/charts'
     },
     map: {
       GitHub: {
