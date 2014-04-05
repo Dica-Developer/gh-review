@@ -131,6 +131,43 @@ define([
       });
     });
 
+    it('.getRepoByName should return correct repo or undefined', function () {
+      server.githubReposGetAll();
+      spyOn(app.github.user, 'getOrgs');
+      var Collection = RepoCollection.extend();
+      var collection = new Collection();
+      collection.getRepos();
+      waitsFor(function () {
+        return server.server.requests[0].readyState === 4;
+      });
+
+      runs(function () {
+        expect(collection.getRepoByName('PRIVATE_REPO')).toBe(collection.at(1));
+        expect(collection.getRepoByName('UNDEFINED_REPO')).toBe(undefined);
+        server.stop();
+      });
+    });
+
+    it('.toJSONSortedByName should return all repos as json sorted by repo name', function () {
+      var expectedResult = [
+        { name: 'PRIVATE_REPO', id: 2, login: 'USER' },
+        { name: 'PUBLIC_REPO', id: 1, login: 'USER' }
+      ];
+      server.githubReposGetAll();
+      spyOn(app.github.user, 'getOrgs');
+      var Collection = RepoCollection.extend();
+      var collection = new Collection();
+      collection.getRepos();
+      waitsFor(function () {
+        return server.server.requests[0].readyState === 4;
+      });
+
+      runs(function () {
+        expect(collection.toJSONSortedByName()).toEqual(expectedResult);
+        server.stop();
+      });
+    });
+
   });
 
 });
