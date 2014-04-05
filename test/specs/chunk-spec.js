@@ -83,6 +83,36 @@ define(['chunk'], function (Chunk) {
         expect(chunk.addNormalLine(normalLine)).toEqual(normalLineReturn);
       });
 
+      it('isAddition should return correct boolean', function () {
+        expect(chunk.isAddition('+')).toBeTruthy();
+        expect(chunk.isAddition('-')).toBeFalsy();
+        expect(chunk.isAddition(' ')).toBeFalsy();
+        expect(chunk.isAddition(' +')).toBeFalsy();
+        expect(chunk.isAddition(' -')).toBeFalsy();
+        expect(chunk.isAddition('+---+')).toBeTruthy();
+        expect(chunk.isAddition('-+++-')).toBeFalsy();
+      });
+
+      it('isDeletion should return correct boolean', function () {
+        expect(chunk.isDeletion('+')).toBeFalsy();
+        expect(chunk.isDeletion('-')).toBeTruthy();
+        expect(chunk.isDeletion(' ')).toBeFalsy();
+        expect(chunk.isDeletion(' +')).toBeFalsy();
+        expect(chunk.isDeletion(' -')).toBeFalsy();
+        expect(chunk.isDeletion('+---+')).toBeFalsy();
+        expect(chunk.isDeletion('-+++-')).toBeTruthy();
+      });
+
+      it('isSame should return correct boolean', function () {
+        expect(chunk.isSame('+')).toBeFalsy();
+        expect(chunk.isSame('-')).toBeFalsy();
+        expect(chunk.isSame(' ')).toBeTruthy();
+        expect(chunk.isSame(' +')).toBeTruthy();
+        expect(chunk.isSame(' -')).toBeTruthy();
+        expect(chunk.isSame('+---+')).toBeFalsy();
+        expect(chunk.isSame('-+++-')).toBeFalsy();
+      });
+
     });
 
   });
