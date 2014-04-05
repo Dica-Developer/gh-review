@@ -24,14 +24,15 @@ define(function (require) {
     it('Init empty', function () {
       var filterModel = new FilterModel();
       var filter = filterModel.toJSON();
-      expect(_.size(filter)).toBe(1);
+      expect(_.size(filter)).toBe(2);
+      expect(filter.sha).toBe('master');
     });
 
     it('Init not empty', function () {
       var filterModel = new FilterModel();
       filterModel.setOwner('owner');
       filterModel.setRepo('repo');
-      filterModel.setBranch('branch');
+      filterModel.setBranch('master');
       filterModel.setContributor('contributor');
       filterModel.setSinceObject({
         pattern: 'YYYY-MM-dd',
@@ -42,7 +43,7 @@ define(function (require) {
       var filterModelJson = filterModel.toJSON();
       expect(filterModelJson.user).toBe('owner');
       expect(filterModelJson.repo).toBe('repo');
-      expect(filterModelJson.branch).toBe('branch');
+      expect(filterModelJson.sha).toBe('master');
       expect(filterModelJson.contributor).toBe('contributor');
       expect(filterModelJson.until).toBe('until');
       expect(filterModelJson.path).toBe('path');
