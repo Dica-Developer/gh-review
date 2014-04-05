@@ -30,6 +30,7 @@
       d3: '../app/bower_components/d3/d3.min',
       crossfilter: '../app/bower_components/crossfilter/crossfilter.min',
       dc: '../app/bower_components/dcjs/dc.min',
+      githubjs: '../app/bower_components/github-js/dist/github.min',
 
       sinon: '../test/lib/sinon',
       server: '../test/helper/server',
@@ -37,9 +38,6 @@
       options: '../test/helper/compiledOptions',
       templates: '../app/templates',
 
-      GitHub: '../app/js/github/index',
-      GitHubApiIndex: '../app/js/github/api/index',
-      GitHubUtils: '../app/js/github/util',
       OAuth: '../app/js/oauth',
       app: '../app/js/app',
       Router: '../app/js/Router',
@@ -93,28 +91,6 @@
       _ExtendedFilterView: '../app/js/_filter/extended-filter-view',
 
       Charts: '../app/js/charts/charts'
-    },
-    map: {
-      GitHub: {
-        'github/api/index': 'GitHubApiIndex',
-        'github/util': 'GitHubUtils'
-      },
-      'GitHubApiIndex': {
-        'github/util': 'GitHubUtils',
-        'github/api/routes': '../app/js/github/api/routes',
-        'github/api/gists': '../app/js/github/api/gists',
-        'github/api/gitdata': '../app/js/github/api/gitdata',
-        'github/api/authorization': '../app/js/github/api/authorization',
-        'github/api/orgs': '../app/js/github/api/orgs',
-        'github/api/statuses': '../app/js/github/api/statuses',
-        'github/api/pullRequests': '../app/js/github/api/pullRequests',
-        'github/api/repos': '../app/js/github/api/repos',
-        'github/api/user': '../app/js/github/api/user',
-        'github/api/events': '../app/js/github/api/events',
-        'github/api/search': '../app/js/github/api/search',
-        'github/api/issues': '../app/js/github/api/issues',
-        'github/api/markdown': '../app/js/github/api/markdown'
-      }
     },
     shim: {
       underscore: {
