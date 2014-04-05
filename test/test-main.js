@@ -6,7 +6,7 @@
   /*jshint camelcase:false*/
   for (var file in window.__karma__.files) {
     if (window.__karma__.files.hasOwnProperty(file)) {
-      if (/specs\S*-spec\.js$/.test(file)) {
+      if (/^\/base\/test\/specs\S*-spec.js$/.test(file)) {
         tests.push(file);
       }
     }
