@@ -3,7 +3,7 @@
         <ol class="breadcrumb">
             <li><%= reviewData.owner %></li>
             <li><%= reviewData.repo %></li>
-            <li><a href="#commits/<%= encodeURIComponent(reviewData.owner) %>/<%= encodeURIComponent(reviewData.repo) %>/<%= encodeURIComponent(reviewData.branch) %>"><%= reviewData.branch %></a></li>
+            <li><a href="#commits/<%= encodeURIComponent(reviewData.owner) %>/<%= encodeURIComponent(reviewData.repo) %>/<%= encodeURIComponent(reviewData.branch) %>/filter-<%=reviewData.id || filter.cid%>"><%= reviewData.branch %></a></li>
             <li><%= model.sha %></li>
         </ol>
     </div>
@@ -75,6 +75,7 @@
                         <% _.forEach(files[fileIndex].chunks, function(chunk){%>
                             <% _.forEach(chunk.lines, function(line){%>
                                 <tr class="<%= line.format %>" data-path="<%= file.filename %>" data-line="<%= lineIndex %>">
+                                    <td class="commitMarker"></td>
                                     <td class="lineNr"><%= line.lineNrLeft %></td>
                                     <td class="lineNr"><%= line.lineNrRight %></td>
                                     <td><pre data-position="<%= lineIndex %>" data-fileindex="<%= fileIndex %>"><%= line.text %></pre></td>
