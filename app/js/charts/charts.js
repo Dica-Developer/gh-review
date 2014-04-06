@@ -126,7 +126,7 @@ define(['underscore', 'dc', 'd3', 'crossfilter', 'app'], function (_, dc, d3, cr
     chart.on('filtered', function (chart, filter) {
       app.trigger('add:filter:byEmail', filter);
     });
-    this.set('commitsPerAuthor', chart);
+    this.set('commitsPerAuthorChart', chart);
     return chart;
   };
 
