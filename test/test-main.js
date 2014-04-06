@@ -27,9 +27,9 @@
       when: '../app/bower_components/when/when',
       moment: '../app/bower_components/moment/min/moment-with-langs.min',
       base64: '../app/bower_components/requirejs-base64/base64.min',
-      d3: '../app/bower_components/d3/d3.min',
+      d3: '../app/bower_components/d3/d3',
       crossfilter: '../app/bower_components/crossfilter/crossfilter.min',
-      dc: '../app/bower_components/dcjs/dc.min',
+      dc: '../app/bower_components/dcjs/dc',
       githubjs: '../app/bower_components/github-js/dist/github.min',
 
       sinon: '../test/lib/sinon',
@@ -111,28 +111,23 @@
       crossfilter: {
         exports: 'crossfilter'
       },
-      d3: {
-        exports: 'd3'
-      },
       dc: {
-        deps: ['d3', 'crossfilter'],
+        deps: ['crossfilter'],
         exports: 'dc'
       }
-    },
-
-    // ask Require.js to load these files (all our tests)
-    deps: tests,
-
-    // start test run, once Require.js is done
-    callback: function () {
-      require([
-        'underscore',
-        'moment',
-        'underscore.string'
-      ], function (_, moment) {
-        _.moment = moment;
-        window.__karma__.start();
-      });
     }
+  });
+
+  require([
+    'underscore',
+    'moment',
+    'd3',
+    'underscore.string'
+  ], function (_, moment, d3) {
+    _.moment = moment;
+    window.d3 = d3;
+    require(tests, function () {
+      window.__karma__.start();
+    });
   });
 }());

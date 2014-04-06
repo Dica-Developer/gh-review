@@ -1,14 +1,13 @@
-/*global define, crossfilter, d3*/
-define([
-  'backbone',
-  'underscore',
-  'moment',
-  'dc',
-  'app',
-  '_ExtendedFilterView',
-  'text!templates/_filter.html'
-], function (Backbone, _, moment, dc, app, ExtendedFilterView, template) {
+/*global define, d3, crossfilter*/
+define(function (require) {
   'use strict';
+
+  var Backbone = require('backbone');
+  var _ = require('underscore');
+  var app = require('app');
+  var dc = require('dc');
+  var ExtendedFilterView = require('_ExtendedFilterView');
+  var template = require('text!templates/_filter.html');
 
   return Backbone.View.extend({
     el: '#main',

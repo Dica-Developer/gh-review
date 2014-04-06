@@ -1,5 +1,5 @@
 /*global define, describe, beforeEach, afterEach, it, expect*/
-define(['underscore', 'dc', 'Charts'], function (_, dc, Charts) {
+define(['underscore', 'Charts'], function (_, Charts) {
   'use strict';
 
   describe('#Charts', function () {
@@ -11,7 +11,6 @@ define(['underscore', 'dc', 'Charts'], function (_, dc, Charts) {
 
     afterEach(function () {
       charts = null;
-      dc.chartRegistry.clear();
     });
 
     it('Should be defined', function () {
@@ -80,7 +79,6 @@ define(['underscore', 'dc', 'Charts'], function (_, dc, Charts) {
       var chart = charts.timeChart(20);
       expect(charts.charts.timeChart).toBe(chart);
     });
-
   });
 
 });

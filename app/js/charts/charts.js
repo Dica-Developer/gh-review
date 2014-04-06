@@ -1,7 +1,10 @@
-/*global define*/
-define(['underscore', 'dc', 'd3', 'crossfilter', 'app'], function (_, dc, d3, crossfilter, app) {
+/*global define, d3, crossfilter*/
+define(function (require) {
   'use strict';
 
+  var _ = require('underscore');
+  var app = require('app');
+  var dc = require('dc');
   /**
    * @class Charts
    * @contructs Charts

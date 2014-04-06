@@ -16,9 +16,9 @@
       when: '../bower_components/when/when',
       moment: '../bower_components/moment/min/moment-with-langs.min',
       base64: '../bower_components/requirejs-base64/base64.min',
-      d3: '../bower_components/d3/d3.min',
-      crossfilter: '../bower_components/crossfilter/crossfilter.min',
-      dc: '../bower_components/dcjs/dc.min',
+      d3: '../bower_components/d3/d3',
+      crossfilter: '../bower_components/crossfilter/crossfilter',
+      dc: '../bower_components/dcjs/dc',
 
       option: 'options',
 
@@ -87,11 +87,8 @@
       crossfilter: {
         exports: 'crossfilter'
       },
-      d3: {
-        exports: 'd3'
-      },
       dc: {
-        deps: ['d3', 'crossfilter'],
+        deps: ['crossfilter'],
         exports: 'dc'
       }
     }
@@ -99,31 +96,38 @@
 
   requirejs([
     'jquery',
-    'app',
-    'Router',
-    'TopMenuView',
     'underscore',
     'moment',
     'options',
+    'd3',
     'underscore.string',
     'bootstrap'
-  ], function ($, app, Router, TopMenuView, _, moment, options) {
+  ], function ($, _, moment, options, d3) {
     //add moment to underscore to have access to moment in templates
     _.moment = moment;
+    window.d3 = d3;
 
-    app.options = options;
+    require([
+      'app',
+      'Router',
+      'TopMenuView'
+    ], function (app, Router, TopMenuView) {
 
-    app.ajaxIndicator = $('#ajaxIndicator').modal({
-      backdrop: true,
-      show: false,
-      keyboard: false
+      app.options = options;
+
+      app.ajaxIndicator = $('#ajaxIndicator').modal({
+        backdrop: true,
+        show: false,
+        keyboard: false
+      });
+
+      app.router = new Router();
+      app.router.on('ajaxIndicator', function (show) {
+        this.showIndicator(show);
+      }, app);
+      app.init();
+      new TopMenuView();
     });
 
-    app.router = new Router();
-    app.router.on('ajaxIndicator', function (show) {
-      this.showIndicator(show);
-    }, app);
-    app.init();
-    new TopMenuView();
   });
 }());
