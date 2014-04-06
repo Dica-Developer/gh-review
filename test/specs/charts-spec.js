@@ -7,11 +7,11 @@ define(['underscore', 'dc', 'Charts'], function (_, dc, Charts) {
 
     beforeEach(function () {
       charts = new Charts();
-      dc.chartRegistry.clear();
     });
 
     afterEach(function () {
       charts = null;
+      dc.chartRegistry.clear();
     });
 
     it('Should be defined', function () {
