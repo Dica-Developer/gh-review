@@ -15,6 +15,10 @@
     "underscore.string": "~2.3.3",
     "requirejs-base64": "~1.0.0",
     "dcjs": "https://github.com/dc-js/dc.js.git#master",
-    "github-js": "https://github.com/Dica-Developer/github-js.git"
+    "github-js": "https://github.com/Dica-Developer/github-js.git",
+    "d3": "~3.4.4"
+  },
+  "resolutions": {
+    "d3": "3.x"
   }
 }
