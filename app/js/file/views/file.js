@@ -29,19 +29,17 @@ define(function (require) {
       'click .commentable': 'commentLine'
     },
     commentLine: function (event) {
-      app.currentReviewData = {
-        user: this.model.user,
-        repo: this.model.repo
-      };
       var tr = $(event.target).closest('tr');
       if (this.commentBox) {
         this.commentBox.remove();
       }
+      var model = this.commitModel[tr.data('line')];
+      model.user = this.model.user;
+      model.repo = this.model.repo;
       this.commentBox = new EditCommentBox({
-        model: this.commitModel[tr.data('line')],
+        model: model,
         tr: tr,
-        // TODO get line index in diff
-        position: tr.data('line'),
+        position: tr.data('lineInPatch'),
         fileIndex: tr.data('fileindex')
       });
     },
@@ -75,6 +73,7 @@ define(function (require) {
           if (file && _.has(file, 'patch')) {
             _this.commitHistory.unshift(commitWithDiff.sha);
             var lines = _.str.lines(file.patch);
+            var lineNumberInPatch = 0;
             lines.forEach(function (line) {
               if (chunk.isMatchingChunkHeading(line)) {
                 lineNumber = chunk.extractChunk(line).rightNr;
@@ -83,12 +82,13 @@ define(function (require) {
                   _this.lines.splice((lineNumber - 1), 1);
                 } else if (chunk.isAddition(line)) {
                   commitWithDiff.fileIndex = fileIndex;
-                  _this.lines.splice((lineNumber - 1), 0, commitWithDiff);
+                  _this.lines.splice((lineNumber - 1), 0, { commit: commitWithDiff, lineInPatch: lineNumberInPatch});
                   lineNumber++;
                 } else if (chunk.isSame(line)) {
                   lineNumber++;
                 }
               }
+              lineNumberInPatch++;
               _this.fillUpMissingLines(lineNumber);
             });
           } else {
@@ -101,15 +101,16 @@ define(function (require) {
               var commitDescEncoded = '&nbsp;';
               var commitTitle = '';
               if (null !== commit && undefined !== commit) {
-                $('#line_' + (lineNumber + 1) + '_color').css('background-color', _this.historyColorRange[_this.commitHistory.indexOf(commit.sha)]);
-                commitDescEncoded = '<a href="#commit/' + encodeURIComponent(_this.model.user) + '/' + encodeURIComponent(_this.model.repo) + '/' + encodeURIComponent(commit.sha) + '">' + _.escape(commit.sha.substr(0, 8)) + '</a>';
-                commitTitle = 'commited at ' + commit.commit.author.date + ' by ' + commit.commit.author.name + '(' + commit.commit.author.email + ')';
+                $('#line_' + (lineNumber + 1) + '_color').css('background-color', _this.historyColorRange[_this.commitHistory.indexOf(commit.commit.sha)]);
+                commitDescEncoded = '<a href="#commit/' + encodeURIComponent(_this.model.user) + '/' + encodeURIComponent(_this.model.repo) + '/' + encodeURIComponent(commit.commit.sha) + '">' + _.escape(commit.commit.sha.substr(0, 8)) + '</a>';
+                commitTitle = 'commited at ' + commit.commit.commit.author.date + ' by ' + commit.commit.commit.author.name + '(' + commit.commit.commit.author.email + ')';
                 $('#line_' + (lineNumber + 1)).addClass('commentable');
-                $('#line_' + (lineNumber + 1)).data('fileindex', commit.fileIndex);
+                $('#line_' + (lineNumber + 1)).data('fileindex', commit.commit.fileIndex);
+                $('#line_' + (lineNumber + 1)).data('lineInPatch', commit.lineInPatch);
                 _this.commitModel[(lineNumber + 1)] = new CommitModel({
-                  commit: commit,
-                  diff: commit,
-                  sha: commit.sha
+                  commit: commit.commit,
+                  diff: commit.commit,
+                  sha: commit.commit.sha
                 });
               }
               $('#line_' + (lineNumber + 1)).attr('data-path', _this.model.path);
