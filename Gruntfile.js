@@ -156,7 +156,7 @@ module.exports = function (grunt) {
       dist: {
         options: {
           out: '<%= config.dist %>/js/main.js',
-          optimize: 'uglify',
+          optimize: 'uglify2',
           name: 'main'
         }
       }
