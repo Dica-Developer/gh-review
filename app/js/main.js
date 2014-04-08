@@ -88,7 +88,7 @@
         exports: 'crossfilter'
       },
       dc: {
-        deps: ['crossfilter'],
+        deps: ['d3', 'crossfilter'],
         exports: 'dc'
       }
     }
