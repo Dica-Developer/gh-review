@@ -14,7 +14,7 @@ define([
       'click .destroy': 'removeFilter'
     },
     removeFilter: function (event) {
-      event.stopPropagation();
+      event.preventDefault();
       var modelId = $(event.target).data('id');
       var model = app.filterCollection.get(modelId);
       if (model) {
