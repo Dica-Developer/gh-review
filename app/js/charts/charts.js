@@ -95,9 +95,6 @@ define(function (require) {
       return percentageString;
     });
     chart.legend(dc.legend().x(5).y(5).itemHeight(13).gap(5));
-    chart.renderlet(function (chart) {
-      chart.select('svg > g').attr('transform', 'translate(200,75)');
-    });
     chart.on('filtered', function (chart, filter) {
       app.trigger('add:filter:byState', filter);
     });
@@ -125,9 +122,6 @@ define(function (require) {
       return d.value;
     });
     chart.legend(dc.legend().x(5).y(5).itemHeight(13).gap(5));
-    chart.renderlet(function (chart) {
-      chart.select('svg > g').attr('transform', 'translate(200,75)');
-    });
     chart.on('filtered', function (chart, filter) {
       app.trigger('add:filter:byEmail', filter);
     });
