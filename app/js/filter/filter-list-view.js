@@ -11,7 +11,8 @@ define([
     el: '#reviewList',
     listItemTemplate: _.template(listItemTemplate),
     events: {
-      'click .destroy': 'removeFilter'
+      'click .destroy': 'removeFilter',
+      'click .stats': 'showStatistics'
     },
     removeFilter: function (event) {
       event.preventDefault();
@@ -20,6 +21,11 @@ define([
       if (model) {
         model.destroy();
       }
+    },
+    showStatistics: function (event) {
+      event.preventDefault();
+      var filterId = $(event.target).data('id');
+      app.router.navigate('statistics/' +filterId, {trigger: true});
     },
     fetchReviews: function () {
       if (this.collection.length) {
@@ -39,6 +45,7 @@ define([
     showHint: function () {
       //TODO show help text for first filter
     },
-    render: function () {}
+    render: function () {
+    }
   });
 });

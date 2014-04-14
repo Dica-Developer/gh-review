@@ -69,6 +69,8 @@
       FileView: 'file/views/file',
       fileTemplates: 'file/templates',
 
+      StatisticsView: 'statistics/statistics-view',
+
       Charts: 'charts/charts'
     },
     shim: {

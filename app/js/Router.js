@@ -18,6 +18,7 @@ define(function (require) {
   var ModulesOverview = require('ModulesOverview');
   var FileView = require('FileView');
   var FilterView = require('_FilterView');
+  var StatisticsView = require('StatisticsView');
 
   return Backbone.Router.extend({
     view: null,
@@ -37,8 +38,7 @@ define(function (require) {
       'oauth/callback': 'callback',
       'whoami': 'whoami',
       'about': 'about',
-      'statistics': 'statisticsOverview',
-      'statistic/:owner/:repo/:branch': 'statistic',
+      'statistics/:filterId': 'showStatistics',
       'file/:owner/:repo/:path': 'showFile'
     },
     filter: function () {
@@ -147,6 +147,14 @@ define(function (require) {
             .then(_this.view.render.bind(_this.view));
         }
       });
+    },
+    showStatistics: function(filterId){
+      this.prepareView();
+      var filter = app.filterCollection.get(filterId);
+      this.view = new StatisticsView({
+        model: filter
+      });
+      this.view.render();
     },
     showFile: function (owner, repo, path) {
       var _this = this;
