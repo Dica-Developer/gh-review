@@ -71,14 +71,15 @@ define(function (require) {
 
   /**
    * @memberof Charts#
-   * @param availableWidth
+   * @param width
+   * @param height
    * @returns {*}
    */
-  Charts.prototype.reviewStateChart = function (availableWidth) {
+  Charts.prototype.reviewStateChart = function (width, height) {
     var all = this.data.all;
     var chart = dc.pieChart('#review-state-chart');
-    chart.width(availableWidth);
-    chart.height(150);
+    chart.width(width);
+    chart.height(height);
     chart.transitionDuration(1000);
     chart.dimension(this.data.commentedCommits);
     chart.group(this.data.commentedCommitsGroup);
@@ -106,13 +107,14 @@ define(function (require) {
 
   /**
    * @memberof Charts#
-   * @param availableWidth
+   * @param width
+   * @param height
    * @returns {*}
    */
-  Charts.prototype.commitsPerAuthorChart = function (availableWidth) {
+  Charts.prototype.commitsPerAuthorChart = function (width, height) {
     var chart = dc.pieChart('#commitsPerAuthor-chart');
-    chart.width(availableWidth);
-    chart.height(150);
+    chart.width(width);
+    chart.height(height);
     chart.transitionDuration(1000);
     chart.dimension(this.data.commitsByAuthor);
     chart.group(this.data.commitsByAuthorGroup);
@@ -135,13 +137,14 @@ define(function (require) {
 
   /**
    * @memberof Charts#
-   * @param availableWidth
+   * @param width
+   * @param height
    * @returns {*}
    */
-  Charts.prototype.timeChart = function (availableWidth) {
+  Charts.prototype.timeChart = function (width, height) {
     var chart = dc.barChart('#time-chart');
-    chart.width(availableWidth);
-    chart.height(150);
+    chart.width(width);
+    chart.height(height);
     chart.margins({top: 20, right: 0, bottom: 20, left: 30});
     chart.renderHorizontalGridLines(true);
     chart.dimension(this.data.commitsByDay);

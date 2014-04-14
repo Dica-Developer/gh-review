@@ -143,17 +143,17 @@ define([
     },
     renderReviewStateChart: function () {
       var availWidth = this.$('#commitFilterCharts').width();
-      var chart = this.charts.reviewStateChart(availWidth);
+      var chart = this.charts.reviewStateChart(availWidth, 150);
       chart.render();
     },
     renderCommitsPerAuthorChart: function () {
       var availWidth = this.$('#commitFilterCharts').width();
-      var chart = this.charts.commitsPerAuthorChart(availWidth);
+      var chart = this.charts.commitsPerAuthorChart(availWidth, 150);
       chart.render();
     },
     renderTimeChart: function () {
       var availableWidth = this.$('#timeWindowFilter').width();
-      var chart = this.charts.timeChart(availableWidth);
+      var chart = this.charts.timeChart(availableWidth, 150);
       chart.render();
     },
     applyHelperTooltips: function () {
