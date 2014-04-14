@@ -74,6 +74,13 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection', 'underscore
         this.set('sha', branch);
       },
       /**
+       *
+       * @returns {String}
+       */
+      getBranch: function(){
+        return this.get('sha');
+      },
+      /**
        * Only commits after this date will be returned. This is a timestamp in ISO 8601 format: YYYY-MM-DDTHH:MM:SSZ.
        * @param {String} since format YYYY-MM-DDTHH:MM:SSZ
        */
