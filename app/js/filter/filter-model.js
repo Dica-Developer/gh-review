@@ -188,9 +188,11 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection', 'underscore
       /**
        * Fetches all filter results by going through all available pages at ones.
        * @param {null | String} link
+       * @param {Object} githubMsg
        * @returns {promise}
        */
-      getAllCommits: function (link) {
+      getAllCommits: function (link, githubMsg) {
+        githubMsg = githubMsg || this.toJSON();
         var callback = function (error, resp) {
           if (!error) {
             var link = resp.meta.link;
@@ -208,11 +210,19 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection', 'underscore
         if (!link) {
           this.tmpCommits = [];
           this.getCommitsRefer = when.defer();
-          app.github.repos.getCommits(this.toJSON(), callback);
+          app.github.repos.getCommits(githubMsg, callback);
         } else {
           app.github.getNextPage(link, callback);
         }
         return this.getCommitsRefer.promise;
+      },
+      getAllCommitsFromBranch: function () {
+        var githubMsg = this.toJSON();
+        delete githubMsg.customFilter;
+        if(githubMsg.author){
+          delete githubMsg.author;
+        }
+        return this.getAllCommits(null, githubMsg);
       },
       /**
        * Returns the commits as collection.
