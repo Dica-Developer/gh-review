@@ -90,6 +90,8 @@
       _FilterModel: '../app/js/_filter/filter-model',
       _ExtendedFilterView: '../app/js/_filter/extended-filter-view',
 
+      StatisticsView: '../app/js/statistics/statistics-view',
+
       Charts: '../app/js/charts/charts'
     },
     shim: {
