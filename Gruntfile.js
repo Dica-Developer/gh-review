@@ -60,20 +60,24 @@ module.exports = function (grunt) {
     },
     clean: {
       dist: {
-        files: [{
-          dot: true,
-          src: [
-            '<%= config.dist %>/*'
-          ]
-        }]
+        files: [
+          {
+            dot: true,
+            src: [
+              '<%= config.dist %>/*'
+            ]
+          }
+        ]
       },
       dev: {
-        files: [{
-          dot: true,
-          src: [
-            '<%= config.dev %>/*'
-          ]
-        }]
+        files: [
+          {
+            dot: true,
+            src: [
+              '<%= config.dev %>/*'
+            ]
+          }
+        ]
       }
     },
     jshint: {
@@ -102,48 +106,58 @@ module.exports = function (grunt) {
     },
     copy: {
       deploy: {
-        files: [{
-          expand: true,
-          cwd: './dist',
-          dest: '/tmp/gh-review.pages',
-          src: '**'
-        }]
+        files: [
+          {
+            expand: true,
+            cwd: './dist',
+            dest: '/tmp/gh-review.pages',
+            src: '**'
+          }
+        ]
       },
       dev: {
-        files: [{
-          expand: true,
-          cwd: '<%= config.app %>',
-          dest: '<%= config.dev %>',
-          src: '**'
-        }, {
-          expand: true,
-          cwd: '<%= config.app %>/bower_components/bootstrap/dist/fonts',
-          dest: '<%= config.dev %>/fonts',
-          src: '*'
-        }, {
-          expand: true,
-          cwd: '<%= config.app %>/bower_components/requirejs',
-          dest: '<%= config.dev %>/js',
-          src: 'require.js'
-        }]
+        files: [
+          {
+            expand: true,
+            cwd: '<%= config.app %>',
+            dest: '<%= config.dev %>',
+            src: '**'
+          },
+          {
+            expand: true,
+            cwd: '<%= config.app %>/bower_components/bootstrap/dist/fonts',
+            dest: '<%= config.dev %>/fonts',
+            src: '*'
+          },
+          {
+            expand: true,
+            cwd: '<%= config.app %>/bower_components/requirejs',
+            dest: '<%= config.dev %>/js',
+            src: 'require.js'
+          }
+        ]
       },
       dist: {
-        files: [{
-          expand: true,
-          cwd: '<%= config.app %>',
-          dest: '<%= config.dist %>',
-          src: ['worker/**/*', 'img/**/*', 'templates/**/*', 'fonts/**/*', '*.html']
-        }, {
-          expand: true,
-          cwd: '<%= config.app %>/bower_components/bootstrap/dist/fonts',
-          dest: '<%= config.dist %>/fonts',
-          src: '*'
-        }, {
-          expand: true,
-          cwd: '<%= config.app %>/bower_components/requirejs',
-          dest: '<%= config.dist %>/js',
-          src: 'require.js'
-        }]
+        files: [
+          {
+            expand: true,
+            cwd: '<%= config.app %>',
+            dest: '<%= config.dist %>',
+            src: ['worker/**/*', 'img/**/*', 'templates/**/*', 'fonts/**/*', '*.html']
+          },
+          {
+            expand: true,
+            cwd: '<%= config.app %>/bower_components/bootstrap/dist/fonts',
+            dest: '<%= config.dist %>/fonts',
+            src: '*'
+          },
+          {
+            expand: true,
+            cwd: '<%= config.app %>/bower_components/requirejs',
+            dest: '<%= config.dist %>/js',
+            src: 'require.js'
+          }
+        ]
       }
     },
     requirejs: {
@@ -175,8 +189,8 @@ module.exports = function (grunt) {
         coverage_dir: 'coverage'
       }
     },
-    jsdoc : {
-      dist : {
+    jsdoc: {
+      dist: {
         src: ['<%= config.app %>/js/**/*.js'],
         options: {
           destination: 'doc',
