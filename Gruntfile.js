@@ -184,6 +184,21 @@ module.exports = function (grunt) {
           template: 'node_modules/grunt-jsdoc/node_modules/ink-docstrap/template'
         }
       }
+    },
+    complexity: {
+      generic: {
+        src: ['<%= config.app %>/js/**/*.js'],
+        options: {
+          breakOnErrors: false,
+//          jsLintXML: 'report.xml',         // create XML JSLint-like report
+//          checkstyleXML: 'checkstyle.xml', // create checkstyle report
+          errorsOnly: false,               // show only maintainability errors
+          cyclomatic: [2, 7, 12],          // or optionally a single value, like 3
+          halstead: [8, 13, 20],           // or optionally a single value, like 8
+          maintainability: 100,
+          hideComplexFunctions: false      // only display maintainability
+        }
+      }
     }
   });
 

@@ -43,7 +43,8 @@
     "karma-coverage": "~0.1.5",
     "grunt-karma-coveralls": "~2.3.0",
     "karma-less-preprocessor": "~0.2.0",
-    "grunt-jsdoc": "^0.5.4"
+    "grunt-jsdoc": "^0.5.4",
+    "grunt-complexity": "^0.1.6"
   },
   "engines": {
     "node": ">=0.8.0"
