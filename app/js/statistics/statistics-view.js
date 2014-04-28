@@ -28,15 +28,29 @@ define([
       app.ajaxIndicator.hide();
     },
     renderReviewStateChart: function () {
-      var availWidth = this.$('.col-sm-5').width();
-      var chart = this.charts.reviewStateChart(availWidth, 300);
-      chart.radius(120);
+      var availWidth = this.$('.col-sm-6').width();
+      var height = 300;
+      var radius = 120;
+      var chart = this.charts.reviewStateChart(availWidth, height);
+      chart.radius(radius);
+      var moveX = availWidth - 120;
+      var moveY = height / 2;
+      chart.renderlet(function (chart) {
+        chart.select('svg > g').attr('transform', 'translate('+ moveX +', '+ moveY +')');
+      });
       chart.render();
     },
     renderCommitsPerAuthorChart: function () {
-      var availWidth = this.$('.col-sm-5').width();
-      var chart = this.charts.commitsPerAuthorChart(availWidth, 300);
-      chart.radius(120);
+      var availWidth = this.$('.col-sm-6').width();
+      var height = 300;
+      var radius = 120;
+      var chart = this.charts.commitsPerAuthorChart(availWidth, height);
+      chart.radius(radius);
+      var moveX = availWidth - 120;
+      var moveY = height / 2;
+      chart.renderlet(function (chart) {
+        chart.select('svg > g').attr('transform', 'translate('+ moveX +', '+ moveY +')');
+      });
       chart.render();
     },
     renderTimeChart: function () {
