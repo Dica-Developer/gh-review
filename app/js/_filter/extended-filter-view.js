@@ -33,6 +33,7 @@ define([
       this.charts = new Charts();
 
       var twoWeeksAgo = moment().subtract('weeks', 2).toISOString();
+      this.filter.setBranch(this.options.branch);
       this.filter.setRepo(this.model.get('name'));
       this.filter.setOwner(this.model.get('owner').login);
       this.filter.setSince(twoWeeksAgo);

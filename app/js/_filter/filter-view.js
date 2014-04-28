@@ -4,6 +4,7 @@ define(function (require) {
 
   var Backbone = require('backbone');
   var _ = require('underscore');
+  var $ = require('jquery');
   var app = require('app');
   var dc = require('dc');
   var ExtendedFilterView = require('_ExtendedFilterView');
@@ -12,10 +13,12 @@ define(function (require) {
   return Backbone.View.extend({
     el: '#main',
     repoTable: null,
+    selectedRepoModel: '',
     events: {
       'click #repo-data-table .dc-table-row': 'selectRepo',
       'change #tableGroup': 'changeRepotableGroup',
-      'click .sortRepoTable': 'sortRepoTable'
+      'click .sortRepoTable': 'sortRepoTable',
+      'click #applyBranchSettings': 'applyBranch'
     },
     template: _.template(template),
     initialize: function () {
@@ -72,9 +75,28 @@ define(function (require) {
       tr.addClass('success');
 
       var repo = tr.find('td').eq(0).text();
-      /*jshint camelcase:false*/
-      var repoModel = app.repoCollection.findWhere({full_name: repo});
-      new ExtendedFilterView({model: repoModel});
+      var repoModel = app.repoCollection.findWhere({'full_name': repo});
+      this.selectedRepoModel = repoModel;
+      repoModel.getBranches()
+        .then(this.addBranchesSelect.bind(this));
+    },
+    addBranchesSelect: function(repoModel){
+      var branches = repoModel.get('branches');
+      var defaultBranch = repoModel.get('default_branch');
+      var selectField = this.$('#selectBranch');
+      selectField.empty();
+      _.each(branches, function(branch){
+        var option = $('<option value="'+ branch.name + '">'+ branch.name +'</option>');
+        if(defaultBranch === branch.name){
+          option.attr('selected', 'selected');
+        }
+        option.appendTo(selectField);
+      });
+      this.$('#selectBranchesRow').show();
+    },
+    applyBranch: function(){
+      var branch = this.$('#selectBranch option:selected').val();
+      new ExtendedFilterView({model: this.selectedRepoModel, branch: branch});
     },
     repoData: function () {
       var rawData = app.repoCollection.toJSON();
