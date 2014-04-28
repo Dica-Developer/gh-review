@@ -61,15 +61,15 @@ define(['backbone', 'when', 'app'], function (Backbone, when, app) {
     },
     getTreeCallback: function(error, res){
       this.set('tree', res);
-      this.getTreeDefer.resolve();
+      this.getTreeDefer.resolve(this);
     },
     getBranchesCallback: function (error, res) {
       this.set('branches', res);
-      this.getBranchesDefer.resolve();
+      this.getBranchesDefer.resolve(this);
     },
     getContributorsCallback: function (error, res) {
       this.set('contributors', res);
-      this.getContributorsDefer.resolve();
+      this.getContributorsDefer.resolve(this);
     }
   });
 });
