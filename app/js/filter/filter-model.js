@@ -162,7 +162,7 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection', 'underscore
        */
       getNextPage: function () {
         this.getCommitsRefer = when.defer();
-        app.github.getNextPage(tmpCommits, this.getCommitsCallback.bind(this));
+        app.github.getNextPage(tmpCommits, this._getCommitsCallback.bind(this));
         return this.getCommitsRefer.promise;
       },
       /**
@@ -171,7 +171,7 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection', 'underscore
        */
       getFirstPage: function () {
         this.getCommitsRefer = when.defer();
-        app.github.getFirstPage(tmpCommits, this.getCommitsCallback.bind(this));
+        app.github.getFirstPage(tmpCommits, this._getCommitsCallback.bind(this));
         return this.getCommitsRefer.promise;
       },
       /**
@@ -182,7 +182,7 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection', 'underscore
        */
       getCommits: function () {
         this.getCommitsRefer = when.defer();
-        app.github.repos.getCommits(this.toJSON(), this.getCommitsCallback.bind(this));
+        app.github.repos.getCommits(this.toJSON(), this._getCommitsCallback.bind(this));
         return this.getCommitsRefer.promise;
       },
       /**
@@ -202,7 +202,7 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection', 'underscore
             if (hasNext) {
               this.getAllCommits(link);
             } else {
-              this.getCommitsCallback(error, this.tmpCommits);
+              this._getCommitsCallback(error, this.tmpCommits);
             }
           }
         }.bind(this);
@@ -244,18 +244,18 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection', 'underscore
        * @param {Error} error
        * @param {Object} commits
        */
-      getCommitsCallback: function (error, commits) {
+      _getCommitsCallback: function (error, commits) {
 //      this.setHeader('If-Modified-Since', commits.meta['last-modified']);
         if (!error) {
           if (!_.isUndefined(commits.meta)) {
-            commits = this.extractMeta(commits);
+            commits = this._extractMeta(commits);
           }
           //indicates that this is a getAll request in that case we dont need to if there is a pagination option
           if (!_.isUndefined(this.tmpCommits)) {
             delete this.tmpCommits;
           }
           if (_.size(this.get('customFilter')) > 0) {
-            this.processCustomFilter(commits);
+            this._processCustomFilter(commits);
           } else {
             this.commitCollection.reset(commits);
             this.getCommitsRefer.resolve(this.commitCollection);
@@ -267,7 +267,7 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection', 'underscore
        * @param {Object} commits
        * @returns {Object}
        */
-      extractMeta: function (commits) {
+      _extractMeta: function (commits) {
         tmpCommits = _.extend({}, commits);
         this.hasNextPage = app.github.hasNextPage(commits);
         this.hasPreviousPage = app.github.hasPreviousPage(commits);
@@ -310,7 +310,7 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection', 'underscore
        * @private
        * @param {Object} commits
        */
-      processCustomFilter: function (commits) {
+      _processCustomFilter: function (commits) {
         var tmpCommits = [];
         var customFilter = this.get('customFilter');
         var state = customFilter.state;
