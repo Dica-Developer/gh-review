@@ -77,7 +77,7 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection', 'underscore
        *
        * @returns {String}
        */
-      getBranch: function(){
+      getBranch: function () {
         return this.get('sha');
       },
       /**
@@ -219,7 +219,7 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection', 'underscore
       getAllCommitsFromBranch: function () {
         var githubMsg = this.toJSON();
         delete githubMsg.customFilter;
-        if(githubMsg.author){
+        if (githubMsg.author) {
           delete githubMsg.author;
         }
         return this.getAllCommits(null, githubMsg);
