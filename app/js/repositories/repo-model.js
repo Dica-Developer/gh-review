@@ -60,14 +60,17 @@ define(['backbone', 'when', 'app'], function (Backbone, when, app) {
       return this.getContributorsDefer.promise;
     },
     getTreeCallback: function(error, res){
+      delete res.meta;
       this.set('tree', res);
       this.getTreeDefer.resolve(this);
     },
     getBranchesCallback: function (error, res) {
+      delete res.meta;
       this.set('branches', res);
       this.getBranchesDefer.resolve(this);
     },
     getContributorsCallback: function (error, res) {
+      delete res.meta;
       this.set('contributors', res);
       this.getContributorsDefer.resolve(this);
     }
