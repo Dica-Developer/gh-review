@@ -26,12 +26,16 @@ define(['jquery', 'WelcomeView'], function($, WelcomeView){
 
       var h1 = sandbox.find('h1');
       var h3 = sandbox.find('h3');
+      var p = sandbox.find('p');
 
       expect(h1.length).toBe(1);
-      expect(h1.text()).toBe('Welome to gh-review');
+      expect(h1.text()).toBe('Welcome to gh-review');
 
       expect(h3.length).toBe(1);
       expect(h3.text()).toBe('You don\'t have setup a filter. Learn How To.');
+
+      expect(p.length).toBe(1);
+      expect(p.text()).toBe('Select under Repositories a repository and then use the filter buttons to isolate what you want to review of this repository.');
 
     });
 
