@@ -182,8 +182,8 @@ define(function (require) {
           return d.access;
         })
         .columns([
+          /*jshint camelcase:false*/
           function (d) {
-            /*jshint camelcase:false*/
             return d.full_name;
           },
           function (d) {
