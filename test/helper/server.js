@@ -100,6 +100,25 @@ define(['githubResponses'], function(githubResponses){
         JSON.stringify(githubResponses.reposGetFromOrg)
       ]);
     };
+
+    this.githubReposGetAllAndOrgs = function(manual){
+      this.start(manual);
+      this.server.respondWith('GET', this.urls.githubReposFromOrgUrl(), [
+        200,
+        this.contentTypes.json,
+        JSON.stringify(githubResponses.reposGetFromOrg)
+      ]);
+      this.server.respondWith('GET', this.urls.githubReposGetAllUrl(), [
+        200,
+        this.contentTypes.json,
+        JSON.stringify(githubResponses.reposGetAll)
+      ]);
+      this.server.respondWith('GET', this.urls.githubUserGetOrgUrl(), [
+        200,
+        this.contentTypes.json,
+        JSON.stringify(githubResponses.userGetOrgs)
+      ]);
+    };
   }
 
   Server.prototype.start = function(manual){
