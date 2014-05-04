@@ -37,26 +37,28 @@ define(['jquery', 'underscore', 'app', 'Router', 'bootstrap'], function ($, _, a
       });
 
       it('Should be visible after 200ms timeout', function () {
-        jasmine.Clock.useMock();
+        jasmine.clock().install();
         tmpApp.showIndicator(true);
         expect(indicator.is(':visible')).toBeFalsy();
-        jasmine.Clock.tick(100);
+        jasmine.clock().tick(100);
         expect(indicator.is(':visible')).toBeFalsy();
-        jasmine.Clock.tick(250);
+        jasmine.clock().tick(250);
         expect(indicator.is(':visible')).toBeTruthy();
+        jasmine.clock().uninstall();
       });
 
       it('Should be closed if passing "false" and indicator is visible', function () {
-        jasmine.Clock.useMock();
+        jasmine.clock().install();
         tmpApp.showIndicator(true);
         expect(indicator.is(':visible')).toBeFalsy();
-        jasmine.Clock.tick(100);
+        jasmine.clock().tick(100);
         expect(indicator.is(':visible')).toBeFalsy();
-        jasmine.Clock.tick(250);
+        jasmine.clock().tick(250);
         expect(indicator.is(':visible')).toBeTruthy();
         tmpApp.showIndicator(false);
-        jasmine.Clock.tick(300);
+        jasmine.clock().tick(300);
         expect(indicator.is(':visible')).toBeFalsy();
+        jasmine.clock().uninstall();
       });
     });
 
