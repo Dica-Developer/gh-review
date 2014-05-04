@@ -11,9 +11,11 @@ define([
   return Backbone.Collection.extend({
     model: RepoModel,
     organizations: {},
-    getReposDefer: when.defer(),
-    getOrgReposDefer: when.defer(),
+    getReposDefer: null,
+    getOrgReposDefer: null,
     getRepos: function () {
+      this.getReposDefer = when.defer();
+      this.getOrgReposDefer = when.defer();
       app.github.repos.getAll({}, this.getAllReposCallback.bind(this));
       app.github.user.getOrgs({}, this.getOrgsCallback.bind(this));
       return [this.getReposDefer.promise, this.getOrgReposDefer.promise];
