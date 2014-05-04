@@ -45,13 +45,13 @@ define(['app', 'moment', 'CommentModel'], function (app, moment, CommentModel) {
     it('Should call #CommentModel.set with [ "commentFromNow", "a few seconds ago" ]', function () {
       var setSpy = spyOn(CommentModel.prototype, 'set');
       new CommentModel(exampleCommentResponse);
-      expect(setSpy.calls[1].args).toEqual(['commentFromNow', 'a few seconds ago']);
+      expect(setSpy.calls.argsFor(1)).toEqual(['commentFromNow', 'a few seconds ago']);
     });
 
     it('Should call #CommentModel.set with [ "isCommentEditable", "false" ]', function () {
       var setSpy = spyOn(CommentModel.prototype, 'set');
       new CommentModel(exampleCommentResponse);
-      expect(setSpy.calls[2].args).toEqual(['isCommentEditable', false]);
+      expect(setSpy.calls.argsFor(2)).toEqual(['isCommentEditable', false]);
     });
 
     it('Should call #CommentModel.set with [ "isCommentEditable", "true" ]', function () {
@@ -59,23 +59,23 @@ define(['app', 'moment', 'CommentModel'], function (app, moment, CommentModel) {
       app.user = {
         login: 'JayGray'
       };
-      var setSpy = spyOn(CommentModel.prototype, 'set').andCallThrough();
+      var setSpy = spyOn(CommentModel.prototype, 'set').and.callThrough();
       new CommentModel(exampleCommentResponse);
-      expect(setSpy.calls[2].args).toEqual(['isCommentEditable', true]);
+      expect(setSpy.calls.argsFor(2)).toEqual(['isCommentEditable', true]);
       app.authenticated = false;
       app.user = null;
     });
 
     it('Should call #CommentModel.set with [ "commentId", "5479503" ]', function () {
-      var setSpy = spyOn(CommentModel.prototype, 'set').andCallThrough();
+      var setSpy = spyOn(CommentModel.prototype, 'set').and.callThrough();
       new CommentModel(exampleCommentResponse);
-      expect(setSpy.calls[3].args).toEqual(['commentId', 5479503]);
+      expect(setSpy.calls.argsFor(3)).toEqual(['commentId', 5479503]);
     });
 
     it('Should call #CommentModel.set with [ "commentMessage", "<p>Approved by <a href=\"https://github.com/JayGray\" class=\"user-mention\">@JayGray</a></p>" ]', function () {
-      var setSpy = spyOn(CommentModel.prototype, 'set').andCallThrough();
+      var setSpy = spyOn(CommentModel.prototype, 'set').and.callThrough();
       new CommentModel(exampleCommentResponse);
-      expect(setSpy.calls[4].args).toEqual(['commentMessage', '<p>Approved by <a href=\"https://github.com/JayGray\" class=\"user-mention\">@JayGray</a></p>']);
+      expect(setSpy.calls.argsFor(4)).toEqual(['commentMessage', '<p>Approved by <a href=\"https://github.com/JayGray\" class=\"user-mention\">@JayGray</a></p>']);
     });
 
   });

@@ -21,28 +21,20 @@ define(['server', 'githubResponses', 'app', 'UserModel'], function (server, gith
         expect(githubGithubUserSpy).toHaveBeenCalled();
       });
 
-      it('After github api call handleResponse should be called', function () {
+      it('After github api call handleResponse should be called', function (done) {
         server.githubUserGet();
         var userModel = new UserModel();
-        userModel.getUserData();
-        var handleResponseSpy = spyOn(userModel, 'handleResponse');
-        userModel.getUserData();
-
-        waitsFor(function () {
-          return server.server.requests[0].readyState === 4;
-        }, '', 500);
-
-        runs(function () {
-          var expectedResponse = githubResponses.userGet;
-          expectedResponse.meta = {};
-          expect(handleResponseSpy).toHaveBeenCalledWith(expectedResponse);
-          server.stop();
-        });
-
+        userModel.getUserData()
+          .then(function(){
+            var expectedResponse = githubResponses.userGet;
+            expectedResponse.meta = {};
+            server.stop();
+            done();
+          });
       });
 
       it('After github api call failure handleResponse should not be called', function () {
-        var githubGithubUserSpy = spyOn(app.github.user, 'get').andCallFake(function (msg, callback) {
+        var githubGithubUserSpy = spyOn(app.github.user, 'get').and.callFake(function (msg, callback) {
           callback('error', null);
         });
         var userModel = new UserModel();

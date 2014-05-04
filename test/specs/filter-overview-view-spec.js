@@ -19,7 +19,7 @@ define(['FilterOverview', 'app', 'QuickFilter', 'RepoCollection', 'FilterCollect
       });
 
       it('Should initiate new #QuickFilter and call #QuickFilter.render', function () {
-        var quickFilterInitSpy = spyOn(QuickFilter.prototype, 'initialize').andCallThrough();
+        var quickFilterInitSpy = spyOn(QuickFilter.prototype, 'initialize').and.callThrough();
         var quickFilterRenderSpy = spyOn(QuickFilter.prototype, 'render');
 
         var filterOverview = new FilterOverview();
@@ -30,7 +30,7 @@ define(['FilterOverview', 'app', 'QuickFilter', 'RepoCollection', 'FilterCollect
       });
 
       it('Should initiate new #FilterListView and call #FilterListView.render and #FilterListView.fetchReviews', function () {
-        var filterListInitSpy = spyOn(FilterListView.prototype, 'initialize').andCallThrough();
+        var filterListInitSpy = spyOn(FilterListView.prototype, 'initialize').and.callThrough();
         var filterListRenderSpy = spyOn(FilterListView.prototype, 'render');
         var filterListFetchReviewsSpy = spyOn(FilterListView.prototype, 'fetchReviews');
 

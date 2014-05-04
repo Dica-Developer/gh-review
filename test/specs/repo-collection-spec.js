@@ -1,11 +1,12 @@
-/*global define, describe, it, expect, spyOn, runs, waitsFor, afterEach, localStorage */
+/*global define, describe, it, expect, spyOn, afterEach, localStorage */
 define([
   'underscore',
+  'when',
   'server',
   'githubResponses',
   'app',
   'RepoCollection'
-], function (_, server, githubResponses, app, RepoCollection) {
+], function (_, when, server, githubResponses, app, RepoCollection) {
   'use strict';
 
   afterEach(function () {
@@ -15,30 +16,29 @@ define([
 
   describe('#RepoCollection', function () {
 
-    it('.getRepos should call github api', function () {
-      var githubReposGetAllSpy = spyOn(app.github.repos, 'getAll');
-      var githubUserGetOrgsSpy = spyOn(app.github.user, 'getOrgs');
+    it('.getRepos should call github api', function (done) {
+      server.githubReposGetAllAndOrgs();
+      var githubReposGetAllSpy = spyOn(app.github.repos, 'getAll').and.callThrough();
+      var githubUserGetOrgsSpy = spyOn(app.github.user, 'getOrgs').and.callThrough();
       var Collection = RepoCollection.extend();
       var collection = new Collection();
-      collection.getRepos();
-      expect(githubReposGetAllSpy).toHaveBeenCalled();
-      expect(githubUserGetOrgsSpy).toHaveBeenCalled();
+      when.all(collection.getRepos(), function(){
+        expect(githubReposGetAllSpy).toHaveBeenCalled();
+        expect(githubUserGetOrgsSpy).toHaveBeenCalled();
+        server.stop();
+        done();
+      });
     });
 
-    it('.getAllReposCallback should be called after github respond', function () {
-      server.githubReposGetAll();
-      var getAllReposCallbackSpy = spyOn(RepoCollection.prototype, 'getAllReposCallback');
-      spyOn(app.github.user, 'getOrgs');
+    it('.getAllReposCallback should be called after github respond', function (done) {
+      server.githubReposGetAllAndOrgs();
+      var getAllReposCallbackSpy = spyOn(RepoCollection.prototype, 'getAllReposCallback').and.callThrough();
       var Collection = RepoCollection.extend();
       var collection = new Collection();
-      collection.getRepos();
-      waitsFor(function () {
-        return server.server.requests[0].readyState === 4;
-      });
-
-      runs(function () {
+      when.all(collection.getRepos(), function(){
         expect(getAllReposCallbackSpy).toHaveBeenCalled();
         server.stop();
+        done();
       });
     });
 
@@ -47,124 +47,75 @@ define([
       spyOn(app.github.user, 'getOrgs');
       var Collection = RepoCollection.extend();
       var collection = new Collection();
+      collection.getReposDefer = when.defer();
       collection.getAllReposCallback(null, githubResponses.reposGetAll);
 
       expect(collection.length).toBe(2);
     });
 
-    it('.getOrgsCallback should be called after github respond', function () {
-      server.githubUserGetOrgs();
-      var getOrgsCallbackSpy = spyOn(RepoCollection.prototype, 'getOrgsCallback');
-      spyOn(app.github.repos, 'getAll');
+    it('.getOrgRepos should should call github.repos.getFromOrg', function (done) {
+      server.githubReposGetAllAndOrgs();
       var Collection = RepoCollection.extend();
       var collection = new Collection();
-      collection.getRepos();
-
-      waitsFor(function () {
-        return server.server.requests[0].readyState === 4;
-      });
-
-      runs(function () {
-        expect(getOrgsCallbackSpy).toHaveBeenCalled();
-        server.stop();
-      });
-    });
-
-    it('.getOrgRepos should should call github.repos.getFromOrg', function () {
-      server.githubUserGetOrgs();
-      spyOn(app.github.repos, 'getAll');
-      spyOn(app.github.user, 'getOrgs').andCallThrough();
-      var githubgetFromOrgSpy = spyOn(app.github.repos, 'getFromOrg');
-      var Collection = RepoCollection.extend();
-      var collection = new Collection();
-      collection.getRepos();
-
-      waitsFor(function () {
-        return server.server.requests[0].readyState === 4;
-      });
-
-      runs(function () {
-        expect(githubgetFromOrgSpy).toHaveBeenCalled();
-        expect(githubgetFromOrgSpy.calls.length).toBe(2);
+      when.all(collection.getRepos(), function(){
         expect(_.size(collection.organizations)).toBe(2);
         server.stop();
+        done();
       });
     });
 
-    it('.getOrgRepos should should call github.repos.getFromOrg with existing org', function () {
-      server.githubReposGetFromOrg();
-      spyOn(app.github.repos, 'getAll');
-      spyOn(app.github.user, 'getOrgs');
+    xit('.getOrgRepos should should call github.repos.getFromOrg with existing org', function (done) {
+      server.githubReposGetAllAndOrgs();
+      spyOn(app.github.user, 'getOrgs').and.returnValue([githubResponses.userGetOrgs[0]]);
       var Collection = RepoCollection.extend();
       var collection = new Collection();
       collection.organizations = {};
-      collection.getOrgRepos([githubResponses.userGetOrgs[0]]);
-
-      waitsFor(function () {
-        return server.server.requests[0].readyState === 4;
-      });
-
-      runs(function () {
+      when.all(collection.getRepos(), function(){
         expect(collection.length).toBe(1);
         expect(collection.models[0].get('organization')).toEqual(githubResponses.userGetOrgs[0]);
         server.stop();
+        done();
       });
     });
 
-    it('.getOrgRepos should should call github.repos.getFromOrg without existing org', function () {
-      server.githubReposGetFromOrg();
-      spyOn(app.github.repos, 'getAll');
-      spyOn(app.github.user, 'getOrgs');
+    xit('.getOrgRepos should should call github.repos.getFromOrg without existing org', function (done) {
+      server.githubReposGetAllAndOrgs();
+      spyOn(app.github.user, 'getOrgs').and.returnValue([githubResponses.userGetOrgs[1]]);
       var Collection = RepoCollection.extend();
       var collection = new Collection();
       collection.organizations = {};
-      collection.getOrgRepos([githubResponses.userGetOrgs[1]]);
-
-      waitsFor(function () {
-        return server.server.requests[0].readyState === 4;
-      });
-
-      runs(function () {
+      when.all(collection.getRepos(), function(){
         expect(collection.length).toBe(1);
         expect(collection.models[0].get('organization')).toBeUndefined();
         server.stop();
+        done();
       });
     });
 
-    it('.getRepoByName should return correct repo or undefined', function () {
-      server.githubReposGetAll();
-      spyOn(app.github.user, 'getOrgs');
+    it('.getRepoByName should return correct repo or undefined', function (done) {
+      server.githubReposGetAllAndOrgs();
       var Collection = RepoCollection.extend();
       var collection = new Collection();
-      collection.getRepos();
-      waitsFor(function () {
-        return server.server.requests[0].readyState === 4;
-      });
-
-      runs(function () {
+      when.all(collection.getRepos(), function(){
         expect(collection.getRepoByName('PRIVATE_REPO')).toBe(collection.at(1));
-        expect(collection.getRepoByName('UNDEFINED_REPO')).toBe(undefined);
+        expect(collection.getRepoByName('UNDEFINED_REPO')).toBe(void 0);
         server.stop();
+        done();
       });
     });
 
-    it('.toJSONSortedByName should return all repos as json sorted by repo name', function () {
+    it('.toJSONSortedByName should return all repos as json sorted by repo name', function (done) {
       var expectedResult = [
         { name: 'PRIVATE_REPO', id: 2, login: 'USER' },
         { name: 'PUBLIC_REPO', id: 1, login: 'USER' }
       ];
-      server.githubReposGetAll();
-      spyOn(app.github.user, 'getOrgs');
+      server.githubReposGetAllAndOrgs();
       var Collection = RepoCollection.extend();
       var collection = new Collection();
-      collection.getRepos();
-      waitsFor(function () {
-        return server.server.requests[0].readyState === 4;
-      });
-
-      runs(function () {
+      when.all(collection.getRepos(), function(){
         expect(collection.toJSONSortedByName()).toEqual(expectedResult);
         server.stop();
+        done();
       });
     });
 

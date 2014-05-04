@@ -35,7 +35,7 @@ define(function (require) {
           }
         });
         router = new TmpRouter();
-        routerClearSpy = spyOn(router, 'clear').andCallThrough();
+        routerClearSpy = spyOn(router, 'clear').and.callThrough();
       });
 
       afterEach(function () {
@@ -57,7 +57,7 @@ define(function (require) {
       //disabled until the commit view w/o filter is up again
       xit('.showCommit should init new #CommentView', function () {
         var commentViewSpy = spyOn(CommentView.prototype, 'initialize');
-        var getDiffAndCommentsSpy = spyOn(CommentView.prototype, 'getDiffAndComments').andReturn(
+        var getDiffAndCommentsSpy = spyOn(CommentView.prototype, 'getDiffAndComments').and.returnValue(
           when.promise(function (resolve) {
             resolve();
           })
