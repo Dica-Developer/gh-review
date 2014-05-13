@@ -66,7 +66,7 @@ define([
       }, this);
     },
     getAllCommits: function () {
-      this.model.getCommits()
+      this.model.getCommits(0, 30)
         .then(this.renderAllCommits.bind(this));
     },
     serialize: function(){

@@ -217,8 +217,8 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection', 'underscore
       },
       getCommits: function (firstResult, maxResults) {
         this.firstResult = firstResult || 0;
-        this.maxResults = maxResults || 30;
-        if (this._needsPostFiltering()) {
+        this.maxResults = maxResults || -1;
+        if (this._needsPostFiltering() || this.maxResults === -1) {
           return this._getCommitsPostFiltered();
         } else {
           return this._getCommitsDirect();
@@ -230,7 +230,7 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection', 'underscore
         if (githubMsg.author) {
           delete githubMsg.author;
         }
-        return this.getAllCommits(null, githubMsg);
+        return this.getCommits(null, githubMsg);
       },
       /**
        * Returns the commits as collection.
@@ -264,7 +264,11 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection', 'underscore
       },
       _extractMetaPostFilter: function (commits) {
         tmpCommits = _.extend({}, commits);
-        this.hasNextPage = (this.maxResults + this.firstResult) < commits.length;
+        if (this.maxResults > -1) {
+          this.hasNextPage = (this.maxResults + this.firstResult) < commits.length;
+        } else {
+          this.hasNextPage = false;
+        }
         this.hasPreviousPage = this.firstResult > 0;
         this.hasFirstPage = true;
         if (!_.isUndefined(commits.meta)) {
@@ -346,7 +350,11 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection', 'underscore
             }
           });
         }
-        this.commitCollection.reset(_.first(_.rest(tmpCommits, this.firstResult), this.maxResults));
+        if (this.maxResults > -1) {
+          this.commitCollection.reset(_.first(_.rest(tmpCommits, this.firstResult), this.maxResults));
+        } else {
+          this.commitCollection.reset(_.rest(tmpCommits, this.firstResult));
+        }
         this.getCommitsRefer.resolve(this.commitCollection);
       }
     });

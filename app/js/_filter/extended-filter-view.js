@@ -38,7 +38,7 @@ define([
       this.filter.setOwner(this.model.get('owner').login);
       this.filter.setSince(twoWeeksAgo);
       this.filter.getAllComments()
-        .then(this.filter.getAllCommits.bind(this.filter))
+        .then(this.filter.getCommits.bind(this.filter))
         .then(this.processDataAndRenderCharts.bind(this));
       this.model.getAdditionalInformations()
         .then(this.renderBranchesAndContributors.bind(this));
