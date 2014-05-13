@@ -139,9 +139,26 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection', 'underscore
         customFilter.state = state;
         this.set('customFilter', customFilter);
       },
-//    setSHA: function (sha) {
-//      this.set('sha', sha);
-//    },
+      _needsPostFiltering: function() {
+        return (_.size(this.get('customFilter')) > 0);
+      },
+      /**
+       * Fetches the next page of commit list
+       * @returns {promise}
+       */
+      getNextPage: function () {
+        return this.getCommits(this.firstResult + this.maxResults, this.maxResults);
+      },
+      /**
+       * Fetches the first page of commit list
+       * @returns {promise}
+       */
+      getFirstPage: function () {
+        return this.getCommits(0, this.maxResults);
+      },
+      getPreviousPage: function () {
+        return this.getCommits(Math.max(0, this.firstResult - this.maxResults), this.maxResults);
+      },
       /**
        * Return the github url to get the comment of the current filtered commits
        * @returns {String}
@@ -157,30 +174,12 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection', 'underscore
         return url;
       },
       /**
-       * Fetches the next page of commit list
-       * @returns {promise}
-       */
-      getNextPage: function () {
-        this.getCommitsRefer = when.defer();
-        app.github.getNextPage(tmpCommits, this._getCommitsCallback.bind(this));
-        return this.getCommitsRefer.promise;
-      },
-      /**
-       * Fetches the first page of commit list
-       * @returns {promise}
-       */
-      getFirstPage: function () {
-        this.getCommitsRefer = when.defer();
-        app.github.getFirstPage(tmpCommits, this._getCommitsCallback.bind(this));
-        return this.getCommitsRefer.promise;
-      },
-      /**
        * Get the first results of the filtered commits.
        * Do the result list is bigger then one page use {@link FilterModel#getNextPage} or {@link FilterModel#getFirstPage}
        * to navigate through results
        * @returns {promise}
        */
-      getCommits: function () {
+      _getCommitsDirect: function () {
         this.getCommitsRefer = when.defer();
         app.github.repos.getCommits(this.toJSON(), this._getCommitsCallback.bind(this));
         return this.getCommitsRefer.promise;
@@ -191,7 +190,7 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection', 'underscore
        * @param {Object} githubMsg
        * @returns {promise}
        */
-      getAllCommits: function (link, githubMsg) {
+      _getCommitsPostFiltered: function (link, githubMsg) {
         githubMsg = githubMsg || this.toJSON();
         var callback = function (error, resp) {
           if (!error) {
@@ -200,7 +199,7 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection', 'underscore
             delete resp.meta;
             this.tmpCommits = this.tmpCommits.concat(resp);
             if (hasNext) {
-              this.getAllCommits(link);
+              this._getCommitsPostFiltered(link);
             } else {
               this._getCommitsCallback(error, this.tmpCommits);
             }
@@ -215,6 +214,15 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection', 'underscore
           app.github.getNextPage(link, callback);
         }
         return this.getCommitsRefer.promise;
+      },
+      getCommits: function (firstResult, maxResults) {
+        this.firstResult = firstResult || 0;
+        this.maxResults = maxResults || 30;
+        if (this._needsPostFiltering()) {
+          return this._getCommitsPostFiltered();
+        } else {
+          return this._getCommitsDirect();
+        }
       },
       getAllCommitsFromBranch: function () {
         var githubMsg = this.toJSON();
@@ -231,35 +239,36 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection', 'underscore
       getCollection: function () {
         return this.commitCollection;
       },
-//    setHeader: function (header, value) {
-//      var headers = this.get('headers');
-//      if (!headers) {
-//        headers = {};
-//      }
-//      headers[header] = value;
-//      this.set('headers', headers);
-//    },
       /**
        * @private
        * @param {Error} error
        * @param {Object} commits
        */
       _getCommitsCallback: function (error, commits) {
-//      this.setHeader('If-Modified-Since', commits.meta['last-modified']);
         if (!error) {
-          if (!_.isUndefined(commits.meta)) {
-            commits = this._extractMeta(commits);
-          }
           //indicates that this is a getAll request in that case we dont need to if there is a pagination option
           if (!_.isUndefined(this.tmpCommits)) {
             delete this.tmpCommits;
           }
-          if (_.size(this.get('customFilter')) > 0) {
+          if (this._needsPostFiltering()) {
+            this._extractMetaPostFilter(commits);
             this._processCustomFilter(commits);
           } else {
+            if (!_.isUndefined(commits.meta)) {
+              commits = this._extractMeta(commits);
+            }
             this.commitCollection.reset(commits);
             this.getCommitsRefer.resolve(this.commitCollection);
           }
+        }
+      },
+      _extractMetaPostFilter: function (commits) {
+        tmpCommits = _.extend({}, commits);
+        this.hasNextPage = (this.maxResults + this.firstResult) < commits.length;
+        this.hasPreviousPage = this.firstResult > 0;
+        this.hasFirstPage = true;
+        if (!_.isUndefined(commits.meta)) {
+          delete commits.meta;
         }
       },
       /**
@@ -337,7 +346,7 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection', 'underscore
             }
           });
         }
-        this.commitCollection.reset(tmpCommits);
+        this.commitCollection.reset(_.first(_.rest(tmpCommits, this.firstResult), this.maxResults));
         this.getCommitsRefer.resolve(this.commitCollection);
       }
     });
