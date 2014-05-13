@@ -147,17 +147,35 @@ define(['backbone', 'underscore', 'when', 'app', 'CommitCollection', 'underscore
        * @returns {promise}
        */
       getNextPage: function () {
-        return this.getCommits(this.firstResult + this.maxResults, this.maxResults);
+        if (this._needsPostFiltering()) {
+          return this.getCommits(this.firstResult + this.maxResults, this.maxResults);
+        } else {
+          this.getCommitsRefer = when.defer();
+          app.github.getNextPage(tmpCommits, this._getCommitsCallback.bind(this));
+          return this.getCommitsRefer.promise;
+        }
       },
       /**
        * Fetches the first page of commit list
        * @returns {promise}
        */
       getFirstPage: function () {
-        return this.getCommits(0, this.maxResults);
+        if (this._needsPostFiltering()) {
+          return this.getCommits(0, this.maxResults);
+        } else {
+          this.getCommitsRefer = when.defer();
+          app.github.getFirstPage(tmpCommits, this._getCommitsCallback.bind(this));
+          return this.getCommitsRefer.promise;
+        }
       },
       getPreviousPage: function () {
-        return this.getCommits(Math.max(0, this.firstResult - this.maxResults), this.maxResults);
+        if (this._needsPostFiltering()) {
+          return this.getCommits(Math.max(0, this.firstResult - this.maxResults), this.maxResults);
+        } else {
+          this.getCommitsRefer = when.defer();
+          app.github.getPreviousPage(tmpCommits, this._getCommitsCallback.bind(this));
+          return this.getCommitsRefer.promise;
+        }
       },
       /**
        * Return the github url to get the comment of the current filtered commits
