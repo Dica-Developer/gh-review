@@ -1,26 +1,29 @@
 <!doctype html>
+<html lang="en" ng-app>
 <head>
-    <meta charset="utf-8">
-    <title></title>
-    <meta name="description" content="">
+    <title>GH-Review</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-    <link rel="stylesheet" href="css/main.css">
+
+    <link rel="stylesheet" type="text/css" media="all" href="css/main.css"/>
 </head>
 <body>
-<div id="topMenu"></div>
-<div id="main" class="container">
-    <div class="jumbotron">
-        <h1>github review</h1>
-        <p>Gh-review works with your github user account to review the code in your connected repositories. Free for open source, pro accounts for private repos, instant sign up with GitHub OAuth.</p>
-        <p><a name="gh-review_login" class="btn btn-primary btn-lg" role="button" href="#login">FREE SIGN UP</a> <a class="btn btn-primary btn-lg" role="button" href="https://github.com/Dica-Developer/gh-review">PRO ACCOUNT</a></p>
-    </div>
+<div id="topMenu">
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#ghr-top-menu">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">GH-REVIEW</a>
+            </div>
+            <div class="collapse navbar-collapse" id="ghr-top-menu" menu></div>
+        </div>
+    </nav>
 </div>
-<div id="ajaxIndicator" class="modal">
-    <div id="spinnerContainer" class="spinnerContainer">
-        <div id="spinner" class="spinner">Loading ...</div>
-    </div>
-</div>
-<script data-main="js/main" src="js/require.js"></script>
+<div id="main" class="container" ui-view></div>
+<script data-main="js/main" src="bower_components/requirejs/require.js"></script>
 </body>
 </html>

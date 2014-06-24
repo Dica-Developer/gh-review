@@ -1,0 +1,13 @@
+<div class="row review-overview">
+    <div class="col-lg-12">
+        <ul id="reviewList" class="list-group">
+            <a ng-repeat="filter in filterList" ui-sref="commitsByFilter({filterId: filter.id})" class="list-group-item">
+                <strong>Repository: </strong>{{ filter.repo }}
+                <strong ng-hide="!filter.sha">Branch: </strong>{{ filter.sha }}
+                <strong ng-hide="!filter.since">Since: </strong><formatted-date date="filter.since"></formatted-date>
+                <span class="destroy glyphicon glyphicon-remove-circle pull-right" data-id="{{ filter.id }}"></span>
+                <span class="stats glyphicon glyphicon-stats pull-right" data-id="{{ filter.id }}"></span>
+            </a>
+        </ul>
+    </div>
+</div>

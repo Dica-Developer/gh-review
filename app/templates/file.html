@@ -1,0 +1,29 @@
+<div class="row animate-hide" ng-hide="progress >= 100">
+    <div class="col-sm-12">
+        <p>{{progressMessage}}</p>
+        <progressbar class="progress-striped active" value="progress" type="{{progressType}}"></progressbar>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <!--<div class="uncomplete-diff-warning" ng-if="showUncompleteDiffWarning">Diff is very big! Diff is not complete!</div>-->
+        <div class="table-wrapper">
+            <div class="div-table">
+                <div class="div-table-row" ng-repeat="line in splicedFileContent" ng-model="line" ng-click="highlightSameSha(line.sha)"
+                     ng-class="line.highlight">
+                    <div class="div-table-cell" popover="{{line.linkTitle}}" popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true"><a
+                        ui-sref="commitBySha(line.propertiesNeededForCommitView)">{{line.linkString}}</a></div>
+                    <div class="commitMarker div-table-cell" style="background-color: {{line.color}}"></div>
+                    <div class="lineNr div-table-cell">{{line.lineIndex}}</div>
+                    <div class="div-table-cell">
+                        <pre>{{line.content}}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--<div class="uncomplete-diff-warning" ng-if="showUncompleteDiffWarning">Diff is very big! Diff is not complete!</div>-->
+    </div>
+</div>
+

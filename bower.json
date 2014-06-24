@@ -1,21 +1,22 @@
 {
-  "name": "reviewweb",
-  "version": "0.0.0",
-  "dependencies": {},
+  "name": "GH-Review",
+  "version": "0.2.0",
   "devDependencies": {
-    "jquery": ">=2.1.0",
-    "backbone": "~1.0.0",
-    "requirejs": "~2.1.5",
-    "requirejs-text": "~2.0.5",
-    "when": "~2.5.0",
-    "backbone.localStorage": "~1.1.7",
-    "bootstrap": "~3.1.0",
-    "underscore": "~1.5.2",
-    "moment": "~2.3.1",
-    "underscore.string": "~2.3.3",
-    "requirejs-base64": "~1.0.0",
-    "dcjs": "https://github.com/dc-js/dc.js.git#master",
+    "angular": "~1.2.1",
+    "angular-scenario": "~1.2.1",
+    "angular-route": "~1.2.1",
+    "angular-mocks": "~1.2.1",
+    "requirejs": "~2.1.9",
+    "angular-bootstrap": "~0.11.0",
+    "bootstrap": "~3.1.1",
+    "angular-ui-router": "~0.2.10",
+    "angular-local-storage": "~0.0.5",
     "github-js": "https://github.com/Dica-Developer/github-js.git",
-    "d3": "~3.4.4"
+    "moment": "~2.6.0",
+    "lodash": "~2.4.1",
+    "underscore.string": "~2.3.3",
+    "angular-sanitize": "~1.2.16",
+    "angular-animate": "~1.2.17",
+    "dcjs": "https://github.com/dc-js/dc.js.git#1c7a39954510b0204b3c76175c0ae8d4e72db81c"
   }
 }

@@ -1,11 +1,3 @@
 <ul class="list-group">
-  <% _.each(user, function(val, name){ %>
-    <% if (typeof val === 'object') {%>
-      <% _.each(val, function(subVal, subName){ %>
-        <li class="list-group-item"><%= subName %>: <%= subVal %></li>
-      <% }); %>
-    <% } else { %>
-      <li class="list-group-item"><%= name %>: <%= val %></li>
-    <% } %>
-  <% }); %>
+    <li class="list-group-item" ng-repeat="(key, value) in userData"> {{key}}: {{ value }} </li>
 </ul>

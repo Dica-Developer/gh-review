@@ -1,0 +1,75 @@
+
+.table-wrapper {
+  overflow-y: scroll;
+
+  .div-table {
+    display: table;
+    width: 100%;
+    border: 1px solid @gray-lighter;
+    border-radius: 3px;
+
+    .div-table-row {
+      display: table-row;
+      width: 100%;
+      clear: both;
+      &.added {
+        .div-table-cell {
+          background-color: @state-success-bg;
+        }
+      }
+      &.deleted {
+        .div-table-cell {
+          background-color: @state-danger-bg;
+        }
+      }
+      &.chunk-header {
+        .div-table-cell {
+          background-color: @state-info-bg;
+        }
+      }
+      &:hover:not(.chunk) {
+        .div-table-cell {
+          background-color: @gray-lighter;
+        }
+      }
+    }
+    .div-table-cell {
+      display: table-cell;
+      width: auto;
+      border-right: 1px solid @gray-lighter;
+      padding: 0 3px;
+      &:not(.lineComment) {
+        font-family: SourceCodePro;
+      }
+      &.lineNr {
+        min-width: 30px;
+      }
+
+      &:last-child {
+        width: 100%;
+        border: none;
+      }
+
+      pre {
+        font-family: SourceCodePro;
+        background: 0;
+        padding: 0;
+        margin: 0;
+        border: 0;
+        border-radius: 0;
+        white-space: pre;
+      }
+    }
+    .comments {
+      .div-table-cell {
+        border: none;
+      }
+      .lineComment {
+        max-width: @container-desktop;
+        margin: 10px;
+
+      }
+    }
+
+  }
+}

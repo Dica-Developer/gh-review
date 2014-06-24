@@ -1,4 +1,15 @@
+// we get all the test files automatically
+var tests = [];
+for (var file in window.__karma__.files) {
+    if (window.__karma__.files.hasOwnProperty(file)) {
+        if (/^\/base\/test\/unit\S*Spec.js$/.test(file)) {
+            tests.push(file);
+        }
+    }
+}
+
 require.config({
+    baseUrl: '/base/app/js',
     paths: {
         angular: '../bower_components/angular/angular',
         angularRoute: '../bower_components/angular-ui-router/release/angular-ui-router.min',
@@ -9,6 +20,7 @@ require.config({
         angularLocalStorage: '../bower_components/angular-local-storage/angular-local-storage.min',
         moment: '../bower_components/moment/min/moment.min',
         lodash: '../bower_components/lodash/dist/lodash.min',
+        jquery: '../bower_components/jquery/dist/jquery.min',
         'underscore.string': '../bower_components/underscore.string/dist/underscore.string.min',
 
         'd3': '../bower_components/d3/d3',
@@ -32,7 +44,7 @@ require.config({
         FilterController: 'controller/FilterController'
     },
     shim: {
-        'angular': {'exports': 'angular'},
+        'angular': {deps: ['jquery'], 'exports': 'angular'},
         'angularRoute': ['angular'],
         'angularUi': ['angular'],
         'angularSanitize': ['angular'],
@@ -51,9 +63,6 @@ require.config({
     ]
 });
 
-//http://code.angularjs.org/1.2.1/docs/guide/bootstrap#overview_deferred-bootstrap
-window.name = 'NG_DEFER_BOOTSTRAP!';
-
 require([
     'd3',
     'lodash',
@@ -67,16 +76,10 @@ require([
     require([
         'app',
         'routes'
-    ], function (app) {
+    ], function () {
 
-        app.config(
-            [
-                'localStorageServiceProvider',
-                function (localStorageServiceProvider) {
-                    localStorageServiceProvider.setPrefix('ghreview');
-                }
-            ]
-        );
-        angular.bootstrap(document, [app.name]);
+        require(tests, function () {
+            window.__karma__.start();
+        });
     });
 });

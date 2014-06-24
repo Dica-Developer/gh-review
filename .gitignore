@@ -1,10 +1,7 @@
-.idea/
-dist/
-dev/
-coverage/
-node_modules/
-bower_components/
+/.idea
 .DS_Store
-app/css/main.css
-app/js/options.js
-.jsbeautifyrc
+/node_modules
+/app/bower_components
+/coverage
+/dev
+/dist

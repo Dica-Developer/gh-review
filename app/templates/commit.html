@@ -1,0 +1,142 @@
+<div class="row">
+    <div class="col-sm-12">
+        <ol class="breadcrumb">
+            <li>{{commit.owner}}</li>
+            <li>{{commit.repository}}</li>
+            <li>commit<a ui-sref="/filter/commits"></a></li>
+            <li>{{commit.sha}}</li>
+        </ol>
+    </div>
+</div>
+
+<div class="row" ng-cloak>
+    <div class="col-sm-12">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h5>{{commit.message}}</h5>
+            </div>
+            <div class="panel-body">
+                <div class="media">
+                    <img ng-if="commit.committer.avatar" height="24px" class="media-object pull-left" src="{{commit.committer.avatar}}" title="{{commit.committer.name}}">
+                    <div class="media-body">
+                        <strong>{{commit.committer.name}}</strong> <span class="text-muted">authored <formatted-date date="commit.date"></formatted-date></span>
+                        <span class="pull-right" ng-if="approvers.length > 0">
+                                approved by
+                                <a ng-repeat="approver in approvers" href="https://github.com/{{approver}}" class="user-mention">@{{approver}}</a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" ng-cloak>
+    <div class="col-sm-12">
+        <small> Showing <strong> {{files.length}} changed {{files.length === 1 ? 'file' : 'files'}}</strong> with <strong>{{commit.additions}} additions</strong> and <strong>{{commit.deletions}} deletions</strong></small>
+    </div>
+</div>
+
+<div class="row" id="diff-view" ng-cloak>
+    <div class="col-sm-12">
+
+        <div ng-repeat="file in files" class="panel panel-default">
+            <div class="panel-heading">
+                File: <a ui-sref="filterModuleFile({user: commit.owner, repo: commit.repository, sha: commit.sha, path: file.name, ref: file.blobSha})">{{file.name}}</a>
+                <div class="pull-right">
+                        <span class="label label-success">
+                            <span class="glyphicon glyphicon-plus"></span> {{file.additions}}
+                        </span>
+                        <span class="label label-danger">
+                            <span class="glyphicon glyphicon-minus"></span> {{file.deletions}}
+                        </span>
+                        <span class="label label-info">
+                            <span class="glyphicon glyphicon-transfer"></span> {{file.changes}}
+                        </span>
+                </div>
+            </div>
+            <div class="table-wrapper">
+                <div class="div-table">
+                    <div ng-repeat="line in file.lines.lines" ng-model="line">
+                        <div class="div-table-row" ng-class="line.format">
+                            <div class="div-table-cell"></div>
+                            <div class="div-table-cell lineNr">{{line.lineNrLeft}}</div>
+                            <div class="div-table-cell lineNr">{{line.lineNrRight}}</div>
+                            <div class="div-table-cell">
+                                <pre>{{line.text}}</pre>
+                            </div>
+                        </div>
+                        <div class="comments div-table-row" ng-if="line.comments.length > 0" ng-repeat="comment in line.comments">
+                            <div class="div-table-cell"></div>
+                            <div class="div-table-cell lineNr"></div>
+                            <div class="div-table-cell lineNr"></div>
+                            <div class="lineComment panel panel-default">
+                                <div class="panel-heading">
+                                    <div class="media">
+                                        <img height="24px" class="media-object pull-left" src="{{comment.user.avatar_url}}" title="{{comment.user.login}}" />
+                                        <div class="media-body">
+                                            <strong>{{comment.user.login}}</strong>
+                                            <div class="pull-right">
+                                                <span class="text-muted"><formatted-date date="comment.created_at"></formatted-date></span>
+                                                <div class="btn-group btn-group-xs">
+                                                    <button type="button" class="btn btn-default edit">
+                                                        <span class="glyphicon glyphicon-pencil"></span>
+                                                    </button>
+                                                    <button type="button" class="btn btn-default remove" data-commentid="6569207">
+                                                        <span class="glyphicon glyphicon-remove-circle"></span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel-body" ng-bind-html="comment.body_html"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" ng-if="comments.commitComments.length > 0" ng-cloak>
+    <div class="col-sm-12">
+        <table class="table-responsive table table-condensed commit-comments">
+            <tr ng-repeat="comment in comments.commitComments">
+                <td class="comment-holder">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="media">
+                                <img height="24px" class="media-object pull-left" src="{{comment.user.avatar_url}}" title="{{comment.user.login}}"/>
+                                <div class="media-body">
+                                    <strong>{{comment.user.login}}</strong>
+                                    <div class="pull-right">
+                                        <span class="text-muted">authored <formatted-date date="comment.created_at"></formatted-date></span>
+                                        <div class="btn-group btn-group-xs">
+                                            <button type="button" class="btn btn-default edit">
+                                                <span class="glyphicon glyphicon-pencil"></span>
+                                            </button>
+                                            <button type="button" class="btn btn-default remove" data-commentid="{{comment.id}}">
+                                                <span class="glyphicon glyphicon-remove-circle"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body" ng-bind-html="comment.body_html"></div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="row" ng-cloak>
+    <div class="col-sm-12">
+        <div class="pull-right">
+            <button type="button" class="btn btn-success approveCommit" ng-click="approveCommit()">Approve Commit</button>
+        </div>
+    </div>
+</div>

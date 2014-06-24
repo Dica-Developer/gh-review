@@ -1,60 +1,25 @@
 module.exports = function (config) {
-  'use strict';
+    config.set({
+        basePath: '../',
+        frameworks: ['jasmine', 'requirejs'],
+        files: [
+            {pattern: 'app/js/**/*.js', included: false},
+            {pattern: 'test/unit.js', included: false},
+            {pattern: 'test/unit/**/*.js', included: false},
+            {pattern: 'app/bower_components/**/*.js', included: false},
+            {pattern: 'test/unit/**/*Spec.js', included: false },
+            // needs to be last http://karma-runner.github.io/0.10/plus/requirejs.html
+            'test/main-test.js'
+        ],
 
-  config.set({
-    basePath: '..',
-    frameworks: ['jasmine', 'requirejs'],
+        reporters: ['dots'],
 
-    files: [{
-      pattern: 'app/js/**/*.js',
-      included: false
-    }, {
-      pattern: 'app/js/**/*.html',
-      included: false
-    }, {
-      pattern: 'app/bower_components/**/*.js',
-      included: false
-    }, {
-      pattern: 'app/bower_components/bootstrap/less/bootstrap.less'
-    }, {
-      pattern: 'test/specs/**/*-spec.js',
-      included: false
-    }, {
-      pattern: 'test/helper/**/*.js',
-      included: false
-    }, {
-      pattern: 'test/lib/**/*.js',
-      included: true
-    }, {
-      pattern: 'app/templates/**/*.html',
-      included: false
-    }, 'test/test-main.js'],
+        autoWatch: false,
 
-    browsers: ['PhantomJS'],
+        singleRun: true,
 
-    reporters: ['dots', 'coverage'],
-    preprocessors: {
-      'app/js/!(github)/*.js': ['coverage'],
-      'app/js/*.js': ['coverage'],
-      'app/bower_components/bootstrap/less/*.less': ['less']
-    },
-    lessPreprocessor: {
-      options: {
-        paths: ['app/bower_components/bootstrap/less'],
-        save: true,
-        transformPath: function (path) {
-          return path.replace(/\.less$/, '.compiled.css');
-        }
-      }
-    },
-    coverageReporter: {
-      type: 'lcov',
-      dir: 'coverage'
-    },
+        LogLevel: config.LOG_DEBUG,
 
-    logLevel: config.LOG_INFO,
-
-    autoWatch: false,
-    singleRun: true
-  });
+        browsers: ['PhantomJS']
+    });
 };

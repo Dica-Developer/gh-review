@@ -4,30 +4,48 @@
 }
 
 @import "../bower_components/bootstrap/less/bootstrap";
+
 @import "commit-list";
-@import (less) "../bower_components/dcjs/dc.css";
+@import "pygments";
+@import "table";
+@import "../bower_components/dcjs/dc.css";
 @import "charts";
 
 body {
   padding-top: 70px;
-  .branchButton { border-radius: 0; border-right-width: 0; }
-  .row{
-    &.review-overview{ margin-bottom: 15px; }
+  .branchButton {
+    border-radius: 0;
+    border-right-width: 0;
+  }
+  .row {
+    &.review-overview {
+      margin-bottom: 15px;
+    }
   }
 }
 
 #topMenu {
-  .top-menu-avatar { height: 50px; }
+  .top-menu-avatar {
+    height: 50px;
+  }
 }
 
 #main {
   padding: 15px;
 
-  .height50 { height: 50px; }
-  .datePickerCon { width: 200px; }
-  .filterSince{
-    select{ height: 10px; }
-    .input-group-addon{ width: auto; }
+  .height50 {
+    height: 50px;
+  }
+  .datePickerCon {
+    width: 200px;
+  }
+  .filterSince {
+    select {
+      height: 10px;
+    }
+    .input-group-addon {
+      width: auto;
+    }
   }
 }
 
@@ -40,7 +58,9 @@ table {
     border: none;
 
     tr {
-      td{ border-top: none; }
+      td {
+        border-top: none;
+      }
     }
   }
   &.comments {
@@ -71,6 +91,16 @@ table {
       border: none;
       border-radius: 0;
       white-space: pre;
+    }
+  }
+
+  &.blame {
+    tr {
+      &.highlight {
+        td {
+          background-color: #f5f5f5;
+        }
+      }
     }
   }
 }
@@ -239,7 +269,9 @@ table {
   position: fixed;
 }
 
-.alert-warning-bottom {
+.uncomplete-diff-warning {
+  .alert;
+  .alert-warning;
   margin-bottom: 0px;
 }
 
