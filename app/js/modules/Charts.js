@@ -122,45 +122,47 @@ define(['angular', 'd3', 'dcjs', 'crossfilter', 'lodash', 'moment'], function (a
                 data.commitDate = new Date(data.commit.author.date);
                 data.commitDay = d3.time.day(data.commitDate);
             }, this);
-            var data = crossfilter(rawData);
-            this.data.all = data.groupAll();
+            this.data.commitData = crossfilter(rawData);
+            this.data.all = this.data.commitData.groupAll();
             var sortedDate = _.sortBy(rawData, function (data) {
                 return data.commitDate.getTime();
             });
 
             this.data.smallestGreatestDateOfCommits = {};
-            if (0 !== data.size()) {
+            if (0 !== this.data.commitData.size()) {
                 this.data.smallestGreatestDateOfCommits.smallest = sortedDate[0].commitDate;
                 this.data.smallestGreatestDateOfCommits.greatest = sortedDate[sortedDate.length - 1].commitDate;
             } else {
                 console.log('filter seems not lead in any results');
             }
 
-            this.data.commitsByDay = data.dimension(function (d) {
+            this.data.commitsByDay = this.data.commitData.dimension(function (d) {
                 return d.commitDay;
             });
             this.data.commitsByDayGroup = this.data.commitsByDay.group();
 
-            this.data.commitsByAuthor = data.dimension(function (data) {
+            this.data.commitsByAuthor = this.data.commitData.dimension(function (data) {
                 return data.commit.author.name;
             });
             this.data.commitsByAuthorGroup = this.data.commitsByAuthor.group();
+        };
 
-//            this.data.commentedCommits = data.dimension(function (data) {
-//                /*jshint camelcase:false*/
-//                var commented = data.commit.comment_count > 0;
-//                var approved = app.commitApproved[data.sha] || false;
-//                var state = 'Undefined';
-//                if (!commented) {
-//                    state = 'Not Reviewed';
-//                } else if (commented && !approved) {
-//                    state = 'Not Approved';
-//                } else if (commented && approved) {
-//                    state = 'Approved';
-//                }
-//                return state;
-//            });
-//            this.data.commentedCommitsGroup = this.data.commentedCommits.group();
+        Charts.prototype.proccessCommentData = function(commitApproved){
+            this.data.commentedCommits = this.data.commitData.dimension(function (data) {
+                /*jshint camelcase:false*/
+                var commented = data.commit.comment_count > 0;
+                var approved = commitApproved[data.sha] || false;
+                var state = 'Undefined';
+                if (!commented) {
+                    state = 'Not Reviewed';
+                } else if (commented && !approved) {
+                    state = 'Not Approved';
+                } else if (commented && approved) {
+                    state = 'Approved';
+                }
+                return state;
+            });
+            this.data.commentedCommitsGroup = this.data.commentedCommits.group();
         };
 
         Charts.prototype.fileTypeChart = function () {
@@ -171,7 +173,7 @@ define(['angular', 'd3', 'dcjs', 'crossfilter', 'lodash', 'moment'], function (a
             chart.group(this.data.fileTypeGroup);
             chart.dimension(this.data.fileType);
             // assign colors to each value in the x scale domain
-//            chart.ordinalColors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb']);
+            chart.ordinalColors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb']);
             chart.label(function (d) {
                 return d.key;
             });
