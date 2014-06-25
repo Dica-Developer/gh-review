@@ -1,55 +1,36 @@
 define(['angular', 'lodash'], function (angular, _) {
     'use strict';
 
+
+    var oneTimeCallback = null;
     var commentCollectorModule = angular.module('GHReview.CommentCollector', []);
 
     commentCollectorModule.provider('commentCollector', function () {
 
-        this.$get = ['$rootScope', function ($rootScope) {
+        this.$get = ['$q', function ($q) {
             var worker = void 0;
-            var commitApproved = {};
-            var approveComments = {};
+            var comments = void 0;
+            var commitApproved = void 0;
+            var approveComments = void 0;
             var init = function (accessToken) {
                 worker = new Worker('js/worker/collector.js');
                 worker.onmessage = function (event) {
-                    if ('comments' === event.data.type) {
-                        sortOutApproveComments(event.data.comments);
+                    if ('commentsCollected' === event.data.type) {
+                        comments = event.data.commentsForRepo;
+                        commitApproved = event.data.commitApproved;
+                        approveComments = event.data.approveComments;
+                        if(_.isFunction(oneTimeCallback)){
+                            oneTimeCallback();
+                        }
                     }
                 };
                 var message = {
-                    type: 'token',
-                    token: accessToken
+                    type: 'accessToken',
+                    accessToken: accessToken
                 };
                 worker.postMessage(message);
             };
 
-            var sortOutApproveComments = function (comments) {
-                var approveCommit = function (comment) {
-                    /*jshint camelcase:false*/
-                    if (true !== commitApproved[comment.commit_id]) {
-                        commitApproved[comment.commit_id] = true;
-                    }
-                    if (true !== approveComments[comment.id]) {
-                        approveComments[comment.id] = true;
-                    }
-                };
-
-                _.each(comments, function (comment) {
-                    var commentBody = comment.body;
-                    if (commentBody) {
-                        if (commentBody.indexOf('```json') > -1) {
-                            commentBody = commentBody.substring(7, (commentBody.length - 3));
-                            commentBody = JSON.parse(commentBody);
-                            if (true === commentBody.approved) {
-                                approveCommit(comment);
-                            }
-                        }
-                    }
-                });
-
-                //TODO find a way to only trigger if data has changed
-                $rootScope.$broadcast('commentCollector.notification.newData');
-            };
 
             var getCommitApproved = function () {
                 return commitApproved;
@@ -69,11 +50,44 @@ define(['angular', 'lodash'], function (angular, _) {
                     type: 'repositories',
                     repositories: repositories
                 });
+                worker.postMessage({
+                    type: 'start'
+                });
+            };
+
+            var announceRepository = function(filter){
+                var url = filter.getCommentsUrl();
+                worker.postMessage({
+                    type: 'repository',
+                    repository: url
+                });
+                worker.postMessage({
+                    type: 'start'
+                });
+            };
+
+            var announceRepositoryAndWaitForFinish = function(filter){
+                var defer = $q.defer();
+                oneTimeCallback = function(){
+                    defer.resolve();
+                    oneTimeCallback = null;
+                };
+                var url = filter.getCommentsUrl();
+                worker.postMessage({
+                    type: 'repository',
+                    repository: url
+                });
+                worker.postMessage({
+                    type: 'start'
+                });
+                return defer.promise;
             };
 
             return {
                 init: init,
                 announceRepositories: announceRepositories,
+                announceRepositoriy: announceRepository,
+                announceRepositoryAndWaitForFinish: announceRepositoryAndWaitForFinish,
                 getCommitApproved: getCommitApproved,
                 getApproveComments: getApproveComments
             };
