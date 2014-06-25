@@ -7,7 +7,8 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
         'getTreeData',
         'Charts',
         'Filter',
-        function ($scope, getAllReposAndBranches, getTreeData, Charts, Filter) {
+        'commentCollector',
+        function ($scope, getAllReposAndBranches, getTreeData, Charts, Filter, commentCollector) {
             var filter = new Filter();
             var charts = new Charts();
             var updateCommitsTimeout = null;
@@ -90,6 +91,13 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
                                 charts.processCommitData(result);
                                 charts.timeChart(timeChartWidth, 150);
                                 charts.commitsPerAuthorChart(otherChartsWidth, 150);
+                                commentCollector.announceRepositoryAndWaitForFinish(filter)
+                                    .then(function(){
+                                        var otherChartsWidth = document.getElementById('commitFilterCharts').offsetWidth;
+                                        var commitApproved = commentCollector.getCommitApproved();
+                                        charts.proccessCommentData(commitApproved);
+                                        charts.reviewStateChart(otherChartsWidth, 150);
+                                    });
                             });
                     }, 1000);
                 }
