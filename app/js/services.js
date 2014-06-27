@@ -66,22 +66,34 @@ define(['angular', 'githubjs', 'moment', 'lodash'], function (angular, GitHub, m
         };
     }]);
 
-    services.factory('getFilter', ['localStorageService', function (localStorageService) {
+    services.factory('getFilter', ['localStorageService', 'Filter', function (localStorageService, Filter) {
         return function () {
             var filter = [];
             var filterIds = localStorageService.get('filter');
             if ( filterIds !== null ) {
                 filterIds.split(',').forEach(function (id) {
-                    filter.push(localStorageService.get('filter-' + id));
+                    var filterOptions = localStorageService.get('filter-' + id);
+                    filter.push(new Filter(filterOptions));
                 });
             }
             return filter;
         };
     }]);
 
-    services.factory('getFilterById', ['localStorageService', function (localStorageService) {
+    services.factory('getFilterById', ['localStorageService', 'Filter', function (localStorageService, Filter) {
         return function (filterId) {
-            return localStorageService.get('filter-' + filterId);
+            return new Filter(localStorageService.get('filter-' + filterId));
+        };
+    }]);
+
+    services.factory('removeFilter', ['localStorageService', function (localStorageService) {
+        return function (filterId) {
+            localStorageService.remove('filter-' + filterId);
+            var filterList = localStorageService.get('filter').split(',');
+            _.remove(filterList, function(value){
+                return value === filterId;
+            });
+            localStorageService.set('filter', filterList.join(','));
         };
     }]);
 
