@@ -12,8 +12,7 @@ define([], function () {
             $scope.hasPrevious = false;
             $scope.hasFirst = false;
 
-            var filterOptions = getFilterById($stateParams.filterId);
-            var filter = new Filter(filterOptions);
+            var filter = getFilterById($stateParams.filterId);
 
             $scope.user = filter.getOwner();
             $scope.repo = filter.getRepo();
