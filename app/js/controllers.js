@@ -42,8 +42,15 @@ define(['angular'], function (angular) {
                 });
         }])
 
-        .controller('FilterListController', ['$scope', 'getFilter', function ($scope, getFilter) {
+        .controller('FilterListController', ['$scope', 'getFilter', 'removeFilter', function ($scope, getFilter, removeFilter) {
             $scope.filterList = getFilter();
+            $scope.removeFilter = function (filterId, event) {
+                if (void 0 !== event) {
+                    event.preventDefault();
+                }
+                removeFilter(filterId);
+                $scope.filterList = getFilter();
+            };
         }])
 
         .controller('CommitListController', ['$scope', '$injector', function ($scope, $injector) {
