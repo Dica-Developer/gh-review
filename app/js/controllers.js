@@ -53,9 +53,9 @@ define(['angular'], function (angular) {
             };
         }])
 
-        .controller('CommitListController', ['$scope', '$injector', function ($scope, $injector) {
+        .controller('CommitListController', ['$scope', '$injector', 'commitsApproved', function ($scope, $injector, commitsApproved) {
             require(['CommitListController'], function (controller) {
-                $injector.invoke(controller, this, {'$scope': $scope});
+                $injector.invoke(controller, this, {'$scope': $scope, commitsApproved: commitsApproved});
             });
         }])
 

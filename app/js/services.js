@@ -128,6 +128,10 @@ define(['angular', 'githubjs', 'moment', 'lodash'], function (angular, GitHub, m
         };
     }]);
 
+    services.factory('getCommitApproved', ['commentCollector', function (commentCollector) {
+        return commentCollector.getCommitApproved();
+    }]);
+
     services.factory('getAllAvailableRepos', ['$q', 'isAuthenticated', 'githubUserData', 'github', function ($q, isAuthenticated, githubUserData, github) {
         return function () {
             var defer = $q.defer();

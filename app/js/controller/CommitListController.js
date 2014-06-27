@@ -3,11 +3,9 @@ define([], function () {
     return [
         '$scope',
         '$stateParams',
+        'commitsApproved',
         'getFilterById',
-        'Filter',
-        'commentCollector',
-        function ($scope, $stateParams, getFilterById, Filter, commentCollector) {
-            var approvedCommits = commentCollector.getCommitApproved();
+        function ($scope, $stateParams, commitsApproved, getFilterById) {
             $scope.hasNext = false;
             $scope.hasPrevious = false;
             $scope.hasFirst = false;
@@ -17,7 +15,7 @@ define([], function () {
             $scope.user = filter.getOwner();
             $scope.repo = filter.getRepo();
             $scope.commitApproved = function (sha) {
-                return (true === approvedCommits[sha]);
+                return (true === commitsApproved[sha]);
             };
 
             var setButtonStates = function () {

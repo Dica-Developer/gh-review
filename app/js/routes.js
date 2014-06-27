@@ -43,7 +43,10 @@ define(['angular', 'app'], function (angular, app) {
             .state('commitsByFilter', {
                 url: '/filter/{filterId}/commits',
                 templateUrl: 'templates/commitList.html',
-                controller: 'CommitListController'
+                controller: 'CommitListController',
+                resolve: {
+                    commitsApproved: 'getCommitApproved'
+                }
             })
             .state('commitBySha', {
                 url: '/{user}/{repo}/commit/{sha}',
