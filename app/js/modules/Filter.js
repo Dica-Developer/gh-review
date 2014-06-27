@@ -39,6 +39,10 @@ define(['angular', 'lodash'], function (angular, _) {
             localStorageService.set('filter-' + this.options.id, JSON.stringify(this.options));
         };
 
+        Filter.prototype.getId = function () {
+            return this.options.id;
+        };
+
         Filter.prototype.setOwner = function (owner) {
             this.options.user = owner;
         };
