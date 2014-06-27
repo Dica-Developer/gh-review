@@ -12,6 +12,7 @@ define(['angular', 'lodash'], function (angular, _) {
             var comments = void 0;
             var commitApproved = void 0;
             var approveComments = void 0;
+            var fetchedUrls = [];
             var init = function (accessToken) {
                 worker = new Worker('js/worker/collector.js');
                 worker.onmessage = function (event) {
@@ -33,7 +34,15 @@ define(['angular', 'lodash'], function (angular, _) {
 
 
             var getCommitApproved = function () {
-                return commitApproved;
+                var defer = $q.defer();
+                if(!_.isUndefined(commitApproved)){
+                    defer.resolve(commitApproved);
+                } else {
+                    oneTimeCallback = function(){
+                        defer.resolve(commitApproved);
+                    };
+                }
+                return defer.promise;
             };
 
             var getApproveComments = function () {
@@ -44,6 +53,7 @@ define(['angular', 'lodash'], function (angular, _) {
                 var repositories = [];
                 _.each(filters, function (filter) {
                     var url = filter.getCommentsUrl();
+                    fetchedUrls.push(url);
                     repositories.push(url);
                 });
                 worker.postMessage({
@@ -57,6 +67,7 @@ define(['angular', 'lodash'], function (angular, _) {
 
             var announceRepository = function(filter){
                 var url = filter.getCommentsUrl();
+                fetchedUrls.push(url);
                 worker.postMessage({
                     type: 'repository',
                     repository: url
@@ -73,6 +84,7 @@ define(['angular', 'lodash'], function (angular, _) {
                     oneTimeCallback = null;
                 };
                 var url = filter.getCommentsUrl();
+                fetchedUrls.push(url);
                 worker.postMessage({
                     type: 'repository',
                     repository: url
