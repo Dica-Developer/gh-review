@@ -31,7 +31,7 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
         Filter.prototype.tmpCommits = [];
 
         Filter.prototype.init = function () {
-            if(this.options.id !== ''){
+            if (this.options.id !== '') {
                 this.options = _.extend(this.options, localStorageService.get('filter-' + this.options.id));
             } else {
                 this.options.id = generateUUID();
@@ -95,7 +95,7 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
 
         Filter.prototype.getSinceDate = function () {
             var sinceDate = null;
-            if(!_.isUndefined(this.options.since) && _.size(this.options.since) === 2){
+            if (!_.isUndefined(this.options.since) && _.size(this.options.since) === 2) {
                 sinceDate = moment().subtract(this.options.since.pattern, this.options.since.amount).format('YYYY-MM-DD HH:mm Z');
             }
             return sinceDate;
@@ -103,8 +103,8 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
 
         Filter.prototype.getSinceDateISO = function () {
             var sinceDate = null;
-            if(!_.isUndefined(this.options.since) && _.size(this.options.since) === 2){
-                sinceDate = moment().subtract(this.options.since.pattern, this.options.since.amount).toISOString() ;
+            if (!_.isUndefined(this.options.since) && _.size(this.options.since) === 2) {
+                sinceDate = moment().subtract(this.options.since.pattern, this.options.since.amount).toISOString();
             }
             return sinceDate;
         };
@@ -193,10 +193,10 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
 
         Filter.prototype.prepareGithubApiCallOptions = function () {
             var options = {};
-            _.each(this.options, function(value, key){
-                if(key === 'since' && value !== null){
+            _.each(this.options, function (value, key) {
+                if (key === 'since' && value !== null) {
                     options.since = this.getSinceDateISO();
-                } else if('id' !== key && 'lastEdited' !== key && 'customFilter' !== key){
+                } else if ('id' !== key && 'lastEdited' !== key && 'customFilter' !== key) {
                     options[key] = value;
                 }
             }, this);
