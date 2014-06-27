@@ -66,23 +66,22 @@ define(['angular', 'githubjs', 'moment', 'lodash'], function (angular, GitHub, m
         };
     }]);
 
-    services.factory('getFilter', ['localStorageService', 'Filter', function (localStorageService, Filter) {
+    services.factory('getAllFilter', ['localStorageService', 'Filter', function (localStorageService, Filter) {
         return function () {
             var filter = [];
             var filterIds = localStorageService.get('filter');
             if ( filterIds !== null ) {
                 filterIds.split(',').forEach(function (id) {
-                    var filterOptions = localStorageService.get('filter-' + id);
-                    filter.push(new Filter(filterOptions));
+                    filter.push(new Filter(id));
                 });
             }
             return filter;
         };
     }]);
 
-    services.factory('getFilterById', ['localStorageService', 'Filter', function (localStorageService, Filter) {
+    services.factory('getFilterById', ['Filter', function (Filter) {
         return function (filterId) {
-            return new Filter(localStorageService.get('filter-' + filterId));
+            return new Filter(filterId);
         };
     }]);
 
@@ -116,13 +115,13 @@ define(['angular', 'githubjs', 'moment', 'lodash'], function (angular, GitHub, m
         };
     });
 
-    services.factory('collectComments', ['commentCollector', 'isAuthenticated', 'localStorageService', 'getFilter', function (commentCollector, isAuthenticated, localStorageService, getFilter) {
+    services.factory('collectComments', ['commentCollector', 'isAuthenticated', 'localStorageService', 'getAllFilter', function (commentCollector, isAuthenticated, localStorageService, getAllFilter) {
         return function () {
             var retVal = false;
             if (isAuthenticated()) {
                 var accessToken = localStorageService.get('accessToken');
                 commentCollector.init(accessToken);
-                commentCollector.announceRepositories(getFilter());
+                commentCollector.announceRepositories(getAllFilter());
                 retVal = true;
             }
             return retVal;

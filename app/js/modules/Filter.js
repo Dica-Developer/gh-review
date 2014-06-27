@@ -10,23 +10,33 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
             return (c === 'x' ? r : (r & 0x7 | 0x8)).toString(16);
         });
     };
+
     var tmpCommits = {};
+
     var services = angular.module('GHReview.Filter', []);
     services.factory('Filter', ['$q', 'github', 'commentCollector', 'localStorageService', function ($q, github, commentCollector, localStorageService) {
-        var Filter = function (options) {
-            var defaults = {
-                id: '',
+        var Filter = function (filterId) {
+            this.options = {
+                id: filterId || '',
                 lastEdited: '',
                 customFilter: {},
                 sha: 'master'
             };
-            this.options = _.extend(defaults, options);
+            this.init();
         };
 
         Filter.prototype.hasNextPage = false;
         Filter.prototype.hasPreviousPage = false;
         Filter.prototype.hasFirstPage = false;
         Filter.prototype.tmpCommits = [];
+
+        Filter.prototype.init = function () {
+            if(this.options.id !== ''){
+                this.options = _.extend(this.options, localStorageService.get('filter-' + this.options.id));
+            } else {
+                this.options.id = generateUUID();
+            }
+        };
 
         Filter.prototype.save = function () {
             if (this.options.id === '') {

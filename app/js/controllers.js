@@ -42,14 +42,14 @@ define(['angular'], function (angular) {
                 });
         }])
 
-        .controller('FilterListController', ['$scope', 'getFilter', 'removeFilter', function ($scope, getFilter, removeFilter) {
-            $scope.filterList = getFilter();
+        .controller('FilterListController', ['$scope', 'getAllFilter', 'removeFilter', function ($scope, getAllFilter, removeFilter) {
+            $scope.filterList = getAllFilter();
             $scope.removeFilter = function (filterId, event) {
                 if (void 0 !== event) {
                     event.preventDefault();
                 }
                 removeFilter(filterId);
-                $scope.filterList = getFilter();
+                $scope.filterList = getAllFilter();
             };
         }])
 
