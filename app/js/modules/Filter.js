@@ -293,36 +293,38 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
             var tmpCommits = [];
             var customFilter = this.options.customFilter;
             var state = customFilter.state;
-            var commitApproved = commentCollector.getCommitApproved();
-            if (!_.isUndefined(state)) {
-                _.each(commits, function (commit) {
-                    switch (state) {
-                    case 'approved':
-                        if (commitApproved[commit.sha]) {
-                            tmpCommits.push(commit);
+            commentCollector.getCommitApproved()
+                .then(function (commitApproved) {
+                    if (!_.isUndefined(state)) {
+                        _.each(commits, function (commit) {
+                            switch (state) {
+                            case 'approved':
+                                if (commitApproved[commit.sha]) {
+                                    tmpCommits.push(commit);
+                                }
+                                break;
+                            case 'reviewed':
+                                /*jshint camelcase:false*/
+                                if (!commitApproved[commit.sha] && commit.commit.comment_count > 0) {
+                                    tmpCommits.push(commit);
+                                }
+                                break;
+                            case 'unseen':
+                                /*jshint camelcase:false*/
+                                if (commit.commit.comment_count === 0) {
+                                    tmpCommits.push(commit);
+                                }
+                                break;
+                            }
+                        });
+                        //                }
+                        if (this.maxResults > -1) {
+                            this.getCommitsRefer.resolve(_.first(_.rest(tmpCommits, this.firstResult), this.maxResults));
+                        } else {
+                            this.getCommitsRefer.resolve(_.rest(tmpCommits, this.firstResult));
                         }
-                        break;
-                    case 'reviewed':
-                        /*jshint camelcase:false*/
-                        if (!commitApproved[commit.sha] && commit.commit.comment_count > 0) {
-                            tmpCommits.push(commit);
-                        }
-                        break;
-                    case 'unseen':
-                        /*jshint camelcase:false*/
-                        if (commit.commit.comment_count === 0) {
-                            tmpCommits.push(commit);
-                        }
-                        break;
                     }
-                });
-//                }
-                if (this.maxResults > -1) {
-                    this.getCommitsRefer.resolve(_.first(_.rest(tmpCommits, this.firstResult), this.maxResults));
-                } else {
-                    this.getCommitsRefer.resolve(_.rest(tmpCommits, this.firstResult));
-                }
-            }
+                }.bind(this));
         };
 
         return Filter;
