@@ -1,5 +1,5 @@
 /*global define*/
-define(['angular', 'lodash'], function (angular, _) {
+define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
     'use strict';
 
     var generateUUID = function () {
@@ -83,24 +83,27 @@ define(['angular', 'lodash'], function (angular, _) {
             return this.options.since;
         };
 
+        Filter.prototype.getSinceDate = function () {
+            var sinceDate = null;
+            if(!_.isUndefined(this.options.since) && _.size(this.options.since) === 2){
+                sinceDate = moment().subtract(this.options.since.pattern, this.options.since.amount).format('YYYY-MM-DD HH:mm Z');
+            }
+            return sinceDate;
+        };
+
+        Filter.prototype.getSinceDateISO = function () {
+            var sinceDate = null;
+            if(!_.isUndefined(this.options.since) && _.size(this.options.since) === 2){
+                sinceDate = moment().subtract(this.options.since.pattern, this.options.since.amount).toISOString() ;
+            }
+            return sinceDate;
+        };
+
         Filter.prototype.unsetSince = function () {
             if (this.options.since) {
                 delete this.options.since;
             }
         };
-
-        /**
-         * Converts a since object to a proper time string
-         * @param {Object} sinceObject
-         * @param {String} sinceObject.pattern the patter to compute the date possible values
-         * are days|weeks|years
-         * @param {Number} sinceObject.amount the amount to compute the date
-         */
-            //TODO if set so no time sliding is available. Better to store the since as object and convert when needed on getSince
-//        setSinceObject: function (sinceObject) {
-//            var since = _.moment().subtract(sinceObject.pattern, sinceObject.amount).toISOString();
-//            this.set('since', since);
-//        },
 
         Filter.prototype.setUntil = function (until) {
             this.options.until = until;
@@ -173,12 +176,25 @@ define(['angular', 'lodash'], function (angular, _) {
 
         Filter.prototype._getCommitsDirect = function () {
             this.getCommitsRefer = $q.defer();
-            github.repos.getCommits(this.options, this._getCommitsCallback.bind(this));
+            var githubApiCallOptions = this.prepareGithubApiCallOptions();
+            github.repos.getCommits(githubApiCallOptions, this._getCommitsCallback.bind(this));
             return this.getCommitsRefer.promise;
         };
 
-        Filter.prototype._getCommitsPostFiltered = function (link, githubMsg) {
-            githubMsg = githubMsg || this.options;
+        Filter.prototype.prepareGithubApiCallOptions = function () {
+            var options = {};
+            _.each(this.options, function(value, key){
+                if(key === 'since' && value !== null){
+                    options.since = this.getSinceDateISO();
+                } else if('id' !== key && 'lastEdited' !== key && 'customFilter' !== key){
+                    options[key] = value;
+                }
+            }, this);
+            return options;
+        };
+
+        Filter.prototype._getCommitsPostFiltered = function (link) {
+            var githubMsg = this.prepareGithubApiCallOptions();
             var callback = function (error, resp) {
                 if (!error) {
                     var link = resp.meta.link;
