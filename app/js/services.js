@@ -70,7 +70,7 @@ define(['angular', 'githubjs', 'moment', 'lodash'], function (angular, GitHub, m
         return function () {
             var filter = [];
             var filterIds = localStorageService.get('filter');
-            if ( filterIds !== null ) {
+            if (filterIds !== null) {
                 filterIds.split(',').forEach(function (id) {
                     filter.push(new Filter(id));
                 });
@@ -89,7 +89,7 @@ define(['angular', 'githubjs', 'moment', 'lodash'], function (angular, GitHub, m
         return function (filterId) {
             localStorageService.remove('filter-' + filterId);
             var filterList = localStorageService.get('filter').split(',');
-            _.remove(filterList, function(value){
+            _.remove(filterList, function (value) {
                 return value === filterId;
             });
             localStorageService.set('filter', filterList.join(','));
@@ -174,7 +174,7 @@ define(['angular', 'githubjs', 'moment', 'lodash'], function (angular, GitHub, m
 
     services.factory('getFileContent', ['$q', 'github', function ($q, github) {
         return function (options) {
-            if(_.isNull(options.ref)){
+            if (_.isNull(options.ref)) {
                 delete options.ref;
             } else {
                 delete options.sha;
