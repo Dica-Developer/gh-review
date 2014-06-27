@@ -289,34 +289,6 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
             return commits;
         };
 
-        Filter.prototype.getAllComments = function (link) {
-            link = link || null;
-            var callback = function (error, resp) {
-                if (!error) {
-                    var link = resp.meta.link;
-                    var hasNext = github.hasNextPage(link);
-                    delete resp.meta;
-                    _.each(resp, function (/*value*/) {
-                        console.log('Not implemented yet: ---> app.sortOutApproveComments(value)');
-//                        app.sortOutApproveComments(value);
-                    });
-                    if (hasNext) {
-                        this.getAllComments(link);
-                    } else {
-                        this.getCommentsRefer.resolve();
-                    }
-                }
-            }.bind(this);
-
-            if (!link) {
-                this.getCommentsRefer = $q.defer();
-                github.repos.getAllCommitComments(this.options, callback);
-            } else {
-                github.getNextPage(link, callback);
-            }
-            return this.getCommentsRefer.promise;
-        };
-
         Filter.prototype._processCustomFilter = function (commits) {
             var tmpCommits = [];
             var customFilter = this.options.customFilter;
