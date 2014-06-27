@@ -1,4 +1,4 @@
-define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
+define(['angular', 'lodash'], function (angular, _) {
     'use strict';
 
     return [
@@ -58,8 +58,10 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
             var changeFilterSinceSettings = function (newValue) {
                 if (!_.isUndefined(newValue) && !_.isNull(newValue)) {
                     //TODO move since pattern handling to Filter
-                    var sinceDate = moment().subtract($scope.sincePattern.value, $scope.sinceAmount).toISOString();
-                    filter.setSince(sinceDate);
+                    filter.setSince({
+                        amount: $scope.sinceAmount,
+                        pattern:$scope.sincePattern.value
+                    });
                     $scope.updated = new Date().getTime();
                 }
             };
