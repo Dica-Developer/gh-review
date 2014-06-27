@@ -116,20 +116,13 @@ define(['angular', 'githubjs', 'moment', 'lodash'], function (angular, GitHub, m
         };
     });
 
-    services.factory('collectComments', ['commentCollector', 'isAuthenticated', 'localStorageService', 'getFilter', 'Filter', function (commentCollector, isAuthenticated, localStorageService, getFilter, Filter) {
+    services.factory('collectComments', ['commentCollector', 'isAuthenticated', 'localStorageService', 'getFilter', function (commentCollector, isAuthenticated, localStorageService, getFilter) {
         return function () {
             var retVal = false;
-            if (isAuthenticated() || false) {
+            if (isAuthenticated()) {
                 var accessToken = localStorageService.get('accessToken');
-                var allFilter = [];
-//                var commentCollector = new CommentCollector();
                 commentCollector.init(accessToken);
-                var filterOptions = getFilter();
-                _.each(filterOptions, function (filterOption) {
-                    var filter = new Filter(filterOption);
-                    allFilter.push(filter);
-                });
-                commentCollector.announceRepositories(allFilter);
+                commentCollector.announceRepositories(getFilter());
                 retVal = true;
             }
             return retVal;
