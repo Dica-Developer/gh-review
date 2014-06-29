@@ -18,10 +18,9 @@ define(['angular', 'githubjs', 'moment', 'lodash'], function (angular, GitHub, m
         };
     }]);
 
+    var github = false;
     services.factory('github', ['localStorageService', function (localStorageService) {
-        var authenticated = false;
-        var github;
-        if (!authenticated) {
+        if (!github) {
             var message = {
                 type: 'token',
                 token: localStorageService.get('accessToken')
