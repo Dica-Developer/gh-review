@@ -12,13 +12,19 @@ module.exports = function (config) {
             'test/main-test.js'
         ],
 
-        reporters: ['dots'],
+        reporters: ['dots', 'coverage'],
+        preprocessors: {
+            'app/js/**/*.js': ['coverage']
+        },
+        coverageReporter: {
+            type: 'lcov',
+            dir: 'coverage/'
+        },
 
         autoWatch: false,
-
         singleRun: true,
 
-        LogLevel: config.LOG_DEBUG,
+        LogLevel: config.LOG_INFO,
 
         browsers: ['PhantomJS']
     });
