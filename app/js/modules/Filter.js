@@ -17,10 +17,18 @@ define(['angular', 'lodash', 'moment', 'watch'], function (angular, _, moment, w
     services.factory('Filter', ['$q', 'github', 'commentCollector', 'localStorageService', function ($q, github, commentCollector, localStorageService) {
         var Filter = function (filterId) {
             this.options = {
-                id: filterId || '',
-                lastEdited: '',
+                repo: null,
+                user: null,
+                id: filterId || null,
+                lastEdited: null,
                 customFilter: {},
-                sha: 'master'
+                sha: 'master',
+                since: null,
+                until: {},
+                path: null,
+                saved: null,
+                author: null,
+                contributor: null
             };
             this.init();
         };
