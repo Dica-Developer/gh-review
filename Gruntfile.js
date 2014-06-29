@@ -187,7 +187,9 @@ module.exports = function (grunt) {
         },
         coveralls: {
             options: {
-                src: 'coverage/**/lcov.info',
+                debug: true,
+                /*jshint camelcase:false*/
+                coverage_dir: 'coverage',
                 force: false
             }
         }
