@@ -127,9 +127,7 @@ define(['angular', 'lodash', 'moment', 'watch'], function (angular, _, moment, w
         };
 
         Filter.prototype.unsetSince = function () {
-            if (this.options.since) {
-                delete this.options.since;
-            }
+            this.options.since = {};
         };
 
         Filter.prototype.setUntil = function (until) {
@@ -137,9 +135,7 @@ define(['angular', 'lodash', 'moment', 'watch'], function (angular, _, moment, w
         };
 
         Filter.prototype.unsetUntil = function () {
-            if (this.options.until) {
-                delete this.options.until;
-            }
+            this.options.until = {};
         };
 
         Filter.prototype.setPath = function (path) {
@@ -147,9 +143,7 @@ define(['angular', 'lodash', 'moment', 'watch'], function (angular, _, moment, w
         };
 
         Filter.prototype.unsetPath = function () {
-            if (this.options.path) {
-                delete this.options.path;
-            }
+            this.options.path = null;
         };
 
         Filter.prototype.setState = function (state) {
