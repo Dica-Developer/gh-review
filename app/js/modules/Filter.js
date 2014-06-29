@@ -48,7 +48,7 @@ define(['angular', 'lodash', 'moment', 'watch'], function (angular, _, moment, w
             this.watch(this.options, this.optionsChanged.bind(this));
         };
 
-        Filter.prototype.optionsChanged = function (key, op, value) {
+        Filter.prototype.optionsChanged = function (key) {
             if ('lastEdited' !== key) {
                 this.options.lastEdited = new Date().getTime();
             }
