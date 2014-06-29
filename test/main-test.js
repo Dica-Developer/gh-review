@@ -21,6 +21,7 @@ require.config({
         moment: '../bower_components/moment/min/moment.min',
         lodash: '../bower_components/lodash/dist/lodash.min',
         jquery: '../bower_components/jquery/dist/jquery.min',
+        text: '../bower_components/requirejs-text/text',
         'underscore.string': '../bower_components/underscore.string/dist/underscore.string.min',
 
         'd3': '../bower_components/d3/d3',
@@ -42,7 +43,8 @@ require.config({
         CommentProvider: 'modules/CommentProvider',
         ModuleFilterController: 'controller/ModuleFilterController',
         FileController: 'controller/FileController',
-        FilterController: 'controller/FilterController'
+        FilterController: 'controller/FilterController',
+        commitListPaginatorTmpl: '../templates/commitListPaginator.html'
     },
     shim: {
         'angular': {deps: ['jquery'], 'exports': 'angular'},
