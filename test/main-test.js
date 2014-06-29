@@ -44,7 +44,11 @@ require.config({
         ModuleFilterController: 'controller/ModuleFilterController',
         FileController: 'controller/FileController',
         FilterController: 'controller/FilterController',
-        commitListPaginatorTmpl: '../templates/commitListPaginator.html'
+
+        commitListPaginatorTmpl: '../templates/commitListPaginator.html',
+        menuTmpl: '../templates/menu.html',
+        authenticatedMenuTmpl: '../templates/authenticatedMenu.html',
+        welcomeTmpl: '../templates/welcome.html'
     },
     shim: {
         'angular': {deps: ['jquery'], 'exports': 'angular'},
