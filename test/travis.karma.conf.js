@@ -4,7 +4,6 @@ module.exports = function (config) {
         frameworks: ['jasmine', 'requirejs'],
         files: [
             {pattern: 'app/js/**/*.js', included: false},
-            {pattern: 'test/unit.js', included: false},
             {pattern: 'test/unit/**/*.js', included: false},
             {pattern: 'app/bower_components/**/*.js', included: false},
             {pattern: 'test/unit/**/*Spec.js', included: false },
