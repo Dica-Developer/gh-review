@@ -207,7 +207,7 @@ define(['angular', 'lodash', 'moment', 'watch'], function (angular, _, moment, w
             _.each(this.options, function (value, key) {
                 if (key === 'since' && value !== null) {
                     options.since = this.getSinceDateISO();
-                } else if ('id' !== key && 'lastEdited' !== key && 'customFilter' !== key) {
+                } else if ('id' !== key && 'lastEdited' !== key && 'customFilter' !== key && !_.isNull(value)) {
                     options[key] = value;
                 }
             }, this);
