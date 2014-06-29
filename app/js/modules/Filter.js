@@ -1,5 +1,5 @@
 /*global define*/
-define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
+define(['angular', 'lodash', 'moment', 'watch'], function (angular, _, moment, watch) {
     'use strict';
 
     var generateUUID = function () {
@@ -25,27 +25,32 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
             this.init();
         };
 
+        Filter.prototype.watch = watch.watch;
         Filter.prototype.hasNextPage = false;
         Filter.prototype.hasPreviousPage = false;
         Filter.prototype.hasFirstPage = false;
         Filter.prototype.tmpCommits = [];
 
         Filter.prototype.init = function () {
-            if (this.options.id !== '') {
+            if (!_.isNull(this.options.id)) {
                 this.options = _.extend(this.options, localStorageService.get('filter-' + this.options.id));
             } else {
                 this.options.id = generateUUID();
             }
+            this.watch(this.options, this.optionsChanged.bind(this));
+        };
+
+        Filter.prototype.optionsChanged = function (key, op, value) {
+            if ('lastEdited' !== key) {
+                this.options.lastEdited = new Date().getTime();
+            }
         };
 
         Filter.prototype.save = function () {
-            if (this.options.id === '') {
-                this.options.id = generateUUID();
-                var filterIds = localStorageService.get('filter').split(',');
-                filterIds.push(this.options.id);
-                localStorageService.set('filter', filterIds.join(','));
-            }
-            this.options.lastEdited = new Date().getTime();
+            var filterIds = localStorageService.get('filter').split(',');
+            filterIds.push(this.options.id);
+            localStorageService.set('filter', filterIds.join(','));
+            this.options.saved = new Date().getTime();
             localStorageService.set('filter-' + this.options.id, JSON.stringify(this.options));
         };
 
