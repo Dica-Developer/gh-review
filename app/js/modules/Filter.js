@@ -99,7 +99,11 @@ define(['angular', 'lodash', 'moment', 'watch'], function (angular, _, moment, w
         };
 
         Filter.prototype.setSince = function (since) {
-            this.options.since = since;
+            if(_.isObject(since)){
+                this.options.since = since;
+            } else {
+                throw new Error('Since should be an object but was ' + typeof since);
+            }
         };
 
         Filter.prototype.getSince = function () {
