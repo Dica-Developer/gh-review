@@ -184,6 +184,12 @@ module.exports = function (grunt) {
         },
         ngdocs: {
             all: ['app/js/**/*.js']
+        },
+        coveralls: {
+            options: {
+                src: 'coverage/**/lcov.info',
+                force: false
+            }
         }
     });
 
@@ -208,7 +214,8 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('travis', [
-        'karma:travis'
+        'karma:travis',
+        'coveralls'
     ]);
 
 };
