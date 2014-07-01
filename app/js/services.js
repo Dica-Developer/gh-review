@@ -55,9 +55,8 @@ define(['angular', 'githubjs', 'moment', 'lodash'], function (angular, GitHub, m
                 sha: params.sha
             }, function (error, res) {
                 if (error) {
-//                        console.log(error);
+                    defer.reject(error);
                 } else {
-//                        console.log(res);
                     defer.resolve(res);
                 }
             });
@@ -138,7 +137,7 @@ define(['angular', 'githubjs', 'moment', 'lodash'], function (angular, GitHub, m
         return function () {
             var defer = $q.defer();
             if (authenticated.get()) {
-                githubUserData()
+                githubUserData.get()
                     .then(function (userData) {
                         github.repos.getAll({
                             user: userData.login
@@ -146,7 +145,6 @@ define(['angular', 'githubjs', 'moment', 'lodash'], function (angular, GitHub, m
                             if (error) {
                                 defer.reject(error);
                             } else {
-                                console.log(res);
                                 defer.resolve(res);
                             }
                         });
