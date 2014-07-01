@@ -247,7 +247,7 @@ define([
 
             beforeEach(mocks.inject(function ($injector) {
                 humanReadableDate = $injector.get('humanReadableDate');
-                date = 291769200000;
+                date = 291780000000;
             }));
 
             it('Should be defined', function(){
@@ -265,7 +265,7 @@ define([
             });
 
             it('Should humanReadableDate.format should return a string', function(){
-                expect(humanReadableDate.format(date)).toBe('Sun, Apr 1 1979 12:00 AM');
+                expect(humanReadableDate.format(date)).toContain('Sun, Apr 1 1979');
             });
 
             it('Should humanReadableDate.format should return null if no date is given', function(){
