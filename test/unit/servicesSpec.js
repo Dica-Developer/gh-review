@@ -18,20 +18,20 @@ define([
                 authenticated = $injector.get('authenticated');
             }));
 
-            afterEach(function(){
+            afterEach(function () {
                 localStorage.clear();
             });
 
-            it('.get should return false if no access token is stored', function(){
+            it('.get should return false if no access token is stored', function () {
                 expect(authenticated.get()).toBeFalsy();
             });
 
-            it('.get should return true if access token is stored', function(){
+            it('.get should return true if access token is stored', function () {
                 localStorage.setItem('ls.accessToken', '44046cd4b4b85afebfe3ccaec13fd8c08cc80aad');
                 expect(authenticated.get()).toBeTruthy();
             });
 
-            it('.set should store access token to local storage', function(){
+            it('.set should store access token to local storage', function () {
                 authenticated.set({'access_token': 'test-to-ken'});
                 expect(localStorage.length).toBe(1);
                 expect(localStorage['ls.accessToken']).toBe('test-to-ken');
@@ -46,11 +46,11 @@ define([
                 github = $injector.get('github');
             }));
 
-            afterEach(function(){
+            afterEach(function () {
                 localStorage.clear();
             });
 
-            it('Should store access token to local storage', function(){
+            it('Should store access token to local storage', function () {
                 expect(github instanceof Github).toBeTruthy();
             });
 
@@ -65,21 +65,21 @@ define([
                 $rootScope = $injector.get('$rootScope');
             }));
 
-            it('Should be defined', function(){
+            it('Should be defined', function () {
                 expect(githubUserData).toBeDefined();
             });
 
-            it('Should call "github.user.get"', function(){
+            it('Should call "github.user.get"', function () {
                 spyOn(github.user, 'get');
                 githubUserData.get();
                 expect(github.user.get).toHaveBeenCalled();
             });
 
-            it('Should return promise and resolve if response has no errors', function(done){
+            it('Should return promise and resolve if response has no errors', function (done) {
                 spyOn(github.user, 'get');
 
                 githubUserData.get()
-                    .then(function(data){
+                    .then(function (data) {
                         expect(data).toBeDefined();
                         done();
                     });
@@ -90,14 +90,14 @@ define([
                 $rootScope.$apply();
             });
 
-            it('Should return promise and reject if response has errors', function(done){
+            it('Should return promise and reject if response has errors', function (done) {
                 spyOn(github.user, 'get');
 
                 githubUserData.get()
-                    .then(function(data){
+                    .then(function (data) {
                         expect(data).toBeDefined();
                         done();
-                    }, function(error){
+                    }, function (error) {
                         expect(error.name).toBe('TestError');
                         done();
                     });
@@ -179,11 +179,11 @@ define([
                 Filter = $injector.get('Filter');
             }));
 
-            afterEach(function(){
+            afterEach(function () {
                 localStorage.clear();
             });
 
-            it('Should return all stored filter', function(){
+            it('Should return all stored filter', function () {
                 var filter = getAllFilter();
                 expect(filter).toBeDefined();
                 expect(filter.length).toBe(2);
@@ -203,11 +203,11 @@ define([
                 Filter = $injector.get('Filter');
             }));
 
-            afterEach(function(){
+            afterEach(function () {
                 localStorage.clear();
             });
 
-            it('Should return specific filter', function(){
+            it('Should return specific filter', function () {
                 var filter = getFilterById('e0a35c44-1066-9a60-22f2-86bd825bc70c');
                 expect(filter).toBeDefined();
                 expect(filter instanceof Filter).toBeTruthy();
@@ -226,17 +226,17 @@ define([
                 removeFilter = $injector.get('removeFilter');
             }));
 
-            afterEach(function(){
+            afterEach(function () {
                 localStorage.clear();
             });
 
-            it('Should remove specific filter', function(){
+            it('Should remove specific filter', function () {
                 removeFilter('e0a35c44-1066-9a60-22f2-86bd825bc70c');
                 var removedFilter = localStorage.getItem('ls.filter-e0a35c44-1066-9a60-22f2-86bd825bc70c');
                 expect(removedFilter).toBeNull();
             });
 
-            it('Should remove id from filter list', function(){
+            it('Should remove id from filter list', function () {
                 var filterList = localStorage.getItem('ls.filter').split(',');
                 expect(filterList.length).toBe(2);
                 removeFilter('e0a35c44-1066-9a60-22f2-86bd825bc70c');
@@ -253,25 +253,25 @@ define([
                 date = 291780000000;
             }));
 
-            it('Should be defined', function(){
+            it('Should be defined', function () {
                 expect(humanReadableDate).toBeDefined();
                 expect(humanReadableDate.fromNow).toBeDefined();
                 expect(humanReadableDate.format).toBeDefined();
             });
 
-            it('Should humanReadableDate.fromNow should return an "ago" string', function(){
+            it('Should humanReadableDate.fromNow should return an "ago" string', function () {
                 expect(humanReadableDate.fromNow(date)).toBe('35 years ago');
             });
 
-            it('Should humanReadableDate.fromNow should return null if no date is given', function(){
+            it('Should humanReadableDate.fromNow should return null if no date is given', function () {
                 expect(humanReadableDate.fromNow()).toBeNull();
             });
 
-            it('Should humanReadableDate.format should return a string', function(){
+            it('Should humanReadableDate.format should return a string', function () {
                 expect(humanReadableDate.format(date)).toContain('Sun, Apr 1 1979');
             });
 
-            it('Should humanReadableDate.format should return null if no date is given', function(){
+            it('Should humanReadableDate.format should return null if no date is given', function () {
                 expect(humanReadableDate.format()).toBeNull();
             });
         });
@@ -284,7 +284,7 @@ define([
                 commentCollector = $injector.get('commentCollector');
             }));
 
-            it('Should be a promise', function(){
+            it('Should be a promise', function () {
                 expect(getCommitApproved.then).toBeDefined();
             });
         });
@@ -301,25 +301,26 @@ define([
                 $rootScope = $injector.get('$rootScope');
             }));
 
-            it('Should be defined', function(){
+            it('Should be defined', function () {
                 getAllAvailableRepos();
                 expect(getAllAvailableRepos).toBeDefined();
             });
 
-            it('Should call authenticated.get', function(){
+            it('Should call authenticated.get', function () {
                 spyOn(authenticated, 'get');
                 getAllAvailableRepos();
                 expect(authenticated.get).toHaveBeenCalled();
             });
 
-            it('Should call githubUserData.get', function(){
+            it('Should call githubUserData.get', function () {
                 spyOn(authenticated, 'get').and.returnValue(true);
-                spyOn(githubUserData, 'get').and.returnValue({then: function(){}});
+                spyOn(githubUserData, 'get').and.returnValue({then: function () {
+                }});
                 getAllAvailableRepos();
                 expect(githubUserData.get).toHaveBeenCalled();
             });
 
-            it('Should call github.repos.getAll', function(){
+            it('Should call github.repos.getAll', function () {
                 spyOn(authenticated, 'get').and.returnValue(true);
                 spyOn(github.user, 'get');
                 spyOn(github.repos, 'getAll');
@@ -330,12 +331,12 @@ define([
                 expect(github.repos.getAll).toHaveBeenCalled();
             });
 
-            it('Should return promise and resolve if data exist', function(done){
+            it('Should return promise and resolve if data exist', function (done) {
                 spyOn(authenticated, 'get').and.returnValue(true);
                 spyOn(github.user, 'get');
                 spyOn(github.repos, 'getAll');
                 getAllAvailableRepos()
-                    .then(function(data){
+                    .then(function (data) {
                         expect(data).toBeDefined();
                         done();
                     });
@@ -349,12 +350,12 @@ define([
                 $rootScope.$apply();
             });
 
-            it('Should return promise and reject if error exist', function(done){
+            it('Should return promise and reject if error exist', function (done) {
                 spyOn(authenticated, 'get').and.returnValue(true);
                 spyOn(github.user, 'get');
                 spyOn(github.repos, 'getAll');
                 getAllAvailableRepos()
-                    .then(null, function(data){
+                    .then(null, function (data) {
                         expect(data).toBeDefined();
                         expect(data.name).toBe('Error');
                         done();
@@ -369,10 +370,10 @@ define([
                 $rootScope.$apply();
             });
 
-            it('Should return promise and reject user is not authenticated yet', function(done){
+            it('Should return promise and reject user is not authenticated yet', function (done) {
                 spyOn(authenticated, 'get').and.returnValue(false);
                 getAllAvailableRepos()
-                    .then(null, function(data){
+                    .then(null, function (data) {
                         expect(data).toBeDefined();
                         expect(data instanceof Error).toBeTruthy();
                         done();
@@ -391,16 +392,16 @@ define([
                 $rootScope = $injector.get('$rootScope');
             }));
 
-            it('Should call github.search.code', function(){
+            it('Should call github.search.code', function () {
                 spyOn(github.search, 'code');
                 githubFreeSearch();
                 expect(github.search.code).toHaveBeenCalled();
             });
 
-            it('Should return promise and resolve if data exist', function(done){
+            it('Should return promise and resolve if data exist', function (done) {
                 spyOn(github.search, 'code');
                 githubFreeSearch()
-                    .then(function(data){
+                    .then(function (data) {
                         expect(data).toBeDefined();
                         expect(data.result).toBe('testResult');
                         done();
@@ -411,10 +412,10 @@ define([
                 $rootScope.$apply();
             });
 
-            it('Should return promise and reject if error exist', function(done){
+            it('Should return promise and reject if error exist', function (done) {
                 spyOn(github.search, 'code');
                 githubFreeSearch()
-                    .then(null, function(error){
+                    .then(null, function (error) {
                         expect(error).toBeDefined();
                         expect(error.name).toBe('Error');
                         done();
