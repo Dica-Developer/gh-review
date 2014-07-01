@@ -31,17 +31,18 @@ define(['angular', 'githubjs', 'moment', 'lodash'], function (angular, GitHub, m
     }]);
 
     services.factory('githubUserData', ['$q', 'github', function ($q, github) {
-        return function () {
-            var defer = $q.defer();
-            github.user.get({}, function (error, res) {
-                if (error) {
-//                        console.log(error);
-                } else {
-//                    console.log(res);
-                    defer.resolve(res);
-                }
-            });
-            return defer.promise;
+        return {
+            get: function () {
+                var defer = $q.defer();
+                github.user.get({}, function (error, res) {
+                    if (error) {
+                        defer.reject(error);
+                    } else {
+                        defer.resolve(res);
+                    }
+                });
+                return defer.promise;
+            }
         };
     }]);
 
@@ -222,7 +223,7 @@ define(['angular', 'githubjs', 'moment', 'lodash'], function (angular, GitHub, m
                 getReposWorker.terminate();
             };
 
-            githubUserData()
+            githubUserData.get()
                 .then(function (userData) {
                     getReposWorker.postMessage({
                         type: 'getReposAndBranches',

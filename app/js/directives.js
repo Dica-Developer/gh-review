@@ -16,7 +16,7 @@ define(['angular'], function (angular) {
         if (authenticated.get()) {
             returnVal.templateUrl = 'templates/authenticatedMenu.html';
             returnVal.link = function ($scope) {
-                githubUserData()
+                githubUserData.get()
                     .then(function (userData) {
                         $scope.name = userData.name;
                     });

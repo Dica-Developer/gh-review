@@ -36,7 +36,7 @@ define(['angular'], function (angular) {
         }])
 
         .controller('WhoAmIController', ['$scope', 'githubUserData', function ($scope, githubUserData) {
-            githubUserData()
+            githubUserData.get()
                 .then(function (userData) {
                     $scope.userData = userData;
                 });
