@@ -5,7 +5,7 @@ define(['angular'], function (angular) {
 
     return angular.module('GHReview.controllers', [])
         // Sample controller where service is being used
-        .controller('RootController', ['$scope', '$location', '$http', '$window', 'setAuthenticated', function ($scope, $location, $http, $window, setAuthenticated) {
+        .controller('RootController', ['$scope', '$location', '$http', '$window', 'authenticated', function ($scope, $location, $http, $window, authenticated) {
             var absUrl = $location.absUrl();
             var codeIndex = absUrl.indexOf('code');
             var equalIndex = absUrl.indexOf('=');
@@ -19,7 +19,7 @@ define(['angular'], function (angular) {
                 $http.post(url)
                     .then(function (resp) {
                         if (!resp.data.error) {
-                            setAuthenticated(resp.data);
+                            authenticated.set(resp.data);
                         }
                         $window.location.href = $window.location.origin;
                     });

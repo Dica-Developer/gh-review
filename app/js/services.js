@@ -5,16 +5,15 @@ define(['angular', 'githubjs', 'moment', 'lodash'], function (angular, GitHub, m
 
     var services = angular.module('GHReview.services', []);
 
-    services.factory('isAuthenticated', ['localStorageService', function (localStorageService) {
-        return function () {
-            return localStorageService.get('accessToken') !== null;
-        };
-    }]);
-
-    services.factory('setAuthenticated', ['localStorageService', function (localStorageService) {
-        return function (value) {
-            /*jshint camelcase:false*/
-            localStorageService.set('accessToken', value.access_token);
+    services.factory('authenticated', ['localStorageService', function (localStorageService) {
+        return {
+            get: function(){
+                return localStorageService.get('accessToken') !== null;
+            },
+            set: function(value){
+                /*jshint camelcase:false*/
+                localStorageService.set('accessToken', value.access_token);
+            }
         };
     }]);
 
@@ -114,10 +113,13 @@ define(['angular', 'githubjs', 'moment', 'lodash'], function (angular, GitHub, m
         };
     });
 
-    services.factory('collectComments', ['commentCollector', 'isAuthenticated', 'localStorageService', 'getAllFilter', function (commentCollector, isAuthenticated, localStorageService, getAllFilter) {
+    /**
+     * @deprecated should handled by worker as well and triggered from another place then menu directive
+     */
+    services.factory('collectComments', ['commentCollector', 'authenticated', 'localStorageService', 'getAllFilter', function (commentCollector, authenticated, localStorageService, getAllFilter) {
         return function () {
             var retVal = false;
-            if (isAuthenticated()) {
+            if (authenticated.get()) {
                 var accessToken = localStorageService.get('accessToken');
                 commentCollector.init(accessToken);
                 commentCollector.announceRepositories(getAllFilter());
@@ -131,10 +133,10 @@ define(['angular', 'githubjs', 'moment', 'lodash'], function (angular, GitHub, m
         return commentCollector.getCommitApproved();
     }]);
 
-    services.factory('getAllAvailableRepos', ['$q', 'isAuthenticated', 'githubUserData', 'github', function ($q, isAuthenticated, githubUserData, github) {
+    services.factory('getAllAvailableRepos', ['$q', 'authenticated', 'githubUserData', 'github', function ($q, authenticated, githubUserData, github) {
         return function () {
             var defer = $q.defer();
-            if (isAuthenticated()) {
+            if (authenticated.get()) {
                 githubUserData()
                     .then(function (userData) {
                         github.repos.getAll({

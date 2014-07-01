@@ -3,7 +3,7 @@ define(['angular', 'lodash'], function (angular, _) {
 
     var commentProviderModule = angular.module('GHReview.CommentProvider', []);
 
-    commentProviderModule.factory('commentProvider', ['$q', 'isAuthenticated', 'github', 'commentCollector', function ($q, isAuthenticated, github, commentCollector) {
+    commentProviderModule.factory('commentProvider', ['$q', 'authenticated', 'github', 'commentCollector', function ($q, authenticated, github, commentCollector) {
 
         var getApproversFromComments = function (result) {
             var commitApproved = commentCollector.getCommitApproved();
@@ -30,7 +30,7 @@ define(['angular', 'lodash'], function (angular, _) {
 
         var getCommentsForCommit = function (stateParams) {
             var defer = $q.defer();
-            if (isAuthenticated()) {
+            if (authenticated.get()) {
                 github.repos.getCommitComments({
                     user: stateParams.user,
                     repo: stateParams.repo,

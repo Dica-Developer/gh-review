@@ -3,7 +3,7 @@ define(['angular', 'lodash'], function (angular, _) {
 
     var commitProviderModule = angular.module('GHReview.CommitProvider', []);
 
-    commitProviderModule.factory('commitProvider', ['$q', '$timeout', 'isAuthenticated', 'github', 'Chunk', function ($q, $timeout, isAuthenticated, github, Chunk) {
+    commitProviderModule.factory('commitProvider', ['$q', '$timeout', 'authenticated', 'github', 'Chunk', function ($q, $timeout, authenticated, github, Chunk) {
         var computeChunk = function (resp) {
             var defer = $q.defer();
             var files = [];
@@ -35,7 +35,7 @@ define(['angular', 'lodash'], function (angular, _) {
 
         var getCommitBySha = function (stateParams) {
             var defer = $q.defer();
-            if (isAuthenticated()) {
+            if (authenticated.get()) {
                 github.repos.getCommit({
                     user: stateParams.user,
                     repo: stateParams.repo,

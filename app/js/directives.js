@@ -5,7 +5,7 @@ define(['angular'], function (angular) {
 
     var directives = angular.module('GHReview.directives', []);
 
-    directives.directive('menu', ['isAuthenticated', 'githubUserData', 'collectComments', function (isAuthenticated, githubUserData, collectComments) {
+    directives.directive('menu', ['authenticated', 'githubUserData', 'collectComments', function (authenticated, githubUserData, collectComments) {
         var commentCollectorInitialized = false;
         if (!commentCollectorInitialized) {
             commentCollectorInitialized = collectComments();
@@ -13,7 +13,7 @@ define(['angular'], function (angular) {
         var returnVal = {
             restrict: 'A'
         };
-        if (isAuthenticated()) {
+        if (authenticated.get()) {
             returnVal.templateUrl = 'templates/authenticatedMenu.html';
             returnVal.link = function ($scope) {
                 githubUserData()
