@@ -5,10 +5,9 @@ define(['lodash'], function (_) {
         '$q',
         '$stateParams',
         'fileContent',
-        'getCommitsByPath',
-        'getCommitBySha',
+        'commits',
         'Chunk',
-        function ($scope, $q, $stateParams, fileContent, getCommitsByPath, getCommitBySha, Chunk) {
+        function ($scope, $q, $stateParams, fileContent, commits, Chunk) {
 
             var colors = {};
             var fileContentSplit = _.str.lines(fileContent);
@@ -63,7 +62,7 @@ define(['lodash'], function (_) {
 
                 var annotateLines = function (commits) {
 
-                    getCommitBySha({
+                    commits.bySha({
                         sha: commits.pop().sha,
                         user: $stateParams.user,
                         repo: $stateParams.repo
@@ -149,9 +148,7 @@ define(['lodash'], function (_) {
                 path: $stateParams.path,
                 sha: $stateParams.ref
             };
-            getCommitsByPath(
-                msg
-            )
+            commits.byPath(msg)
                 .then(startAnnotateLines)
                 .then(
                 //Success
@@ -176,5 +173,6 @@ define(['lodash'], function (_) {
                 });
 
             $scope.$apply();
-        }];
+        }
+    ];
 });

@@ -110,58 +110,61 @@ define([
 
         });
 
-        describe('.getCommitBySha', function () {
-            var getCommitBySha, github, $rootScope,
-                githubParams = {
-                    user: 'testUser',
-                    repo: 'testRepo',
-                    sha: 'master'
-                };
+        describe('.commits', function () {
 
-            beforeEach(mocks.inject(function ($injector) {
-                getCommitBySha = $injector.get('getCommitBySha');
-                github = $injector.get('github');
-                $rootScope = $injector.get('$rootScope');
-            }));
+            describe('.bySha', function () {
+                var commits, github, $rootScope,
+                    githubParams = {
+                        user: 'testUser',
+                        repo: 'testRepo',
+                        sha: 'master'
+                    };
 
-            it('Should be defined', function(){
-                expect(getCommitBySha).toBeDefined();
-            });
+                beforeEach(mocks.inject(function ($injector) {
+                    commits = $injector.get('commits');
+                    github = $injector.get('github');
+                    $rootScope = $injector.get('$rootScope');
+                }));
 
-            it('Should call "github.repos.getCommit"', function(){
-                spyOn(github.repos, 'getCommit');
-                getCommitBySha(githubParams);
-                expect(github.repos.getCommit.calls.argsFor(0)[0]).toEqual(githubParams);
-            });
+                it('Should be defined', function () {
+                    expect(commits.bySha).toBeDefined();
+                });
 
-            it('Should return promise and resolve if response has no errors', function(done){
-                spyOn(github.repos, 'getCommit');
+                it('Should call "github.repos.getCommit"', function () {
+                    spyOn(github.repos, 'getCommit');
+                    commits.bySha(githubParams);
+                    expect(github.repos.getCommit.calls.argsFor(0)[0]).toEqual(githubParams);
+                });
 
-                getCommitBySha(githubParams)
-                    .then(function(data){
-                        expect(data).toBeDefined();
-                        done();
-                    });
+                it('Should return promise and resolve if response has no errors', function (done) {
+                    spyOn(github.repos, 'getCommit');
 
-                var getCallback = github.repos.getCommit.calls.argsFor(0)[1];
-                getCallback(null, {});
+                    commits.bySha(githubParams)
+                        .then(function (data) {
+                            expect(data).toBeDefined();
+                            done();
+                        });
 
-                $rootScope.$apply();
-            });
+                    var getCallback = github.repos.getCommit.calls.argsFor(0)[1];
+                    getCallback(null, {});
 
-            it('Should return promise and reject if response has errors', function(done){
-                spyOn(github.repos, 'getCommit');
+                    $rootScope.$apply();
+                });
 
-                getCommitBySha(githubParams)
-                    .then(null, function(error){
-                        expect(error.name).toBe('TestError');
-                        done();
-                    });
+                it('Should return promise and reject if response has errors', function (done) {
+                    spyOn(github.repos, 'getCommit');
 
-                var getCallback = github.repos.getCommit.calls.argsFor(0)[1];
-                getCallback({name: 'TestError'}, null);
+                    commits.bySha(githubParams)
+                        .then(null, function (error) {
+                            expect(error.name).toBe('TestError');
+                            done();
+                        });
 
-                $rootScope.$apply();
+                    var getCallback = github.repos.getCommit.calls.argsFor(0)[1];
+                    getCallback({name: 'TestError'}, null);
+
+                    $rootScope.$apply();
+                });
             });
         });
 

@@ -7,10 +7,10 @@ define(['angular', 'githubjs', 'moment', 'lodash'], function (angular, GitHub, m
 
     services.factory('authenticated', ['localStorageService', function (localStorageService) {
         return {
-            get: function(){
+            get: function () {
                 return localStorageService.get('accessToken') !== null;
             },
-            set: function(value){
+            set: function (value) {
                 /*jshint camelcase:false*/
                 localStorageService.set('accessToken', value.access_token);
             }
@@ -46,23 +46,57 @@ define(['angular', 'githubjs', 'moment', 'lodash'], function (angular, GitHub, m
         };
     }]);
 
-    services.factory('getCommitBySha', ['$q', 'github', function ($q, github) {
-        return function (params) {
-            var defer = $q.defer();
-            github.repos.getCommit({
-                user: params.user,
-                repo: params.repo,
-                sha: params.sha
-            }, function (error, res) {
-                if (error) {
-                    defer.reject(error);
-                } else {
-                    defer.resolve(res);
-                }
-            });
-            return defer.promise;
+    services.factory('commits', ['$q', 'github', 'localStorageService', function ($q, github, localStorageService) {
+        return {
+            bySha: function (params) {
+                var defer = $q.defer();
+                github.repos.getCommit({
+                    user: params.user,
+                    repo: params.repo,
+                    sha: params.sha
+                }, function (error, res) {
+                    if (error) {
+                        defer.reject(error);
+                    } else {
+                        defer.resolve(res);
+                    }
+                });
+                return defer.promise;
+            },
+            byPath: function (options) {
+                var defer = $q.defer();
+                var commitsPerFileWorker = new Worker('js/worker/commitsOfFile.js');
+                commitsPerFileWorker.onmessage = function (event) {
+                    if ('commits' === event.data.type) {
+                        commitsPerFileWorker.terminate();
+                        defer.resolve(event.data.commits.concat([]));
+                    }
+                };
+                options.type = 'getCommits';
+                options.token = localStorageService.get('accessToken');
+                commitsPerFileWorker.postMessage(options);
+                return defer.promise;
+            }
         };
     }]);
+
+//    services.factory('getCommitBySha', ['$q', 'github', function ($q, github) {
+//        return function (params) {
+//            var defer = $q.defer();
+//            github.repos.getCommit({
+//                user: params.user,
+//                repo: params.repo,
+//                sha: params.sha
+//            }, function (error, res) {
+//                if (error) {
+//                    defer.reject(error);
+//                } else {
+//                    defer.resolve(res);
+//                }
+//            });
+//            return defer.promise;
+//        };
+//    }]);
 
     services.factory('getAllFilter', ['localStorageService', 'Filter', function (localStorageService, Filter) {
         return function () {
@@ -194,22 +228,9 @@ define(['angular', 'githubjs', 'moment', 'lodash'], function (angular, GitHub, m
         };
     }]);
 
-    services.factory('getCommitsByPath', ['$q', 'localStorageService', function ($q, localStorageService) {
-        return function (options) {
-            var defer = $q.defer();
-            var commitsPerFileWorker = new Worker('js/worker/commitsOfFile.js');
-            commitsPerFileWorker.onmessage = function (event) {
-                if ('commits' === event.data.type) {
-                    commitsPerFileWorker.terminate();
-                    defer.resolve(event.data.commits.concat([]));
-                }
-            };
-            options.type = 'getCommits';
-            options.token = localStorageService.get('accessToken');
-            commitsPerFileWorker.postMessage(options);
-            return defer.promise;
-        };
-    }]);
+//    services.factory('getCommitsByPath', ['$q', 'localStorageService', function ($q, localStorageService) {
+//        return ;
+//    }]);
 
     services.factory('getAllReposAndBranches', ['$q', 'githubUserData', 'localStorageService', function ($q, githubUserData, localStorageService) {
         return function () {
