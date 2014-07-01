@@ -80,24 +80,6 @@ define(['angular', 'githubjs', 'moment', 'lodash'], function (angular, GitHub, m
         };
     }]);
 
-//    services.factory('getCommitBySha', ['$q', 'github', function ($q, github) {
-//        return function (params) {
-//            var defer = $q.defer();
-//            github.repos.getCommit({
-//                user: params.user,
-//                repo: params.repo,
-//                sha: params.sha
-//            }, function (error, res) {
-//                if (error) {
-//                    defer.reject(error);
-//                } else {
-//                    defer.resolve(res);
-//                }
-//            });
-//            return defer.promise;
-//        };
-//    }]);
-
     services.factory('getAllFilter', ['localStorageService', 'Filter', function (localStorageService, Filter) {
         return function () {
             var filter = [];
@@ -227,10 +209,6 @@ define(['angular', 'githubjs', 'moment', 'lodash'], function (angular, GitHub, m
             return defer.promise;
         };
     }]);
-
-//    services.factory('getCommitsByPath', ['$q', 'localStorageService', function ($q, localStorageService) {
-//        return ;
-//    }]);
 
     services.factory('getAllReposAndBranches', ['$q', 'githubUserData', 'localStorageService', function ($q, githubUserData, localStorageService) {
         return function () {
