@@ -426,5 +426,122 @@ define([
                 $rootScope.$apply();
             });
         });
+
+        describe('.getFileContent', function () {
+            var getFileContent, github, $rootScope;
+
+            beforeEach(mocks.inject(function ($injector) {
+                getFileContent = $injector.get('getFileContent');
+                github = $injector.get('github');
+                $rootScope = $injector.get('$rootScope');
+            }));
+
+            it('Should call github.search.code', function () {
+                spyOn(github.repos, 'getContent');
+                getFileContent({});
+                expect(github.repos.getContent).toHaveBeenCalled();
+            });
+
+            it('Should return promise and resolve if data exist', function (done) {
+                spyOn(github.repos, 'getContent');
+                getFileContent({})
+                    .then(function (data) {
+                        expect(data).toBeDefined();
+                        expect(data.result).toBe('testResult');
+                        done();
+                    });
+                var callback = github.repos.getContent.calls.argsFor(0)[1];
+                callback(null, { data: {result: 'testResult'}});
+                expect(github.repos.getContent).toHaveBeenCalled();
+                $rootScope.$apply();
+            });
+
+            it('Should return promise and reject if error exist', function (done) {
+                spyOn(github.repos, 'getContent');
+                getFileContent({})
+                    .then(null, function (error) {
+                        expect(error).toBeDefined();
+                        expect(error.name).toBe('Error');
+                        done();
+                    });
+                var callback = github.repos.getContent.calls.argsFor(0)[1];
+                callback({name: 'Error'}, null);
+                expect(github.repos.getContent).toHaveBeenCalled();
+                $rootScope.$apply();
+            });
+
+            it('Should delete property ref not sha from options if null', function (done) {
+                spyOn(github.repos, 'getContent');
+                getFileContent({ref: null, sha: 'bla'})
+                    .then(function (data) {
+                        expect(data).toBeDefined();
+                        done();
+                    });
+                var callback = github.repos.getContent.calls.argsFor(0)[1];
+                var callOptions = github.repos.getContent.calls.argsFor(0)[0];
+                callback(null, {data:{bla: 'bla'}});
+                expect(callOptions.ref).not.toBeDefined();
+                expect(callOptions.sha).toBeDefined();
+                $rootScope.$apply();
+            });
+
+            it('Should not delete property ref but sha from options if not null', function (done) {
+                spyOn(github.repos, 'getContent');
+                getFileContent({ref: 'not null', sha: 'delete me'})
+                    .then(function (data) {
+                        expect(data).toBeDefined();
+                        done();
+                    });
+                var callback = github.repos.getContent.calls.argsFor(0)[1];
+                var callOptions = github.repos.getContent.calls.argsFor(0)[0];
+                callback(null, {data:{bla: 'bla'}});
+                expect(callOptions.ref).toBeDefined();
+                expect(callOptions.sha).not.toBeDefined();
+                $rootScope.$apply();
+            });
+        });
+
+        describe('.getTreeData', function () {
+            var getTreeData, github, $rootScope;
+
+            beforeEach(mocks.inject(function ($injector) {
+                getTreeData = $injector.get('getTreeData');
+                github = $injector.get('github');
+                $rootScope = $injector.get('$rootScope');
+            }));
+
+            it('Should call github.search.code', function () {
+                spyOn(github.gitdata, 'getTree');
+                getTreeData({});
+                expect(github.gitdata.getTree).toHaveBeenCalled();
+            });
+
+            it('Should return promise and resolve if data exist', function (done) {
+                spyOn(github.gitdata, 'getTree');
+                getTreeData({})
+                    .then(function (data) {
+                        expect(data).toBeDefined();
+                        done();
+                    });
+                var callback = github.gitdata.getTree.calls.argsFor(0)[1];
+                callback(null, { data:  'testResult'});
+                expect(github.gitdata.getTree).toHaveBeenCalled();
+                $rootScope.$apply();
+            });
+
+            it('Should return promise and reject if error exist', function (done) {
+                spyOn(github.gitdata, 'getTree');
+                getTreeData({})
+                    .then(null, function (error) {
+                        expect(error).toBeDefined();
+                        expect(error.name).toBe('Error');
+                        done();
+                    });
+                var callback = github.gitdata.getTree.calls.argsFor(0)[1];
+                callback({name: 'Error'}, null);
+                expect(github.gitdata.getTree).toHaveBeenCalled();
+                $rootScope.$apply();
+            });
+        });
     });
 });
