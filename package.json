@@ -41,6 +41,7 @@
     "karma-requirejs": "^0.2.2",
     "karma-phantomjs-launcher": "^0.1.4",
     "karma-coverage": "^0.2.4",
-    "grunt-karma-coveralls": "^2.5.1"
+    "grunt-karma-coveralls": "^2.5.1",
+    "karma-story-reporter": "^0.2.2"
   }
 }

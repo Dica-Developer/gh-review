@@ -12,7 +12,7 @@ module.exports = function (config) {
             'test/main-test.js'
         ],
 
-        reporters: ['dots', 'coverage'],
+        reporters: ['story', 'coverage'],
         preprocessors: {
             'app/js/**/*.js': ['coverage']
         },
