@@ -266,6 +266,7 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('test', [
+        'processTmpl:dev',
         'karma:dev'
     ]);
 
