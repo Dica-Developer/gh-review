@@ -35,9 +35,9 @@ define(['angular', 'app'], function (angular, app) {
                 templateUrl: 'templates/moduleFilter.html',
                 controller: 'ModuleFilterController',
                 resolve: {
-                    allRepos: function ($q, getAllAvailableRepos) {
+                    allRepos: ['$q', 'getAllAvailableRepos', function ($q, getAllAvailableRepos) {
                         return getAllAvailableRepos();
-                    }
+                    }]
                 }
             })
             .state('commitsByFilter', {
@@ -66,9 +66,9 @@ define(['angular', 'app'], function (angular, app) {
                      * @param $stateParams.name
                      * @returns {$q}
                      */
-                    fileContent: function ($stateParams, getFileContent) {
+                    fileContent: ['$stateParams', 'getFileContent', function ($stateParams, getFileContent) {
                         return getFileContent($stateParams);
-                    }
+                    }]
                 }
             });
     }]);
