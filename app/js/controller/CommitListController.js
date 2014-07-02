@@ -4,47 +4,47 @@ define([], function () {
         '$scope',
         '$stateParams',
         'commitsApproved',
-        'getFilterById',
-        function ($scope, $stateParams, commitsApproved, getFilterById) {
+        'filter',
+        function ($scope, $stateParams, commitsApproved, filter) {
             $scope.hasNext = false;
             $scope.hasPrevious = false;
             $scope.hasFirst = false;
 
-            var filter = getFilterById($stateParams.filterId);
+            var filterById = filter.getById($stateParams.filterId);
 
-            $scope.user = filter.getOwner();
-            $scope.repo = filter.getRepo();
+            $scope.user = filterById.getOwner();
+            $scope.repo = filterById.getRepo();
             $scope.commitApproved = function (sha) {
                 return (true === commitsApproved[sha]);
             };
 
             var setButtonStates = function () {
-                $scope.hasNext = filter.hasNextPage;
-                $scope.hasPrevious = filter.hasPreviousPage;
-                $scope.hasFirst = filter.hasFirstPage;
+                $scope.hasNext = filterById.hasNextPage;
+                $scope.hasPrevious = filterById.hasPreviousPage;
+                $scope.hasFirst = filterById.hasFirstPage;
             };
 
-            filter.getCommits(0, 20).then(function (commits) {
+            filterById.getCommits(0, 20).then(function (commits) {
                 $scope.commits = commits;
                 setButtonStates();
             });
 
             $scope.getNextPage = function () {
-                filter.getNextPage().then(function (commits) {
+                filterById.getNextPage().then(function (commits) {
                     $scope.commits = commits;
                     setButtonStates();
                 });
             };
 
             $scope.getPreviousPage = function () {
-                filter.getPreviousPage().then(function (commits) {
+                filterById.getPreviousPage().then(function (commits) {
                     $scope.commits = commits;
                     setButtonStates();
                 });
             };
 
             $scope.getFirstPage = function () {
-                filter.getFirstPage().then(function (commits) {
+                filterById.getFirstPage().then(function (commits) {
                     $scope.commits = commits;
                     setButtonStates();
                 });

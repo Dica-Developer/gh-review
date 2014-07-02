@@ -80,8 +80,10 @@ define(['angular', 'githubjs', 'moment', 'lodash'], function (angular, GitHub, m
         };
     }]);
 
-    services.factory('getAllFilter', ['localStorageService', 'Filter', function (localStorageService, Filter) {
-        return function () {
+
+    services.factory('filter', ['localStorageService', 'Filter', function (localStorageService, Filter) {
+
+        var getAll = function () {
             var filter = [];
             var filterIds = localStorageService.get('filter');
             if (filterIds !== null) {
@@ -91,16 +93,12 @@ define(['angular', 'githubjs', 'moment', 'lodash'], function (angular, GitHub, m
             }
             return filter;
         };
-    }]);
 
-    services.factory('getFilterById', ['Filter', function (Filter) {
-        return function (filterId) {
+        var getById = function (filterId) {
             return new Filter(filterId);
         };
-    }]);
 
-    services.factory('removeFilter', ['localStorageService', function (localStorageService) {
-        return function (filterId) {
+        var remove = function (filterId) {
             localStorageService.remove('filter-' + filterId);
             var filterList = localStorageService.get('filter').split(',');
             _.remove(filterList, function (value) {
@@ -108,6 +106,13 @@ define(['angular', 'githubjs', 'moment', 'lodash'], function (angular, GitHub, m
             });
             localStorageService.set('filter', filterList.join(','));
         };
+
+        return {
+            getAll: getAll,
+            getById: getById,
+            remove: remove
+        };
+
     }]);
 
     services.factory('humanReadableDate', function () {
@@ -132,13 +137,13 @@ define(['angular', 'githubjs', 'moment', 'lodash'], function (angular, GitHub, m
     /**
      * @deprecated should handled by worker as well and triggered from another place then menu directive
      */
-    services.factory('collectComments', ['commentCollector', 'authenticated', 'localStorageService', 'getAllFilter', function (commentCollector, authenticated, localStorageService, getAllFilter) {
+    services.factory('collectComments', ['commentCollector', 'authenticated', 'localStorageService', 'filter', function (commentCollector, authenticated, localStorageService, filter) {
         return function () {
             var retVal = false;
             if (authenticated.get()) {
                 var accessToken = localStorageService.get('accessToken');
                 commentCollector.init(accessToken);
-                commentCollector.announceRepositories(getAllFilter());
+                commentCollector.announceRepositories(filter.getAll());
                 retVal = true;
             }
             return retVal;
