@@ -18,6 +18,8 @@ require.config({
         githubjs: '../bower_components/github-js/dist/github.min',
         watch: '../bower_components/watch/src/watch.min',
 
+        options: 'options',
+
         routes: 'routes',
         Filter: 'modules/Filter',
         Chunk: 'modules/Chunk',

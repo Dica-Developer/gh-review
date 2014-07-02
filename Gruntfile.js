@@ -196,6 +196,19 @@ module.exports = function (grunt) {
         }
     });
 
+    grunt.registerTask('processTmpl', function (target) {
+        var options = config.distOptions;
+        var tmpl = grunt.file.read('build-templates/options.tmpl');
+        var pkg = grunt.file.readJSON('package.json');
+        if ('dev' === target) {
+            options = config.devOptions;
+        }
+        options.version = pkg.version;
+        var processedTmpl = grunt.template.process(tmpl, {
+            data: options
+        });
+        grunt.file.write('app/js/options.js', processedTmpl);
+    });
     grunt.registerTask('devWatch', [
         'jshint',
         'less:dev',
@@ -205,7 +218,7 @@ module.exports = function (grunt) {
     grunt.registerTask('dev', [
         'clean:dev',
         'jshint',
-//        'processTmpl:dev',
+        'processTmpl:dev',
         'copy:dev',
         'less:dev',
         'connect:dev',
