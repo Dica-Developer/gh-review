@@ -196,7 +196,10 @@ module.exports = function (grunt) {
             }
         },
         ngdocs: {
-            all: ['app/js/**/*.js']
+            options: {
+                deferLoad: true,
+                all: ['app/js/main.js']
+            }
         },
         coveralls: {
             options: {
@@ -254,6 +257,7 @@ module.exports = function (grunt) {
     grunt.registerTask('dev', [
         'clean:dev',
         'jshint',
+//        'ngdocs',
         'processTmpl:dev',
         'copy:dev',
         'less:dev',
