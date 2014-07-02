@@ -11,14 +11,13 @@ define([
 
 
         describe('FilterListController', function () {
-            var $location, $rootScope, $scope, controller;
+            var $rootScope, $scope, controller;
 
             beforeEach(mocks.inject(function ($injector) {
                 localStorage.setItem('ls.filter', 'e0a35c44-1066-9a60-22f2-86bd825bc70c,2d3e5719-fc16-b69e-4a27-1cb2521fbeba');
                 localStorage.setItem('ls.filter-2d3e5719-fc16-b69e-4a27-1cb2521fbeba', '{"sha":"master","customFilter":{"state":"reviewed"},"repo":"gh-review","user":"Dica-Developer","since":"2012-05-13T18:21:29.919Z","id":"2d3e5719-fc16-b69e-4a27-1cb2521fbebf"}');
                 localStorage.setItem('ls.filter-e0a35c44-1066-9a60-22f2-86bd825bc70c', '{"sha":" DAP-18276-rebranch","customFilter":{},"repo":"dap","user":"Datameer-Inc","since":"2014-04-14T16:41:48.746Z","id":"e0a35c44-1066-9a60-22f2-86bd825bc70c"}');
                 localStorage.setItem('ls.accessToken', '44046cd4b4b85afebfe3ccaec13fd8c08cc80aad');
-                $location = $injector.get('$location');
                 $rootScope = $injector.get('$rootScope');
                 $scope = $rootScope.$new();
 
@@ -72,31 +71,83 @@ define([
             });
         });
 
-        xdescribe('WhoAmIController', function () {
-            var WhoAmIController, scope, originalTimeout;
+        describe('WhoAmIController', function () {
+            var WhoAmIController, $scope, $controller, githubUserDataSpy, githubUserData, github;
 
-            beforeEach(function () {
-                originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
-                jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
+            beforeEach(mocks.inject(function ($injector) {
                 localStorage.setItem('ls.accessToken', '44046cd4b4b85afebfe3ccaec13fd8c08cc80aad');
-                mocks.module('GHReview.controllers');
-                mocks.module('GHReview.services');
-                mocks.module('LocalStorageModule');
-                mocks.inject(function ($rootScope, $controller) {
-                    scope = $rootScope.$new();
-                    WhoAmIController = $controller('WhoAmIController', {
-                        $scope: scope
-                    });
-                });
-            });
+                githubUserData = $injector.get('githubUserData');
+                $controller = $injector.get('$controller');
+                github= $injector.get('github');
+                var $rootScope = $injector.get('$rootScope');
+                $scope = $rootScope.$new();
+            }));
 
             afterEach(function () {
-                jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
                 localStorage.clear();
             });
 
             it('Should be defined', function () {
+                githubUserDataSpy = spyOn(githubUserData, 'get').and.returnValue({then: function(){}});
+                WhoAmIController = $controller('WhoAmIController', {
+                    $scope: $scope
+                });
                 expect(WhoAmIController).toBeDefined();
+            });
+
+            it('Should call githubUserData', function () {
+                githubUserDataSpy = spyOn(githubUserData, 'get').and.returnValue({then: function(){}});
+                WhoAmIController = $controller('WhoAmIController', {
+                    $scope: $scope
+                });
+                expect(githubUserDataSpy).toHaveBeenCalled();
+            });
+
+            it('Should call github.user.get', function () {
+                spyOn(github.user, 'get');
+                WhoAmIController = $controller('WhoAmIController', {
+                    $scope: $scope
+                });
+                expect(github.user.get).toHaveBeenCalled();
+            });
+
+            it('Should apply response of github.user.get to $scope', function () {
+                spyOn(github.user, 'get');
+                WhoAmIController = $controller('WhoAmIController', {
+                    $scope: $scope
+                });
+                var getCallback = github.user.get.calls.argsFor(0)[1];
+                getCallback(null, {login: 'testUser', name: 'testName'});
+                $scope.$apply();
+                expect($scope.userData).toBeDefined();
+                expect($scope.userData.login).toBe('testUser');
+                expect($scope.userData.name).toBe('testName');
+            });
+
+        });
+
+
+        describe('CommitListController', function () {
+            var CommitListController, $scope, $controller, Filter, filter;
+
+            beforeEach(mocks.inject(function ($injector) {
+                Filter = $injector.get('Filter');
+                filter = $injector.get('filter');
+                $controller = $injector.get('$controller');
+                var $rootScope = $injector.get('$rootScope');
+                $scope = $rootScope.$new();
+            }));
+
+            afterEach(function () {
+                localStorage.clear();
+            });
+
+            it('Should be defined', function () {
+                CommitListController = $controller('CommitListController', {
+                    $scope: $scope,
+                    commitsApproved: {}
+                });
+                expect(CommitListController).toBeDefined();
             });
 
         });
