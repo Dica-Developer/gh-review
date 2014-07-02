@@ -13,7 +13,13 @@ define([
     'angularUi',
     'angularLocalStorage',
     'angularSanitize',
-    'angularAnimate'
+    'angularAnimate',
+
+    'FilterController',
+    'FileController',
+    'ModuleFilterController',
+    'CommitController',
+    'CommitListController'
 ], function (angular) {
     'use strict';
 

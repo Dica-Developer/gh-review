@@ -59,35 +59,5 @@ define(['angular'], function (angular) {
                 filter.remove(filterId);
                 $scope.filterList = filter.getAll();
             };
-        }])
-
-        .controller('CommitListController', ['$scope', '$injector', 'commitsApproved', function ($scope, $injector, commitsApproved) {
-            require(['CommitListController'], function (controller) {
-                $injector.invoke(controller, this, {'$scope': $scope, commitsApproved: commitsApproved});
-            });
-        }])
-
-        .controller('CommitController', ['$scope', '$injector', function ($scope, $injector) {
-            require(['CommitController'], function (controller) {
-                $injector.invoke(controller, this, {'$scope': $scope});
-            });
-        }])
-
-        .controller('ModuleFilterController', ['$scope', '$injector', 'allRepos', function ($scope, $injector, allRepos) {
-            require(['ModuleFilterController'], function (controller) {
-                $injector.invoke(controller, this, {'$scope': $scope, allRepos: allRepos});
-            });
-        }])
-
-        .controller('FileController', ['$scope', '$injector', 'fileContent', function ($scope, $injector, fileContent) {
-            require(['FileController'], function (controller) {
-                $injector.invoke(controller, this, {'$scope': $scope, fileContent: fileContent});
-            });
-        }])
-
-        .controller('FilterController', ['$scope', '$injector', function ($scope, $injector) {
-            require(['FilterController'], function (controller) {
-                $injector.invoke(controller, this, {'$scope': $scope});
-            });
         }]);
 });
