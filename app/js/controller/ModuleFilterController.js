@@ -1,7 +1,7 @@
 define(['controllers'], function (controllers) {
     'use strict';
     controllers
-        .controller('ModuleFilterController', ['$scope', 'allRepos', 'githubFreeSearch', function ($scope, allRepos, githubFreeSearch) {
+        .controller('ModuleFilterController', ['$scope', 'githubFreeSearch', function ($scope, githubFreeSearch) {
             $scope.searchString = '';
             $scope.doSearch = function () {
                 githubFreeSearch($scope.searchString)
