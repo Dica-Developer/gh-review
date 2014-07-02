@@ -54,7 +54,9 @@ define(['angular', 'lodash', 'moment', 'watch'], function (angular, _, moment, w
             }
         };
 
+        //TODO will throw error if this filter is the first filter
         Filter.prototype.save = function () {
+            //TODO need to check if it return null (possible if no filter defined yet)
             var filterIds = localStorageService.get('filter').split(',');
             filterIds.push(this.options.id);
             localStorageService.set('filter', filterIds.join(','));
