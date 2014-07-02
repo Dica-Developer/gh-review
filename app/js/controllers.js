@@ -5,32 +5,40 @@ define(['angular'], function (angular) {
 
     return angular.module('GHReview.controllers', [])
         // Sample controller where service is being used
-        .controller('RootController', ['$scope', '$location', '$http', '$window', 'authenticated', function ($scope, $location, $http, $window, authenticated) {
-            var absUrl = $location.absUrl();
-            var codeIndex = absUrl.indexOf('code');
-            var equalIndex = absUrl.indexOf('=');
-            var hashIndex = absUrl.indexOf('#');
-            if (codeIndex > -1) {
-                var authCode = absUrl.slice(equalIndex + 1, hashIndex);
-                var url = 'http://gh-review.herokuapp.com/bemdsvdsynggmvweibduvjcbgf?' +
-                    'client_id=5082108e53d762d90c00&' +
-                    'code=' + authCode + '&' +
-                    'scope=user, repo';
-                $http.post(url)
-                    .then(function (resp) {
-                        if (!resp.data.error) {
-                            authenticated.set(resp.data);
-                        }
-                        $window.location.href = $window.location.origin;
-                    });
+        .controller('RootController', [
+            '$scope',
+            '$location',
+            '$http',
+            '$window',
+            'authenticated',
+            'githubOptions',
+            function ($scope, $location, $http, $window, authenticated, githubOptions) {
+                var absUrl = $location.absUrl();
+                var codeIndex = absUrl.indexOf('code');
+                var equalIndex = absUrl.indexOf('=');
+                var hashIndex = absUrl.indexOf('#');
+                if (codeIndex > -1) {
+                    var authCode = absUrl.slice(equalIndex + 1, hashIndex);
+                    var url = githubOptions.accessTokenUrl + '?' +
+                        'client_id='+ githubOptions.clientId +'&' +
+                        'code=' + authCode + '&' +
+                        'scope=' + githubOptions.apiScope;
+                    $http.post(url)
+                        .then(function (resp) {
+                            if (!resp.data.error) {
+                                authenticated.set(resp.data);
+                            }
+                            $window.location.href = $window.location.origin;
+                        });
+                }
             }
-        }])
+        ])
 
-        .controller('LoginController', ['$scope', '$window', function ($scope, $window) {
+        .controller('LoginController', ['$scope', '$window', 'githubOptions', function ($scope, $window, githubOptions) {
             var url = 'https://github.com/login/oauth/authorize?' +
-                'client_id=5082108e53d762d90c00&' +
-                'redirect_uri=http://localhost:9000&' +
-                'scope=user, repo';
+                'client_id='+ githubOptions.clientId +'&' +
+                'redirect_uri='+ githubOptions.redirectUri +'&' +
+                'scope=' + githubOptions.apiScope;
 
             $window.location.href = url;
         }])

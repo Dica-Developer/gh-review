@@ -1,9 +1,12 @@
-define(['angular', 'githubjs', 'moment', 'lodash'], function (angular, GitHub, moment, _) {
+define(['angular', 'githubjs', 'moment', 'lodash', 'options'], function (angular, GitHub, moment, _, options) {
     'use strict';
 
     /* Services */
 
     var services = angular.module('GHReview.services', []);
+
+    services.value('version', options.ghReview.version);
+    services.value('githubOptions', options.github);
 
     services.factory('authenticated', ['localStorageService', function (localStorageService) {
         return {
