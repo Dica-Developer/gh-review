@@ -128,11 +128,17 @@ define([
 
 
         describe('CommitListController', function () {
-            var CommitListController, $scope, $controller, Filter, filter;
+            var CommitListController, $scope, $controller,
+                Filter, filter, referenceFilter, filterGetByIdSpy;
 
             beforeEach(mocks.inject(function ($injector) {
+                localStorage.setItem('ls.filter', 'e0a35c44-1066-9a60-22f2-86bd825bc70c,2d3e5719-fc16-b69e-4a27-1cb2521fbeba');
+                localStorage.setItem('ls.filter-2d3e5719-fc16-b69e-4a27-1cb2521fbeba', '{"sha":"master","customFilter":{"state":"reviewed"},"repo":"gh-review","user":"Dica-Developer","since":"2012-05-13T18:21:29.919Z","id":"2d3e5719-fc16-b69e-4a27-1cb2521fbebf"}');
+                localStorage.setItem('ls.filter-e0a35c44-1066-9a60-22f2-86bd825bc70c', '{"sha":" DAP-18276-rebranch","customFilter":{},"repo":"dap","user":"Datameer-Inc","since":"2014-04-14T16:41:48.746Z","id":"e0a35c44-1066-9a60-22f2-86bd825bc70c"}');
                 Filter = $injector.get('Filter');
                 filter = $injector.get('filter');
+                referenceFilter = new Filter('e0a35c44-1066-9a60-22f2-86bd825bc70c');
+                filterGetByIdSpy = spyOn(filter, 'getById').and.returnValue(referenceFilter);
                 $controller = $injector.get('$controller');
                 var $rootScope = $injector.get('$rootScope');
                 $scope = $rootScope.$new();
@@ -148,6 +154,116 @@ define([
                     commitsApproved: {}
                 });
                 expect(CommitListController).toBeDefined();
+            });
+
+            it('Should call filter.getById', function () {
+                CommitListController = $controller('CommitListController', {
+                    $scope: $scope,
+                    commitsApproved: {}
+                });
+                expect(filterGetByIdSpy).toHaveBeenCalled();
+            });
+
+            it('Should collect owner and repo from filter', function () {
+                spyOn(Filter.prototype, 'getOwner').and.callThrough();
+                spyOn(Filter.prototype, 'getRepo').and.callThrough();
+                CommitListController = $controller('CommitListController', {
+                    $scope: $scope,
+                    commitsApproved: {}
+                });
+                expect(Filter.prototype.getOwner).toHaveBeenCalled();
+                expect(Filter.prototype.getRepo).toHaveBeenCalled();
+            });
+
+        });
+
+        describe('FilterController', function () {
+            var FilterController, $scope, $controller, Filter, spy = {};
+
+            beforeEach(mocks.inject(function ($injector) {
+                Filter = $injector.get('Filter');
+                spy.getAllReposAndBranches = $injector.get('getAllReposAndBranches');
+                $controller = $injector.get('$controller');
+                var $rootScope = $injector.get('$rootScope');
+                $scope = $rootScope.$new();
+            }));
+
+            afterEach(function () {
+                localStorage.clear();
+            });
+
+            it('Should be defined', function () {
+                FilterController = $controller('FilterController', {
+                    $scope: $scope,
+                    commitsApproved: {}
+                });
+                expect(FilterController).toBeDefined();
+            });
+
+            it('Should call getAllReposAndBranches', function () {
+                spyOn(spy, 'getAllReposAndBranches').and.returnValue({then: function(){}});
+                FilterController = $controller('FilterController', {
+                    $scope: $scope,
+                    getAllReposAndBranches: spy.getAllReposAndBranches
+                });
+                expect(spy.getAllReposAndBranches).toHaveBeenCalled();
+            });
+
+        });
+
+        describe('ModuleFilterController', function () {
+            var $q, ModuleFilterController, $scope, $controller, github, spy = {};
+
+            beforeEach(mocks.inject(function ($injector) {
+                github = $injector.get('github');
+                spy.githubFreeSearch = $injector.get('githubFreeSearch');
+                $q = $injector.get('$q');
+                $controller = $injector.get('$controller');
+                var $rootScope = $injector.get('$rootScope');
+                $scope = $rootScope.$new();
+            }));
+
+
+            it('Should be defined', function () {
+                ModuleFilterController = $controller('ModuleFilterController', {
+                    $scope: $scope
+                });
+                expect(ModuleFilterController).toBeDefined();
+            });
+
+            it('Should have empty search string', function () {
+                ModuleFilterController = $controller('ModuleFilterController', {
+                    $scope: $scope
+                });
+                expect($scope.searchString).toBeDefined();
+                expect($scope.searchString).toBe('');
+            });
+
+            it('Should call githubFreeSearch when calling $scope.doSearch', function () {
+                spyOn(spy, 'githubFreeSearch').and.returnValue({then: function(){}});
+                ModuleFilterController = $controller('ModuleFilterController', {
+                    $scope: $scope,
+                    githubFreeSearch: spy.githubFreeSearch
+                });
+                $scope.doSearch();
+                $scope.$apply();
+                expect(spy.githubFreeSearch).toHaveBeenCalled();
+            });
+
+            it('Should set $scope.reult to response of gitHubFreeSearch request', function () {
+                var defer = $q.defer();
+                spyOn(spy, 'githubFreeSearch').and.returnValue(defer.promise);
+                ModuleFilterController = $controller('ModuleFilterController', {
+                    $scope: $scope,
+                    githubFreeSearch: spy.githubFreeSearch
+                });
+                $scope.doSearch();
+                expect($scope.result).toBeUndefined();
+                var items = [1, 2, 3];
+                defer.resolve({items: items});
+                $scope.$apply();
+                expect($scope.result).toBeDefined();
+                expect($scope.result).toBe(items);
             });
 
         });
