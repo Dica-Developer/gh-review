@@ -143,7 +143,7 @@ module.exports = function (grunt) {
                         expand: true,
                         cwd: '<%= config.app %>',
                         dest: '<%= config.dist %>',
-                        src: ['worker/**/*', 'img/**/*', 'templates/**/*', 'fonts/**/*', '*.html']
+                        src: ['js/worker/*', 'img/**/*', 'templates/**/*', 'fonts/**/*', '*.html']
                     },
                     {
                         expand: true,
@@ -156,6 +156,18 @@ module.exports = function (grunt) {
                         cwd: '<%= config.app %>/bower_components/requirejs',
                         dest: '<%= config.dist %>/js',
                         src: 'require.js'
+                    },
+                    {
+                        expand: true,
+                        cwd: '<%= config.app %>/bower_components/lodash/dist',
+                        dest: '<%= config.dist %>/js',
+                        src: 'lodash.min.js'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'worker',
+                        dest: '<%= config.dist %>/worker',
+                        src: '*'
                     }
                 ]
             }
@@ -165,7 +177,7 @@ module.exports = function (grunt) {
                 loglevel: 5,
                 findNestedDependencies: true,
                 inlineText: true,
-                mainConfigFile: 'app/js/main.js'
+                mainConfigFile: '<%= config.app %>/js/main.js'
             },
             dist: {
                 options: {
@@ -209,8 +221,32 @@ module.exports = function (grunt) {
         });
         grunt.file.write('app/js/options.js', processedTmpl);
     });
+
+    grunt.registerTask('postProcess', function(){
+        var done = this.async();
+        var fs = require('fs');
+        var indexHtml = fs.readFileSync('dist/index.html', {encoding: 'UTF8'});
+        indexHtml = indexHtml.replace('bower_components/requirejs/require.js', 'js/require.js');
+        fs.writeFileSync('dist/index.html', indexHtml, {encoding: 'UTF8'});
+
+        var collectorJs = fs.readFileSync('dist/js/worker/collector.js', {encoding: 'UTF8'});
+        collectorJs = collectorJs.replace('../../bower_components/lodash/dist/lodash.min.js', '../lodash.min.js');
+        fs.writeFileSync('dist/js/worker/collector.js', collectorJs, {encoding: 'UTF8'});
+        done();
+    });
+
+    grunt.registerTask('dist', [
+        'clean:dist',
+        'less:dist',
+        'processTmpl:dist',
+        'copy:dist',
+        'requirejs:dist',
+        'postProcess'
+    ]);
+
     grunt.registerTask('devWatch', [
         'jshint',
+//        'ngdocs',
         'less:dev',
         'copy:dev'
     ]);
