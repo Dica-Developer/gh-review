@@ -9,6 +9,45 @@ define(['lodash'], function (_) {
         'Chunk',
         function ($scope, $q, $stateParams, fileContent, commits, Chunk) {
 
+
+//TODO implement ColorLuminance instead of random color. Found on http://blogs.sitepointstatic.com/examples/tech/color-luminance/index.html
+// return lighter (+lum) or darker (-lum) color as a hex string
+// pass original hex string and luminosity factor, e.g. -0.1 = 10% darker
+//            function ColorLuminance(hex, lum) {
+//
+//                // validate hex string
+//                hex = String(hex).replace(/[^0-9a-f]/gi, '');
+//                if (hex.length < 6) {
+//                    hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+//                }
+//                lum = lum || 0;
+//
+//                // convert to decimal and change luminosity
+//                var rgb = "#", c, i;
+//                for (i = 0; i < 3; i++) {
+//                    c = parseInt(hex.substr(i*2,2), 16);
+//                    c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
+//                    rgb += ("00"+c).substr(c.length);
+//                }
+//
+//                return rgb;
+//            }
+//
+//
+//            var	color = "#905030",
+//                lum = 0.05,
+//                out = document.getElementById("out");
+//
+//            var i, c, nc;
+//
+//            for (var i = 0; i < 100; i++) {
+//                var c = out.appendChild(document.createElement("div"));
+//                nc = ColorLuminance(color, i*lum);
+//                c.style.backgroundColor = nc;
+//                c.title = nc;
+//            }
+
+
             var colors = {};
             var fileContentSplit = _.str.lines(fileContent);
             var splicedFileContent = [];
