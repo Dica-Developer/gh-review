@@ -55,15 +55,15 @@ define(['lodash'], function (_) {
                 }
             };
 
-            var startAnnotateLines = function (commits) {
+            var startAnnotateLines = function (responseCommits) {
                 var defer = $q.defer();
                 var chunk = new Chunk();
-                commitLength = commits.length;
+                commitLength = responseCommits.length;
 
-                var annotateLines = function (commits) {
+                var annotateLines = function (responseCommits) {
 
                     commits.bySha({
-                        sha: commits.pop().sha,
+                        sha: responseCommits.pop().sha,
                         user: $stateParams.user,
                         repo: $stateParams.repo
                     })
@@ -101,10 +101,10 @@ define(['lodash'], function (_) {
                             } else {
                                 $scope.showUncompleteDiffWarning = true;
                             }
-                            if (commits.length > 0) {
+                            if (responseCommits.length > 0) {
                                 var percentComplete = Math.floor(commitHistory.length / commitLength * 100);
                                 defer.notify({progress: percentComplete, alreadyFetched: commitHistory.length});
-                                annotateLines(commits);
+                                annotateLines(responseCommits);
                             } else {
                                 lines.forEach(function (commit, lineNumber) {
                                     //file could be greater at some point as latest state
@@ -138,7 +138,7 @@ define(['lodash'], function (_) {
                             }
                         });
                 };
-                annotateLines(commits);
+                annotateLines(responseCommits);
                 return defer.promise;
             };
 
