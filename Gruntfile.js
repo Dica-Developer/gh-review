@@ -266,11 +266,11 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('test', [
-        'processTmpl:dev',
         'karma:dev'
     ]);
 
     grunt.registerTask('travis', [
+        'processTmpl:dev',
         'karma:travis',
         'coveralls'
     ]);
