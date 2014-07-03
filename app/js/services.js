@@ -260,4 +260,11 @@ define(['angular', 'githubjs', 'moment', 'lodash', 'options'], function (angular
         };
     }]);
 
+    services.factory('commentProviderService', ['commentProvider', function (commentProvider) {
+        return commentProvider;
+    }]);
+
+    services.factory('commitProviderService', ['commitProvider', function (commitProvider) {
+        return commitProvider;
+    }]);
 });

@@ -51,7 +51,12 @@ define(['angular', 'app'], function (angular, app) {
             .state('commitBySha', {
                 url: '/{user}/{repo}/commit/{sha}',
                 templateUrl: 'templates/commit.html',
-                controller: 'CommitController'
+                controller: 'CommitController',
+                resolve: {
+                    commitsAndComments: ['$q', '$stateParams', 'commentProviderService', 'commitProviderService', function($q, $stateParams, commentProviderService, commitProviderService){
+                        return $q.all([commitProviderService.getPreparedCommit($stateParams), commentProviderService.getCommentsForCommit($stateParams)]);
+                    }]
+                }
             })
             .state('filterModuleFile', {
                 url: '/{user}/{repo}/blob/{sha}/*path?ref',
