@@ -51,7 +51,7 @@ define(['angular'], function (angular) {
         return {
             restrict: 'E',
             template: '<a href="{{link}}" title="{{name}}" target="_blank"><img height="32px" class="media-object pull-left" ng-src="{{imgLink}}"></a>',
-            link: function($scope, element, attr){
+            link: function ($scope, element, attr) {
                 $scope.imgLink = 'images/icon-social-github-128.png';
                 $scope.$watch(attr.commit, function (value) {
                     $scope.name = value.name;
