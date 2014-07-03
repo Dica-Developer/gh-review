@@ -117,7 +117,7 @@ define(['angular', 'lodash', 'moment', 'watch'], function (angular, _, moment, w
         Filter.prototype.getSinceDate = function () {
             var sinceDate = null;
             if (!_.isUndefined(this.options.since) && _.size(this.options.since) === 2) {
-                sinceDate = moment().subtract(this.options.since.pattern, this.options.since.amount).format('YYYY-MM-DD HH:mm Z');
+                sinceDate = moment().startOf('minute').subtract(this.options.since.pattern, this.options.since.amount).toISOString();
             }
             return sinceDate;
         };
