@@ -65,25 +65,28 @@ define(['angular', 'lodash'], function (angular, _) {
                 .then(computeChunk)
                 .then(function (arg) {
                     /* jshint camelcase:false */
-                    var splittedUrl = arg.commit.html_url.split('/');
+                    var commit = arg.commit;
+                    var splittedUrl = commit.html_url.split('/');
                     var repository = splittedUrl[4];
                     var owner = splittedUrl[3];
-                    var committer = arg.commit.committer;
+                    var committer = commit.committer;
+                    /*jshint camelcase:false*/
                     var avatar = committer ? committer.avatar_url : null;
+                    var committerLink = committer.html_url;
                     var commitInfos = {
-                        sha: arg.commit.sha,
-                        additions: arg.commit.stats.additions,
-                        deletions: arg.commit.stats.deletions,
-                        changes: arg.commit.stats.total,
-                        message: arg.commit.commit.message,
-                        date: arg.commit.commit.committer.date,
+                        sha: commit.sha,
+                        additions: commit.stats.additions,
+                        deletions: commit.stats.deletions,
+                        changes: commit.stats.total,
+                        message: commit.commit.message,
+                        date: commit.commit.committer.date,
                         repository: repository,
                         owner: owner,
                         committer: {
-                            name: arg.commit.commit.committer.name,
-                            email: arg.commit.commit.committer.email,
-                            /*jshint camelcase:false*/
-                            avatar: avatar
+                            name: commit.commit.committer.name,
+                            email: commit.commit.committer.email,
+                            avatar: avatar,
+                            committerLink: committerLink
                         }
                     };
                     defer.resolve({commitInfos: commitInfos, files: arg.files});
