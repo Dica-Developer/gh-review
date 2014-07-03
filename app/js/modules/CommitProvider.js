@@ -68,6 +68,8 @@ define(['angular', 'lodash'], function (angular, _) {
                     var splittedUrl = arg.commit.html_url.split('/');
                     var repository = splittedUrl[4];
                     var owner = splittedUrl[3];
+                    var committer = arg.commit.committer;
+                    var avatar = committer ? committer.avatar_url : null;
                     var commitInfos = {
                         sha: arg.commit.sha,
                         additions: arg.commit.stats.additions,
@@ -81,7 +83,7 @@ define(['angular', 'lodash'], function (angular, _) {
                             name: arg.commit.commit.committer.name,
                             email: arg.commit.commit.committer.email,
                             /*jshint camelcase:false*/
-                            avatar: arg.commit.committer.avatar_url
+                            avatar: avatar
                         }
                     };
                     defer.resolve({commitInfos: commitInfos, files: arg.files});
