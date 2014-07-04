@@ -13,12 +13,12 @@ define(['angular', 'lodash'], function (angular, _) {
 
         var chunkHeadingRegExp = new RegExp('^@@.*?[-+](\\d+)(,\\d+){0,1}\\s[-+](\\d+)(,\\d+){0,1} @@', 'g');
 
-        function Chunk(lines) {
+        function Chunk(lines, path) {
             this.leftNr = 0;
             this.rightNr = 0;
 
             this.lines = [];
-            this.addLine = function (line) {
+            this.addLine = function (line, index) {
                 var computedLine = null;
                 if(this.isMatchingChunkHeading(line)){
                     computedLine = this.addChunkLine(line);
@@ -29,6 +29,8 @@ define(['angular', 'lodash'], function (angular, _) {
                 } else {
                     computedLine = this.addNormalLine(line);
                 }
+                computedLine.position = index;
+                computedLine.path = path;
                 this.lines.push(computedLine);
             };
             _.each(lines, this.addLine, this);

@@ -16,7 +16,7 @@ define(['angular', 'lodash'], function (angular, _) {
                 var end = shaAndPath.indexOf('/');
                 var blobSha = shaAndPath.substr(0, end);
                 files[fileIndex] = {
-                    lines: new Chunk(lines),
+                    lines: new Chunk(lines, file.filename),
                     name: file.filename,
                     blobSha: blobSha,
                     additions: file.additions,
