@@ -2,6 +2,7 @@ define(function (require) {
     'use strict';
 
     var angular = require('angular'),
+        _ = require('lodash'),
         mocks = require('angularMocks'),
         moment = require('moment'),
         Github = require('githubjs'),
@@ -146,7 +147,7 @@ define(function (require) {
 
         describe('comment', function () {
 
-            describe('existing comment', function(){
+            describe('existing comment', function () {
                 var $scope;
                 beforeEach(mocks.inject(function ($injector) {
                     $scope = $rootScope.$new();
@@ -180,7 +181,7 @@ define(function (require) {
             });
 
 
-            describe('new comment', function(){
+            describe('new comment', function () {
                 var $scope;
                 beforeEach(mocks.inject(function ($injector) {
                     $scope = $rootScope.$new();
@@ -213,7 +214,7 @@ define(function (require) {
                 });
             });
 
-            describe('preview comment', function(){
+            describe('preview comment', function () {
                 var $scope;
                 beforeEach(mocks.inject(function ($injector) {
                     $scope = $rootScope.$new();
@@ -245,6 +246,48 @@ define(function (require) {
                     expect(element.find('#submitLineComment').text()).toBe('Add');
                 });
             });
+        });
+
+        describe('commitMessageTeaser', function () {
+            var $scope;
+            beforeEach(function () {
+                $scope = $rootScope.$new();
+                /*jshint camelcase:false*/
+            });
+            it('Should render full message', function () {
+                $scope.commit = {
+                    message: _.range(54).join('')
+                };
+                var element = $compile('<commit-message-teaser message="commit.message"></commit-message-teaser>')($scope);
+                $scope.$apply();
+                var text = element.find('.panel-title').text();
+                expect(text).toBe(_.range(54).join(''));
+                expect(element.find('.panel-title').length).toBe(1);
+                expect(text.indexOf('...')).toBe(-1);
+            });
+
+            it('Should render cropped message and add "..."', function () {
+                $scope.commit = {
+                    message: _.range(55).join('')
+                };
+                var element = $compile('<commit-message-teaser message="commit.message"></commit-message-teaser>')($scope);
+                $scope.$apply();
+                var text = element.find('.panel-title').text();
+                expect(element.find('.panel-title').length).toBe(1);
+                expect(text.indexOf('...')).toBe(100);
+            });
+
+            it('Should render message as text instead of html', function () {
+                $scope.commit = {
+                    message: '<img src="#" />'
+                };
+                var element = $compile('<commit-message-teaser message="commit.message"></commit-message-teaser>')($scope);
+                $scope.$apply();
+                var text = element.find('.panel-title').text();
+                expect(element.find('img').length).toBe(0);
+                expect(text).toBe('<img src="#" />');
+            });
+
         });
     });
 });
