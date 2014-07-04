@@ -5,7 +5,6 @@ define(function (require) {
         _ = require('lodash'),
         mocks = require('angularMocks'),
         moment = require('moment'),
-        Github = require('githubjs'),
         commitListPaginatorTmpl = require('text!commitListPaginatorTmpl'),
         menuTmpl = require('text!menuTmpl'),
         authenticatedMenuTmpl = require('text!authenticatedMenuTmpl'),
