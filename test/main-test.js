@@ -37,6 +37,7 @@ require.config({
         Filter: 'modules/Filter',
         Chunk: 'modules/Chunk',
         Charts: 'modules/Charts',
+        Comment: 'modules/Comment',
 
         CommitProvider: 'modules/CommitProvider',
         CommitController: 'controller/CommitController',
