@@ -158,7 +158,7 @@ define([
             });
 
             it('getSinceDate should return current since date without seconds', function(){
-                var dateString = moment().subtract(filterOptions.since.pattern, filterOptions.since.amount).format('YYYY-MM-DD HH:mm Z');
+                var dateString = moment().startOf('minute').subtract(filterOptions.since.pattern, filterOptions.since.amount).toISOString();
                 expect(filter.getSinceDate()).toBe(dateString);
             });
 
