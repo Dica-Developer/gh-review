@@ -203,7 +203,7 @@ module.exports = function (grunt) {
         },
         coveralls: {
             options: {
-                debug: true,
+                debug: false,
                 /*jshint camelcase:false*/
                 coverage_dir: 'coverage',
                 force: false
