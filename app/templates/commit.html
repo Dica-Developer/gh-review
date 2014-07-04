@@ -59,7 +59,7 @@
             <div class="table-wrapper">
                 <div class="div-table">
                     <div ng-repeat="line in file.lines.lines" ng-model="line">
-                        <div class="div-table-row" ng-class="line.format">
+                        <div class="div-table-row" ng-class="line.format" ng-dblclick="addComment($event, line, file, commit)">
                             <div class="div-table-cell"></div>
                             <div class="div-table-cell lineNr">{{line.lineNrLeft}}</div>
                             <div class="div-table-cell lineNr">{{line.lineNrRight}}</div>
