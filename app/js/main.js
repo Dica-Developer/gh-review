@@ -10,6 +10,7 @@ require.config({
         moment: '../bower_components/moment/min/moment.min',
         lodash: '../bower_components/lodash/dist/lodash.min',
         'underscore.string': '../bower_components/underscore.string/dist/underscore.string.min',
+        text: '../bower_components/requirejs-text/text',
 
         'd3': '../bower_components/d3/d3',
         'dcjs': '../bower_components/dcjs/dc',

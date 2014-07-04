@@ -1,5 +1,10 @@
-define(['angular'], function (angular) {
+define(function (require) {
     'use strict';
+
+    var angular = require('angular'),
+        existingCommentTemplate = require('text!../templates/existingComment.html'),
+        editCommentTemplate = require('text!../templates/editComment.html'),
+        previewCommentTemplate = require('text!../templates/previewComment.html');
 
     /* Directives */
 
@@ -61,4 +66,21 @@ define(['angular'], function (angular) {
             }
         };
     });
+
+    directives.directive('comment', ['$compile', function ($compile) {
+        return {
+            restrict: 'A',
+            link: function ($scope, element, attr) {
+                $scope.$watch(attr.mode, function (mode) {
+                    if(mode === 'edit'){
+                        $compile(element.html(editCommentTemplate).contents())($scope);
+                    } else if (mode === 'preview'){
+                        $compile(element.html(previewCommentTemplate).contents())($scope);
+                    } else {
+                        $compile(element.html(existingCommentTemplate).contents())($scope);
+                    }
+                });
+            }
+        };
+    }]);
 });

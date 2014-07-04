@@ -71,28 +71,7 @@
                             <div class="div-table-cell"></div>
                             <div class="div-table-cell lineNr"></div>
                             <div class="div-table-cell lineNr"></div>
-                            <div class="lineComment panel panel-default">
-                                <div class="panel-heading">
-                                    <div class="media">
-                                        <img height="24px" class="media-object pull-left" src="{{comment.user.avatar_url}}" title="{{comment.user.login}}" />
-                                        <div class="media-body">
-                                            <strong>{{comment.user.login}}</strong>
-                                            <div class="pull-right">
-                                                <span class="text-muted"><formatted-date date="comment.created_at"></formatted-date></span>
-                                                <div class="btn-group btn-group-xs">
-                                                    <button type="button" class="btn btn-default edit">
-                                                        <span class="glyphicon glyphicon-pencil"></span>
-                                                    </button>
-                                                    <button type="button" class="btn btn-default remove" data-commentid="6569207">
-                                                        <span class="glyphicon glyphicon-remove-circle"></span>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel-body" ng-bind-html="comment.body_html"></div>
-                            </div>
+                            <div class="lineComment panel panel-default" content="comment" mode="comment.mode" comment></div>
                         </div>
                     </div>
                 </div>
@@ -106,28 +85,7 @@
         <table class="table-responsive table table-condensed commit-comments">
             <tr ng-repeat="comment in comments.commitComments">
                 <td class="comment-holder">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <div class="media">
-                                <img height="24px" class="media-object pull-left" src="{{comment.user.avatar_url}}" title="{{comment.user.login}}"/>
-                                <div class="media-body">
-                                    <strong>{{comment.user.login}}</strong>
-                                    <div class="pull-right">
-                                        <span class="text-muted">authored <formatted-date date="comment.created_at"></formatted-date></span>
-                                        <div class="btn-group btn-group-xs">
-                                            <button type="button" class="btn btn-default edit">
-                                                <span class="glyphicon glyphicon-pencil"></span>
-                                            </button>
-                                            <button type="button" class="btn btn-default remove" data-commentid="{{comment.id}}">
-                                                <span class="glyphicon glyphicon-remove-circle"></span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="panel-body" ng-bind-html="comment.body_html"></div>
-                    </div>
+                    <div class="lineComment panel panel-default" content="comment" mode="comment.mode" comment></div>
                 </td>
             </tr>
         </table>
