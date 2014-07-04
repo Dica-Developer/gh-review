@@ -3,7 +3,7 @@ define(['angular', 'lodash'], function (angular, _) {
 
     var commentProviderModule = angular.module('GHReview.CommentProvider', []);
 
-    commentProviderModule.factory('commentProvider', ['$q', 'authenticated', 'github', 'commentCollector', function ($q, authenticated, github, commentCollector) {
+    commentProviderModule.factory('commentProvider', ['$q', 'authenticated', 'github', 'commentCollector', 'Comment', function ($q, authenticated, github, commentCollector, Comment) {
 
         var getApproversFromComments = function (result) {
             var commitApproved = commentCollector.getCommitApproved();
@@ -18,12 +18,31 @@ define(['angular', 'lodash'], function (angular, _) {
             return approvers;
         };
 
-        var splitInLineAndCommitComments = function (result) {
-            return {
-                lineComments: _.filter(result, function (comment) {
+        var splitInLineAndCommitComments = function (result, user, repo) {
+            var lineComments = _.filter(result, function (comment) {
                     return !_.isNull(comment.line) && !_.isNull(comment.position);
-                }),
-                commitComments: _.where(result, {line: null, position: null})
+                });
+            var commitComments = _.where(result, {line: null, position: null});
+
+            lineComments = _.map(lineComments, function(comment){
+                comment.editInformations = {
+                    user: user,
+                    repo: repo
+                };
+                return new Comment(comment);
+            });
+
+            commitComments = _.map(commitComments, function(comment){
+                comment.editInformations = {
+                    user: user,
+                    repo: repo
+                };
+                return new Comment(comment);
+            });
+
+            return {
+                lineComments: lineComments,
+                commitComments: commitComments
             };
         };
 
@@ -46,7 +65,7 @@ define(['angular', 'lodash'], function (angular, _) {
                             delete res.meta;
                         }
                         var approvers = getApproversFromComments(res);
-                        var comments = splitInLineAndCommitComments(res);
+                        var comments = splitInLineAndCommitComments(res, stateParams.user, stateParams.repo);
                         var resolveObject = {comments: comments, approvers: approvers};
                         defer.resolve(resolveObject);
                     }
