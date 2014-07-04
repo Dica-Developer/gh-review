@@ -34,24 +34,28 @@ require.config({
         options: 'options',
 
         routes: 'routes',
+
+        //Modules
         Filter: 'modules/Filter',
         Chunk: 'modules/Chunk',
         Charts: 'modules/Charts',
         Comment: 'modules/Comment',
-
+        CommentProvider: 'modules/CommentProvider',
         CommitProvider: 'modules/CommitProvider',
+
+        //Controller
         CommitController: 'controller/CommitController',
         CommitListController: 'controller/CommitListController',
         CommentCollector: 'modules/CommentCollector',
-        CommentProvider: 'modules/CommentProvider',
         ModuleFilterController: 'controller/ModuleFilterController',
         FileController: 'controller/FileController',
         FilterController: 'controller/FilterController',
 
+        //Templates
         commitListPaginatorTmpl: '../templates/commitListPaginator.html',
         menuTmpl: '../templates/menu.html',
         authenticatedMenuTmpl: '../templates/authenticatedMenu.html',
-        welcomeTmpl: '../templates/welcome.html'
+        welcomeTmpl: '../templates/welcome.html',
     },
     shim: {
         'angular': {deps: ['jquery'], 'exports': 'angular'},
