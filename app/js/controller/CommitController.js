@@ -9,8 +9,6 @@ define(['lodash', 'controllers'], function (_, controllers) {
             'commitsAndComments',
             'Comment',
             function ($scope, $stateParams, commitsAndComments, Comment) {
-                console.log($stateParams);
-
                 var commit = commitsAndComments[0].commitInfos ? commitsAndComments[0] : commitsAndComments[1],
                     comments = commitsAndComments[0].commitInfos ? commitsAndComments[1] : commitsAndComments[0],
                     lineWithNewComment = [], lineComments = comments.comments.lineComments;
