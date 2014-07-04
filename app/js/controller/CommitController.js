@@ -20,6 +20,9 @@ define(['lodash', 'controllers'], function (_, controllers) {
                     });
                 };
 
+                $scope.commitHeaderStatus = {
+                    open: false
+                };
                 $scope.commit = commit.commitInfos;
                 $scope.files = commit.files;
                 $scope.approvers = comments.approvers;
