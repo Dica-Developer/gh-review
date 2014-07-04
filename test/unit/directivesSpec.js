@@ -1,15 +1,15 @@
-define([
-    'angular',
-    'angularMocks',
-    'moment',
-    'githubjs',
-    'text!commitListPaginatorTmpl',
-    'text!menuTmpl',
-    'text!authenticatedMenuTmpl',
-    'text!welcomeTmpl',
-    'app'
-], function (angular, mocks, moment, Github, commitListPaginatorTmpl, menuTmpl, authenticatedMenuTmpl, welcomeTmpl) {
+define(function (require) {
     'use strict';
+
+    var angular = require('angular'),
+        mocks = require('angularMocks'),
+        moment = require('moment'),
+        Github = require('githubjs'),
+        commitListPaginatorTmpl = require('text!commitListPaginatorTmpl'),
+        menuTmpl = require('text!menuTmpl'),
+        authenticatedMenuTmpl = require('text!authenticatedMenuTmpl'),
+        welcomeTmpl = require('text!welcomeTmpl');
+
 
     beforeEach(angular.mock.module('GHReview'));
 
@@ -77,7 +77,7 @@ define([
                 gh = github;
             }]));
 
-            afterEach(function(){
+            afterEach(function () {
                 localStorage.clear();
             });
 
@@ -101,6 +101,149 @@ define([
                 var element = $compile('<div class="collapse navbar-collapse" id="ghr-top-menu" menu></div>')($rootScope);
                 $rootScope.$digest();
                 expect(element.find('.navbar-right .dropdown-menu > li').length).toBe(7);
+            });
+        });
+
+        describe('avatar', function () {
+            var $scope;
+            beforeEach(function () {
+                $scope = $rootScope.$new();
+            });
+
+            it('Should render avatar link and img with complete data', function () {
+                var element = $compile('<avatar commit="commit.committer"></avatar>')($scope);
+                $scope.commit = {
+                    committer: {
+                        name: 'TestName',
+                        avatar: 'AvatarLink',
+                        committerLink: 'committerLink'
+                    }
+                };
+                $scope.$digest();
+                expect(element.find('a').attr('title')).toBe('TestName');
+                expect(element.find('a').attr('href')).toBe('committerLink');
+                expect(element.find('img').attr('ng-src')).toBe('AvatarLink');
+                expect(element.find('img').attr('src')).toBe('AvatarLink');
+                expect(element.find('img').attr('height')).toBe('32px');
+            });
+
+            it('Should render avatar link and img with committerLink is missing', function () {
+                var element = $compile('<avatar commit="commit.committer"></avatar>')($scope);
+                $scope.commit = {
+                    committer: {
+                        name: 'TestName',
+                        avatar: 'AvatarLink'
+                    }
+                };
+                $scope.$digest();
+                expect(element.find('a').attr('title')).toBe('TestName');
+                expect(element.find('a').attr('href')).toBe('#');
+                expect(element.find('img').attr('ng-src')).toBe('AvatarLink');
+                expect(element.find('img').attr('src')).toBe('AvatarLink');
+                expect(element.find('img').attr('height')).toBe('32px');
+            });
+        });
+
+        describe('comment', function () {
+
+            describe('existing comment', function(){
+                var $scope;
+                beforeEach(mocks.inject(function ($injector) {
+                    $scope = $rootScope.$new();
+                    var Comment = $injector.get('Comment');
+                    /*jshint camelcase:false*/
+                    $scope.comment = new Comment({
+                        body_html: '<p>Line comment test</p>',
+                        commit_id: '9dc35ebda672c3a0443d0af3fa54fda0372cdcd2',
+                        created_at: '2014-06-05T14:19:31Z',
+                        html_url: 'https://github.com/Dica-Developer/gh-review/commit/9dc35ebda672c3a0443d0af3fa54fda0372cdcd2#commitcomment-6569207',
+                        id: 6569207,
+                        line: 39,
+                        path: 'app/templates/_filter.html',
+                        position: 6,
+                        updated_at: '2014-06-05T14:19:31Z',
+                        url: 'https://api.github.com/repos/Dica-Developer/gh-review/comments/6569207'
+                    });
+                }));
+                it('Should render comment', function () {
+                    var element = $compile('<div class="lineComment panel panel-default" content="comment" mode="comment.mode" comment></div>')($scope);
+                    $scope.$digest();
+                    expect(element.find('.panel-body').text()).toBe('Line comment test');
+                });
+
+                it('Should render edit and remove buttons', function () {
+                    var element = $compile('<div class="lineComment panel panel-default" content="comment" mode="comment.mode" comment></div>')($scope);
+                    $scope.$digest();
+                    expect(element.find('button > .glyphicon-pencil').length).toBe(1);
+                    expect(element.find('button > .glyphicon-remove-circle').length).toBe(1);
+                });
+            });
+
+
+            describe('new comment', function(){
+                var $scope;
+                beforeEach(mocks.inject(function ($injector) {
+                    $scope = $rootScope.$new();
+                    var Comment = $injector.get('Comment');
+                    /*jshint camelcase:false*/
+                    $scope.comment = new Comment({
+                        mode: 'edit',
+                        line: 39,
+                        path: 'app/templates/_filter.html',
+                        position: 6
+                    });
+                }));
+
+                it('Should render comment', function () {
+                    var element = $compile('<div class="lineComment panel panel-default" content="comment" mode="comment.mode" comment></div>')($scope);
+                    $scope.$digest();
+                    expect(element.find('textarea').text()).toBe('');
+                    expect(element.find('textarea').length).toBe(1);
+                });
+
+                it('Should render cancel, preview and save buttons', function () {
+                    var element = $compile('<div class="lineComment panel panel-default" content="comment" mode="comment.mode" comment></div>')($scope);
+                    $scope.$digest();
+                    expect(element.find('#cancelComment').length).toBe(1);
+                    expect(element.find('#previewComment').length).toBe(1);
+                    expect(element.find('#submitLineComment').length).toBe(1);
+                    expect(element.find('#cancelComment').text()).toBe('Cancel');
+                    expect(element.find('#previewComment').text()).toBe('Preview');
+                    expect(element.find('#submitLineComment').text()).toBe('Add');
+                });
+            });
+
+            describe('preview comment', function(){
+                var $scope;
+                beforeEach(mocks.inject(function ($injector) {
+                    $scope = $rootScope.$new();
+                    var Comment = $injector.get('Comment');
+                    /*jshint camelcase:false*/
+                    $scope.comment = new Comment({
+                        mode: 'preview',
+                        line: 39,
+                        path: 'app/templates/_filter.html',
+                        position: 6,
+                        previewHtml: '<p>Test</p>'
+                    });
+                }));
+                it('Should render comment', function () {
+                    var element = $compile('<div class="lineComment panel panel-default" content="comment" mode="comment.mode" comment></div>')($scope);
+                    $scope.$digest();
+                    expect(element.find('p').text()).toBe('Test');
+                    expect(element.find('p').length).toBe(1);
+                });
+
+                xit('Should render cancel, preview and save buttons', function () {
+                    var element = $compile('<div class="lineComment panel panel-default" content="comment" mode="comment.mode" comment></div>')($scope);
+                    $scope.$digest();
+                    expect(element.find('#cancelComment').length).toBe(1);
+                    expect(element.find('#previewComment').length).toBe(1);
+                    expect(element.find('#submitLineComment').length).toBe(1);
+                    expect(element.find('#cancelComment').text()).toBe('Cancel');
+                    expect(element.find('#previewComment').text()).toBe('Preview');
+                    expect(element.find('#submitLineComment').text()).toBe('Add');
+                });
             });
         });
     });
