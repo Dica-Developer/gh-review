@@ -100,7 +100,7 @@ define(function (require) {
                         firstLine = firstLine.substr(0, maxLengthForFirstLine);
                         firstLine = firstLine + '...';
                     }
-                    element.html(firstLine);
+                    element.find('.panel-title').text(firstLine);
                 });
             }
         };
