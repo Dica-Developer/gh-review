@@ -4,7 +4,9 @@ define(function (require) {
     var angular = require('angular'),
         existingCommentTemplate = require('text!../templates/existingComment.html'),
         editCommentTemplate = require('text!../templates/editComment.html'),
-        previewCommentTemplate = require('text!../templates/previewComment.html');
+        previewCommentTemplate = require('text!../templates/previewComment.html'),
+        commitHeaderTemplate = require('text!../templates/commitHeader.html'),
+        commitHeaderCollabsibleTemplate = require('text!../templates/commitHeaderCollabsible.html');
 
     /* Directives */
 
@@ -78,6 +80,45 @@ define(function (require) {
                         $compile(element.html(previewCommentTemplate).contents())($scope);
                     } else {
                         $compile(element.html(existingCommentTemplate).contents())($scope);
+                    }
+                });
+            }
+        };
+    }]);
+
+
+    var maxLengthForFirstLine = 100;
+    directives.directive('commitMessageTeaser', function () {
+        return {
+            restrict: 'E',
+            template: '<h3 class="panel-title"></h3>',
+            link: function ($scope, element, attr) {
+                $scope.$watch(attr.message, function (value) {
+                    var splittedValue = value.split('\n');
+                    var firstLine = splittedValue[0];
+                    if(firstLine.length >= maxLengthForFirstLine){
+                        firstLine = firstLine.substr(0, maxLengthForFirstLine);
+                        firstLine = firstLine + '...';
+                    }
+                    element.html(firstLine);
+                });
+            }
+        };
+    });
+
+    directives.directive('commitHeader', ['$compile', function ($compile) {
+        return {
+            restrict: 'E',
+            link: function ($scope, element, attr) {
+                $scope.$watch(attr.commit, function (value) {
+                    var message = value.message;
+                    var splittedMessage = message.split('\n');
+                    var firstLine = splittedMessage[0];
+                    var shouldBeCollabsible = splittedMessage.length > 1 || firstLine.length >= maxLengthForFirstLine;
+                    if(shouldBeCollabsible){
+                        $compile(element.html(commitHeaderCollabsibleTemplate).contents())($scope);
+                    } else {
+                        $compile(element.html(commitHeaderTemplate).contents())($scope);
                     }
                 });
             }
