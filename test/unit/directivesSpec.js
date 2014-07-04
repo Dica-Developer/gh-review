@@ -252,7 +252,6 @@ define(function (require) {
             var $scope;
             beforeEach(function () {
                 $scope = $rootScope.$new();
-                /*jshint camelcase:false*/
             });
             it('Should render full message', function () {
                 $scope.commit = {
