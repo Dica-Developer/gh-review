@@ -28,9 +28,6 @@
             <div class="panel-heading" ng-init="file.isOpen = !(files.length > 5 && $index >= 5)">
                 File: <a ui-sref="filterModuleFile({user: commit.owner, repo: commit.repository, sha: commit.sha, path: file.name, ref: file.blobSha})">{{file.name}}</a>
                 <div class="pull-right">
-                        <span class="label label-default" ng-click="file.isOpen = file.isOpen ? false : true">
-                            <span class="glyphicon glyphicon-plus" ng-class="{'glyphicon-save': !file.isOpen, 'glyphicon-open': file.isOpen}"></span> {{file.isOpen ? 'Collapse' : 'Expand'}}
-                        </span>
                         <span class="label label-success">
                             <span class="glyphicon glyphicon-plus"></span> {{file.additions}}
                         </span>
@@ -42,6 +39,9 @@
                         </span>
                         <span class="label label-primary" ng-if="file.commentCount">
                                 <span class="glyphicon glyphicon-comment" ></span> {{file.commentCount}}
+                        </span>
+                        <span class="label label-default" ng-click="file.isOpen = file.isOpen ? false : true">
+                                <span class="glyphicon glyphicon" ng-class="{'glyphicon-save': !file.isOpen, 'glyphicon-open': file.isOpen}"></span> {{file.isOpen ? 'Collapse' : 'Expand&nbsp;&nbsp;'}}
                         </span>
                 </div>
             </div>
