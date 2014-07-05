@@ -51,18 +51,22 @@ define(['angular', 'lodash'], function (angular, _) {
         }])
 
         .controller('FilterListController', ['$scope', 'filter', function ($scope, filter) {
-            var groupedFilter = _.groupBy(filter.getAll(), function (filter) {
-                return filter.getRepo();
-            });
+            var getGroupedAndSortedFilter = function(){
+                var groupedFilter = _.groupBy(filter.getAll(), function (filter) {
+                    return filter.getRepo();
+                });
 
-            var sortedGroupedFilter = _.sortBy(groupedFilter, 'length');
-            $scope.filterList = sortedGroupedFilter.reverse();
+                var sortedGroupedFilter = _.sortBy(groupedFilter, 'length');
+                return sortedGroupedFilter.reverse();
+            };
+
+            $scope.filterList = getGroupedAndSortedFilter();
             $scope.removeFilter = function (filterId, event) {
                 if (void 0 !== event) {
                     event.preventDefault();
                 }
                 filter.remove(filterId);
-                $scope.filterList = filter.getAll();
+                $scope.filterList = getGroupedAndSortedFilter();
             };
         }]);
 });
