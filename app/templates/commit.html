@@ -40,7 +40,7 @@
                         <span class="label label-primary" ng-if="file.commentCount">
                                 <span class="glyphicon glyphicon-comment" ></span> {{file.commentCount}}
                         </span>
-                        <span class="label label-default" ng-click="file.isOpen = file.isOpen ? false : true">
+                        <span class="label label-default collapse-expand-label" ng-click="file.isOpen = file.isOpen ? false : true">
                                 <span class="glyphicon glyphicon" ng-class="{'glyphicon-save': !file.isOpen, 'glyphicon-open': file.isOpen}"></span> {{file.isOpen ? 'Collapse' : 'Expand&nbsp;&nbsp;'}}
                         </span>
                 </div>
