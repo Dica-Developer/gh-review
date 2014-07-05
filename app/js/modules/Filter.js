@@ -23,10 +23,10 @@ define(['angular', 'lodash', 'moment', 'watch'], function (angular, _, moment, w
                 lastEdited: null,
                 customFilter: {},
                 sha: 'master',
-                since: null,
+                since: {},
                 until: {},
                 path: null,
-                saved: null,
+                isSaved: filterId ? true : false,
                 author: null,
                 contributor: null
             };
@@ -49,8 +49,9 @@ define(['angular', 'lodash', 'moment', 'watch'], function (angular, _, moment, w
         };
 
         Filter.prototype.optionsChanged = function (key) {
-            if ('lastEdited' !== key) {
+            if ('lastEdited' !== key && 'isSaved' !== key) {
                 this.options.lastEdited = new Date().getTime();
+                this.options.isSaved = false;
             }
         };
 
@@ -62,8 +63,8 @@ define(['angular', 'lodash', 'moment', 'watch'], function (angular, _, moment, w
             }
             filterIds.push(this.options.id);
             localStorageService.set('filter', filterIds.join(','));
-            this.options.saved = new Date().getTime();
             localStorageService.set('filter-' + this.options.id, JSON.stringify(this.options));
+            this.options.isSaved = true;
         };
 
         Filter.prototype.getId = function () {
