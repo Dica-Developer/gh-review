@@ -18,7 +18,6 @@
     "angular-sanitize": "~1.2.16",
     "angular-animate": "~1.2.17",
     "dcjs": "https://github.com/dc-js/dc.js.git#1c7a39954510b0204b3c76175c0ae8d4e72db81c",
-    "watch": "*",
     "requirejs-text": "~2.0.12"
   }
 }

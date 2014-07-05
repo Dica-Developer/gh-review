@@ -17,7 +17,6 @@ require.config({
         'crossfilter': '../bower_components/crossfilter/crossfilter',
 
         githubjs: '../bower_components/github-js/dist/github.min',
-        watch: '../bower_components/watch/src/watch.min',
 
         options: 'options',
 

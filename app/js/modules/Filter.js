@@ -1,5 +1,5 @@
 /*global define*/
-define(['angular', 'lodash', 'moment', 'watch'], function (angular, _, moment, watch) {
+define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
     'use strict';
 
     var generateUUID = function () {
@@ -33,7 +33,6 @@ define(['angular', 'lodash', 'moment', 'watch'], function (angular, _, moment, w
             this.init();
         };
 
-        Filter.prototype.watch = watch.watch;
         Filter.prototype.hasNextPage = false;
         Filter.prototype.hasPreviousPage = false;
         Filter.prototype.hasFirstPage = false;
@@ -44,14 +43,6 @@ define(['angular', 'lodash', 'moment', 'watch'], function (angular, _, moment, w
                 this.options = _.extend(this.options, localStorageService.get('filter-' + this.options.id));
             } else {
                 this.options.id = generateUUID();
-            }
-            this.watch(this.options, this.optionsChanged.bind(this));
-        };
-
-        Filter.prototype.optionsChanged = function (key) {
-            if ('lastEdited' !== key && 'isSaved' !== key) {
-                this.options.lastEdited = new Date().getTime();
-                this.options.isSaved = false;
             }
         };
 
@@ -67,12 +58,28 @@ define(['angular', 'lodash', 'moment', 'watch'], function (angular, _, moment, w
             this.options.isSaved = true;
         };
 
+        Filter.prototype.set = function(key, value){
+            if(_.isUndefined(this.options[key])){
+                throw new Error('Unknown filter property');
+            } else {
+                this.options[key] = value;
+                this.options.lastEdited = new Date().getTime();
+                this.options.saved = false;
+            }
+        };
+
+        Filter.prototype.setCustomFilter = function(key, value){
+            this.options.customFilter[key] = value;
+            this.options.lastEdited = new Date().getTime();
+            this.options.saved = false;
+        };
+
         Filter.prototype.getId = function () {
             return this.options.id;
         };
 
         Filter.prototype.setOwner = function (owner) {
-            this.options.user = owner;
+            this.set('user', owner);
         };
 
         Filter.prototype.getOwner = function () {
@@ -80,7 +87,7 @@ define(['angular', 'lodash', 'moment', 'watch'], function (angular, _, moment, w
         };
 
         Filter.prototype.setRepo = function (repo) {
-            this.options.repo = repo;
+            this.set('repo', repo);
         };
 
         Filter.prototype.getRepo = function () {
@@ -88,7 +95,7 @@ define(['angular', 'lodash', 'moment', 'watch'], function (angular, _, moment, w
         };
 
         Filter.prototype.setAuthor = function (author) {
-            this.options.author = author;
+            this.set('author', author);
         };
 
         Filter.prototype.setContributor = function (contributor) {
@@ -96,7 +103,7 @@ define(['angular', 'lodash', 'moment', 'watch'], function (angular, _, moment, w
         };
 
         Filter.prototype.setBranch = function (branch) {
-            this.options.sha = branch;
+            this.set('sha', branch);
         };
 
         Filter.prototype.getBranch = function () {
@@ -105,7 +112,7 @@ define(['angular', 'lodash', 'moment', 'watch'], function (angular, _, moment, w
 
         Filter.prototype.setSince = function (since) {
             if(_.isObject(since)){
-                this.options.since = since;
+                this.set('since', since);
             } else {
                 throw new Error('Since should be an object but was ' + typeof since);
             }
@@ -132,27 +139,27 @@ define(['angular', 'lodash', 'moment', 'watch'], function (angular, _, moment, w
         };
 
         Filter.prototype.unsetSince = function () {
-            this.options.since = {};
+            this.set('since', {});
         };
 
         Filter.prototype.setUntil = function (until) {
-            this.options.until = until;
+            this.set('until', until);
         };
 
         Filter.prototype.unsetUntil = function () {
-            this.options.until = {};
+            this.set('until', {});
         };
 
         Filter.prototype.setPath = function (path) {
-            this.options.path = path;
+            this.set('path', path);
         };
 
         Filter.prototype.unsetPath = function () {
-            this.options.path = null;
+            this.set('path', null);
         };
 
         Filter.prototype.setState = function (state) {
-            this.options.customFilter.state = state;
+            this.setCustomFilter('state', state);
         };
 
         Filter.prototype._needsPostFiltering = function () {
