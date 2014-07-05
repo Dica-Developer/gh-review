@@ -106,7 +106,7 @@ define(['angular', 'controllers', 'lodash'], function (angular, controllers, _) 
                     }
                 };
 
-                $scope.$watch('updated', updateCommits);
+                $scope.$watch('updated', _.debounce(updateCommits, 500));
             }
         ]);
 });
