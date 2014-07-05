@@ -91,7 +91,6 @@ define(function (require) {
     directives.directive('commitMessageTeaser', function () {
         return {
             restrict: 'E',
-            template: '<h3 class="panel-title"></h3>',
             link: function ($scope, element, attr) {
                 $scope.$watch(attr.message, function (value) {
                     var splittedValue = value.split('\n');
@@ -100,7 +99,7 @@ define(function (require) {
                         firstLine = firstLine.substr(0, maxLengthForFirstLine);
                         firstLine = firstLine + '...';
                     }
-                    element.find('.panel-title').text(firstLine);
+                    element.text(firstLine);
                 });
             }
         };

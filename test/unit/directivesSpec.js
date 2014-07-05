@@ -258,9 +258,8 @@ define(function (require) {
                 };
                 var element = $compile('<commit-message-teaser message="commit.message"></commit-message-teaser>')($scope);
                 $scope.$apply();
-                var text = element.find('.panel-title').text();
+                var text = element.text();
                 expect(text).toBe(_.range(54).join(''));
-                expect(element.find('.panel-title').length).toBe(1);
                 expect(text.indexOf('...')).toBe(-1);
             });
 
@@ -270,8 +269,7 @@ define(function (require) {
                 };
                 var element = $compile('<commit-message-teaser message="commit.message"></commit-message-teaser>')($scope);
                 $scope.$apply();
-                var text = element.find('.panel-title').text();
-                expect(element.find('.panel-title').length).toBe(1);
+                var text = element.text();
                 expect(text.indexOf('...')).toBe(100);
             });
 
@@ -281,7 +279,7 @@ define(function (require) {
                 };
                 var element = $compile('<commit-message-teaser message="commit.message"></commit-message-teaser>')($scope);
                 $scope.$apply();
-                var text = element.find('.panel-title').text();
+                var text = element.text();
                 expect(element.find('img').length).toBe(0);
                 expect(text).toBe('<img src="#" />');
             });
