@@ -64,7 +64,11 @@ define(['lodash', 'controllers'], function (_, controllers) {
                         if (!commentPosition.comments) {
                             commentPosition.comments = [];
                         }
+                        if(!file.commentCount){
+                            file.commentCount = 0;
+                        }
                         commentPosition.comments.push(comment);
+                        file.commentCount++;
                     }
                 });
             }
