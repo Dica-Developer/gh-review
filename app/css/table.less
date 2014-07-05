@@ -8,28 +8,46 @@
     border: 1px solid @gray-lighter;
     border-radius: 3px;
 
+    .comments-wrapper {
+      border-style: solid;
+      border-color: #ddd;
+      border-width: 1px 0;
+      box-shadow: inset 0px 0px 10px 0px #ddd;
+      padding: 10px 0;
+    }
+
     .div-table-row {
       display: table-row;
       width: 100%;
       clear: both;
       &.added {
+        &:hover {
+          .div-table-cell {
+            background-color: @gray-lighter;
+          }
+        }
         .div-table-cell {
           background-color: @state-success-bg;
         }
       }
       &.deleted {
+        &:hover {
+          .div-table-cell {
+            background-color: @gray-lighter;
+          }
+        }
         .div-table-cell {
           background-color: @state-danger-bg;
         }
       }
       &.chunk-header {
+        &:hover {
+          .div-table-cell {
+            background-color: @state-info-bg;
+          }
+        }
         .div-table-cell {
           background-color: @state-info-bg;
-        }
-      }
-      &:hover:not(.chunk) {
-        .div-table-cell {
-          background-color: @gray-lighter;
         }
       }
     }
@@ -65,7 +83,9 @@
         border: none;
       }
       .lineComment {
+        box-shadow: 0px 0px 20px 0px #ddd;
         max-width: @container-desktop;
+        min-width: @container-desktop;
         margin: 10px;
 
       }

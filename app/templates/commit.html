@@ -56,11 +56,13 @@
                                 <pre>{{line.text}}</pre>
                             </div>
                         </div>
-                        <div class="comments div-table-row" ng-if="line.comments.length > 0" ng-repeat="comment in line.comments">
-                            <div class="div-table-cell"></div>
-                            <div class="div-table-cell lineNr"></div>
-                            <div class="div-table-cell lineNr"></div>
-                            <div class="lineComment panel panel-default" content="comment" mode="comment.mode" comment></div>
+                        <div class="comments-wrapper" ng-if="line.comments.length > 0">
+                            <div class="comments div-table-row" ng-repeat="comment in line.comments">
+                                <div class="div-table-cell"></div>
+                                <div class="div-table-cell lineNr"></div>
+                                <div class="div-table-cell lineNr"></div>
+                                <div class="lineComment panel panel-default" content="comment" mode="comment.mode" comment></div>
+                            </div>
                         </div>
                     </div>
                 </div>
