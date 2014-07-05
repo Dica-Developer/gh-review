@@ -25,9 +25,12 @@
     <div class="col-sm-12">
 
         <div ng-repeat="file in files" class="panel panel-default">
-            <div class="panel-heading">
+            <div class="panel-heading" ng-init="file.isOpen = !(files.length > 5 && $index >= 5)">
                 File: <a ui-sref="filterModuleFile({user: commit.owner, repo: commit.repository, sha: commit.sha, path: file.name, ref: file.blobSha})">{{file.name}}</a>
                 <div class="pull-right">
+                        <span class="label label-default" ng-click="file.isOpen = file.isOpen ? false : true">
+                            <span class="glyphicon glyphicon-plus" ng-class="{'glyphicon-save': !file.isOpen, 'glyphicon-open': file.isOpen}"></span> {{file.isOpen ? 'Collapse' : 'Expand'}}
+                        </span>
                         <span class="label label-success">
                             <span class="glyphicon glyphicon-plus"></span> {{file.additions}}
                         </span>
@@ -39,7 +42,7 @@
                         </span>
                 </div>
             </div>
-            <div class="table-wrapper">
+            <div class="table-wrapper" ng-if="file.isOpen">
                 <div class="div-table">
                     <div ng-repeat="line in file.lines.lines" ng-model="line">
                         <div class="div-table-row" ng-class="line.format" ng-dblclick="addComment($event, line, file, commit)">
