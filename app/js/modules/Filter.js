@@ -333,7 +333,6 @@ define(['angular', 'lodash', 'moment', 'watch'], function (angular, _, moment, w
                                 break;
                             }
                         });
-                        //                }
                         if (this.maxResults > -1) {
                             this.getCommitsRefer.resolve(_.first(_.rest(tmpCommits, this.firstResult), this.maxResults));
                         } else {
