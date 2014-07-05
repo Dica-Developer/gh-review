@@ -1,4 +1,4 @@
-define(['angular'], function (angular) {
+define(['angular', 'lodash'], function (angular, _) {
     'use strict';
 
     /* Controllers */
@@ -51,7 +51,12 @@ define(['angular'], function (angular) {
         }])
 
         .controller('FilterListController', ['$scope', 'filter', function ($scope, filter) {
-            $scope.filterList = filter.getAll();
+            var groupedFilter = _.groupBy(filter.getAll(), function (filter) {
+                return filter.getRepo();
+            });
+
+            var sortedGroupedFilter = _.sortBy(groupedFilter, 'length');
+            $scope.filterList = sortedGroupedFilter.reverse();
             $scope.removeFilter = function (filterId, event) {
                 if (void 0 !== event) {
                     event.preventDefault();
