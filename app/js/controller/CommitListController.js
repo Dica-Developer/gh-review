@@ -7,6 +7,7 @@ define(['controllers'], function (controllers) {
             'commitsApproved',
             'filter',
             function ($scope, $stateParams, commitsApproved, filter) {
+                $scope.loader = '';
                 $scope.hasNext = false;
                 $scope.hasPrevious = false;
                 $scope.hasFirst = false;
@@ -29,6 +30,7 @@ define(['controllers'], function (controllers) {
                     $scope.commits = commits;
                     setButtonStates();
                 });
+
 
                 $scope.getNextPage = function () {
                     filterById.getNextPage().then(function (commits) {
