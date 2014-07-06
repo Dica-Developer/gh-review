@@ -3,7 +3,7 @@ define(['angular', 'd3', 'dcjs', 'crossfilter', 'lodash', 'moment'], function (a
     'use strict';
 
     var services = angular.module('GHReview.Charts', []);
-    services.factory('Charts', function () {
+    services.factory('Charts', ['$rootScope', function ($rootScope) {
 
         console.log(dcjs.version);
 
@@ -209,9 +209,9 @@ define(['angular', 'd3', 'dcjs', 'crossfilter', 'lodash', 'moment'], function (a
                 return percentageString;
             });
             chart.legend(dcjs.legend().x(5).y(5).itemHeight(13).gap(5));
-//            chart.on('filtered', function (chart, filter) {
-//                app.trigger('add:filter:byState', filter);
-//            });
+            chart.on('filtered', function (chart, filter) {
+                $rootScope.$broadcast('filter:change:state', filter);
+            });
             chart.render();
         };
 
@@ -229,9 +229,9 @@ define(['angular', 'd3', 'dcjs', 'crossfilter', 'lodash', 'moment'], function (a
                 return d.value;
             });
             chart.legend(dcjs.legend().x(5).y(5).itemHeight(13).gap(5));
-//            chart.on('filtered', function (chart, filter) {
-//                app.trigger('add:filter:byEmail', filter);
-//            });
+            chart.on('filtered', function (chart, filter) {
+                $rootScope.$broadcast('filter:change:author', filter);
+            });
             chart.render();
         };
 
@@ -256,5 +256,5 @@ define(['angular', 'd3', 'dcjs', 'crossfilter', 'lodash', 'moment'], function (a
         };
 
         return Charts;
-    });
+    }]);
 });
