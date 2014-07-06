@@ -27,6 +27,7 @@
     "expect": true,
     "it": true,
     "xit": true,
-    "spyOn": true
+    "spyOn": true,
+    "jasmine": true
   }
 }
