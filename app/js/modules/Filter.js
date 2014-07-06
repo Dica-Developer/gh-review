@@ -168,6 +168,10 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
             this.setCustomFilter('state', state);
         };
 
+        Filter.prototype.getState = function () {
+            return this.options.meta.customFilter.state;
+        };
+
         Filter.prototype._needsPostFiltering = function () {
             return (_.size(this.options.meta.customFilter) > 0);
         };
