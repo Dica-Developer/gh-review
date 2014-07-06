@@ -180,6 +180,11 @@ define([
                 filter.options.since = {};
                 expect(filter.getSinceDateISO()).toBeNull();
             });
+
+            it('getState should correct preview state', function(){
+                filter.options.meta.customFilter.state = 'testState';
+                expect(filter.getState()).toBe('testState');
+            });
         });
 
         describe('#Filter.save', function(){
