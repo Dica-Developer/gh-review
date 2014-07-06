@@ -95,9 +95,8 @@ define(['angular', 'controllers', 'lodash'], function (angular, controllers, _) 
                                     charts.timeChart(timeChartWidth, 150);
                                     charts.commitsPerAuthorChart(otherChartsWidth, 150);
                                     commentCollector.announceRepositoryAndWaitForFinish(filter)
-                                        .then(function () {
-                                            var otherChartsWidth = document.getElementById('commitFilterCharts').offsetWidth;
-                                            var commitApproved = commentCollector.getCommitApproved();
+                                        .then(commentCollector.getCommitApproved)
+                                        .then(function(commitApproved){
                                             charts.proccessCommentData(commitApproved);
                                             charts.reviewStateChart(otherChartsWidth, 150);
                                         });
@@ -107,6 +106,36 @@ define(['angular', 'controllers', 'lodash'], function (angular, controllers, _) 
                 };
 
                 $scope.$watch('updated', _.debounce(updateCommits, 500));
+
+                $scope.$on('filter:change:state', function(event, state){
+                    var filterState = '';
+                    switch(state){
+                    case 'Not Reviewed':
+                        filterState = 'unseen';
+                        break;
+                    case 'Not Approved':
+                        filterState = 'reviewed';
+                        break;
+                    case 'Approved':
+                        filterState = 'approved';
+                        break;
+                    default:
+                        throw new Error('Unknown state: ' + state);
+                    }
+
+                    if(filterState !== ''){
+                        filter.setState(filterState);
+                    }
+                });
+
+                $scope.$on('filter:change:author', function(event, author){
+                    var currentAuthor = filter.getAuthor();
+                    if(currentAuthor === author){
+                        filter.setAuthor(null);
+                    } else {
+                        filter.setAuthor(author);
+                    }
+                });
             }
         ]);
 });
