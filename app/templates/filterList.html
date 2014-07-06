@@ -1,4 +1,22 @@
 <div class="row review-overview">
+    <div class="col-xs-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Grouped by:
+                <div class="pull-right col-xs-4">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label for="selectGroup" class="col-xs-4 control-label" id="selectGroupLabel">Group by: </label>
+                            <div class="col-xs-8">
+                                <select id="selectGroup" class="col-xs-8 form-control input-sm" ng-model="selectedGrouping"
+                                        ng-options="opt as opt.label for opt in groupingOptions" ></select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="col-lg-12">
         <div class="panel panel-default" ng-repeat="groupedFilter in filterList">
             <div class="panel-heading">{{groupedFilter[0].getOwner() +' / '+ groupedFilter[0].getRepo()}}</div>
