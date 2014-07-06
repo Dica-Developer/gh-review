@@ -23,9 +23,7 @@ define([
                 $state = $injector.get('$state');
 
                 var $controller = $injector.get('$controller');
-                controller = $controller('FilterListController', {
-                    '$scope': $scope
-                });
+                controller = $controller('FilterListController', {'$scope': $scope});
             }));
 
             afterEach(function () {
@@ -77,13 +75,15 @@ define([
                 expect($state.go).toHaveBeenCalledWith('editFilter', { filterId : 'filterId' });
             });
 
-            it('.editFilter should call preventDefault if event is given', function () {
+            it('.editFilter should call preventDefault and stopImmediatePropagation event is given', function () {
                 spyOn($state, 'go');
                 var event = {
-                    preventDefault: jasmine.createSpy()
+                    preventDefault: jasmine.createSpy(),
+                    stopImmediatePropagation: jasmine.createSpy()
                 };
-                $scope.editFilter('bla', event);
+                $scope.editFilter('filterId', event);
                 expect(event.preventDefault).toHaveBeenCalled();
+                expect(event.stopImmediatePropagation).toHaveBeenCalled();
             });
         });
 
