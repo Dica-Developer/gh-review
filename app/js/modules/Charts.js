@@ -142,7 +142,7 @@ define(['angular', 'd3', 'dcjs', 'crossfilter', 'lodash', 'moment'], function (a
             this.data.commitsByDayGroup = this.data.commitsByDay.group();
 
             this.data.commitsByAuthor = this.data.commitData.dimension(function (data) {
-                return data.committer.login;
+                return data.committer ? data.committer.login : '';
             });
             this.data.commitsByAuthorGroup = this.data.commitsByAuthor.group();
         };
