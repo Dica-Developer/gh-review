@@ -147,7 +147,7 @@ define(['angular', 'd3', 'dcjs', 'crossfilter', 'lodash', 'moment'], function (a
             this.data.commitsByAuthorGroup = this.data.commitsByAuthor.group();
         };
 
-        Charts.prototype.proccessCommentData = function(commitApproved){
+        Charts.prototype.proccessCommentData = function (commitApproved) {
             this.data.commentedCommits = this.data.commitData.dimension(function (data) {
                 /*jshint camelcase:false*/
                 var commented = data.commit.comment_count > 0;
