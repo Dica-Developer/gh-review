@@ -4,13 +4,19 @@ define(['angular', 'controllers', 'lodash'], function (angular, controllers, _) 
     controllers
         .controller('FilterController', [
             '$scope',
+            '$stateParams',
             'getAllReposAndBranches',
             'getTreeData',
             'Charts',
             'Filter',
             'commentCollector',
-            function ($scope, getAllReposAndBranches, getTreeData, Charts, Filter, commentCollector) {
-                var filter = new Filter();
+            function ($scope, $stateParams, getAllReposAndBranches, getTreeData, Charts, Filter, commentCollector) {
+                var filter = null;
+                if($stateParams.filterId){
+                    filter = new Filter($stateParams.filterId);
+                } else {
+                    filter = new Filter();
+                }
                 var charts = new Charts();
                 var updateCommitsTimeout = null;
 

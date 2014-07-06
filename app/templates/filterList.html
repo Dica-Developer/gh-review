@@ -24,8 +24,13 @@
                 <a ng-repeat="filter in groupedFilter" ui-sref="commitsByFilter({filterId: filter.getId()})" class="list-group-item">
                     <strong>Repository: </strong>{{ filter.getRepo() }}
                     <strong ng-show="filter.getBranch()">Branch: </strong>{{ filter.getBranch() }}
-                    <strong ng-hide="!filter.options.since">Since: </strong><formatted-date date="filter.getSinceDate()"></formatted-date>
-                    <span class="destroy glyphicon glyphicon-remove-circle pull-right" ng-click="removeFilter(filter.getId(), $event)"></span>
+                    <strong ng-hide="!filter.getSinceDate()">Since: </strong><formatted-date date="filter.getSinceDate()"></formatted-date>
+                    <strong ng-show="filter.getAuthor()">Author: </strong>{{ filter.getAuthor() }}
+                    <strong ng-hide="!filter.getState()">Review State: </strong>{{ filter.getState() }}
+                    <div class="pull-right">
+                        <span class="destroy glyphicon glyphicon-pencil" ng-click="editFilter(filter.getId(), $event)"></span>
+                        <span class="destroy glyphicon glyphicon-remove-circle" ng-click="removeFilter(filter.getId(), $event)"></span>
+                    </div>
                     <!--<span class="stats glyphicon glyphicon-stats pull-right" data-id="{{ filter.id }}"></span>-->
                 </a>
             </ul>

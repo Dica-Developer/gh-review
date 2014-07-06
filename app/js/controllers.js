@@ -50,7 +50,7 @@ define(['angular', 'lodash'], function (angular, _) {
                 });
         }])
 
-        .controller('FilterListController', ['$scope', 'filter', function ($scope, filter) {
+        .controller('FilterListController', ['$scope', '$state', 'filter', function ($scope, $state, filter) {
             $scope.groupingOptions = [
                 {
                     value: 'repo',
@@ -94,6 +94,13 @@ define(['angular', 'lodash'], function (angular, _) {
                 }
                 filter.remove(filterId);
                 updateFilterList();
+            };
+            $scope.editFilter = function (filterId, event) {
+                if (void 0 !== event) {
+                    event.preventDefault();
+                    event.stopImmediatePropagation();
+                }
+                $state.go('editFilter', {'filterId': filterId});
             };
             $scope.$watch('selectedGrouping', updateFilterList);
             updateFilterList();

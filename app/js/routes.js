@@ -30,6 +30,11 @@ define(['angular', 'app'], function (angular, app) {
                 templateUrl: 'templates/addFilter.html',
                 controller: 'FilterController'
             })
+            .state('editFilter', {
+                url: '/filter/edit/{filterId}',
+                templateUrl: 'templates/addFilter.html',
+                controller: 'FilterController'
+            })
             .state('filter/modules', {
                 url: '/filter/modules',
                 templateUrl: 'templates/moduleFilter.html',
