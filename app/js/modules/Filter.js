@@ -42,7 +42,7 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
 
         Filter.prototype.init = function () {
             if (!_.isNull(this.options.meta.id)) {
-                this.options = _.clone(localStorageService.get('filter-' + this.options.meta.id), true);
+                _.extend(this.options, localStorageService.get('filter-' + this.options.meta.id), true);
             } else {
                 this.options.meta.id = generateUUID();
             }
