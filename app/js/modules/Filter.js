@@ -26,7 +26,7 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
                 author: null,
                 contributor: null,
                 meta: {
-                    isSaved: filterId ? true : false,
+                    isSaved: false,
                     lastEdited: null,
                     customFilter: {},
                     id: filterId || null
@@ -42,13 +42,14 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
 
         Filter.prototype.init = function () {
             if (!_.isNull(this.options.meta.id)) {
-                _.extend(this.options, localStorageService.get('filter-' + this.options.meta.id));
+                this.options = _.clone(localStorageService.get('filter-' + this.options.meta.id), true);
             } else {
                 this.options.meta.id = generateUUID();
             }
         };
 
         Filter.prototype.save = function () {
+            this.options.meta.isSaved = true;
             var filterIdsString = localStorageService.get('filter');
             var filterIds = [];
             if (!_.isNull(filterIdsString)){
@@ -57,7 +58,6 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
             filterIds.push(this.options.meta.id);
             localStorageService.set('filter', filterIds.join(','));
             localStorageService.set('filter-' + this.options.meta.id, JSON.stringify(this.options));
-            this.options.meta.isSaved = true;
         };
 
         Filter.prototype.set = function(key, value){
