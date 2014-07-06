@@ -19,16 +19,18 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
             this.options = {
                 repo: null,
                 user: null,
-                id: filterId || null,
-                lastEdited: null,
-                customFilter: {},
                 sha: 'master',
                 since: {},
                 until: {},
                 path: null,
-                isSaved: filterId ? true : false,
                 author: null,
-                contributor: null
+                contributor: null,
+                meta: {
+                    isSaved: filterId ? true : false,
+                    lastEdited: null,
+                    customFilter: {},
+                    id: filterId || null
+                }
             };
             this.init();
         };
@@ -39,10 +41,10 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
         Filter.prototype.tmpCommits = [];
 
         Filter.prototype.init = function () {
-            if (!_.isNull(this.options.id)) {
-                this.options = _.extend(this.options, localStorageService.get('filter-' + this.options.id));
+            if (!_.isNull(this.options.meta.id)) {
+                _.extend(this.options, localStorageService.get('filter-' + this.options.meta.id));
             } else {
-                this.options.id = generateUUID();
+                this.options.meta.id = generateUUID();
             }
         };
 
@@ -52,10 +54,10 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
             if (!_.isNull(filterIdsString)){
                 filterIds = filterIdsString.split(',');
             }
-            filterIds.push(this.options.id);
+            filterIds.push(this.options.meta.id);
             localStorageService.set('filter', filterIds.join(','));
-            localStorageService.set('filter-' + this.options.id, JSON.stringify(this.options));
-            this.options.isSaved = true;
+            localStorageService.set('filter-' + this.options.meta.id, JSON.stringify(this.options));
+            this.options.meta.isSaved = true;
         };
 
         Filter.prototype.set = function(key, value){
@@ -63,19 +65,19 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
                 throw new Error('Unknown filter property');
             } else {
                 this.options[key] = value;
-                this.options.lastEdited = new Date().getTime();
-                this.options.saved = false;
+                this.options.meta.lastEdited = new Date().getTime();
+                this.options.meta.isSaved = false;
             }
         };
 
         Filter.prototype.setCustomFilter = function(key, value){
-            this.options.customFilter[key] = value;
-            this.options.lastEdited = new Date().getTime();
-            this.options.saved = false;
+            this.options.meta.customFilter[key] = value;
+            this.options.meta.lastEdited = new Date().getTime();
+            this.options.meta.isSaved = false;
         };
 
         Filter.prototype.getId = function () {
-            return this.options.id;
+            return this.options.meta.id;
         };
 
         Filter.prototype.setOwner = function (owner) {
@@ -96,6 +98,10 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
 
         Filter.prototype.setAuthor = function (author) {
             this.set('author', author);
+        };
+
+        Filter.prototype.getAuthor = function () {
+            return this.options.author;
         };
 
         Filter.prototype.setContributor = function (contributor) {
@@ -163,7 +169,7 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
         };
 
         Filter.prototype._needsPostFiltering = function () {
-            return (_.size(this.options.customFilter) > 0);
+            return (_.size(this.options.meta.customFilter) > 0);
         };
 
         Filter.prototype.getNextPage = function () {
@@ -219,7 +225,9 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
             _.each(this.options, function (value, key) {
                 if (key === 'since' && value !== null) {
                     options.since = this.getSinceDateISO();
-                } else if ('id' !== key && 'lastEdited' !== key && 'customFilter' !== key && !_.isNull(value)) {
+                } else if (key === 'until' && value !== null) {
+                    //TODO set correct until value
+                } else if ('meta' !== key && value !== null) {
                     options[key] = value;
                 }
             }, this);
@@ -263,7 +271,7 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
         };
 
         Filter.prototype.getAllCommitsFromBranch = function () {
-            var githubMsg = this.options;
+            var githubMsg = this.prepareGithubApiCallOptions();
             delete githubMsg.customFilter;
             if (githubMsg.author) {
                 delete githubMsg.author;
@@ -314,7 +322,7 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
 
         Filter.prototype._processCustomFilter = function (commits) {
             var tmpCommits = [];
-            var customFilter = this.options.customFilter;
+            var customFilter = this.options.meta.customFilter;
             var state = customFilter.state;
             commentCollector.getCommitApproved()
                 .then(function (commitApproved) {
