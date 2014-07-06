@@ -10,11 +10,14 @@ define([
 
     var filterOptions = {
         'sha': 'master',
-        'customFilter': {'state': 'approved'},
         'repo': 'gh-review',
         'user': 'Dica-Developer',
         'since': {'pattern': 'weeks', 'amount': '20'},
-        'id': 'filterId'
+        meta: {
+            'customFilter': {'state': 'approved'},
+            'id': 'filterId',
+            isSaved: true
+        }
     };
 
     beforeEach(angular.mock.module('GHReview'));
@@ -119,9 +122,9 @@ define([
             });
 
             it('setState should set state to given string', function () {
-                expect(filter.options.customFilter.state).toEqual(filterOptions.customFilter.state);
+                expect(filter.options.meta.customFilter.state).toEqual(filterOptions.meta.customFilter.state);
                 filter.setState('approved');
-                expect(filter.options.customFilter.state).toBe('approved');
+                expect(filter.options.meta.customFilter.state).toBe('approved');
             });
         });
 
@@ -138,7 +141,7 @@ define([
             });
 
             it('getId should return current id', function(){
-                expect(filter.getId()).toBe(filterOptions.id);
+                expect(filter.getId()).toBe(filterOptions.meta.id);
             });
 
             it('getOwner should return current user', function(){
@@ -254,7 +257,7 @@ define([
 
             it('#Filter._needsPostFiltering should return true/false dependeing on custom filter length', function(){
                 expect(filter._needsPostFiltering).toBeTruthy();
-                filter.options.customFilter = {};
+                filter.options.meta.customFilter = {};
                 expect(filter._needsPostFiltering()).toBeFalsy();
             });
 
@@ -265,7 +268,7 @@ define([
             });
 
             it('#Filter.getNextPage should call #GIthub.getNextPage if no customFilter is set', function(){
-                filter.options.customFilter = {};
+                filter.options.meta.customFilter = {};
                 var githubSpy = spyOn(GitHub.prototype, 'getNextPage');
                 filter.getNextPage();
                 expect(githubSpy).toHaveBeenCalled();
@@ -278,7 +281,7 @@ define([
             });
 
             it('#Filter.getFirstPage should call #GIthub.getFirstPage if no customFilter is set', function(){
-                filter.options.customFilter = {};
+                filter.options.meta.customFilter = {};
                 var githubSpy = spyOn(GitHub.prototype, 'getFirstPage');
                 filter.getFirstPage();
                 expect(githubSpy).toHaveBeenCalled();
@@ -291,7 +294,7 @@ define([
             });
 
             it('#Filter.getPreviousPage should call #GIthub.getPreviousPage if no customFilter is set', function(){
-                filter.options.customFilter = {};
+                filter.options.meta.customFilter = {};
                 var githubSpy = spyOn(GitHub.prototype, 'getPreviousPage');
                 filter.getPreviousPage();
                 expect(githubSpy).toHaveBeenCalled();
@@ -307,7 +310,9 @@ define([
 
             it('#Filter.prepareGithubApiCallOptions should filter all github API relevant options', function(){
                 var githubOptions = filter.prepareGithubApiCallOptions();
-                expect(githubOptions).toEqual({ repo : 'gh-review', user : 'Dica-Developer', sha : 'master', since : filter.getSinceDateISO(), until : {  } });
+                expect(githubOptions.repo).toEqual('gh-review');
+                expect(githubOptions.user).toEqual('Dica-Developer');
+                expect(githubOptions.sha).toEqual('master');
             });
         });
     });
