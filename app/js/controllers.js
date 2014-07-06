@@ -1,10 +1,9 @@
-define(['angular', 'lodash'], function (angular, _) {
+define(['angular'], function (angular) {
     'use strict';
 
     /* Controllers */
 
     return angular.module('GHReview.controllers', [])
-        // Sample controller where service is being used
         .controller('RootController', [
             '$scope',
             '$location',
@@ -48,61 +47,5 @@ define(['angular', 'lodash'], function (angular, _) {
                 .then(function (userData) {
                     $scope.userData = userData;
                 });
-        }])
-
-        .controller('FilterListController', ['$scope', '$state', 'filter', function ($scope, $state, filter) {
-            $scope.groupingOptions = [
-                {
-                    value: 'repo',
-                    label: 'Repository'
-                },
-                {
-                    value: 'state',
-                    label: 'Review State'
-                }
-            ];
-            $scope.selectedGrouping = $scope.groupingOptions[0];
-            var getGroupedAndSortedFilter = function(){
-                var groupedFilter = _.groupBy(filter.getAll(), function (filter) {
-                    var groupValue;
-                    switch($scope.selectedGrouping.value){
-                    case 'repo':
-                        groupValue = filter.getRepo();
-                        break;
-                    case 'state':
-                        groupValue = filter.getState();
-                        break;
-                    default:
-                        console.error('Value for filter group unknown: ' + $scope.selectedGrouping.value);
-                        groupValue = filter.getRepo();
-                        break;
-                    }
-                    return groupValue;
-                });
-
-                var sortedGroupedFilter = _.sortBy(groupedFilter, 'length');
-                return sortedGroupedFilter.reverse();
-            };
-
-            var updateFilterList = function(){
-                $scope.filterList = getGroupedAndSortedFilter();
-
-            };
-            $scope.removeFilter = function (filterId, event) {
-                if (void 0 !== event) {
-                    event.preventDefault();
-                }
-                filter.remove(filterId);
-                updateFilterList();
-            };
-            $scope.editFilter = function (filterId, event) {
-                if (void 0 !== event) {
-                    event.preventDefault();
-                    event.stopImmediatePropagation();
-                }
-                $state.go('editFilter', {'filterId': filterId});
-            };
-            $scope.$watch('selectedGrouping', updateFilterList);
-            updateFilterList();
         }]);
 });

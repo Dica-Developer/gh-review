@@ -21,19 +21,23 @@ require.config({
         options: 'options',
 
         routes: 'routes',
+
+        //Modules
         Filter: 'modules/Filter',
         Chunk: 'modules/Chunk',
         Charts: 'modules/Charts',
         Comment: 'modules/Comment',
-
+        CommentProvider: 'modules/CommentProvider',
         CommitProvider: 'modules/CommitProvider',
+
+        //Controller
         CommitController: 'controller/CommitController',
         CommitListController: 'controller/CommitListController',
         CommentCollector: 'modules/CommentCollector',
-        CommentProvider: 'modules/CommentProvider',
         ModuleFilterController: 'controller/ModuleFilterController',
         FileController: 'controller/FileController',
-        FilterController: 'controller/FilterController'
+        FilterController: 'controller/FilterController',
+        FilterListController: 'controller/FilterListController'
     },
     shim: {
         'angular': {'exports': 'angular'},

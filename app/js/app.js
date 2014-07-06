@@ -17,6 +17,7 @@ define([
     'angularAnimate',
 
     'FilterController',
+    'FilterListController',
     'FileController',
     'ModuleFilterController',
     'CommitController',
