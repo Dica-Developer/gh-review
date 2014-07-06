@@ -20,7 +20,7 @@ define(['angular', 'lodash'], function (angular, _) {
 
         var splitInLineAndCommitComments = function (result, user, repo) {
             var lineComments = _.filter(result, function (comment) {
-                    return !_.isNull(comment.line) && !_.isNull(comment.position);
+                    return !_.isNull(comment.line) || !_.isNull(comment.position);
                 });
             var commitComments = _.where(result, {line: null, position: null});
 
