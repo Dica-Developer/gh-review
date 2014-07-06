@@ -61,6 +61,7 @@ define(['angular', 'lodash'], function (angular, _) {
                     if (error) {
                         defer.reject(error);
                     } else {
+                        /*istanbul ignore next*/
                         if (res.meta) {
                             delete res.meta;
                         }
