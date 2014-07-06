@@ -81,7 +81,6 @@
                             askGithub(next, successCallback, reject);
                         } else {
                             resolve();
-                            console.log(branches[repo]);
                         }
                     } else {
                         resolve();
