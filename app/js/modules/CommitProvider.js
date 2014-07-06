@@ -72,7 +72,7 @@ define(['angular', 'lodash'], function (angular, _) {
                     var committer = commit.committer;
                     /*jshint camelcase:false*/
                     var avatar = committer ? committer.avatar_url : null;
-                    var committerLink = committer.html_url;
+                    var committerLink = committer ? committer.html_url : null;
                     var commitInfos = {
                         sha: commit.sha,
                         additions: commit.stats.additions,
