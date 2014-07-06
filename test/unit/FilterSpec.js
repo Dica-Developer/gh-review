@@ -69,6 +69,23 @@ define([
                 window.localStorage.removeItem('ls.filter-filterId');
             });
 
+            it('.set should set given value to given key', function () {
+                expect(filter.options.author).toBeNull();
+                filter.set('author', 'testAuthor');
+                expect(filter.options.author).toBe('testAuthor');
+
+                expect(filter.options.sha).toBe('master');
+                filter.set('sha', 'testSha');
+                expect(filter.options.sha).toBe('testSha');
+            });
+
+            it('.set should throw error if key is not known', function () {
+                var errorFunction = function(){
+                    filter.set('unknown', 'unknown');
+                };
+                expect(errorFunction).toThrow();
+            });
+
             it('setRepo should set repo to given string', function () {
                 expect(filter.options.repo).toBe(filterOptions.repo);
                 filter.setRepo('TestRepo');
@@ -181,9 +198,14 @@ define([
                 expect(filter.getSinceDateISO()).toBeNull();
             });
 
-            it('getState should correct preview state', function(){
+            it('getState should returncorrect preview state', function(){
                 filter.options.meta.customFilter.state = 'testState';
                 expect(filter.getState()).toBe('testState');
+            });
+
+            it('getAuthor should return correct author', function(){
+                filter.options.author = 'testAuthor';
+                expect(filter.getAuthor()).toBe('testAuthor');
             });
         });
 
