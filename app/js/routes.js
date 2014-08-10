@@ -40,7 +40,7 @@ define(['angular', 'app'], function (angular, app) {
                 templateUrl: 'templates/moduleFilter.html',
                 controller: 'ModuleFilterController',
                 resolve: {
-                    allRepos: ['$q', 'getAllAvailableRepos', function ($q, getAllAvailableRepos) {
+                    allRepos: ['getAllAvailableRepos', function (getAllAvailableRepos) {
                         return getAllAvailableRepos();
                     }]
                 }
