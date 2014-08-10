@@ -10,50 +10,37 @@ define(['lodash', 'controllers'], function (_, controllers) {
             'Chunk',
             function ($scope, $q, $stateParams, fileContent, commits, Chunk) {
 
-
-//TODO implement ColorLuminance instead of random color. Found on http://blogs.sitepointstatic.com/examples/tech/color-luminance/index.html
-// return lighter (+lum) or darker (-lum) color as a hex string
-// pass original hex string and luminosity factor, e.g. -0.1 = 10% darker
-//            function ColorLuminance(hex, lum) {
-//
-//                // validate hex string
-//                hex = String(hex).replace(/[^0-9a-f]/gi, '');
-//                if (hex.length < 6) {
-//                    hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
-//                }
-//                lum = lum || 0;
-//
-//                // convert to decimal and change luminosity
-//                var rgb = "#", c, i;
-//                for (i = 0; i < 3; i++) {
-//                    c = parseInt(hex.substr(i*2,2), 16);
-//                    c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
-//                    rgb += ("00"+c).substr(c.length);
-//                }
-//
-//                return rgb;
-//            }
-//
-//
-//            var	color = "#905030",
-//                lum = 0.05,
-//                out = document.getElementById("out");
-//
-//            var i, c, nc;
-//
-//            for (var i = 0; i < 100; i++) {
-//                var c = out.appendChild(document.createElement("div"));
-//                nc = ColorLuminance(color, i*lum);
-//                c.style.backgroundColor = nc;
-//                c.title = nc;
-//            }
+                var filePath = $stateParams.path,
+                    filePathSplit = filePath.split('.'),
+                    fileExtension = _.last(filePathSplit),
+                    colors = {},
+                    fileContentSplit = _.str.lines(fileContent),
+                    splicedFileContent = [],
+                    commitLength = 0,
+                    alreadyUsedColors = [];
 
 
-                var colors = {};
-                var fileContentSplit = _.str.lines(fileContent);
-                var splicedFileContent = [];
-                var commitLength = 0;
-                var alreadyUsedColors = [];
+                $scope.languages = [
+                    {display: 'JavaScript', value: 'js', hljs: 'javascript'},
+                    {display: 'Java', value: 'java', hljs: 'java'},
+                    {display: 'XML', value: 'xml', hljs: 'xml'},
+                    {display: 'HTML', value: 'html', hljs: 'html'},
+                    {display: 'Bash/Shell', value: 'sh', hljs: 'bash'}
+                ];
+
+                var languageIndex = _.findIndex($scope.languages, {value: fileExtension});
+                $scope.suggestedLanguage = $scope.languages[languageIndex];
+
+
+                $scope.themes = [
+                    {display: 'Github', value: 'github'},
+                    {display: 'Solarized Dark', value: 'solarized-dark'},
+                    {display: 'Solarized Light', value: 'solarized-light'},
+                    {display: 'Monokai', value: 'monokai'}
+                ];
+                $scope.highlightTheme = $scope.themes[0];
+
+
                 _.each(fileContentSplit, function (value, index) {
                     var object = {
                         lineIndex: index,
@@ -75,25 +62,23 @@ define(['lodash', 'controllers'], function (_, controllers) {
                     $scope.splicedFileContent = splicedFileContent;
                 };
 
-                var path; //TODO this.model.path
-                var commitHistory = [];
-                var lines = [];
+                var path, //TODO this.model.path
+                    commitHistory = [],
+                    lines = [],
+                    randomColor = function () {
+                        var color = 'hsl(' + Math.random() * 360 + ',100%,60%)';
 
-                var randomColor = function () {
-                    var color = 'hsl(' + Math.random() * 360 + ',100%,60%)';
-
-                    if (_.indexOf(alreadyUsedColors, color) > -1) {
-                        return randomColor();
-                    } else {
-                        return color;
-                    }
-                };
-
-                var fillUpMissingLines = function (lineNumbers) {
-                    if (lines.length < lineNumbers) {
-                        lines.push(null);
-                    }
-                };
+                        if (_.indexOf(alreadyUsedColors, color) > -1) {
+                            return randomColor();
+                        } else {
+                            return color;
+                        }
+                    },
+                    fillUpMissingLines = function (lineNumbers) {
+                        if (lines.length < lineNumbers) {
+                            lines.push(null);
+                        }
+                    };
 
                 var startAnnotateLines = function (responseCommits) {
                     var defer = $q.defer();
