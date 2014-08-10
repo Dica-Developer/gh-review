@@ -15,6 +15,7 @@ define([
     'angularLocalStorage',
     'angularSanitize',
     'angularAnimate',
+    'angularHighlightJS',
 
     'FilterController',
     'FilterListController',
@@ -40,7 +41,8 @@ define([
         'ui.bootstrap',
         'LocalStorageModule',
         'ngSanitize',
-        'ngAnimate'
+        'ngAnimate',
+        'hljs'
     ]);
 
 });

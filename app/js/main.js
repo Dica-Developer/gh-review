@@ -7,6 +7,7 @@ require.config({
         angularAnimate: '../bower_components/angular-animate/angular-animate.min',
         angularSanitize: '../bower_components/angular-sanitize/angular-sanitize.min',
         angularLocalStorage: '../bower_components/angular-local-storage/angular-local-storage.min',
+        angularHighlightJS: '../bower_components/angular-highlightjs/angular-highlightjs.min',
         moment: '../bower_components/moment/min/moment.min',
         lodash: '../bower_components/lodash/dist/lodash.min',
         'underscore.string': '../bower_components/underscore.string/dist/underscore.string.min',
@@ -15,6 +16,8 @@ require.config({
         'd3': '../bower_components/d3/d3',
         'dcjs': '../bower_components/dcjs/dc',
         'crossfilter': '../bower_components/crossfilter/crossfilter',
+
+        'highlightjs': '../bower_components/highlightjs/highlight.pack',
 
         githubjs: '../bower_components/github-js/dist/github.min',
 
@@ -45,6 +48,7 @@ require.config({
         'angularUi': ['angular'],
         'angularSanitize': ['angular'],
         'angularLocalStorage': ['angular'],
+        'angularHighlightJS': ['angular', 'highlightjs'],
         'angularMocks': {
             deps: ['angular'],
             'exports': 'angular.mock'
@@ -52,7 +56,10 @@ require.config({
         'crossfilter': {
             exports: 'crossfilter'
         },
-        'dcjs': ['crossfilter']
+        'dcjs': ['crossfilter'],
+        'highlightjs': {
+            exports: 'hljs'
+        }
     },
     priority: [
         'angular'
