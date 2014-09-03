@@ -1,0 +1,92 @@
+<div class="row">
+    <div class="col-sm-12">
+        <ol class="breadcrumb">
+            <li>{{commit.owner}}</li>
+            <li>{{commit.repository}}</li>
+            <li>commit<a ui-sref="/filter/commits"></a></li>
+            <li>{{commit.sha}}</li>
+        </ol>
+    </div>
+</div>
+
+<div class="row" ng-cloak>
+    <div class="col-sm-12">
+       <commit-header commit="commit"></commit-header>
+    </div>
+</div>
+
+<div class="row" ng-cloak>
+    <div class="col-sm-12">
+        <small> Showing <strong> {{files.length}} changed {{files.length === 1 ? 'file' : 'files'}}</strong> with <strong>{{commit.additions}} additions</strong> and <strong>{{commit.deletions}} deletions</strong></small>
+    </div>
+</div>
+
+<div class="row" id="diff-view" ng-cloak>
+    <div class="col-sm-12">
+
+        <div ng-repeat="file in files" class="panel panel-default">
+            <div class="panel-heading" ng-init="file.isOpen = !(files.length > 5 && $index >= 5)">
+                File: <a ui-sref="filterModuleFile({user: commit.owner, repo: commit.repository, sha: commit.sha, path: file.name, ref: file.blobSha})">{{file.name}}</a>
+                <div class="pull-right">
+                        <span class="label label-success">
+                            <span class="glyphicon glyphicon-plus"></span> {{file.additions}}
+                        </span>
+                        <span class="label label-danger">
+                            <span class="glyphicon glyphicon-minus"></span> {{file.deletions}}
+                        </span>
+                        <span class="label label-info">
+                            <span class="glyphicon glyphicon-transfer"></span> {{file.changes}}
+                        </span>
+                        <span class="label label-primary" ng-if="file.commentCount">
+                                <span class="glyphicon glyphicon-comment" ></span> {{file.commentCount}}
+                        </span>
+                        <span class="label label-default collapse-expand-label" ng-click="file.isOpen = file.isOpen ? false : true">
+                                <span class="glyphicon glyphicon" ng-class="{'glyphicon-save': !file.isOpen, 'glyphicon-open': file.isOpen}"></span> {{file.isOpen ? 'Collapse' : 'Expand&nbsp;&nbsp;'}}
+                        </span>
+                </div>
+            </div>
+            <div class="table-wrapper" ng-if="file.isOpen">
+                <div class="div-table">
+                    <div ng-repeat="line in file.lines.lines" ng-model="line">
+                        <div class="div-table-row" ng-class="line.format" ng-dblclick="addComment($event, line, file, commit)">
+                            <div class="div-table-cell"></div>
+                            <div class="div-table-cell lineNr">{{line.lineNrLeft}}</div>
+                            <div class="div-table-cell lineNr">{{line.lineNrRight}}</div>
+                            <div class="div-table-cell">
+                                <pre>{{line.text}}</pre>
+                            </div>
+                        </div>
+                        <div class="comments-wrapper" ng-if="line.comments.length > 0">
+                            <div class="comments div-table-row" ng-repeat="comment in line.comments">
+                                <div class="div-table-cell"></div>
+                                <div class="div-table-cell lineNr"></div>
+                                <div class="div-table-cell lineNr"></div>
+                                <div class="lineComment panel panel-default" content="comment" mode="comment.mode" comment></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" ng-if="comments.commitComments.length > 0" ng-cloak>
+    <div class="col-sm-12">
+        <table class="table-responsive table table-condensed commit-comments">
+            <tr ng-repeat="comment in comments.commitComments">
+                <td class="comment-holder">
+                    <div class="lineComment panel panel-default" content="comment" mode="comment.mode" comment></div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="row" ng-cloak>
+    <div class="col-sm-12">
+        <div class="pull-right">
+            <button type="button" class="btn btn-success approveCommit" ng-click="approveCommit()">Approve Commit</button>
+        </div>
+    </div>
+</div>
