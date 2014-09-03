@@ -43,7 +43,9 @@ require.config({
         FilterListController: 'controller/FilterListController'
     },
     shim: {
-        'angular': {'exports': 'angular'},
+        'angular': {
+            'exports': 'angular'
+        },
         'angularRoute': ['angular'],
         'angularUi': ['angular'],
         'angularSanitize': ['angular'],
