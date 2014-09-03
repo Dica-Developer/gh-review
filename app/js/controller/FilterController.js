@@ -39,6 +39,7 @@ define(['angular', 'controllers', 'lodash'], function (angular, controllers, _) 
                 };
 
                 $scope.selectRepo = function (event) {
+                    /*jshint camelcase: false */
                     var data = event.target.__data__;
                     var table = angular.element(event.currentTarget);
                     table.find('.success').removeClass('success');
