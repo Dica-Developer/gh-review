@@ -51,7 +51,7 @@ define(['angular', 'd3', 'dcjs', 'crossfilter', 'lodash', 'moment'], function (a
                 .group(repoTypeGroup)
                 .radius(70)
                 .minAngleForLabel(0)
-                .colors(d3.scale.category10())
+                .colors(window.d3.scale.category10())
                 .legend(dcjs.legend().x(5).y(5).itemHeight(13).gap(5))
                 .label(function (d) {
                     return d.value;
@@ -72,7 +72,7 @@ define(['angular', 'd3', 'dcjs', 'crossfilter', 'lodash', 'moment'], function (a
                 .group(repoOwnerGroup)
                 .radius(70)
                 .minAngleForLabel(0)
-                .colors(d3.scale.category20())
+                .colors(window.d3.scale.category20())
                 .label(function (d) {
                     return d.value;
                 })
@@ -110,7 +110,7 @@ define(['angular', 'd3', 'dcjs', 'crossfilter', 'lodash', 'moment'], function (a
                 .sortBy(function (data) {
                     return moment(data.updatedAt).valueOf();
                 })
-                .order(d3.descending)
+                .order(window.d3.descending)
                 .renderlet(function (table) {
                     table.selectAll('.dc-table-group').classed('info', true);
                 })
@@ -120,7 +120,7 @@ define(['angular', 'd3', 'dcjs', 'crossfilter', 'lodash', 'moment'], function (a
         Charts.prototype.processCommitData = function (rawData) {
             _.each(rawData, function (data) {
                 data.commitDate = new Date(data.commit.author.date);
-                data.commitDay = d3.time.day(data.commitDate);
+                data.commitDay = window.d3.time.day(data.commitDate);
             }, this);
             this.data.commitData = crossfilter(rawData);
             this.data.all = this.data.commitData.groupAll();
@@ -199,7 +199,7 @@ define(['angular', 'd3', 'dcjs', 'crossfilter', 'lodash', 'moment'], function (a
             chart.group(this.data.commentedCommitsGroup);
             chart.radius(70);
             chart.minAngleForLabel(0);
-            chart.colors(d3.scale.ordinal().range(['#2EC73B', '#4EACF6', '#a60000']));
+            chart.colors(window.d3.scale.ordinal().range(['#2EC73B', '#4EACF6', '#a60000']));
             chart.label(function (d) {
                 var percentage = (d.value / all.value() * 100);
                 var percentageString = '(' + (Math.round(percentage * 100) / 100) + '%)';
@@ -224,7 +224,7 @@ define(['angular', 'd3', 'dcjs', 'crossfilter', 'lodash', 'moment'], function (a
             chart.group(this.data.commitsByAuthorGroup);
             chart.radius(70);
             chart.minAngleForLabel(0);
-            chart.colors(d3.scale.category10());
+            chart.colors(window.d3.scale.category10());
             chart.label(function (d) {
                 return d.value;
             });
@@ -245,11 +245,11 @@ define(['angular', 'd3', 'dcjs', 'crossfilter', 'lodash', 'moment'], function (a
             chart.group(this.data.commitsByDayGroup);
             chart.centerBar(true);
             chart.mouseZoomable(false);
-            chart.round(d3.time.day.round);
+            chart.round(window.d3.time.day.round);
             chart.alwaysUseRounding(true);
             var smallestGreatestDateOfCommits = this.data.smallestGreatestDateOfCommits;
-            chart.x(d3.time.scale().domain([smallestGreatestDateOfCommits.smallest, smallestGreatestDateOfCommits.greatest]));
-            chart.xUnits(d3.time.day);
+            chart.x(window.d3.time.scale().domain([smallestGreatestDateOfCommits.smallest, smallestGreatestDateOfCommits.greatest]));
+            chart.xUnits(window.d3.time.day);
             chart.elasticY(true);
             chart.brushOn(false);
             chart.render();
