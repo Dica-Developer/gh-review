@@ -68,9 +68,6 @@ require.config({
     ]
 });
 
-//http://code.angularjs.org/1.2.1/docs/guide/bootstrap#overview_deferred-bootstrap
-window.name = 'NG_DEFER_BOOTSTRAP!';
-
 require([
     'd3',
     'lodash',
@@ -95,6 +92,8 @@ require([
                 }
             ]
         );
-        angular.bootstrap(document, [app.name]);
+        angular.element(document).ready(function() {
+            angular.bootstrap(document, [app.name]);
+        });
     });
 });
