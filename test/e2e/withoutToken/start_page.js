@@ -2,12 +2,11 @@
 (function(){
     'use strict';
     describe('GH-Review start page', function() {
+        browser.get('http://localhost:9000');
+        
         var loginButton = element(by.id('loginLogoutContainer'));
         var welcomeMessage = element(by.id('welcomeMessage'));
 
-        beforeEach(function(){
-            browser.get('http://localhost:9000');
-        });
 
         it('should have correct title', function() {
             expect(browser.getTitle()).toEqual('GH-Review');
