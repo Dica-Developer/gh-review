@@ -1,7 +1,7 @@
 // conf.js
 exports.config = {
     suites: {
-        startWithoutToken: 'withoutToken/**/*.js',
+//        startWithoutToken: 'withoutToken/**/*.js',
         startWithToken: 'withToken/**/*.js'
     }
 };
