@@ -16,31 +16,34 @@
     "node": ">=0.8.0"
   },
   "scripts": {
-    "test": "grunt travis"
+    "test": "grunt travis",
+    "install": "node node_modules/protractor/bin/webdriver-manager update"
   },
   "devDependencies": {
-    "time-grunt": "^1.0.0",
-    "load-grunt-tasks": "^0.6.0",
     "grunt": "^0.4.5",
-    "grunt-ngdocs": "^0.2.3",
-    "grunt-karma": "^0.8.3",
-    "grunt-contrib-copy": "^0.5.0",
-    "grunt-contrib-requirejs": "^0.4.4",
     "grunt-contrib-clean": "^0.6.0",
     "grunt-contrib-concat": "^0.5.0",
-    "grunt-contrib-uglify": "^0.5.1",
-    "grunt-contrib-jshint": "^0.10.0",
-    "grunt-contrib-jasmine": "^0.7.0",
-    "grunt-contrib-watch": "^0.6.1",
     "grunt-contrib-connect": "^0.8.0",
+    "grunt-contrib-copy": "^0.5.0",
+    "grunt-contrib-jasmine": "^0.7.0",
+    "grunt-contrib-jshint": "^0.10.0",
     "grunt-contrib-less": "^0.11.4",
+    "grunt-contrib-requirejs": "^0.4.4",
+    "grunt-contrib-uglify": "^0.5.1",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-karma": "^0.8.3",
+    "grunt-karma-coveralls": "^2.5.1",
+    "grunt-ngdocs": "^0.2.3",
+    "grunt-protractor-runner": "^1.1.4",
     "karma": "^0.12.23",
     "karma-chrome-launcher": "^0.1.4",
-    "karma-jasmine": "^0.2.2",
-    "karma-requirejs": "^0.2.2",
-    "karma-phantomjs-launcher": "^0.1.4",
     "karma-coverage": "^0.2.6",
-    "grunt-karma-coveralls": "^2.5.1",
-    "karma-story-reporter": "^0.2.2"
+    "karma-jasmine": "^0.2.2",
+    "karma-phantomjs-launcher": "^0.1.4",
+    "karma-requirejs": "^0.2.2",
+    "karma-story-reporter": "^0.2.2",
+    "load-grunt-tasks": "^0.6.0",
+    "protractor": "^1.2.0",
+    "time-grunt": "^1.0.0"
   }
 }

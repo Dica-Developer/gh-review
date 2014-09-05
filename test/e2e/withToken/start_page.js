@@ -4,9 +4,9 @@
     var startPageObjects = require('../pageObjects/startPageObjects.js');
     var headerMenu = new startPageObjects.HeaderMenu();
     var userMenu = new startPageObjects.UserMenu();
-    browser.get('http://localhost:9000');
+    browser.get('http://localhost:9001');
     browser.executeScript('localStorage.setItem("ghreview.accessToken","aa66cb267dbe5c26674a9b4309054602c597bfc1");');
-    browser.get('http://localhost:9000/#/');
+    browser.get('http://localhost:9001/#/');
 
     describe('GH-Review start page', function () {
 
@@ -61,7 +61,7 @@
 
             it('should have correct link url\'s', function () {
                 userMenu.show();
-                expect(userMenu.getLinkUrl(userMenu.whoAmILink)).toEqual('http://localhost:9000/#/whoami');
+                expect(userMenu.getLinkUrl(userMenu.whoAmILink)).toEqual('http://localhost:9001/#/whoami');
                 expect(userMenu.getLinkUrl(userMenu.bugLink)).toEqual('https://github.com/Dica-Developer/gh-review/issues');
                 expect(userMenu.getLinkUrl(userMenu.moreLink)).toEqual('https://github.com/Dica-Developer/gh-review');
                 expect(userMenu.getLinkUrl(userMenu.howtoLink)).toEqual('https://github.com/Dica-Developer/gh-review/wiki');

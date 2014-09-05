@@ -29,16 +29,39 @@ module.exports = function (grunt) {
         config: config,
         connect: {
             options: {
-                port: 9000,
                 livereload: 35729,
                 // Change this to '0.0.0.0' to access the server from outside
                 hostname: 'localhost'
             },
             dev: {
                 options: {
+                    port: 9000,
                     open: true,
                     base: '<%= config.dev %>',
                     livereload: false
+                }
+            },
+            e2e: {
+                options: {
+                    port: 9001,
+                    base: '<%= config.dev %>',
+                    livereload: false
+                }
+            }
+        },
+        protractor: {
+            options: {
+                configFile: '<%= config.test %>/e2e/conf.js',
+                keepAlive: true,
+                noColor: false,
+                args: {}
+            },
+            run: {},
+            startWithoutToken: {
+                options: {
+                    args: {
+                        suite: 'startWithoutToken'
+                    }
                 }
             }
         },
@@ -304,6 +327,16 @@ module.exports = function (grunt) {
         'less:dev',
         'connect:dev',
         'watch:dev'
+    ]);
+
+    grunt.registerTask('e2e', [
+        'clean:dev',
+        'jshint',
+        'processTmpl:dev',
+        'copy:dev',
+        'less:dev',
+        'connect:e2e',
+        'protractor:run'
     ]);
 
     grunt.registerTask('test', [

@@ -2,7 +2,7 @@
 (function(){
     'use strict';
     describe('GH-Review start page', function() {
-        browser.get('http://localhost:9000');
+        browser.get('http://localhost:9001');
 
         var loginButton = element(by.id('loginLogoutContainer'));
         var welcomeMessage = element(by.id('welcomeMessage'));
