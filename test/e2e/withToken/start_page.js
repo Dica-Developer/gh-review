@@ -3,8 +3,9 @@
     'use strict';
     var startPageObjects = require('../pageObjects/startPageObjects.js');
     var headerMenu = new startPageObjects.HeaderMenu();
+    var userMenu = new startPageObjects.UserMenu();
     browser.get('http://localhost:9000');
-    browser.executeScript('localStorage.setItem("ghreview.accessToken","14d762f65ea69243176f9933566144d552fb2f64");');
+    browser.executeScript('localStorage.setItem("ghreview.accessToken","aa66cb267dbe5c26674a9b4309054602c597bfc1");');
     browser.get('http://localhost:9000/#/');
 
     describe('GH-Review start page', function () {
@@ -38,9 +39,35 @@
 
         describe('User menu', function () {
 
+            it('should have 6 entries', function () {
+                expect(userMenu.menuEntries.count()).toEqual(6);
+            });
+
             it('should have correct login name', function () {
                 var userName = element(by.binding('name'));
-                expect(userName.getText()).toEqual('Jörg Weber');
+                expect(userName.getText()).toEqual('jwebertest');
+            });
+
+            it('should have correct link names', function () {
+                userMenu.show();
+                expect(userMenu.getLinkText(userMenu.whoAmILink)).toEqual('Who am I');
+                expect(userMenu.getLinkText(userMenu.bugLink)).toEqual('I found a bug');
+                expect(userMenu.getLinkText(userMenu.moreLink)).toEqual('I need more');
+                expect(userMenu.getLinkText(userMenu.howtoLink)).toEqual('How to use');
+                expect(userMenu.getLinkText(userMenu.aboutLink)).toEqual('About');
+                expect(userMenu.getLinkText(userMenu.logoutLink)).toEqual('Logout');
+                userMenu.hide();
+            });
+
+            it('should have correct link url\'s', function () {
+                userMenu.show();
+                expect(userMenu.getLinkUrl(userMenu.whoAmILink)).toEqual('http://localhost:9000/#/whoami');
+                expect(userMenu.getLinkUrl(userMenu.bugLink)).toEqual('https://github.com/Dica-Developer/gh-review/issues');
+                expect(userMenu.getLinkUrl(userMenu.moreLink)).toEqual('https://github.com/Dica-Developer/gh-review');
+                expect(userMenu.getLinkUrl(userMenu.howtoLink)).toEqual('https://github.com/Dica-Developer/gh-review/wiki');
+                expect(userMenu.getLinkUrl(userMenu.aboutLink)).toBeNull();
+                expect(userMenu.getLinkUrl(userMenu.logoutLink)).toBeNull();
+                userMenu.hide();
             });
         });
 
