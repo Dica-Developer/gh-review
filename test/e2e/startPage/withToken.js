@@ -1,9 +1,9 @@
 /*global describe, it, browser, element, by*/
 (function () {
     'use strict';
-    var startPageObjects = require('../pageObjects/startPageObjects.js');
-    var headerMenu = new startPageObjects.HeaderMenu();
-    var userMenu = new startPageObjects.UserMenu();
+    var menuObjects = require('../pageObjects/menuObjects.js');
+    var headerMenu = new menuObjects.HeaderMenu();
+    var userMenu = new menuObjects.UserMenu();
     browser.get('http://localhost:9001');
     browser.executeScript('localStorage.setItem("ghreview.accessToken","aa66cb267dbe5c26674a9b4309054602c597bfc1");');
     browser.get('http://localhost:9001/#/');
