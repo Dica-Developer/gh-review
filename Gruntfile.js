@@ -52,15 +52,21 @@ module.exports = function (grunt) {
         protractor: {
             options: {
                 configFile: '<%= config.test %>/e2e/conf.js',
-                keepAlive: true,
+                keepAlive: false,
                 noColor: false,
                 args: {}
             },
-            run: {},
-            startWithoutToken: {
+            startPage: {
                 options: {
                     args: {
-                        suite: 'startWithoutToken'
+                        suite: 'startWithToken'
+                    }
+                }
+            },
+            reviewModules: {
+                options: {
+                    args: {
+                        suite: 'reviewModules'
                     }
                 }
             }
@@ -336,7 +342,8 @@ module.exports = function (grunt) {
         'copy:dev',
         'less:dev',
         'connect:e2e',
-        'protractor:run'
+        'protractor:startPage',
+        'protractor:reviewModules'
     ]);
 
     grunt.registerTask('test', [
