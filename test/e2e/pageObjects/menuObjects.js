@@ -15,7 +15,7 @@ exports.HeaderMenu = function () {
         var _this = this;
         this.modulesLink.isDisplayed()
             .then(function (visible) {
-                if(!visible){
+                if (!visible) {
                     _this.reviewLink.all(by.tagName('a')).first().click();
                 }
             });
@@ -25,10 +25,21 @@ exports.HeaderMenu = function () {
         var _this = this;
         this.modulesLink.isDisplayed()
             .then(function (visible) {
-                if(visible){
+                if (visible) {
                     _this.reviewLink.all(by.tagName('a')).first().click();
                 }
             });
+    };
+
+    this.navigateToReviewModules = function () {
+        this.showReviewMenu();
+        this.modulesLink.all(by.tagName('a')).first().click();
+        browser.wait(function () {
+            return browser.getLocationAbsUrl()
+                .then(function (url) {
+                    return url === 'http://localhost:9001/#/filter/modules';
+                });
+        }, 1000, 'Navigate to review modules timed out');
     };
 };
 
@@ -57,7 +68,7 @@ exports.UserMenu = function () {
         var _this = this;
         this.whoAmILink.isDisplayed()
             .then(function (visible) {
-                if(!visible){
+                if (!visible) {
                     _this.menuDropdown.click();
                 }
             });
@@ -67,7 +78,7 @@ exports.UserMenu = function () {
         var _this = this;
         this.whoAmILink.isDisplayed()
             .then(function (visible) {
-                if(visible){
+                if (visible) {
                     _this.menuDropdown.click();
                 }
             });
