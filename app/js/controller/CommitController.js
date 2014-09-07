@@ -1,7 +1,6 @@
 define(['lodash', 'controllers'], function (_, controllers) {
     'use strict';
 
-
     controllers
         .controller('CommitController', [
             '$scope',
@@ -12,10 +11,11 @@ define(['lodash', 'controllers'], function (_, controllers) {
             function ($scope, $stateParams, commitsAndComments, Comment, approveCommit) {
                 var commit = commitsAndComments[0].commitInfos ? commitsAndComments[0] : commitsAndComments[1],
                     comments = commitsAndComments[0].commitInfos ? commitsAndComments[1] : commitsAndComments[0],
-                    lineWithNewComment = [], lineComments = comments.comments.lineComments;
+                    lineWithNewComment = [],
+                    lineComments = comments.comments.lineComments;
 
-                var removeCommentFromScope = function(){
-                    _.remove(lineWithNewComment, function(comment){
+                var removeCommentFromScope = function () {
+                    _.remove(lineWithNewComment, function (comment) {
                         /*jshint camelcase:false*/
                         return comment.mode === 'edit' || _.isUndefined(comment.body_html);
                     });
@@ -28,7 +28,7 @@ define(['lodash', 'controllers'], function (_, controllers) {
                 $scope.files = commit.files;
                 $scope.approvers = comments.approvers;
                 $scope.comments = comments.comments;
-                $scope.addComment = function ($event, line/*, file, commit*/) {
+                $scope.addComment = function ($event, line /*, file, commit*/ ) {
                     removeCommentFromScope();
                     line.comments = line.comments || [];
                     lineWithNewComment = line.comments;
@@ -48,7 +48,7 @@ define(['lodash', 'controllers'], function (_, controllers) {
 
                 $scope.removeComment = function (line, commentToRemove) {
                     commentToRemove.remove();
-                    _.remove(line.comments, function(comment){
+                    _.remove(line.comments, function (comment) {
                         return comment.id === commentToRemove.id;
                     });
                 };
