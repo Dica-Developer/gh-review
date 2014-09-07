@@ -8,7 +8,8 @@ define(['lodash', 'controllers'], function (_, controllers) {
             '$stateParams',
             'commitsAndComments',
             'Comment',
-            function ($scope, $stateParams, commitsAndComments, Comment) {
+            'approveCommit',
+            function ($scope, $stateParams, commitsAndComments, Comment, approveCommit) {
                 var commit = commitsAndComments[0].commitInfos ? commitsAndComments[0] : commitsAndComments[1],
                     comments = commitsAndComments[0].commitInfos ? commitsAndComments[1] : commitsAndComments[0],
                     lineWithNewComment = [], lineComments = comments.comments.lineComments;
@@ -55,16 +56,26 @@ define(['lodash', 'controllers'], function (_, controllers) {
                     removeCommentFromScope();
                 };
 
+                $scope.approveCommit = function () {
+                    approveCommit($stateParams.sha, $stateParams.user, $stateParams.repo).then(function () {
+                        console.log('ok');
+                    }).fail(function (error) {
+                        console.log('to bad: ' + error);
+                    });
+
+                };
 
                 _.each(lineComments, function (comment) {
                     var path = comment.path;
-                    var file = _.findWhere(commit.files, {name: path});
+                    var file = _.findWhere(commit.files, {
+                        name: path
+                    });
                     if (file) {
                         var commentPosition = file.lines.lines[comment.position];
                         if (!commentPosition.comments) {
                             commentPosition.comments = [];
                         }
-                        if(!file.commentCount){
+                        if (!file.commentCount) {
                             file.commentCount = 0;
                         }
                         commentPosition.comments.push(comment);

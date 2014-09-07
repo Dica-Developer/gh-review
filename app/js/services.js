@@ -259,12 +259,52 @@ define(['angular', 'githubjs', 'moment', 'lodash', 'options'], function (angular
             return defer.promise;
         };
     }]);
+    services.factory('commitProviderService', ['commitProvider',
+        function (commitProvider) {
+            return commitProvider;
+        }
+    ]);
 
     services.factory('commentProviderService', ['commentProvider', function (commentProvider) {
         return commentProvider;
     }]);
+    services.factory('approveCommit', ['$q', 'github', 'version', 'authenticated', 'githubUserData',
+        function ($q, github, version, authenticated, githubUserData) {
+            return function (sha, user, repo) {
+                var defer = $q.defer();
 
-    services.factory('commitProviderService', ['commitProvider', function (commitProvider) {
-        return commitProvider;
-    }]);
+                if (authenticated.get()) {
+                    githubUserData.get()
+                        .then(function (userData) {
+                            var commitState = {
+                                version: version,
+                                approved: true,
+                                approver: userData.login,
+                                approvalDate: Date.now(),
+                                commentBy: 'gh-review - http://gh-review.herokuapp.com/'
+                            };
+                            var comment = '```json\n' + JSON.stringify(commitState, null, 2) + '\n```';
+                            github.repos.createCommitComment({
+                                user: user,
+                                repo: repo,
+                                // TODO sha and commit id are the same. Why do we need both?
+                                sha: sha,
+                                /*jshint camelcase:false*/
+                                commit_id: sha,
+                                body: comment
+                            }, function (error) {
+                                if (!error) {
+                                    defer.resolve();
+                                } else {
+                                    defer.reject(error);
+                                }
+                            });
+                        });
+                } else {
+                    // handle this
+                }
+                return defer.promise;
+            };
+        }
+    ]);
 });
