@@ -12,7 +12,7 @@ define(['angular', 'controllers', 'lodash'], function (angular, controllers, _) 
             'commentCollector',
             function ($scope, $stateParams, getAllReposAndBranches, getTreeData, Charts, Filter, commentCollector) {
                 var filter = null;
-                if($stateParams.filterId){
+                if ($stateParams.filterId) {
                     filter = new Filter($stateParams.filterId);
                 } else {
                     filter = new Filter();
@@ -27,11 +27,16 @@ define(['angular', 'controllers', 'lodash'], function (angular, controllers, _) 
                 $scope.branches = null;
                 $scope.selectedBranch = null;
                 $scope.sinceAmount = 2;
-                $scope.sincePatterns = [
-                    {display: 'Days', value: 'days'},
-                    {display: 'Weeks', value: 'weeks'},
-                    {display: 'Years', value: 'years'}
-                ];
+                $scope.sincePatterns = [{
+                    display: 'Days',
+                    value: 'days'
+                }, {
+                    display: 'Weeks',
+                    value: 'weeks'
+                }, {
+                    display: 'Years',
+                    value: 'years'
+                }];
                 $scope.sincePattern = $scope.sincePatterns[1];
 
                 $scope.save = function () {
@@ -47,7 +52,9 @@ define(['angular', 'controllers', 'lodash'], function (angular, controllers, _) 
                     var tr = angular.element(event.target.parentNode);
                     tr.addClass('success');
                     $scope.branches = data.branches;
-                    $scope.selectedBranch = _.find(data.branches, {name: 'master'});
+                    $scope.selectedBranch = _.find(data.branches, {
+                        name: 'master'
+                    });
                     filter.setRepo(data.name);
                     filter.setOwner(data.owner.login);
                     filter.setBranch($scope.selectedBranch.name);
@@ -103,7 +110,7 @@ define(['angular', 'controllers', 'lodash'], function (angular, controllers, _) 
                                     charts.commitsPerAuthorChart(otherChartsWidth, 150);
                                     commentCollector.announceRepositoryAndWaitForFinish(filter)
                                         .then(commentCollector.getCommitApproved)
-                                        .then(function(commitApproved){
+                                        .then(function (commitApproved) {
                                             charts.proccessCommentData(commitApproved);
                                             charts.reviewStateChart(otherChartsWidth, 150);
                                         });
@@ -114,9 +121,9 @@ define(['angular', 'controllers', 'lodash'], function (angular, controllers, _) 
 
                 $scope.$watch('updated', _.debounce(updateCommits, 500));
 
-                $scope.$on('filter:change:state', function(event, state){
+                $scope.$on('filter:change:state', function (event, state) {
                     var filterState = '';
-                    switch(state){
+                    switch (state) {
                     case 'Not Reviewed':
                         filterState = 'unseen';
                         break;
@@ -130,14 +137,14 @@ define(['angular', 'controllers', 'lodash'], function (angular, controllers, _) 
                         throw new Error('Unknown state: ' + state);
                     }
 
-                    if(filterState !== ''){
+                    if (filterState !== '') {
                         filter.setState(filterState);
                     }
                 });
 
-                $scope.$on('filter:change:author', function(event, author){
+                $scope.$on('filter:change:author', function (event, author) {
                     var currentAuthor = filter.getAuthor();
-                    if(currentAuthor === author){
+                    if (currentAuthor === author) {
                         filter.setAuthor(null);
                     } else {
                         filter.setAuthor(author);
