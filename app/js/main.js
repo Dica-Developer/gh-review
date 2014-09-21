@@ -75,7 +75,7 @@ require([
     'angular'
 ], function (d3, _, str, angular) {
     'use strict';
-    // FIXME removed for now because it is set in d3.js itself to winfow.d3 and set for me only undefied to undefined
+    // FIXME removed for now because it is set in d3.js itself to window.d3 and set for me only undefied to undefined
     // window.d3 = d3;
     _.str = str;
 
@@ -92,7 +92,7 @@ require([
                 }
             ]
         );
-        angular.element(document).ready(function() {
+        angular.element(document).ready(function () {
             angular.bootstrap(document, [app.name]);
         });
     });
