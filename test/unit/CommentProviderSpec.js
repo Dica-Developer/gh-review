@@ -95,16 +95,13 @@ define(function (require) {
 
       it('Should call commentCollector.getCommitApproved and commentCollector.getApproveComments', function (done) {
         spyOn(authenticated, 'get').and.returnValue(true);
-        spyOn(commentCollector, 'getCommitApproved').and.returnValue({
-          '123': true
-        });
-        spyOn(commentCollector, 'getApproveComments').and.returnValue({
-          '456': true
-        });
-        commentProvider.getCommentsForCommit(githubOptions)
-          .then(function () {
-            expect(commentCollector.getCommitApproved).toHaveBeenCalled();
-            expect(commentCollector.getApproveComments).toHaveBeenCalled();
+        commentProvider.getCommentsForCommit({
+          user: 'Dica-Developer',
+          repo: 'gh-review',
+          sha: 'c4830df0f992137ffa8aa95237361b21f2ad828d'
+        })
+          .then(function (result) {
+            expect(result).toBe(2);
             done();
           });
         var callback = github.repos.getCommitComments.calls.argsFor(0)[1];
