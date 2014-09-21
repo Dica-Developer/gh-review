@@ -41,7 +41,7 @@ define(function (require) {
     });
 
     describe('.getCommentsForCommit', function () {
-      var github, authenticated, $rootScope, commentCollector, Comment;
+      var github, authenticated, $rootScope, commentCollector, Comment, $q;
 
       beforeEach(mocks.inject(function ($injector) {
         $rootScope = $injector.get('$rootScope');
@@ -50,6 +50,7 @@ define(function (require) {
         commentCollector = $injector.get('commentCollector');
         Comment = $injector.get('Comment');
         spyOn(github.repos, 'getCommitComments');
+        $q = $injector.get('$q');
       }));
 
       it('Should reject if not authenticated', function (done) {
@@ -81,9 +82,11 @@ define(function (require) {
 
       it('Should return one approver', function (done) {
         spyOn(authenticated, 'get').and.returnValue(true);
-        spyOn(commentCollector, 'getCommitApproved').and.returnValue({
+        var defer = $q.defer();
+        defer.resolve({
           '123': true
         });
+        spyOn(commentCollector, 'getCommitApproved').and.returnValue(defer.promise);
         spyOn(commentCollector, 'getApproveComments').and.returnValue({
           '456': true
         });
@@ -100,9 +103,11 @@ define(function (require) {
 
       it('Should return no approver', function (done) {
         spyOn(authenticated, 'get').and.returnValue(true);
-        spyOn(commentCollector, 'getCommitApproved').and.returnValue({
+        var defer = $q.defer();
+        defer.resolve({
           '123': false
         });
+        spyOn(commentCollector, 'getCommitApproved').and.returnValue(defer.promise);
         spyOn(commentCollector, 'getApproveComments').and.returnValue({
           '456': true
         });
@@ -118,9 +123,11 @@ define(function (require) {
 
       it('Should return one line comment if comment.line not null', function (done) {
         spyOn(authenticated, 'get').and.returnValue(true);
-        spyOn(commentCollector, 'getCommitApproved').and.returnValue({
+        var defer = $q.defer();
+        defer.resolve({
           '123': true
         });
+        spyOn(commentCollector, 'getCommitApproved').and.returnValue(defer.promise);
         spyOn(commentCollector, 'getApproveComments').and.returnValue({
           '456': true
         });
@@ -144,9 +151,11 @@ define(function (require) {
 
       it('Should return one line comment if comment.position not null', function (done) {
         spyOn(authenticated, 'get').and.returnValue(true);
-        spyOn(commentCollector, 'getCommitApproved').and.returnValue({
+        var defer = $q.defer();
+        defer.resolve({
           '123': true
         });
+        spyOn(commentCollector, 'getCommitApproved').and.returnValue(defer.promise);
         spyOn(commentCollector, 'getApproveComments').and.returnValue({
           '456': true
         });
@@ -170,9 +179,11 @@ define(function (require) {
 
       it('Should return commit comment if comment.line and comment.position is null', function (done) {
         spyOn(authenticated, 'get').and.returnValue(true);
-        spyOn(commentCollector, 'getCommitApproved').and.returnValue({
+        var defer = $q.defer();
+        defer.resolve({
           '123': true
         });
+        spyOn(commentCollector, 'getCommitApproved').and.returnValue(defer.promise);
         spyOn(commentCollector, 'getApproveComments').and.returnValue({
           '456': true
         });
