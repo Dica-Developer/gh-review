@@ -364,4 +364,12 @@ define(['angular', 'githubjs', 'moment', 'lodash', 'options'], function (angular
       };
     }
   ]);
+
+  services.factory('isCommentNotApprovalComment', ['commentCollector',
+    function (commentCollector) {
+      return function (commentId) {
+        return (true !== commentCollector.getApproveComments()[commentId]);
+      };
+    }
+  ]);
 });
