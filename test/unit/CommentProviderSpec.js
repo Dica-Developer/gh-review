@@ -63,20 +63,6 @@ define(function (require) {
         $rootScope.$apply();
       });
 
-      it('Should call github.repos.getCommitComments', function () {
-        spyOn(authenticated, 'get').and.returnValue(true);
-        commentProvider.getCommentsForCommit(githubOptions);
-        expect(github.repos.getCommitComments).toHaveBeenCalled();
-        expect(github.repos.getCommitComments.calls.argsFor(0)[0]).toEqual({
-          user: 'testUser',
-          repo: 'testRepo',
-          sha: 'testSha',
-          headers: {
-            Accept: 'application/vnd.github-commitcomment.html+json'
-          }
-        });
-      });
-
       it('Should reject if github.repos.getCommitComments returns error', function (done) {
         spyOn(authenticated, 'get').and.returnValue(true);
         commentProvider.getCommentsForCommit(githubOptions)
@@ -90,22 +76,6 @@ define(function (require) {
         callback({
           Error: 'Error'
         }, null);
-        $rootScope.$apply();
-      });
-
-      it('Should call commentCollector.getCommitApproved and commentCollector.getApproveComments', function (done) {
-        spyOn(authenticated, 'get').and.returnValue(true);
-        commentProvider.getCommentsForCommit({
-          user: 'Dica-Developer',
-          repo: 'gh-review',
-          sha: 'c4830df0f992137ffa8aa95237361b21f2ad828d'
-        })
-          .then(function (result) {
-            expect(result).toBe(2);
-            done();
-          });
-        var callback = github.repos.getCommitComments.calls.argsFor(0)[1];
-        callback(null, [comment]);
         $rootScope.$apply();
       });
 
