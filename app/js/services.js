@@ -338,20 +338,17 @@ define(['angular', 'githubjs', 'moment', 'lodash', 'options'], function (angular
 
   services.factory('unapproveCommit', ['$q', 'github', 'version', 'authenticated', 'githubUserData', 'commentCollector',
     function ($q, github, version, authenticated, githubUserData, commentCollector) {
-      return function (sha, user, repo) {
+      return function (commentId, sha, user, repo) {
         var defer = $q.defer();
 
         if (authenticated.get()) {
           github.repos.deleteCommitComment({
             user: user,
             repo: repo,
-            // TODO sha and commit id are the same. Why do we need both?
-            sha: sha,
-            /*jshint camelcase:false*/
-            commit_id: sha
-          }, function (error, comment) {
+            id: commentId
+          }, function (error) {
             if (!error) {
-              commentCollector.removeApprovalComment(sha, comment.id);
+              commentCollector.removeApprovalComment(sha);
               defer.resolve();
             } else {
               defer.reject(error);
@@ -369,6 +366,14 @@ define(['angular', 'githubjs', 'moment', 'lodash', 'options'], function (angular
     function (commentCollector) {
       return function (commentId) {
         return (true !== commentCollector.getApproveComments()[commentId]);
+      };
+    }
+  ]);
+
+  services.factory('isCommentApprovalCommentFromUser', ['commentCollector',
+    function (commentCollector) {
+      return function (comment, loggedInUser) {
+        return (true === commentCollector.getApproveComments()[comment.id]) && comment.user.login === loggedInUser.login;
       };
     }
   ]);

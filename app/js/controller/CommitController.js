@@ -11,7 +11,8 @@ define(['lodash', 'controllers'], function (_, controllers) {
       'unapproveCommit',
       'loggedInUser',
       'isCommentNotApprovalComment',
-      function ($scope, $stateParams, commitsAndComments, Comment, approveCommit, unapproveCommit, loggedInUser, isCommentNotApprovalComment) {
+      'isCommentApprovalCommentFromUser',
+      function ($scope, $stateParams, commitsAndComments, Comment, approveCommit, unapproveCommit, loggedInUser, isCommentNotApprovalComment, isCommentApprovalCommentFromUser) {
         var commit = commitsAndComments[0].commitInfos ? commitsAndComments[0] : commitsAndComments[1],
           comments = commitsAndComments[0].commitInfos ? commitsAndComments[1] : commitsAndComments[0],
           lineWithNewComment = [],
@@ -71,7 +72,15 @@ define(['lodash', 'controllers'], function (_, controllers) {
         };
 
         $scope.unapproveCommit = function () {
-          unapproveCommit();
+          _.each(comments.comments.commitComments, function (comment) {
+            if (isCommentApprovalCommentFromUser(comment, loggedInUser)) {
+              unapproveCommit(comment.id, $stateParams.sha, $stateParams.user, $stateParams.repo).then(function () {
+                console.log('ok');
+              }).fail(function (error) {
+                console.log('to bad: ' + error);
+              });
+            }
+          });
         };
 
         _.each(lineComments, function (comment) {

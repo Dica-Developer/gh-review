@@ -37,9 +37,8 @@ define(['angular', 'lodash'], function (angular, _) {
           approveComments[commentIdThatApproved] = true;
         };
 
-        var removeApprovalComment = function (commitIdToUnapprove, commentIdThatApproved) {
+        var removeApprovalComment = function (commitIdToUnapprove) {
           commitApproved[commitIdToUnapprove] = false;
-          approveComments[commentIdThatApproved] = false;
         };
 
         var getCommitApproved = function () {

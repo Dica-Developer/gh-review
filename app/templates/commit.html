@@ -90,7 +90,7 @@
         </div>
         {{approvers[loggedInUser.login]}}
         <div class="pull-right" ng-if="loggedInUserIsApprover">
-            <button type="button" class="btn btn-danger">Unapprove Commit</button>
+            <button type="button" class="btn btn-danger" ng-click="unapproveCommit()">Unapprove Commit</button>
         </div>
     </div>
 </div>
