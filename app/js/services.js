@@ -295,8 +295,8 @@ define(['angular', 'githubjs', 'moment', 'lodash', 'options'], function (angular
         }
     ]);
 
-    services.factory('approveCommit', ['$q', 'github', 'version', 'authenticated', 'githubUserData',
-        function ($q, github, version, authenticated, githubUserData) {
+    services.factory('approveCommit', ['$q', 'github', 'version', 'authenticated', 'githubUserData', 'commentCollector',
+        function ($q, github, version, authenticated, githubUserData, commentCollector) {
             return function (sha, user, repo) {
                 var defer = $q.defer();
 
@@ -319,8 +319,9 @@ define(['angular', 'githubjs', 'moment', 'lodash', 'options'], function (angular
                                 /*jshint camelcase:false*/
                                 commit_id: sha,
                                 body: comment
-                            }, function (error) {
+                            }, function (error, comment) {
                                 if (!error) {
+                                    commentCollector.addApprovalComment(sha, comment.id);
                                     defer.resolve();
                                 } else {
                                     defer.reject(error);
@@ -328,7 +329,36 @@ define(['angular', 'githubjs', 'moment', 'lodash', 'options'], function (angular
                             });
                         });
                 } else {
-                    // handle this
+                    defer.reject(new Error('Not authenticated'));
+                }
+                return defer.promise;
+            };
+        }
+    ]);
+
+    services.factory('unapproveCommit', ['$q', 'github', 'version', 'authenticated', 'githubUserData', 'commentCollector',
+        function ($q, github, version, authenticated, githubUserData, commentCollector) {
+            return function (sha, user, repo) {
+                var defer = $q.defer();
+
+                if (authenticated.get()) {
+                    github.repos.deleteCommitComment({
+                        user: user,
+                        repo: repo,
+                        // TODO sha and commit id are the same. Why do we need both?
+                        sha: sha,
+                        /*jshint camelcase:false*/
+                        commit_id: sha
+                    }, function (error, comment) {
+                        if (!error) {
+                            commentCollector.removeApprovalComment(sha, comment.id);
+                            defer.resolve();
+                        } else {
+                            defer.reject(error);
+                        }
+                    });
+                } else {
+                    defer.reject(new Error('Not authenticated'));
                 }
                 return defer.promise;
             };

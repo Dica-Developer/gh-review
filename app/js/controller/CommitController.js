@@ -8,7 +8,8 @@ define(['lodash', 'controllers'], function (_, controllers) {
             'commitsAndComments',
             'Comment',
             'approveCommit',
-            function ($scope, $stateParams, commitsAndComments, Comment, approveCommit) {
+            'unapproveCommit',
+            function ($scope, $stateParams, commitsAndComments, Comment, approveCommit, unapproveCommit) {
                 var commit = commitsAndComments[0].commitInfos ? commitsAndComments[0] : commitsAndComments[1],
                     comments = commitsAndComments[0].commitInfos ? commitsAndComments[1] : commitsAndComments[0],
                     lineWithNewComment = [],
@@ -28,6 +29,7 @@ define(['lodash', 'controllers'], function (_, controllers) {
                 $scope.files = commit.files;
                 $scope.approvers = comments.approvers;
                 $scope.comments = comments.comments;
+
                 $scope.addComment = function ($event, line /*, file, commit*/ ) {
                     removeCommentFromScope();
                     line.comments = line.comments || [];
@@ -62,7 +64,10 @@ define(['lodash', 'controllers'], function (_, controllers) {
                     }).fail(function (error) {
                         console.log('to bad: ' + error);
                     });
+                };
 
+                $scope.unapproveCommit = function () {
+                    unapproveCommit();
                 };
 
                 _.each(lineComments, function (comment) {
