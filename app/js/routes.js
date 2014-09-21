@@ -64,6 +64,11 @@ define(['angular', 'app'], function (angular, app) {
               function ($q, $stateParams, commentProviderService, commitProviderService) {
                 return $q.all([commitProviderService.getPreparedCommit($stateParams), commentProviderService.getCommentsForCommit($stateParams)]);
               }
+            ],
+            loggedInUser: ['$q', 'githubUserData',
+              function ($q, githubUserData) {
+                return $q.all(githubUserData.get());
+              }
             ]
           }
         })

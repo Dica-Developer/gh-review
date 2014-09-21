@@ -9,7 +9,8 @@ define(['lodash', 'controllers'], function (_, controllers) {
       'Comment',
       'approveCommit',
       'unapproveCommit',
-      function ($scope, $stateParams, commitsAndComments, Comment, approveCommit, unapproveCommit) {
+      'loggedInUser',
+      function ($scope, $stateParams, commitsAndComments, Comment, approveCommit, unapproveCommit, loggedInUser) {
         var commit = commitsAndComments[0].commitInfos ? commitsAndComments[0] : commitsAndComments[1],
           comments = commitsAndComments[0].commitInfos ? commitsAndComments[1] : commitsAndComments[0],
           lineWithNewComment = [],
@@ -29,6 +30,7 @@ define(['lodash', 'controllers'], function (_, controllers) {
         $scope.files = commit.files;
         $scope.approvers = comments.approvers;
         $scope.comments = comments.comments;
+        $scope.loggedInUserIsApprover = _.contains(comments.approvers, loggedInUser.login);
 
         $scope.addComment = function ($event, line /*, file, commit*/ ) {
           removeCommentFromScope();
