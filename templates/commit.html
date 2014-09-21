@@ -74,8 +74,8 @@
 <div class="row" ng-if="comments.commitComments.length > 0" ng-cloak>
     <div class="col-sm-12">
         <table class="table-responsive table table-condensed commit-comments">
-            <tr ng-repeat="comment in comments.commitComments">
-                <td class="comment-holder">
+            <tr ng-repeat="comment in comments.commitComments" ng-if="isCommentNotApprovalComment(comment.id)" >
+                <td class="comment-holder" >
                     <div class="lineComment panel panel-default" content="comment" mode="comment.mode" comment></div>
                 </td>
             </tr>
@@ -85,8 +85,12 @@
 
 <div class="row" ng-cloak>
     <div class="col-sm-12">
-        <div class="pull-right">
-            <button type="button" class="btn btn-success approveCommit" ng-click="approveCommit()">Approve Commit</button>
+        <div class="pull-right" ng-if="!loggedInUserIsApprover">
+            <button type="button" class="btn btn-success" ng-click="approveCommit()">Approve Commit</button>
+        </div>
+        {{approvers[loggedInUser.login]}}
+        <div class="pull-right" ng-if="loggedInUserIsApprover">
+            <button type="button" class="btn btn-danger">Unapprove Commit</button>
         </div>
     </div>
 </div>
