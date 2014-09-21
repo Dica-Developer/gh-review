@@ -1,14 +1,12 @@
 {
   "name": "GH-Review",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": "Dica-Developer",
-  "repository": [
-    {
-      "type": "git",
-      "url": "https://github.com/Dica-Developer/gh-review",
-      "path": "/"
-    }
-  ],
+  "repository": [{
+    "type": "git",
+    "url": "https://github.com/Dica-Developer/gh-review",
+    "path": "/"
+  }],
   "bugs": {
     "url": "https://github.com/Dica-Developer/gh-review/issues"
   },
