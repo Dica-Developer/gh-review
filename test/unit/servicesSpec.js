@@ -273,7 +273,7 @@ define([
       });
 
       it('Should humanReadableDate.format should return a string', function () {
-        expect(humanReadableDate.format(date)).toContain('Sun, Apr 1 1979');
+        expect(humanReadableDate.format(date)).toContain('Mon, Dec 10 1979 12:00 AM');
       });
 
       it('Should humanReadableDate.format should return null if no date is given', function () {
