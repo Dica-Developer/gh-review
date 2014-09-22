@@ -65,6 +65,7 @@ define(['lodash', 'controllers'], function (_, controllers) {
 
         $scope.approveCommit = function () {
           approveCommit($stateParams.sha, $stateParams.user, $stateParams.repo).then(function () {
+            $scope.loggedInUserIsApprover = true;
             console.log('ok');
           }).fail(function (error) {
             console.log('to bad: ' + error);
@@ -75,6 +76,8 @@ define(['lodash', 'controllers'], function (_, controllers) {
           _.each(comments.comments.commitComments, function (comment) {
             if (isCommentApprovalCommentFromUser(comment, loggedInUser)) {
               unapproveCommit(comment.id, $stateParams.sha, $stateParams.user, $stateParams.repo).then(function () {
+                // TODO for unapproval before the next refresh the comment made needs to be added to the list of comments on approve
+                $scope.loggedInUserIsApprover = false;
                 console.log('ok');
               }).fail(function (error) {
                 console.log('to bad: ' + error);
