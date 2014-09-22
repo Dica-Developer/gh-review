@@ -56,8 +56,10 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
         if (!_.isNull(filterIdsString)) {
           filterIds = filterIdsString.split(',');
         }
-        filterIds.push(this.options.meta.id);
-        localStorageService.set('filter', filterIds.join(','));
+        if (!_.contains(filterIds, this.options.meta.id)) {
+          filterIds.push(this.options.meta.id);
+          localStorageService.set('filter', filterIds.join(','));
+        }
         localStorageService.set('filter-' + this.options.meta.id, JSON.stringify(this.options));
       };
 
