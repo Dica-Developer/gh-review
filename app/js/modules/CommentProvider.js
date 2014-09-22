@@ -6,12 +6,12 @@ define(['angular', 'lodash'], function (angular, _) {
   commentProviderModule.factory('commentProvider', ['$q', 'authenticated', 'github', 'commentCollector', 'Comment',
     function ($q, authenticated, github, commentCollector, Comment) {
 
-      var getApproversFromComments = function (result) {
+      var getApproversFromComments = function (comments) {
         var defer = $q.defer();
         commentCollector.getCommitApproved().then(function (commitApproved) {
           var approveComments = commentCollector.getApproveComments();
           var approvers = [];
-          _.each(result, function (comment) {
+          comments.forEach(function (comment) {
             /*jshint camelcase:false*/
             if ((true === commitApproved[comment.commit_id]) && (true === approveComments[comment.id])) {
               approvers.push(comment.user.login);
