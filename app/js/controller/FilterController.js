@@ -136,18 +136,13 @@ define(['angular', 'controllers', 'lodash'], function (angular, controllers, _) 
           default:
             throw new Error('Unknown state: ' + state);
           }
-
-          if (filterState !== '') {
-            filter.setState(filterState);
-          }
         });
 
         $scope.$on('filter:change:author', function (event, author) {
-          var currentAuthor = filter.getAuthor();
-          if (currentAuthor === author) {
-            filter.setAuthor(null);
+          if (filter.hasAuthor(author)) {
+            filter.removeAuthor(author);
           } else {
-            filter.setAuthor(author);
+            filter.addAuthor(author);
           }
         });
       }

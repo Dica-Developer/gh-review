@@ -25,7 +25,7 @@
                     <strong>Repository: </strong>{{ filter.getRepo() }}
                     <strong ng-show="filter.getBranch()">Branch: </strong>{{ filter.getBranch() }}
                     <strong ng-hide="!filter.getSinceDate()">Since: </strong><formatted-date date="filter.getSinceDate()"></formatted-date>
-                    <strong ng-show="filter.getAuthor()">Author: </strong>{{ filter.getAuthor() }}
+                    <strong ng-show="filter.getAuthors()">Authors: </strong>{{ filter.getAuthors() }}
                     <strong ng-hide="!filter.getState()">Review State: </strong>{{ filter.getState() }}
                     <div class="pull-right">
                         <span class="destroy glyphicon glyphicon-pencil" ng-click="editFilter(filter.getId(), $event)"></span>

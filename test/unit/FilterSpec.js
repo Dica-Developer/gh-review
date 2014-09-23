@@ -87,10 +87,6 @@ define([
       });
 
       it('.set should set given value to given key', function () {
-        expect(filter.options.author).toBeNull();
-        filter.set('author', 'testAuthor');
-        expect(filter.options.author).toBe('testAuthor');
-
         expect(filter.options.sha).toBe('master');
         filter.set('sha', 'testSha');
         expect(filter.options.sha).toBe('testSha');
@@ -121,10 +117,18 @@ define([
         expect(filter.options.user).toBe('TestOwner');
       });
 
-      it('setAuthor should set author to given string', function () {
-        expect(filter.options.author).toBeNull();
-        filter.setAuthor('TestAuthor');
-        expect(filter.options.author).toBe('TestAuthor');
+      it('addAuthor/removeAuthor should add/remove given string to/from authors list', function () {
+        expect(filter.hasAuthor('TestAuthor')).toBe(false);
+        filter.addAuthor('TestAuthor');
+        expect(filter.hasAuthor('TestAuthor')).toBe(true);
+        filter.removeAuthor('TestAuthor');
+        expect(filter.hasAuthor('TestAuthor')).toBe(false);
+      });
+
+      it('removeAuthor should not fail if given string did not exist in authors list', function () {
+        expect(filter.hasAuthor('TestAuthor')).toBe(false);
+        filter.removeAuthor('TestAuthor');
+        expect(filter.hasAuthor('TestAuthor')).toBe(false);
       });
 
       it('setContributor should set contributor to given string', function () {
@@ -237,8 +241,11 @@ define([
       });
 
       it('getAuthor should return correct author', function () {
-        filter.options.author = 'testAuthor';
-        expect(filter.getAuthor()).toBe('testAuthor');
+        filter.addAuthor('testAuthor');
+        filter.addAuthor('testAuthor1');
+        filter.addAuthor('testAuthor');
+        filter.addAuthor('testAuthor3');
+        expect(filter.getAuthors()).toEqual(['testAuthor', 'testAuthor1', 'testAuthor', 'testAuthor3']);
       });
     });
 

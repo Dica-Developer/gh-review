@@ -24,7 +24,7 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
           since: {},
           until: {},
           path: null,
-          author: null,
+          authors: [],
           contributor: null,
           meta: {
             isSaved: false,
@@ -99,12 +99,20 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
         return this.options.repo;
       };
 
-      Filter.prototype.setAuthor = function (author) {
-        this.set('author', author);
+      Filter.prototype.hasAuthor = function (author) {
+        return _.contains(this.options.authors, author);
       };
 
-      Filter.prototype.getAuthor = function () {
-        return this.options.author;
+      Filter.prototype.addAuthor = function (author) {
+        this.options.authors.push(author);
+      };
+
+      Filter.prototype.removeAuthor = function (author) {
+        this.options.authors.pop(author);
+      };
+
+      Filter.prototype.getAuthors = function () {
+        return this.options.authors;
       };
 
       Filter.prototype.setContributor = function (contributor) {
@@ -228,17 +236,23 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
       };
 
       Filter.prototype.prepareGithubApiCallOptions = function () {
-        var options = {};
+        var preparedGithubOptions = {};
         _.each(this.options, function (value, key) {
-          if (key === 'since' && value !== null) {
-            options.since = this.getSinceDateISO();
+          if ('authors' === key) {
+            if (value.length === 1) {
+              preparedGithubOptions.author = value[0];
+            } else if (value.length > 1) {
+              this.options.meta.customFilter.authors = value;
+            }
+          } else if (key === 'since' && value !== null) {
+            preparedGithubOptions.since = this.getSinceDateISO();
           } else if (key === 'until' && value !== null) {
             //TODO set correct until value
           } else if ('meta' !== key && value !== null) {
-            options[key] = value;
+            preparedGithubOptions[key] = value;
           }
         }, this);
-        return options;
+        return preparedGithubOptions;
       };
 
       Filter.prototype._getCommitsPostFiltered = function (link) {
@@ -331,35 +345,45 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
         var tmpCommits = [];
         var customFilter = this.options.meta.customFilter;
         var state = customFilter.state;
+        var authors = customFilter.authors;
         commentCollector.getCommitApproved()
           .then(function (commitApproved) {
-            if (!_.isUndefined(state)) {
-              _.each(commits, function (commit) {
+            _.each(commits, function (commit) {
+              var selectCommit = true;
+              if (!_.isUndefined(authors)) {
+                if (!_.contains(authors, commit.author.login)) {
+                  selectCommit = false;
+                }
+              }
+              if (!_.isUndefined(state)) {
                 switch (state) {
                 case 'approved':
-                  if (commitApproved[commit.sha]) {
-                    tmpCommits.push(commit);
+                  if (!commitApproved[commit.sha]) {
+                    selectCommit = false;
                   }
                   break;
                 case 'reviewed':
                   /*jshint camelcase:false*/
-                  if (!commitApproved[commit.sha] && commit.commit.comment_count > 0) {
-                    tmpCommits.push(commit);
+                  if (!(!commitApproved[commit.sha] && commit.commit.comment_count > 0)) {
+                    selectCommit = false;
                   }
                   break;
                 case 'unseen':
                   /*jshint camelcase:false*/
-                  if (commit.commit.comment_count === 0) {
-                    tmpCommits.push(commit);
+                  if (commit.commit.comment_count !== 0) {
+                    selectCommit = false;
                   }
                   break;
                 }
-              });
-              if (this.maxResults > -1) {
-                this.getCommitsRefer.resolve(_.first(_.rest(tmpCommits, this.firstResult), this.maxResults));
-              } else {
-                this.getCommitsRefer.resolve(_.rest(tmpCommits, this.firstResult));
               }
+              if (selectCommit) {
+                tmpCommits.push(commit);
+              }
+            });
+            if (this.maxResults > -1) {
+              this.getCommitsRefer.resolve(_.first(_.rest(tmpCommits, this.firstResult), this.maxResults));
+            } else {
+              this.getCommitsRefer.resolve(_.rest(tmpCommits, this.firstResult));
             }
           }.bind(this));
       };
