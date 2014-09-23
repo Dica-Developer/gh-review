@@ -13,6 +13,9 @@ define(function (require) {
         }, {
           value: 'state',
           label: 'Review State'
+        }, {
+          value: 'owner',
+          label: 'Owner'
         }];
         $scope.selectedGrouping = $scope.groupingOptions[0];
         var getGroupedAndSortedFilter = function () {
@@ -24,6 +27,9 @@ define(function (require) {
               break;
             case 'state':
               groupValue = filter.getState();
+            break;
+            case 'owner':
+              groupValue = filter.getOwner();
               break;
             default:
               console.error('Value for filter group unknown: ' + $scope.selectedGrouping.value);

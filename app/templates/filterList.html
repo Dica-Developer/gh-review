@@ -19,14 +19,17 @@
     </div>
     <div class="col-lg-12">
         <div class="panel panel-default" ng-repeat="groupedFilter in filterList">
-            <div class="panel-heading">{{groupedFilter[0].getOwner() +' / '+ groupedFilter[0].getRepo()}}</div>
+            <div ng-if="selectedGrouping.value === 'repo'" class="panel-heading">{{groupedFilter[0].getRepo()}}</div>
+            <div ng-if="selectedGrouping.value === 'owner'" class="panel-heading">{{groupedFilter[0].getOwner()}}</div>
+            <div ng-if="selectedGrouping.value === 'state'" class="panel-heading">{{groupedFilter[0].getState() || 'unreviewed'}}</div>
             <ul id="reviewList" class="list-group">
                 <a ng-repeat="filter in groupedFilter" ui-sref="commitsByFilter({filterId: filter.getId()})" class="list-group-item">
-                    <strong>Repository: </strong>{{ filter.getRepo() }}
-                    <strong ng-show="filter.getBranch()">Branch: </strong>{{ filter.getBranch() }}
-                    <strong ng-hide="!filter.getSinceDate()">Since: </strong><formatted-date date="filter.getSinceDate()"></formatted-date>
-                    <strong ng-show="filter.getAuthors()">Authors: </strong>{{ filter.getAuthors() }}
-                    <strong ng-hide="!filter.getState()">Review State: </strong>{{ filter.getState() }}
+                    <span ng-if="selectedGrouping.value !== 'owner'"><strong>Owner: </strong>{{groupedFilter[0].getOwner()}}</span>
+                    <span ng-if="selectedGrouping.value !== 'repo'"><strong>Repository: </strong>{{ filter.getRepo() }}</span>
+                    <span ng-show="filter.getBranch()"><strong>Branch: </strong>{{ filter.getBranch() }}</span>
+                    <span ng-hide="!filter.getSinceDate()"><strong>Since: </strong><formatted-date date="filter.getSinceDate()"></formatted-date></span>
+                    <span ng-show="filter.getAuthors()"><strong>Authors: </strong>{{ filter.getAuthors() }}</span>
+                    <span ng-hide="!filter.getState()"><strong>Review State: </strong>{{ filter.getState() }}</span>
                     <div class="pull-right">
                         <span class="destroy glyphicon glyphicon-pencil" ng-click="editFilter(filter.getId(), $event)"></span>
                         <span class="destroy glyphicon glyphicon-remove-circle" ng-click="removeFilter(filter.getId(), $event)"></span>
