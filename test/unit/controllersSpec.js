@@ -90,6 +90,30 @@ define([
       });
     });
 
+    describe('LogoutController', function(){
+      var $controller, $window;
+      $window = {location: { replace: jasmine.createSpy()} };
+
+      beforeEach(mocks.inject(function ($injector) {
+        localStorage.setItem('ls.accessToken', '44046cd4b4b85afebfe3ccaec13fd8c08cc80aad');
+        $controller = $injector.get('$controller');
+      }));
+
+      afterEach(function () {
+        localStorage.clear();
+      });
+
+      it('Should remove access token from local storage and change call $window.href', function(){
+        expect(localStorage.getItem('ls.accessToken')).toBe('44046cd4b4b85afebfe3ccaec13fd8c08cc80aad');
+        var LogoutController = $controller('LogoutController', {
+          $window: $window
+        });
+        expect(LogoutController).toBeDefined();
+        expect($window.location.replace).toHaveBeenCalled();
+        expect(localStorage.getItem('ls.accessToken')).toBeNull();
+      });
+    });
+
     describe('WhoAmIController', function () {
       var WhoAmIController, $scope, $controller, githubUserDataSpy, githubUserData, github;
 
