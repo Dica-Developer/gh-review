@@ -33,23 +33,23 @@ define(['angular'], function (angular) {
       }
     ])
 
-  .controller('LoginController', ['$scope', '$window', 'githubOptions',
-    function ($scope, $window, githubOptions) {
-      var url = 'https://github.com/login/oauth/authorize?' +
-        'client_id=' + githubOptions.clientId + '&' +
-        'redirect_uri=' + githubOptions.redirectUri + '&' +
-        'scope=' + githubOptions.apiScope;
+    .controller('LoginController', ['$scope', '$window', 'githubOptions',
+      function ($scope, $window, githubOptions) {
+        var url = 'https://github.com/login/oauth/authorize?' +
+          'client_id=' + githubOptions.clientId + '&' +
+          'redirect_uri=' + githubOptions.redirectUri + '&' +
+          'scope=' + githubOptions.apiScope;
 
-      $window.location.href = url;
-    }
-  ])
+        $window.location.href = url;
+      }
+    ])
 
-  .controller('WhoAmIController', ['$scope', 'githubUserData',
-    function ($scope, githubUserData) {
-      githubUserData.get()
-        .then(function (userData) {
-          $scope.userData = userData;
-        });
-    }
-  ]);
+    .controller('WhoAmIController', ['$scope', 'githubUserData',
+      function ($scope, githubUserData) {
+        githubUserData.get()
+          .then(function (userData) {
+            $scope.userData = userData;
+          });
+      }
+    ]);
 });
