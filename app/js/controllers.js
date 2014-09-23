@@ -44,6 +44,15 @@ define(['angular'], function (angular) {
       }
     ])
 
+    .controller('LogoutController', [
+      '$window',
+      'localStorageService',
+      function ($window, localStorageService) {
+        localStorageService.remove('accessToken');
+        $window.location.href = $window.location.origin + $window.location.pathname;
+      }
+    ])
+
     .controller('WhoAmIController', ['$scope', 'githubUserData',
       function ($scope, githubUserData) {
         githubUserData.get()

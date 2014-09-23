@@ -15,6 +15,10 @@ define(['angular', 'app'], function (angular, app) {
           url: '/login',
           controller: 'LoginController'
         })
+        .state('logout', {
+          url: '/logout',
+          controller: 'LogoutController'
+        })
         .state('whoami', {
           url: '/whoami',
           templateUrl: 'templates/whoami.html',
