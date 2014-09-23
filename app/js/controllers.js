@@ -27,7 +27,7 @@ define(['angular'], function (angular) {
               if (!resp.data.error) {
                 authenticated.set(resp.data);
               }
-              $window.location.href = $window.location.origin;
+              $window.location.href = $window.location.origin + $window.location.pathname;
             });
         }
       }
