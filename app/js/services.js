@@ -307,10 +307,9 @@ define(['angular', 'githubjs', 'moment', 'lodash', 'options'], function (angular
                 version: version,
                 approved: true,
                 approver: userData.login,
-                approvalDate: Date.now(),
-                commentBy: 'gh-review - http://gh-review.herokuapp.com/'
+                approvalDate: Date.now()
               };
-              var comment = '```json\n' + JSON.stringify(commitState, null, 2) + '\n```';
+              var comment = '```json\n' + JSON.stringify(commitState, null, 2) + '\n```\napproved with [gh-review](http://gh-review.herokuapp.com/)';
               github.repos.createCommitComment({
                 user: user,
                 repo: repo,
