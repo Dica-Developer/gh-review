@@ -1,4 +1,4 @@
-define(['controllers'], function (controllers) {
+define(['controllers', 'lodash', 'moment'], function (controllers, _, moment) {
   'use strict';
   controllers
     .controller('CommitListController', [
@@ -26,28 +26,38 @@ define(['controllers'], function (controllers) {
           $scope.hasFirst = filterById.hasFirstPage;
         };
 
+        function getSortedCommits (commits) {
+          var groupedCommits = _.groupBy(commits, function(commit){
+            return moment(commit.commit.committer.date).format('YYYY-MM-DD');
+          });
+
+          return _.sortBy(groupedCommits, function(a, b){
+            return moment(a).isBefore(b);
+          });
+        }
+
         filterById.getCommits(0, 20).then(function (commits) {
-          $scope.commits = commits;
+          $scope.sortedGroupedCommits = getSortedCommits(commits);
           setButtonStates();
         });
 
         $scope.getNextPage = function () {
           filterById.getNextPage().then(function (commits) {
-            $scope.commits = commits;
+            $scope.sortedGroupedCommits = getSortedCommits(commits);
             setButtonStates();
           });
         };
 
         $scope.getPreviousPage = function () {
           filterById.getPreviousPage().then(function (commits) {
-            $scope.commits = commits;
+            $scope.sortedGroupedCommits = getSortedCommits(commits);
             setButtonStates();
           });
         };
 
         $scope.getFirstPage = function () {
           filterById.getFirstPage().then(function (commits) {
-            $scope.commits = commits;
+            $scope.sortedGroupedCommits = getSortedCommits(commits);
             setButtonStates();
           });
         };

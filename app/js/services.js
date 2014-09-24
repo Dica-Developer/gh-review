@@ -142,6 +142,13 @@ define(['angular', 'githubjs', 'moment', 'lodash', 'options'], function (angular
           retVal = moment(date).format('llll');
         }
         return retVal;
+      },
+      customFormat: function(date, formatPattern){
+        var retVal = null;
+        if (date) {
+          retVal = moment(date).format(formatPattern);
+        }
+        return retVal;
       }
     };
   });

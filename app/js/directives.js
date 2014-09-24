@@ -40,11 +40,16 @@ define(function (require) {
     function (humanReadableDate) {
       return {
         restrict: 'AE',
-        template: '<span tooltip-placement="top" tooltip="{{formattedDate}}">{{fromNowDate}}</span>',
+        template: '<span tooltip-placement="top" tooltip="{{formattedDate}}">{{date}}</span>',
         link: function ($scope, element, attr) {
           $scope.$watch(attr.date, function (value) {
-            $scope.formattedDate = humanReadableDate.format(value);
-            $scope.fromNowDate = humanReadableDate.fromNow(value);
+            if(attr.format && attr.format !== '') {
+              $scope.formattedDate = humanReadableDate.format(value);
+              $scope.date = humanReadableDate.customFormat(value, attr.format);
+            } else {
+              $scope.formattedDate = humanReadableDate.format(value);
+              $scope.date = humanReadableDate.fromNow(value);
+            }
           });
         }
       };
