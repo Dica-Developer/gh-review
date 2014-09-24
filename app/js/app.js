@@ -16,6 +16,7 @@ define([
   'angularSanitize',
   'angularAnimate',
   'angularHighlightJS',
+  'angularHotkeys',
 
   'FilterController',
   'FilterListController',
@@ -39,10 +40,14 @@ define([
     'GHReview.directives',
     'ui.router',
     'ui.bootstrap',
+    'cfp.hotkeys',
     'LocalStorageModule',
     'ngSanitize',
     'ngAnimate',
     'hljs'
-  ]);
+  ])
+    .config(function(hotkeysProvider) {
+      hotkeysProvider.includeCheatSheet = true;
+    });
 
 });

@@ -8,6 +8,7 @@ require.config({
     angularSanitize: '../bower_components/angular-sanitize/angular-sanitize.min',
     angularLocalStorage: '../bower_components/angular-local-storage/angular-local-storage.min',
     angularHighlightJS: '../bower_components/angular-highlightjs/angular-highlightjs.min',
+    angularHotkeys: '../bower_components/angular-hotkeys/build/hotkeys.min',
     moment: '../bower_components/moment/min/moment.min',
     lodash: '../bower_components/lodash/dist/lodash.min',
     'underscore.string': '../bower_components/underscore.string/dist/underscore.string.min',
@@ -50,6 +51,7 @@ require.config({
     'angularUi': ['angular'],
     'angularSanitize': ['angular'],
     'angularLocalStorage': ['angular'],
+    'angularHotkeys': ['angular'],
     'angularHighlightJS': ['angular', 'highlightjs'],
     'angularMocks': {
       deps: ['angular'],
