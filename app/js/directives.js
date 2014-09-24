@@ -12,8 +12,8 @@ define(function (require) {
 
   var directives = angular.module('GHReview.directives', []);
 
-  directives.directive('menu', ['authenticated', 'githubUserData', 'collectComments',
-    function (authenticated, githubUserData, collectComments) {
+  directives.directive('menu', ['$state', 'authenticated', 'githubUserData', 'collectComments', 'hotkeys',
+    function ($state, authenticated, githubUserData, collectComments, hotkeys) {
       var commentCollectorInitialized = false;
       if (!commentCollectorInitialized) {
         commentCollectorInitialized = collectComments();
@@ -24,6 +24,39 @@ define(function (require) {
       if (authenticated.get()) {
         returnVal.templateUrl = 'templates/authenticatedMenu.html';
         returnVal.link = function ($scope) {
+          hotkeys.bindTo($scope)
+            .add({
+              combo: 'alt+f',
+              description: 'Go to filter list',
+              callback: function(event) {
+                event.preventDefault();
+                $state.go('filter');
+              }
+            })
+            .add({
+              combo: 'alt+m',
+              description: 'Go to module search',
+              callback: function(event) {
+                event.preventDefault();
+                $state.go('modules');
+              }
+            })
+            .add({
+              combo: 'alt+w',
+              description: 'Go to "Who Am I" page',
+              callback: function(event) {
+                event.preventDefault();
+                $state.go('whoami');
+              }
+            })
+            .add({
+              combo: 'alt+q',
+              description: 'Logout',
+              callback: function(event) {
+                event.preventDefault();
+                $state.go('logout');
+              }
+            });
           githubUserData.get()
             .then(function (userData) {
               $scope.name = userData.name;
