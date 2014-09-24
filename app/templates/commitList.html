@@ -4,8 +4,9 @@
     <div class="panel panel-default" ng-repeat="commits in sortedGroupedCommits">
         <div class="panel-heading" formatted-date format="YYYY-MM-DD" date="commits[0].commit.committer.date"></div>
         <ul id="commitList" class="list-group">
-            <a ng-repeat="commit in commits" ui-sref="commitBySha({sha: commit.sha, user: user, repo: repo})"
+            <a ng-class="{'selected-commit': (selectedCommit === commit.sha)}" ng-repeat="commit in commits" ui-sref="commitBySha({sha: commit.sha, user: user, repo: repo})"
                class="list-group-item" ng-click="loader = commit.sha">
+                <div id="{{commit.sha}}" class="scroll-anchor"></div>
                 <div class="media">
                     <img height="36px" class="media-object pull-left" ng-src="{{commit.author.avatar_url}}"
                          title="{{commit.commit.author.name}}">
