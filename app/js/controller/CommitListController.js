@@ -40,8 +40,10 @@ define(['controllers', 'lodash', 'moment'], function (controllers, _, moment) {
             description: 'Navigate through commits',
             callback: function(event) {
               event.preventDefault();
+              var sha = flattenedCommitList[currentCommitPointer].sha;
+              $scope.loader = sha;
               $state.go('commitBySha', {
-                sha: flattenedCommitList[currentCommitPointer].sha,
+                sha: sha,
                 user: filterById.getOwner(),
                 repo: filterById.getRepo()
               });
