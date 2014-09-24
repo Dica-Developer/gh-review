@@ -39,7 +39,7 @@ define(['angular', 'app'], function (angular, app) {
           templateUrl: 'templates/addFilter.html',
           controller: 'FilterController'
         })
-        .state('filter/modules', {
+        .state('modules', {
           url: '/filter/modules',
           templateUrl: 'templates/moduleFilter.html',
           controller: 'ModuleFilterController',
