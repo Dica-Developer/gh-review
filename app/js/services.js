@@ -149,7 +149,7 @@ define(['angular', 'githubjs', 'moment', 'lodash', 'options'], function (angular
         }
         return retVal;
       },
-      customFormat: function(date, formatPattern){
+      customFormat: function (date, formatPattern) {
         var retVal = null;
         if (date) {
           retVal = moment(date).format(formatPattern);
