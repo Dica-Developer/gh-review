@@ -13,18 +13,19 @@ define(['angular', 'lodash'], function (angular, _) {
         user: filter.getOwner(),
         repo: filter.getRepo()
       };
-
-      if (this.urlEtags[url]) {
+      if (_this.urlEtags[url]) {
         githubParams.headers = {
-          'If-None-Match': this.urlEtags[url]
+          'If-None-Match': _this.urlEtags[url]
         };
       }
 
-      this.github.events.getFromRepo(githubParams, function (err, res) {
+      _this.github.events.getFromRepo(githubParams, function (err, res) {
         if(!err){
           if (res.meta) {
             _this.maxXPollInterval = Math.max(_this.maxXPollInterval, parseInt(res.meta['x-poll-interval'], 10));
-            _this.urlEtags[url] = res.meta.etag;
+            if(!_.isUndefined(res.meta.etag)){
+              _this.urlEtags[url] = res.meta.etag;
+            }
           }
           delete res.meta;
 
@@ -35,7 +36,7 @@ define(['angular', 'lodash'], function (angular, _) {
         }
         defer.resolve();
       });
-    }.bind(this);
+    };
 
     if (_.contains(this.fetchedUrls, url)) {
       defer.resolve();
