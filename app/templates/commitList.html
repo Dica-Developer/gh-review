@@ -20,7 +20,18 @@
                             <small formatted-date date="commit.commit.committer.date"></small>
                             <span class="label label-success" ng-if="commitApproved(commit.sha)">approved</span>
                         </div>
-                        <span class="badge pull-right">{{commit.commit.comment_count}}</span>
+                        <div class="pull-right">
+                            <span ng-show="commit.commit.comment_count > 0" class="label label-info">
+                                <ng-pluralize count="commit.commit.comment_count"
+                                              when="{
+                                                    'one': '1 comment',
+                                                    'other': '{} comments'}
+                                                    ">
+                                </ng-pluralize>
+                            </span>
+                            &nbsp;
+                            <span ng-show="filterEvents.commits.indexOf(commit.sha) > -1" class="label label-success">New</span>
+                        </div>
                     </div>
                 </div>
                 <div class="commit-loader" ng-if="commit.sha === loader"><div class="commit-loader-message">Loading commit {{commit.sha}}</div></div>

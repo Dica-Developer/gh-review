@@ -8,8 +8,9 @@ define(['controllers', 'lodash', 'moment'], function (controllers, _, moment) {
       '$location',
       'commitsApproved',
       'filter',
+      'events',
       'hotkeys',
-      function ($scope, $state, $stateParams, $location, commitsApproved, filter, hotkeys) {
+      function ($scope, $state, $stateParams, $location, commitsApproved, filter, events, hotkeys) {
         var flattenedCommitList = [], currentCommitPointer = 0;
 
         hotkeys.bindTo($scope)
@@ -111,6 +112,7 @@ define(['controllers', 'lodash', 'moment'], function (controllers, _, moment) {
 
         filterById.getCommits(0, 20).then(function (commits) {
           $scope.sortedGroupedCommits = getSortedCommits(commits);
+          $scope.filterEvents = events.getForFilter(filterById);
           setButtonStates();
           setSelectedCommit();
         });
