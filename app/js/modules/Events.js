@@ -21,15 +21,17 @@ define(['angular', 'lodash'], function (angular, _) {
       }
 
       this.github.events.getFromRepo(githubParams, function (err, res) {
-        if (res.meta) {
-          _this.maxXPollInterval = Math.max(_this.maxXPollInterval, parseInt(res.meta['x-poll-interval'], 10));
-          _this.urlEtags[url] = res.meta.etag;
-        }
-        delete res.meta;
+        if(!err){
+          if (res.meta) {
+            _this.maxXPollInterval = Math.max(_this.maxXPollInterval, parseInt(res.meta['x-poll-interval'], 10));
+            _this.urlEtags[url] = res.meta.etag;
+          }
+          delete res.meta;
 
-        //modified since last eTag or new events at all
-        if (res.length) {
-          _this.eventsByUrl[url] = res;
+          //modified since last eTag or new events at all
+          if (res.length) {
+            _this.eventsByUrl[url] = res;
+          }
         }
         defer.resolve();
       });
