@@ -5,8 +5,8 @@ define(function (require) {
     _ = require('lodash');
 
   controllers
-    .controller('FilterListController', ['$scope', '$state', 'filter',
-      function ($scope, $state, filter) {
+    .controller('FilterListController', ['$scope', '$state', 'filter', 'events',
+      function ($scope, $state, filter, events) {
         $scope.groupingOptions = [{
           value: 'repo',
           label: 'Repository'
@@ -45,8 +45,9 @@ define(function (require) {
 
         var updateFilterList = function () {
           $scope.filterList = getGroupedAndSortedFilter();
-
+          $scope.filterEvents = events.getAll();
         };
+
         $scope.removeFilter = function (filterId, event) {
           if (void 0 !== event) {
             event.preventDefault();
