@@ -20,7 +20,7 @@ require.config({
 
     'highlightjs': '../bower_components/highlightjs/highlight.pack',
 
-    githubjs: '../bower_components/github-js/dist/github.min',
+    githubjs: '../bower_components/github-js/dist/github',
 
     options: 'options',
 
