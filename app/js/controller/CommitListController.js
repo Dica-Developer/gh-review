@@ -72,9 +72,11 @@ define(['controllers', 'lodash', 'moment'], function (controllers, _, moment) {
           });
 
         function setSelectedCommit () {
-          var sha = flattenedCommitList[currentCommitPointer].sha;
-          $scope.selectedCommit = sha;
-          $location.hash(sha);
+          if(flattenedCommitList.length > 0){
+            var sha = flattenedCommitList[currentCommitPointer].sha;
+            $scope.selectedCommit = sha;
+            $location.hash(sha);
+          }
         }
 
         $scope.loader = '';
