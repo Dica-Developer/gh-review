@@ -45,6 +45,7 @@ require.config({
     Comment: 'modules/Comment',
     CommentProvider: 'modules/CommentProvider',
     CommitProvider: 'modules/CommitProvider',
+    Events: 'modules/Events',
 
     //Controller
     CommitController: 'controller/CommitController',
