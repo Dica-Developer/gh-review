@@ -12,11 +12,14 @@ define(['lodash', 'controllers'], function (_, controllers) {
       'loggedInUser',
       'isCommentNotApprovalComment',
       'isCommentApprovalCommentFromUser',
-      function ($scope, $stateParams, commitsAndComments, Comment, approveCommit, unapproveCommit, loggedInUser, isCommentNotApprovalComment, isCommentApprovalCommentFromUser) {
+      'events',
+      function ($scope, $stateParams, commitsAndComments, Comment, approveCommit, unapproveCommit, loggedInUser, isCommentNotApprovalComment, isCommentApprovalCommentFromUser, events) {
         var commit = commitsAndComments[0].commitInfos ? commitsAndComments[0] : commitsAndComments[1],
           comments = commitsAndComments[0].commitInfos ? commitsAndComments[1] : commitsAndComments[0],
           lineWithNewComment = [],
           lineComments = comments.comments.lineComments;
+
+        events.removeNewCommit(commit.commitInfos.sha);
 
         var removeCommentFromScope = function () {
           _.remove(lineWithNewComment, function (comment) {
