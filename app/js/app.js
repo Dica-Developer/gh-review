@@ -23,7 +23,8 @@ define([
   'FileController',
   'ModuleFilterController',
   'CommitController',
-  'CommitListController'
+  'CommitListController',
+  'Events'
 ], function (angular) {
   'use strict';
 
@@ -38,6 +39,7 @@ define([
     'GHReview.controllers',
     'GHReview.services',
     'GHReview.directives',
+    'GHReview.Events',
     'ui.router',
     'ui.bootstrap',
     'cfp.hotkeys',
