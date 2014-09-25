@@ -20,12 +20,12 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
       }
 
       _this.github.events.getFromRepo(githubParams, function (err, res) {
-        if(!err){
+        if (!err) {
           if (res.meta) {
-            if(!_.isUndefined(res.meta['x-poll-interval'])){
+            if (!_.isUndefined(res.meta['x-poll-interval'])) {
               _this.maxXPollInterval = Math.max(_this.maxXPollInterval, parseInt(res.meta['x-poll-interval'], 10));
             }
-            if(!_.isUndefined(res.meta.etag)){
+            if (!_.isUndefined(res.meta.etag)) {
               _this.urlEtags[url] = res.meta.etag;
             }
           }
@@ -53,12 +53,12 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
   function getNewCommits(filter, eventsByUrl, filterAuthors, currentUserLogin, lastUpdated) {
     var filterRef = 'refs/heads/' + filter.getBranch(),
       eventsFilteredByPushEvent;
-    if(lastUpdated){
-      var eventsFilteredByLastUpdate = _.filter(eventsByUrl, function(event){
+    if (lastUpdated) {
+      var eventsFilteredByLastUpdate = _.filter(eventsByUrl, function (event) {
         /*jshint camelcase:false*/
-          if(moment(lastUpdated).isBefore(event.created_at)){
-            return event;
-          }
+        if (moment(lastUpdated).isBefore(event.created_at)) {
+          return event;
+        }
       });
       eventsFilteredByPushEvent = _.filter(eventsFilteredByLastUpdate, {type: 'PushEvent'});
     } else {
@@ -83,18 +83,18 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
 
     _.each(this.filter.getAll(), function (filter/*, index*/) {
       var defer = this.$q.defer(),
-        filterUrl = filter.getOwner() +'/'+ filter.getRepo(),
+        filterUrl = filter.getOwner() + '/' + filter.getRepo(),
         filterAuthors = filter.getAuthors(),
         eventsByUrl = this.eventsByUrl[filterUrl];
 
       deferList.push(defer.promise);
 
-      if(eventsByUrl) {
+      if (eventsByUrl) {
         var lastUpdated = false;
-        if(!this.allEvents[filter.getId()]){
+        if (!this.allEvents[filter.getId()]) {
           this.allEvents[filter.getId()] = {};
         }
-        if(this.allEvents[filter.getId()].lastUpdated){
+        if (this.allEvents[filter.getId()].lastUpdated) {
           lastUpdated = this.allEvents[filter.getId()].lastUpdated;
         }
         this.allEvents[filter.getId()].commits = getNewCommits(filter, eventsByUrl, filterAuthors, this.userData.login, lastUpdated);
@@ -125,7 +125,7 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
     this.allEvents = this.localStorageService.get('events') || {};
     this.urlEtags = this.localStorageService.get('eventsUrlEtags') || {};
     this.githubUserData.get()
-      .then(function(userData){
+      .then(function (userData) {
         this.userData = userData;
       }.bind(this));
     this.fetch();
@@ -148,8 +148,8 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
   };
 
   Events.prototype.removeNewCommit = function (commitSha) {
-    _.each(this.allEvents, function(events){
-      _.remove(events.commits, function(sha){
+    _.each(this.allEvents, function (events) {
+      _.remove(events.commits, function (sha) {
         return sha === commitSha;
       });
     });
