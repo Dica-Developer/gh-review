@@ -15,13 +15,15 @@ define(['angular', 'lodash'], function (angular, _) {
         var githubCallback = function (error, response) {
           if (!error) {
             this.mode = 'preview';
-            this.previewHtml = response.data;
+            /*jshint camelcase:false*/
+            this.body_html = response.data;
             $rootScope.$apply();
           }
         }.bind(this);
 
         github.markdown.render({
-          text: this.content,
+          /*jshint camelcase:false*/
+          text: this.body_text,
           mode: 'gfm'
         }, githubCallback);
       };
@@ -29,6 +31,7 @@ define(['angular', 'lodash'], function (angular, _) {
       Comment.prototype.save = function () {
 
         var githubCallback = function (error, result) {
+
           if (!error) {
             _.extend(this, result);
             this.mode = 'show';
@@ -42,10 +45,14 @@ define(['angular', 'lodash'], function (angular, _) {
           user: this.editInformations.user,
           repo: this.editInformations.repo,
           sha: this.sha,
-          body: this.content,
+          /*jshint camelcase:false*/
+          body: this.body_text,
           path: this.path,
           position: this.position,
-          line: this.line
+          line: this.line,
+          headers: {
+            'Accept': 'application/vnd.github-commitcomment.html+json'
+          }
         }, githubCallback);
       };
 
@@ -69,7 +76,7 @@ define(['angular', 'lodash'], function (angular, _) {
         var githubCallback = function (error, res) {
           if (!error) {
             this.mode = 'edit';
-            this.content = res.body;
+            _.extend(this, res);
             $rootScope.$apply();
           }
         }.bind(this);
