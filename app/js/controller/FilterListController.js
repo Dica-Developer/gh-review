@@ -7,17 +7,23 @@ define(function (require) {
   controllers
     .controller('FilterListController', ['$scope', '$state', 'filter', 'events',
       function ($scope, $state, filter, events) {
-        $scope.groupingOptions = [{
-          value: 'repo',
-          label: 'Repository'
-        }, {
-          value: 'state',
-          label: 'Review State'
-        }, {
-          value: 'owner',
-          label: 'Owner'
-        }];
+        $scope.groupingOptions = [
+          {
+            value: 'repo',
+            label: 'Repository'
+          },
+          {
+            value: 'state',
+            label: 'Review State'
+          },
+          {
+            value: 'owner',
+            label: 'Owner'
+          }
+        ];
+
         $scope.selectedGrouping = $scope.groupingOptions[0];
+
         var getGroupedAndSortedFilter = function () {
           var groupedFilter = _.groupBy(filter.getAll(), function (filter) {
             var groupValue;
@@ -27,7 +33,7 @@ define(function (require) {
               break;
             case 'state':
               groupValue = filter.getState();
-            break;
+              break;
             case 'owner':
               groupValue = filter.getOwner();
               break;
