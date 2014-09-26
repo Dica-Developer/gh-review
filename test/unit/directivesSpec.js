@@ -208,7 +208,7 @@ define(function (require) {
           expect(element.find('#submitLineComment').length).toBe(1);
           expect(element.find('#cancelComment').text()).toBe('Cancel');
           expect(element.find('#previewComment').text()).toBe('Preview');
-          expect(element.find('#submitLineComment').text()).toBe('Add');
+          expect(element.find('#submitLineComment').text()).toBe('Save');
         });
       });
 
@@ -223,7 +223,7 @@ define(function (require) {
             line: 39,
             path: 'app/templates/_filter.html',
             position: 6,
-            previewHtml: '<p>Test</p>'
+            body_html: '<p>Test</p>'
           });
         }));
         it('Should render comment', function () {

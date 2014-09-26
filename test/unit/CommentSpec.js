@@ -10,6 +10,7 @@ define([
     mode: 'test',
     body_html: '<p>Line comment test</p>',
     body: 'Line comment test body',
+    body_text: 'Line comment test body',
     content: 'Line comment test content',
     sha: 'sad87cv087wfadvb098h',
     commit_id: '9dc35ebda672c3a0443d0af3fa54fda0372cdcd2',
@@ -54,10 +55,14 @@ define([
           user: commentData.editInformations.user,
           repo: commentData.editInformations.repo,
           sha: commentData.sha,
-          body: commentData.content,
+          /*jshint camelcase:false*/
+          body: commentData.body_text,
           path: commentData.path,
           position: commentData.position,
-          line: commentData.line
+          line: commentData.line,
+          headers: {
+            Accept: 'application/vnd.github-commitcomment.html+json'
+          }
         };
         var githubSpy = spyOn(github.repos, 'createCommitComment');
         comment.save();
@@ -87,7 +92,8 @@ define([
       it('Should call github.markdown.render', function () {
         var comment = new Comment(commentData);
         var expectedCallArgs = {
-          text: commentData.content,
+          /*jshint camelcase:false*/
+          text: commentData.body_text,
           mode: 'gfm'
         };
         var githubSpy = spyOn(github.markdown, 'render');
@@ -106,7 +112,8 @@ define([
         });
         expect(scopeSpy).toHaveBeenCalled();
         expect(comment.mode).toBe('preview');
-        expect(comment.previewHtml).toBe('<p>Test</p>');
+        /*jshint camelcase:false*/
+        expect(comment.body_html).toBe('<p>Test</p>');
       });
     });
 
@@ -137,11 +144,11 @@ define([
         comment.edit();
         var callback = githubSpy.calls.argsFor(0)[1];
         callback(null, {
-          body: 'Test'
+          body_text: 'Test'
         });
         expect(scopeSpy).toHaveBeenCalled();
         expect(comment.mode).toBe('edit');
-        expect(comment.content).toBe('Test');
+        expect(comment.body_text).toBe('Test');
       });
     });
 
@@ -194,7 +201,10 @@ define([
           user: commentData.editInformations.user,
           repo: commentData.editInformations.repo,
           id: commentData.id,
-          body: commentData.content
+          body: commentData.body_text,
+          headers: {
+            Accept: 'application/vnd.github-commitcomment.html+json'
+          }
         };
         var githubSpy = spyOn(github.repos, 'updateCommitComment');
         comment.saveChanges();
