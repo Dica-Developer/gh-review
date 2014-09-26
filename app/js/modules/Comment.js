@@ -87,6 +87,12 @@ define(['angular', 'lodash'], function (angular, _) {
         }, githubCallback);
       };
 
+      Comment.prototype.cancelEdit = function () {
+        this.mode = 'show';
+        /*jshint camelcase:false*/
+        this.content = this.body_html;
+      };
+
       Comment.prototype.saveChanges = function () {
         var githubCallback = function (error, res) {
           if (!error) {
