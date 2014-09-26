@@ -61,7 +61,7 @@ define(['angular', 'lodash'], function (angular, _) {
             repo: stateParams.repo,
             sha: stateParams.sha,
             headers: {
-              'Accept': 'application/vnd.github-commitcomment.html+json'
+              'Accept': 'application/vnd.github-commitcomment.full+json'
             }
           }, function (error, res) {
             if (error) {
