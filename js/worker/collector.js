@@ -33,7 +33,6 @@
 
   var sortOutApproveComments = function (comments) {
     return new Promise(function (resolve) {
-      var commentsLength = comments.length;
       var approveCommit = function (comment) {
         /*jshint camelcase:false*/
         if (true !== commitApproved[comment.commit_id]) {
@@ -44,21 +43,23 @@
         }
       };
 
-      _.each(comments, function (comment, idx) {
+      comments.forEach(function (comment, idx) {
         var commentBody = comment.body;
         if (commentBody) {
           if (commentBody.indexOf('```json') > -1) {
-            commentBody = commentBody.substring(7, (commentBody.length - 3));
+            if(commentBody.indexOf('approved with ') > -1){
+              commentBody = commentBody.substring(7, commentBody.indexOf('approved with ') - 4);
+            } else {
+              commentBody = commentBody.substring(7, (commentBody.length - 3));
+            }
             commentBody = JSON.parse(commentBody);
             if (true === commentBody.approved) {
               approveCommit(comment, idx);
             }
           }
         }
-        if (idx + 1 === commentsLength) {
-          resolve();
-        }
       });
+      resolve();
     });
   };
 
