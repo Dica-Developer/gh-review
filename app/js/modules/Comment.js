@@ -90,17 +90,21 @@ define(['angular', 'lodash'], function (angular, _) {
       Comment.prototype.saveChanges = function () {
         var githubCallback = function (error, res) {
           if (!error) {
-            console.log(res);
-            //                    this.mode = 'edit';
-            //                    this.content = res.body;
-            //                    $rootScope.$apply();
+            this.mode = 'show';
+            /*jshint camelcase:false*/
+            _.extend(this, res);
+            $rootScope.$apply();
           }
         }.bind(this);
         github.repos.updateCommitComment({
           user: this.editInformations.user,
           repo: this.editInformations.repo,
           id: this.id,
-          body: this.content
+          /*jshint camelcase:false*/
+          body: this.body_text,
+          headers: {
+            'Accept': 'application/vnd.github-commitcomment.html+json'
+          }
         }, githubCallback);
       };
 
