@@ -9,8 +9,10 @@ define([
   var commentData = {
     mode: 'test',
     body_html: '<p>Line comment test</p>',
+    preview_html: '<p>Line comment test preview</p>',
     body: 'Line comment test body',
     body_text: 'Line comment test body',
+    edit_text: 'Line comment test body edit',
     content: 'Line comment test content',
     sha: 'sad87cv087wfadvb098h',
     commit_id: '9dc35ebda672c3a0443d0af3fa54fda0372cdcd2',
@@ -41,7 +43,7 @@ define([
       expect(Comment).toBeDefined();
     });
 
-    describe('.save', function () {
+    describe('.createComment', function () {
       var github, $rootScope;
 
       beforeEach(mocks.inject(function ($injector) {
@@ -56,16 +58,16 @@ define([
           repo: commentData.editInformations.repo,
           sha: commentData.sha,
           /*jshint camelcase:false*/
-          body: commentData.body_text,
+          body: commentData.edit_text,
           path: commentData.path,
           position: commentData.position,
           line: commentData.line,
           headers: {
-            Accept: 'application/vnd.github-commitcomment.html+json'
+            Accept: 'application/vnd.github-commitcomment.full+json'
           }
         };
         var githubSpy = spyOn(github.repos, 'createCommitComment');
-        comment.save();
+        comment.createComment();
         expect(githubSpy.calls.argsFor(0)[0]).toEqual(expectedCallArgs);
       });
 
@@ -73,7 +75,7 @@ define([
         var comment = new Comment(commentData);
         var githubSpy = spyOn(github.repos, 'createCommitComment');
         var scopeSpy = spyOn($rootScope, '$apply');
-        comment.save();
+        comment.createComment();
         var callback = githubSpy.calls.argsFor(0)[1];
         callback(null, {});
         expect(scopeSpy).toHaveBeenCalled();
@@ -93,7 +95,7 @@ define([
         var comment = new Comment(commentData);
         var expectedCallArgs = {
           /*jshint camelcase:false*/
-          text: commentData.body_text,
+          text: commentData.edit_text,
           mode: 'gfm'
         };
         var githubSpy = spyOn(github.markdown, 'render');
@@ -101,7 +103,7 @@ define([
         expect(githubSpy.calls.argsFor(0)[0]).toEqual(expectedCallArgs);
       });
 
-      it('Should set comment.mode to "preview" comment.previewHtml to resp.data and $rootScope.$apply', function () {
+      it('Should set comment.mode to "preview" comment.preview_html to resp.data and $rootScope.$apply', function () {
         var comment = new Comment(commentData);
         var githubSpy = spyOn(github.markdown, 'render');
         var scopeSpy = spyOn($rootScope, '$apply');
@@ -113,7 +115,7 @@ define([
         expect(scopeSpy).toHaveBeenCalled();
         expect(comment.mode).toBe('preview');
         /*jshint camelcase:false*/
-        expect(comment.body_html).toBe('<p>Test</p>');
+        expect(comment.preview_html).toBe('<p>Test</p>');
       });
     });
 
@@ -125,30 +127,10 @@ define([
         $rootScope = $injector.get('$rootScope');
       }));
 
-      it('Should call github.repos.getCommitComment', function () {
+      it('Should set comment.mode to "edit" ', function () {
         var comment = new Comment(commentData);
-        var expectedCallArgs = {
-          user: commentData.editInformations.user,
-          repo: commentData.editInformations.repo,
-          id: commentData.id
-        };
-        var githubSpy = spyOn(github.repos, 'getCommitComment');
         comment.edit();
-        expect(githubSpy.calls.argsFor(0)[0]).toEqual(expectedCallArgs);
-      });
-
-      it('Should set comment.mode to "edit" comment.content to resp.body and $rootScope.$apply', function () {
-        var comment = new Comment(commentData);
-        var githubSpy = spyOn(github.repos, 'getCommitComment');
-        var scopeSpy = spyOn($rootScope, '$apply');
-        comment.edit();
-        var callback = githubSpy.calls.argsFor(0)[1];
-        callback(null, {
-          body_text: 'Test'
-        });
-        expect(scopeSpy).toHaveBeenCalled();
         expect(comment.mode).toBe('edit');
-        expect(comment.body_text).toBe('Test');
       });
     });
 
@@ -187,7 +169,7 @@ define([
       });
     });
 
-    describe('.saveChanges', function () {
+    describe('.save', function () {
       var github, $rootScope;
 
       beforeEach(mocks.inject(function ($injector) {
@@ -201,28 +183,27 @@ define([
           user: commentData.editInformations.user,
           repo: commentData.editInformations.repo,
           id: commentData.id,
-          body: commentData.body_text,
+          body: commentData.edit_text,
           headers: {
-            Accept: 'application/vnd.github-commitcomment.html+json'
+            Accept: 'application/vnd.github-commitcomment.full+json'
           }
         };
         var githubSpy = spyOn(github.repos, 'updateCommitComment');
-        comment.saveChanges();
+        comment.save();
         expect(githubSpy.calls.argsFor(0)[0]).toEqual(expectedCallArgs);
       });
 
-      xit('Should set comment.mode to "edit" comment.content to resp.body and $rootScope.$apply', function () {
+      it('Should set comment.mode to "show" and call $rootScope.$apply', function () {
         var comment = new Comment(commentData);
-        var githubSpy = spyOn(github.repos, 'getCommitComment');
+        var githubSpy = spyOn(github.repos, 'updateCommitComment');
         var scopeSpy = spyOn($rootScope, '$apply');
-        comment.edit();
+        comment.save();
         var callback = githubSpy.calls.argsFor(0)[1];
         callback(null, {
           body: 'Test'
         });
         expect(scopeSpy).toHaveBeenCalled();
-        expect(comment.mode).toBe('edit');
-        expect(comment.content).toBe('Test');
+        expect(comment.mode).toBe('show');
       });
     });
 

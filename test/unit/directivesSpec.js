@@ -168,7 +168,7 @@ define(function (require) {
         it('Should render comment', function () {
           var element = $compile('<div class="lineComment panel panel-default" content="comment" mode="comment.mode" comment></div>')($scope);
           $scope.$digest();
-          expect(element.find('.panel-body').text()).toBe('Line comment test');
+          expect(element.find('.panel-body').text().trim()).toBe('Line comment test');
         });
 
         it('Should render edit and remove buttons', function () {
@@ -208,7 +208,7 @@ define(function (require) {
           expect(element.find('#submitLineComment').length).toBe(1);
           expect(element.find('#cancelComment').text()).toBe('Cancel');
           expect(element.find('#previewComment').text()).toBe('Preview');
-          expect(element.find('#submitLineComment').text()).toBe('Save');
+          expect(element.find('#submitLineComment').text()).toBe('Create');
         });
       });
 
@@ -223,7 +223,7 @@ define(function (require) {
             line: 39,
             path: 'app/templates/_filter.html',
             position: 6,
-            body_html: '<p>Test</p>'
+            preview_html: '<p>Test</p>'
           });
         }));
         it('Should render comment', function () {

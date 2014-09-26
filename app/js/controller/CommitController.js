@@ -52,7 +52,8 @@ define(['lodash', 'controllers'], function (_, controllers) {
             editInformations: {
               repo: $stateParams.repo,
               user: $stateParams.user
-            }
+            },
+            user: loggedInUser
           }));
         };
 
@@ -63,7 +64,7 @@ define(['lodash', 'controllers'], function (_, controllers) {
           });
         };
 
-        $scope.cancelAddComment = function () {
+        $scope.cancelCreateComment = function () {
           removeCommentFromScope();
         };
 

@@ -14,27 +14,27 @@ define(['angular', 'lodash'], function (angular, _) {
       Comment.prototype.preview = function () {
         var githubCallback = function (error, response) {
           if (!error) {
-            this.mode = 'preview';
             /*jshint camelcase:false*/
-            this.body_html = response.data;
+            this.preview_html = response.data;
+            this.mode = 'preview';
             $rootScope.$apply();
           }
         }.bind(this);
 
         github.markdown.render({
           /*jshint camelcase:false*/
-          text: this.body_text,
+          text: this.edit_text,
           mode: 'gfm'
         }, githubCallback);
       };
 
-      Comment.prototype.save = function () {
+      Comment.prototype.createComment = function () {
 
         var githubCallback = function (error, result) {
 
           if (!error) {
+            result.mode = 'show';
             _.extend(this, result);
-            this.mode = 'show';
             $rootScope.$apply();
           } else {
             console.log(error);
@@ -46,12 +46,12 @@ define(['angular', 'lodash'], function (angular, _) {
           repo: this.editInformations.repo,
           sha: this.sha,
           /*jshint camelcase:false*/
-          body: this.body_text,
+          body: this.edit_text,
           path: this.path,
           position: this.position,
           line: this.line,
           headers: {
-            'Accept': 'application/vnd.github-commitcomment.html+json'
+            'Accept': 'application/vnd.github-commitcomment.full+json'
           }
         }, githubCallback);
       };
@@ -73,30 +73,25 @@ define(['angular', 'lodash'], function (angular, _) {
       };
 
       Comment.prototype.edit = function () {
-        var githubCallback = function (error, res) {
-          if (!error) {
-            this.mode = 'edit';
-            _.extend(this, res);
-            $rootScope.$apply();
-          }
-        }.bind(this);
-        github.repos.getCommitComment({
-          user: this.editInformations.user,
-          repo: this.editInformations.repo,
-          id: this.id
-        }, githubCallback);
+        this.mode = 'edit';
+        /*jshint camelcase:false*/
+        this.edit_text = this.body_text;
+      };
+
+      Comment.prototype.continueEditing = function () {
+        this.mode = 'edit';
       };
 
       Comment.prototype.cancelEdit = function () {
         this.mode = 'show';
         /*jshint camelcase:false*/
-        this.content = this.body_html;
+        this.edit_text = '';
       };
 
-      Comment.prototype.saveChanges = function () {
+      Comment.prototype.save = function () {
         var githubCallback = function (error, res) {
           if (!error) {
-            this.mode = 'show';
+            res.mode = 'show';
             /*jshint camelcase:false*/
             _.extend(this, res);
             $rootScope.$apply();
@@ -107,11 +102,15 @@ define(['angular', 'lodash'], function (angular, _) {
           repo: this.editInformations.repo,
           id: this.id,
           /*jshint camelcase:false*/
-          body: this.body_text,
+          body: this.edit_text,
           headers: {
-            'Accept': 'application/vnd.github-commitcomment.html+json'
+            'Accept': 'application/vnd.github-commitcomment.full+json'
           }
         }, githubCallback);
+      };
+
+      Comment.prototype.shouldShowEditButton = function(){
+        return this.mode === 'show';
       };
 
       return Comment;

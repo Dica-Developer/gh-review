@@ -2,9 +2,7 @@ define(function (require) {
   'use strict';
 
   var angular = require('angular'),
-    existingCommentTemplate = require('text!../templates/existingComment.html'),
-    editCommentTemplate = require('text!../templates/editComment.html'),
-    previewCommentTemplate = require('text!../templates/previewComment.html'),
+    commentTemplate = require('text!../templates/comment.html'),
     commitHeaderTemplate = require('text!../templates/commitHeader.html'),
     commitHeaderCollabsibleTemplate = require('text!../templates/commitHeaderCollabsible.html');
 
@@ -111,21 +109,11 @@ define(function (require) {
     };
   });
 
-  directives.directive('comment', ['$compile',
-    function ($compile) {
+  directives.directive('comment', [
+    function () {
       return {
         restrict: 'A',
-        link: function ($scope, element, attr) {
-          $scope.$watch(attr.mode, function (mode) {
-            if (mode === 'edit') {
-              $compile(element.html(editCommentTemplate).contents())($scope);
-            } else if (mode === 'preview') {
-              $compile(element.html(previewCommentTemplate).contents())($scope);
-            } else {
-              $compile(element.html(existingCommentTemplate).contents())($scope);
-            }
-          });
-        }
+        template: commentTemplate
       };
     }
   ]);
