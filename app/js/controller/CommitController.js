@@ -62,6 +62,7 @@ define(['lodash', 'controllers'], function (_, controllers) {
             return comment.id === commentToRemove.id;
           });
         };
+
         $scope.cancelAddComment = function () {
           removeCommentFromScope();
         };
