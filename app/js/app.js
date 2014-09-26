@@ -48,8 +48,8 @@ define([
     'ngAnimate',
     'hljs'
   ])
-    .config(function(hotkeysProvider) {
+    .config(['hotkeysProvider', function(hotkeysProvider) {
       hotkeysProvider.includeCheatSheet = true;
-    });
+    }]);
 
 });
