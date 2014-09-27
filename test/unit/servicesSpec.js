@@ -668,4 +668,34 @@ define([
       });
     });
   });
+
+  describe('.isCommentNotApprovalComment', function () {
+    var commentCollector, isCommentNotApprovalComment;
+
+    beforeEach(mocks.inject(function ($injector) {
+      commentCollector = $injector.get('commentCollector');
+      isCommentNotApprovalComment = $injector.get('isCommentNotApprovalComment');
+    }));
+
+    it('Should return false', function () {
+      spyOn(commentCollector, 'getApproveComments').and.returnValue({
+        commentIsApprovalComment: true
+      });
+      expect(isCommentNotApprovalComment('commentIsApprovalComment')).toBe(false);
+    });
+
+    it('Should return true', function () {
+      spyOn(commentCollector, 'getApproveComments').and.returnValue({
+        commentIsNotApprovalComment: false
+      });
+      expect(isCommentNotApprovalComment('commentIsNotApprovalComment')).toBe(true);
+    });
+
+    it('Should return true', function () {
+      spyOn(commentCollector, 'getApproveComments').and.returnValue({
+        commentIsApprovalComment: true
+      });
+      expect(isCommentNotApprovalComment('commentIsNotApprovalComment')).toBe(true);
+    });
+  });
 });
