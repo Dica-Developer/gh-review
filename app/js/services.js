@@ -27,7 +27,7 @@ define(['angular', 'githubjs', 'moment', 'lodash', 'options'], function (angular
     function (localStorageService) {
       if (!github) {
         var message = {
-          type: 'token',
+          type: 'oauth',
           token: localStorageService.get('accessToken')
         };
         github = new GitHub({});
