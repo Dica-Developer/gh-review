@@ -164,7 +164,7 @@ table {
       width: auto;
       border-right: 1px solid @gray-lighter;
       padding: 0 3px;
-      &:not(.lineComment) {
+      &:not(.lineComment),  &:not(button){
         font-family: SourceCodePro;
       }
       &.lineNr {
@@ -194,8 +194,10 @@ table {
         box-shadow: 0px 0px 20px 0px #ddd;
         max-width: @container-desktop;
         min-width: @container-desktop;
-        margin: 10px;
 
+        textarea {
+          margin-bottom: 10px;
+        }
       }
     }
 
