@@ -25,6 +25,7 @@
     req.open('GET', url, true);
     req.responseType = 'json';
     req.setRequestHeader('authorization', 'token ' + _accessToken);
+    req.setRequestHeader('Accept', 'application/vnd.github-commitcomment.full+json');
     req.addEventListener('load', successCallback, false);
     req.addEventListener('error', errorCallback, false);
     req.addEventListener('abort', errorCallback, false);
