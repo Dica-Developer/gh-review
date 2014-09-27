@@ -91,12 +91,10 @@
 
 <div class="row" ng-cloak>
     <div class="col-sm-12">
-        <div class="pull-right" ng-if="!loggedInUserIsApprover">
-            <button type="button" class="btn btn-success" ng-click="approveCommit()">Approve Commit</button>
-        </div>
-        {{approvers[loggedInUser.login]}}
-        <div class="pull-right" ng-if="loggedInUserIsApprover">
-            <button type="button" class="btn btn-danger" ng-click="unapproveCommit()">Unapprove Commit</button>
+
+        <div class="pull-right">
+            <button ng-if="!loggedInUserIsApprover" type="button" class="btn btn-success" ng-click="approveCommit()">Approve Commit</button>
+            <button ng-if="loggedInUserIsApprover" type="button" class="btn btn-danger" ng-click="unapproveCommit()">Unapprove Commit</button>
         </div>
     </div>
 </div>
