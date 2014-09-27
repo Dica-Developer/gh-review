@@ -313,7 +313,7 @@ define([
       });
 
       it('Should humanReadableDate.format should return a string', function () {
-        expect(humanReadableDate.format(date)).toContain('Mon, Dec 10 1979 12:00 AM');
+        expect(humanReadableDate.format(date)).toBe('Mon, Dec 10 1979 12:00 AM');
       });
 
       it('Should humanReadableDate.format should return null if no date is given', function () {
@@ -321,15 +321,15 @@ define([
       });
 
       it('Should humanReadableDate.customFormat should return a date in default format if pattern is null', function () {
-        expect(humanReadableDate.customFormat(date, null)).toContain('1979-12-10T00:00:00+01:00');
+        expect(humanReadableDate.customFormat(date, null)).toContain('1979-12-10T00:00:00');
       });
 
       it('Should humanReadableDate.customFormat should return only the year if pattern is "YYYY"', function () {
-        expect(humanReadableDate.customFormat(date, 'YYYY')).toContain('1979');
+        expect(humanReadableDate.customFormat(date, 'YYYY')).toBe('1979');
       });
 
       it('Should humanReadableDate.customFormat should return only "1979 jub jub 00" if pattern is "YYYY jub jub ss"', function () {
-        expect(humanReadableDate.customFormat(date, 'YYYY jub jub ss')).toContain('1979 jub jub 00');
+        expect(humanReadableDate.customFormat(date, 'YYYY jub jub ss')).toBe('1979 jub jub 00');
       });
 
       it('Should humanReadableDate.customFormat should return null if no date is given', function () {
