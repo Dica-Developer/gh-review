@@ -43,7 +43,7 @@ define(['angular', 'githubjs', 'moment', 'lodash', 'options'], function (angular
       return {
         get: function () {
           var defer = $q.defer();
-          if(userData){
+          if (userData) {
             defer.resolve(userData);
           } else {
             github.user.get({}, function (error, res) {
