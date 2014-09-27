@@ -38,7 +38,7 @@ define(['lodash', 'controllers'], function (_, controllers) {
         $scope.loggedInUserIsApprover = _.contains(comments.approvers, loggedInUser.login);
         $scope.isCommentNotApprovalComment = isCommentNotApprovalComment;
 
-        $scope.addComment = function ($event, line /*, file, commit*/ ) {
+        $scope.addComment = function (line) {
           removeCommentFromScope();
           line.comments = line.comments || [];
           lineWithNewComment = line.comments;
