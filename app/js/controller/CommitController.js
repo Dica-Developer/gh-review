@@ -57,11 +57,32 @@ define(['lodash', 'controllers'], function (_, controllers) {
           }));
         };
 
+        $scope.addCommitComment = function () {
+          $scope.comments.commitComments.push(new Comment({
+            mode: 'edit',
+            position: null,
+            line: null,
+            sha: $stateParams.sha,
+            path: null,
+            editInformations: {
+              repo: $stateParams.repo,
+              user: $stateParams.user
+            },
+            user: loggedInUser
+          }));
+        };
+
         $scope.removeComment = function (line, commentToRemove) {
           commentToRemove.remove();
-          _.remove(line.comments, function (comment) {
-            return comment.id === commentToRemove.id;
-          });
+          if(line){
+            _.remove(line.comments, function (comment) {
+              return comment.id === commentToRemove.id;
+            });
+          } else {
+            _.remove($scope.comments.commitComments, function (comment) {
+              return comment.id === commentToRemove.id;
+            });
+          }
         };
 
         $scope.cancelCreateComment = function () {
