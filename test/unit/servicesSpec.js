@@ -171,6 +171,45 @@ define([
           $rootScope.$apply();
         });
       });
+
+      describe('.byPath', function () {
+        var commits, $rootScope,
+          githubParams = {
+            user: 'testUser',
+            repo: 'testRepo',
+            path: '/',
+            sha: 'master'
+          };
+
+        beforeEach(mocks.inject(function ($injector) {
+          commits = $injector.get('commits');
+          $rootScope = $injector.get('$rootScope');
+        }));
+
+        it('Should be defined', function () {
+          expect(commits.byPath).toBeDefined();
+        });
+
+        xit('Should return promise and resolve if response has no errors', function (done) {
+          commits.byPath(githubParams)
+            .then(function (data) {
+              expect(data).toBeDefined();
+              done();
+            });
+
+          $rootScope.$apply();
+        });
+
+        xit('Should return promise and reject if response has errors', function (done) {
+          commits.byPath(githubParams)
+            .then(null, function (error) {
+              expect(error.name).toBe('TestError');
+              done();
+            });
+
+          $rootScope.$apply();
+        });
+      });
     });
 
     describe('.getAllFilter', function () {
@@ -262,6 +301,7 @@ define([
         expect(humanReadableDate).toBeDefined();
         expect(humanReadableDate.fromNow).toBeDefined();
         expect(humanReadableDate.format).toBeDefined();
+        expect(humanReadableDate.customFormat).toBeDefined();
       });
 
       it('Should humanReadableDate.fromNow should return an "ago" string', function () {
@@ -278,6 +318,22 @@ define([
 
       it('Should humanReadableDate.format should return null if no date is given', function () {
         expect(humanReadableDate.format()).toBeNull();
+      });
+
+      it('Should humanReadableDate.customFormat should return a date in default format if pattern is null', function () {
+        expect(humanReadableDate.customFormat(date, null)).toContain('1979-12-10T00:00:00+01:00');
+      });
+
+      it('Should humanReadableDate.customFormat should return only the year if pattern is "YYYY"', function () {
+        expect(humanReadableDate.customFormat(date, 'YYYY')).toContain('1979');
+      });
+
+      it('Should humanReadableDate.customFormat should return only "1979 jub jub 00" if pattern is "YYYY jub jub ss"', function () {
+        expect(humanReadableDate.customFormat(date, 'YYYY jub jub ss')).toContain('1979 jub jub 00');
+      });
+
+      it('Should humanReadableDate.customFormat should return null if no date is given', function () {
+        expect(humanReadableDate.customFormat()).toBeNull();
       });
     });
 
