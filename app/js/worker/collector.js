@@ -47,15 +47,15 @@
       comments.forEach(function (comment, idx) {
         var commentBody = comment.body;
         if (commentBody) {
-          if (commentBody.indexOf('```json') > -1) {
-            if(commentBody.indexOf('approved with ') > -1){
-              commentBody = commentBody.substring(7, commentBody.indexOf('approved with ') - 4);
-            } else {
-              commentBody = commentBody.substring(7, (commentBody.length - 3));
-            }
-            commentBody = JSON.parse(commentBody);
-            if (true === commentBody.approved) {
-              approveCommit(comment, idx);
+          var startIndex = commentBody.indexOf('```json');
+          if (startIndex > -1) {
+            var endIndex = commentBody.lastIndexOf('```');
+            if (endIndex > -1) {
+              commentBody = commentBody.substring(7, endIndex);
+              commentBody = JSON.parse(commentBody);
+              if (true === commentBody.approved) {
+                approveCommit(comment, idx);
+              }
             }
           }
         }
