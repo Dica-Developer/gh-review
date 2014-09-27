@@ -200,7 +200,18 @@ define(function (require) {
           expect(element.find('textarea').length).toBe(1);
         });
 
-        it('Should render cancel, preview and save buttons', function () {
+        it('Should render cancel button only if comment as no content', function () {
+          var element = $compile('<div class="lineComment panel panel-default" content="comment" mode="comment.mode" comment></div>')($scope);
+          $scope.$digest();
+          expect(element.find('#cancelComment').length).toBe(1);
+          expect(element.find('#previewComment').length).toBe(0);
+          expect(element.find('#submitLineComment').length).toBe(0);
+          expect(element.find('#cancelComment').text()).toBe('Cancel');
+        });
+
+        it('Should render all buttons if comment as content', function () {
+          /*jshint camelcase:false*/
+          $scope.comment.edit_text = 'Comment content';
           var element = $compile('<div class="lineComment panel panel-default" content="comment" mode="comment.mode" comment></div>')($scope);
           $scope.$digest();
           expect(element.find('#cancelComment').length).toBe(1);
