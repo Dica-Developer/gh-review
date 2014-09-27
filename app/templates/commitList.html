@@ -2,7 +2,7 @@
 
 <div class="col-lg-12">
     <div class="panel panel-default" ng-repeat="commits in sortedGroupedCommits">
-        <div class="panel-heading" formatted-date format="YYYY-MM-DD" date="commits[0].commit.committer.date"></div>
+        <div class="panel-heading" formatted-date format="LL" date="commits[0].commit.committer.date"></div>
         <ul id="commitList" class="list-group">
             <a ng-class="{'selected-commit': (selectedCommit === commit.sha)}" ng-repeat="commit in commits" ui-sref="commitBySha({sha: commit.sha, user: user, repo: repo})"
                class="list-group-item" ng-click="loader = commit.sha">
