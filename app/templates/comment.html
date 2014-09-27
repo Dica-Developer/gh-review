@@ -27,13 +27,14 @@
     <button ng-if="comment.mode === 'preview'" type="button" id="continueEditComment" class="btn btn-default btn-sm" ng-click="comment.mode = 'edit'">Edit</button>
     <button ng-if="comment.mode !== 'show'" type="button" id="submitLineComment" class="btn btn-primary btn-sm" ng-click="comment.save()">Save</button>
 </div>
+
 <!--new comment-->
 <div ng-if="!comment.id" class="panel-body" >
     <div ng-if="comment.mode !== 'edit'" ng-bind-html="comment.preview_html"></div>
     <textarea ng-if="comment.mode === 'edit'" class="form-control" ng-model="comment.edit_text"></textarea>
 
     <button ng-if="comment.mode !== 'show'" type="button" id="cancelComment" class="btn btn-default btn-sm" ng-click="cancelCreateComment()">Cancel</button>
-    <button ng-if="comment.mode === 'edit'" type="button" id="previewComment" class="btn btn-default btn-sm" ng-click="comment.preview()">Preview</button>
+    <button ng-if="comment.mode === 'edit' && comment.edit_text" type="button" id="previewComment" class="btn btn-default btn-sm" ng-click="comment.preview()">Preview</button>
     <button ng-if="comment.mode === 'preview'" type="button" id="continueEditComment" class="btn btn-default btn-sm" ng-click="comment.mode = 'edit'">Edit</button>
-    <button ng-if="comment.mode !== 'show'" type="button" id="submitLineComment" class="btn btn-primary btn-sm" ng-click="comment.createComment()">Create</button>
+    <button ng-if="comment.mode !== 'show' && comment.edit_text" type="button" id="submitLineComment" class="btn btn-primary btn-sm" ng-click="comment.createComment()">Create</button>
 </div>
