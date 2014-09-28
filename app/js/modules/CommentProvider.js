@@ -87,8 +87,41 @@ define(['angular', 'lodash'], function (angular, _) {
         return defer.promise;
       };
 
+      function getCommentsForCommitWithoutApprovers (stateParams) {
+        var defer = $q.defer();
+        if (authenticated.get()) {
+          github.repos.getCommitComments({
+            user: stateParams.user,
+            repo: stateParams.repo,
+            sha: stateParams.sha,
+            headers: {
+              'Accept': 'application/vnd.github-commitcomment.full+json'
+            }
+          }, function (error, res) {
+            if (error) {
+              defer.reject(error);
+            } else {
+              /*istanbul ignore next*/
+              if (res.meta) {
+                delete res.meta;
+              }
+              if(res.length){
+                var comments = splitInLineAndCommitComments(res, stateParams.user, stateParams.repo);
+                defer.resolve(comments);
+              } else {
+                defer.resolve(false);
+              }
+            }
+          });
+        } else {
+          defer.reject(new Error('Not authenticated'));
+        }
+        return defer.promise;
+      }
+
       return {
-        getCommentsForCommit: getCommentsForCommit
+        getCommentsForCommit: getCommentsForCommit,
+        getCommentsForCommitWithoutApprovers: getCommentsForCommitWithoutApprovers
       };
     }
   ]);
