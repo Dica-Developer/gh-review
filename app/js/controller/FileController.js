@@ -8,7 +8,8 @@ define(['lodash', 'controllers'], function (_, controllers) {
       'fileContent',
       'commits',
       'Chunk',
-      function ($scope, $q, $stateParams, fileContent, commits, Chunk) {
+      'commentProvider',
+      function ($scope, $q, $stateParams, fileContent, commits, Chunk, commentProvider) {
 
         var filePath = $stateParams.path,
           filePathSplit = filePath.split('.'),
@@ -17,8 +18,10 @@ define(['lodash', 'controllers'], function (_, controllers) {
           fileContentSplit = _.str.lines(fileContent),
           splicedFileContent = [],
           commitLength = 0,
-          alreadyUsedColors = [];
+          alreadyUsedColors = [],
+          comments = {};
 
+        $scope.comments = {};
         $scope.languages = [{
           display: 'JavaScript',
           value: 'js',
@@ -80,6 +83,20 @@ define(['lodash', 'controllers'], function (_, controllers) {
           });
           $scope.splicedFileContent = splicedFileContent;
         };
+
+        function getCommentForCommit(propertiesNeededForCommitView) {
+          commentProvider.getCommentsForCommitWithoutApprovers(propertiesNeededForCommitView)
+            .then(function (res) {
+              if(res && res.lineComments.length > 0){
+                res.lineComments.forEach(function(comment){
+                  $scope.comments[comment.line] = comment;
+                });
+              }
+            }, function(err){
+              //TODO
+              console.log(err);
+            });
+        }
 
         var path, //TODO this.model.path
           commitHistory = [],
@@ -166,12 +183,17 @@ define(['lodash', 'controllers'], function (_, controllers) {
                         if (_.isUndefined(colors[commit.commit.sha])) {
                           colors[commit.commit.sha] = randomColor();
                         }
+
                         splicedFileContent[lineNumber].color = colors[commit.commit.sha];
                         var propertiesNeededForCommitView = {
                           user: $stateParams.user,
                           repo: $stateParams.repo,
                           sha: commit.commit.sha
                         };
+                        if (_.isUndefined(comments[commit.commit.sha])) {
+                          comments[commit.commit.sha] = true;
+                          getCommentForCommit(propertiesNeededForCommitView);
+                        }
                         linkString = _.escape(commit.commit.sha.substr(0, 8));
                         commitTitle = 'commited at ' + commit.commit.commit.author.date + ' by ' + commit.commit.commit.author.name + '(' + commit.commit.commit.author.email + ')';
                         splicedFileContent[lineNumber].commentable = true;
