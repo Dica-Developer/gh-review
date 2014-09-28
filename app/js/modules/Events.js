@@ -23,7 +23,7 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
         if (!err) {
           if (res.meta) {
             if (!_.isUndefined(res.meta['x-poll-interval'])) {
-              _this.maxXPollInterval = Math.max(_this.maxXPollInterval, parseInt(res.meta['x-poll-interval'], 10));
+              _this.maxPollInterval = Math.max(_this.maxPollInterval, parseInt(res.meta['x-poll-interval'], 10));
             }
             if (!_.isUndefined(res.meta.etag)) {
               _this.urlEtags[url] = res.meta.etag;
@@ -114,7 +114,7 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
     this.github = github;
     this.filter = filter;
     this.localStorageService = localStorageService;
-    this.maxXPollInterval = 60;
+    this.maxPollInterval = 60;
     this.eventsByUrl = {};
     this.fetchedUrls = [];
     this.githubUserData = githubUserData;
@@ -166,7 +166,7 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
         _this.localStorageService.set('events', _this.allEvents);
         _this.localStorageService.set('eventsUrlEtags', _this.urlEtags);
         _this.fetchedUrls = [];
-        _.delay(_this.fetch.bind(_this), _this.maxXPollInterval * 1000);
+        _.delay(_this.fetch.bind(_this), _this.maxPollInterval * 1000);
       });
   };
 
