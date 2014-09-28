@@ -22,6 +22,8 @@ define(['lodash', 'controllers'], function (_, controllers) {
           comments = {};
 
         $scope.comments = {};
+        $scope.showComments = false;
+
         $scope.languages = [{
           display: 'JavaScript',
           value: 'js',
