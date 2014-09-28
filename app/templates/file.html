@@ -11,6 +11,9 @@
 <div class="form-group" id="timeChartSlidingSettings">
     <select id="suggestedLanguage" class="form-control input-sm" ng-options="language.display for language in languages" ng-model="suggestedLanguage" ></select>
 </div>
+<div class="form-group" id="timeChartSlidingSettings">
+    <input type="checkbox" id="showComments" class="form-control input-sm" ng-model="showComments"></input> Show comments
+</div>
 <div class="row">
     <div class="col-sm-12">
         <!--<div class="uncomplete-diff-warning" ng-if="showUncompleteDiffWarning">Diff is very big! Diff is not complete!</div>-->
@@ -26,7 +29,7 @@
                         </div>
                     </div>
 
-                    <div class="comments-wrapper" ng-if="comments[line.lineIndex +'-'+ line.sha]">
+                    <div class="comments-wrapper" ng-if="comments[line.lineIndex +'-'+ line.sha]" ng-show="showComments">
                         <div class="comments div-table-row"  ng-repeat="comment in comments[line.lineIndex +'-'+ line.sha]">
                             <div class="div-table-cell"></div>
                             <div class="div-table-cell lineNr"></div>
