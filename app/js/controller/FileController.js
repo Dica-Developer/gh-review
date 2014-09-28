@@ -89,7 +89,11 @@ define(['lodash', 'controllers'], function (_, controllers) {
             .then(function (res) {
               if(res && res.lineComments.length > 0){
                 res.lineComments.forEach(function(comment){
-                  $scope.comments[comment.line] = comment;
+                  /*jshint camelcase:false*/
+                  if(!$scope.comments[comment.line +'-'+ comment.commit_id]) {
+                    $scope.comments[comment.line +'-'+ comment.commit_id] = [];
+                  }
+                  $scope.comments[comment.line +'-'+ comment.commit_id].push(comment);
                 });
               }
             }, function(err){

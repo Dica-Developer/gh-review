@@ -25,12 +25,13 @@
                         <div class="div-table-cell" hljs source="line.content" language="{{suggestedLanguage.hljs}}">
                         </div>
                     </div>
-                    <div class="comments-wrapper" ng-if="comments[line.lineIndex]">
-                        <div class="comments div-table-row">
+
+                    <div class="comments-wrapper" ng-if="comments[line.lineIndex +'-'+ line.sha]">
+                        <div class="comments div-table-row"  ng-repeat="comment in comments[line.lineIndex +'-'+ line.sha]">
                             <div class="div-table-cell"></div>
                             <div class="div-table-cell lineNr"></div>
                             <div class="div-table-cell lineNr"></div>
-                            <div class="lineComment panel panel-default" content="comments[line.lineIndex]" comment></div>
+                            <div class="lineComment panel panel-default" content="comment" comment></div>
                         </div>
                     </div>
                 </div>
