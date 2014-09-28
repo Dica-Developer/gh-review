@@ -810,24 +810,40 @@ define([
           body: 'bla'
         });
         expect(commentCollector).toHaveBeenCalledWith('sha', 'commentId');
-        done();
       }).catch(function (e) {
         expect(true).toBe(e);
-        done();
-      });
+      }).finally(done);
       $rootScope.$apply();
     });
 
-    it('fails because not authenticated', function (done) {
+    it('fails because not authenticated and error should be returned', function (done) {
       spyOn(authenticated, 'get').and.returnValue(false);
       approveCommit('sha', 'user', 'repo').then(function () {
         expect(true).toBe(false);
-        done();
       }).catch(function (e) {
         expect(e.name).toBe('Error');
         expect(e.message).toBe('Not authenticated');
-        done();
+      }).finally(done);
+      $rootScope.$apply();
+    });
+
+    it('fails because retrieval of github user data fails and error should be returned', function (done) {
+      spyOn(authenticated, 'get').and.returnValue(true);
+      spyOn(githubUserData, 'get').and.returnValue({
+        then: function () {
+          return {
+            catch: function (f) {
+              f.call(null, new Error('Could not retrieve user data.'));
+            }
+          };
+        }
       });
+      approveCommit('sha', 'user', 'repo').then(function () {
+        expect(true).toBe(false);
+      }).catch(function (e) {
+        expect(e.name).toBe('Error');
+        expect(e.message).toBe('Could not retrieve user data.');
+      }).finally(done);
       $rootScope.$apply();
     });
   });
