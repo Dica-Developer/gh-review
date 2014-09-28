@@ -113,7 +113,10 @@ define(function (require) {
     function () {
       return {
         restrict: 'A',
-        template: commentTemplate
+        template: commentTemplate,
+        scope: {
+          comment: '=content'
+        }
       };
     }
   ]);
