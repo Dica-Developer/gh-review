@@ -763,4 +763,72 @@ define([
       })).toBe(true);
     });
   });
+
+  describe('.approveCommit', function () {
+    var approveCommit, authenticated, github, githubUserData, $rootScope, commentCollector;
+
+    beforeEach(mocks.inject(function ($injector) {
+      approveCommit = $injector.get('approveCommit');
+      authenticated = $injector.get('authenticated');
+      githubUserData = $injector.get('githubUserData');
+      commentCollector = $injector.get('commentCollector');
+      github = $injector.get('github');
+      $rootScope = $injector.get('$rootScope');
+    }));
+
+    xit('successfully', function (done) {
+      spyOn(authenticated, 'get').and.returnValue(true);
+      spyOn(githubUserData, 'get').and.returnValue({
+        then: function (f) {
+          var result = {
+            catch: function () {
+              console.log('This catch is called!!!');
+            }
+          };
+          try {
+            f.call(null, {
+              login: 'ms'
+            });
+          } catch (e) {
+            result = {
+              catch: function (f) {
+                f.call(null, e);
+              }
+            };
+          }
+          return result;
+        }
+      });
+      spyOn(github.repos, 'createCommitComment');
+      approveCommit('sha', 'user', 'repo').then(function () {
+        spyOn(github.repos, 'createCommitComment').toHaveBeenCalledWith({
+          user: 'user',
+          repo: 'repo',
+          sha: 'sha',
+          /*jshint camelcase:false*/
+          commit_id: 'sha',
+          body: 'bla'
+        });
+        expect(commentCollector).toHaveBeenCalledWith('sha', 'commentId');
+        done();
+      }).catch(function (e) {
+        expect(true).toBe(e);
+        done();
+      });
+      $rootScope.$apply();
+    });
+
+    it('fails because not authenticated', function (done) {
+      spyOn(authenticated, 'get').and.returnValue(false);
+      approveCommit('sha', 'user', 'repo').then(function () {
+        expect(true).toBe(false);
+        done();
+      }).catch(function (e) {
+        expect(e.name).toBe('Error');
+        expect(e.message).toBe('Not authenticated');
+        done();
+      });
+      $rootScope.$apply();
+    });
+  });
 });

@@ -339,6 +339,8 @@ define(['angular', 'githubjs', 'moment', 'lodash', 'options'], function (angular
                   defer.reject(error);
                 }
               });
+            }).catch(function (error) {
+              defer.reject(error);
             });
         } else {
           defer.reject(new Error('Not authenticated'));
@@ -348,11 +350,10 @@ define(['angular', 'githubjs', 'moment', 'lodash', 'options'], function (angular
     }
   ]);
 
-  services.factory('unapproveCommit', ['$q', 'github', 'version', 'authenticated', 'githubUserData', 'commentCollector',
-    function ($q, github, version, authenticated, githubUserData, commentCollector) {
+  services.factory('unapproveCommit', ['$q', 'github', 'version', 'authenticated', 'commentCollector',
+    function ($q, github, version, authenticated, commentCollector) {
       return function (commentId, sha, user, repo) {
         var defer = $q.defer();
-
         if (authenticated.get()) {
           github.repos.deleteCommitComment({
             user: user,
