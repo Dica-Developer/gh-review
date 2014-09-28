@@ -229,7 +229,7 @@ define(['angular', 'githubjs', 'moment', 'lodash', 'options'], function (angular
   services.factory('getFileContent', ['$q', 'github',
     function ($q, github) {
       return function (options) {
-        if (_.isUndefined(options.ref)) {
+        if (_.isUndefined(options.ref) || _.isNull(options.ref)) {
           delete options.ref;
         } else {
           delete options.sha;
