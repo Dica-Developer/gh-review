@@ -109,10 +109,12 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
         } else {
           this.options.authors.push(author);
         }
+        this.options.meta.isSaved = false;
       };
 
       Filter.prototype.removeAuthor = function (author) {
         this.options.authors.pop(author);
+        this.options.meta.isSaved = false;
       };
 
       Filter.prototype.getAuthors = function () {
@@ -121,6 +123,7 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
 
       Filter.prototype.setContributor = function (contributor) {
         this.options.contributor = contributor;
+        this.options.meta.isSaved = false;
       };
 
       Filter.prototype.setBranch = function (branch) {
