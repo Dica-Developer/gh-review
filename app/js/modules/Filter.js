@@ -104,7 +104,11 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
       };
 
       Filter.prototype.addAuthor = function (author) {
-        this.options.authors.push(author);
+        if(_.isArray(author)){
+          this.options.authors = author;
+        } else {
+          this.options.authors.push(author);
+        }
       };
 
       Filter.prototype.removeAuthor = function (author) {
