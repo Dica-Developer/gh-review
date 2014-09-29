@@ -12,6 +12,7 @@ define([
     'sha': 'master',
     'repo': 'gh-review',
     'user': 'Dica-Developer',
+    'authors': ['Me', 'You'],
     'since': {
       'pattern': 'weeks',
       'amount': '20'
@@ -117,12 +118,19 @@ define([
         expect(filter.options.user).toBe('TestOwner');
       });
 
-      it('addAuthor/removeAuthor should add/remove given string to/from authors list', function () {
+      it('addAuthor/removeAuthor should add/remove given string/array to/from authors list', function () {
         expect(filter.hasAuthor('TestAuthor')).toBe(false);
         filter.addAuthor('TestAuthor');
         expect(filter.hasAuthor('TestAuthor')).toBe(true);
         filter.removeAuthor('TestAuthor');
         expect(filter.hasAuthor('TestAuthor')).toBe(false);
+        filter.addAuthor(['TestAuthor', 'TestAuthor2']);
+        expect(filter.hasAuthor('TestAuthor')).toBe(true);
+        expect(filter.hasAuthor('TestAuthor2')).toBe(true);
+        filter.removeAuthor('TestAuthor');
+        filter.removeAuthor('TestAuthor2');
+        expect(filter.hasAuthor('TestAuthor')).toBe(false);
+        expect(filter.hasAuthor('TestAuthor2')).toBe(false);
       });
 
       it('removeAuthor should not fail if given string did not exist in authors list', function () {
@@ -245,7 +253,7 @@ define([
         filter.addAuthor('testAuthor1');
         filter.addAuthor('testAuthor');
         filter.addAuthor('testAuthor3');
-        expect(filter.getAuthors()).toEqual(['testAuthor', 'testAuthor1', 'testAuthor', 'testAuthor3']);
+        expect(filter.getAuthors()).toEqual(['Me', 'You', 'testAuthor', 'testAuthor1', 'testAuthor', 'testAuthor3']);
       });
     });
 
@@ -271,8 +279,15 @@ define([
         expect(lSS.set.calls.argsFor(0)).toEqual(['filter', 'filter1,filter2,filterId']);
       });
 
-      it('Should call localStorageService to add filter to localStorage', function () {
+      it('Should call localStorageService.set  to add filter to localStorage', function () {
         spyOn(lSS, 'get').and.returnValue('filter1,filter2');
+        spyOn(lSS, 'set');
+        filter.save();
+        expect(lSS.set.calls.argsFor(1)).toEqual(['filter-filterId', JSON.stringify(filter.options)]);
+      });
+
+      it('Should call localStorageService.set to add filter to localStorage even it is the first filter', function () {
+        spyOn(lSS, 'get').and.returnValue(null);
         spyOn(lSS, 'set');
         filter.save();
         expect(lSS.set.calls.argsFor(1)).toEqual(['filter-filterId', JSON.stringify(filter.options)]);
@@ -287,16 +302,20 @@ define([
     });
 
     describe('core functions', function () {
-      var filterProtos, filter, q;
-      beforeEach(mocks.inject(['$q', 'Filter',
-        function ($q, Filter) {
-          window.localStorage.setItem('ls.filter-filterId', JSON.stringify(filterOptions));
-          window.localStorage.setItem('ls.accessToken', 'abc');
-          filter = new Filter('filterId');
-          filterProtos = Filter.prototype;
-          q = $q;
-        }
-      ]));
+      var filterProtos, filter, $q, github, $rootScope;
+      beforeEach(mocks.inject(function ($injector) {
+        window.localStorage.setItem('ls.filter-filterId', JSON.stringify(filterOptions));
+        window.localStorage.setItem('ls.accessToken', 'abc');
+
+        $q = $injector.get('$q');
+        github = $injector.get('github');
+        $rootScope = $injector.get('$rootScope');
+
+        var Filter = $injector.get('Filter');
+        filterProtos = Filter.prototype;
+        filter = new Filter('filterId');
+
+      }));
 
       afterEach(function () {
         window.localStorage.removeItem('ls.filter-filterId');
@@ -384,6 +403,66 @@ define([
         expect(githubOptions.repo).toEqual('gh-review');
         expect(githubOptions.user).toEqual('Dica-Developer');
         expect(githubOptions.sha).toEqual('master');
+
+        filter.addAuthor(['She']);
+        githubOptions = filter.prepareGithubApiCallOptions();
+        expect(githubOptions.repo).toEqual('gh-review');
+        expect(githubOptions.user).toEqual('Dica-Developer');
+        expect(githubOptions.sha).toEqual('master');
+        expect(githubOptions.author).toEqual('She');
+      });
+
+      it('#Filter.isSaved should return correct value', function () {
+        expect(filter.isSaved()).toBe(true);
+        filter.addAuthor('TestAuthor');
+        expect(filter.isSaved()).toBe(false);
+      });
+
+      it('#Filter.getContributorList should call github.repos.getContributors with correct values', function () {
+        var githubSpy = spyOn(github.repos, 'getContributors');
+        filter.getContributorList();
+        expect(githubSpy).toHaveBeenCalled();
+        expect(githubSpy.calls.argsFor(0)[0]).toEqual({ user : 'Dica-Developer', repo : 'gh-review' });
+      });
+
+      it('#Filter.getContributorList should promise.resolve if response', function (done) {
+        spyOn(github.repos, 'getContributors');
+        filter.getContributorList()
+          .then(function (data) {
+            expect(data).toBeDefined();
+            expect(data.result).toBe('testResult');
+            done();
+          });
+        var callback = github.repos.getContributors.calls.argsFor(0)[1];
+        callback(null, {
+          result: 'testResult'
+        });
+        $rootScope.$apply();
+      });
+
+      it('#Filter.getContributorList should promise.reject if response error', function (done) {
+        spyOn(github.repos, 'getContributors');
+        filter.getContributorList()
+          .then(null, function () {
+            done();
+          });
+        var callback = github.repos.getContributors.calls.argsFor(0)[1];
+        callback({});
+        $rootScope.$apply();
+      });
+
+      it('#Filter.reset should set all options to default and call Filter.init', function () {
+        var initSpy = spyOn(filter, 'init');
+        expect(filter.options.repo).toEqual('gh-review');
+        expect(filter.options.user).toEqual('Dica-Developer');
+        expect(filter.options.sha).toEqual('master');
+        expect(filter.isSaved()).toBe(true);
+        filter.reset();
+        expect(filter.options.repo).toBeNull();
+        expect(filter.options.user).toBeNull();
+        expect(filter.options.sha).toEqual('master');
+        expect(filter.isSaved()).toBe(false);
+        expect(initSpy).toHaveBeenCalled();
       });
     });
   });
