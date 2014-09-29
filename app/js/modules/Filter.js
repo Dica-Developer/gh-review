@@ -187,6 +187,10 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
         return this.options.meta.customFilter.state;
       };
 
+      Filter.prototype.isSaved = function () {
+        return this.options.meta.isSaved;
+      };
+
       Filter.prototype._needsPostFiltering = function () {
         return (_.size(this.options.meta.customFilter) > 0);
       };
