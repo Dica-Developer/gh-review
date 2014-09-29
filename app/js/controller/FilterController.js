@@ -101,7 +101,6 @@ define(['angular', 'controllers', 'lodash'], function (angular, controllers, _) 
           if(newSelectedRepo){
             filter.setRepo(newSelectedRepo.name);
             filter.setOwner(newSelectedRepo.owner.login);
-            filter.setOwner(newSelectedRepo.owner.login);
             $scope.branchSelection = [];
             $scope.selectedBranch = null;
             $scope.fetchingBranches = true;
