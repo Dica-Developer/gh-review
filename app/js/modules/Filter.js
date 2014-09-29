@@ -215,6 +215,24 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
         return (_.size(this.options.meta.customFilter) > 0);
       };
 
+      Filter.prototype.getContributorList= function () {
+        var defer = $q.defer();
+        github.repos.getContributors(
+          {
+            user: this.getOwner(),
+            repo: this.getRepo()
+          },
+          function(err, res){
+            if(!err){
+              defer.resolve(res);
+            } else {
+              defer.reject();
+            }
+          }
+        );
+        return defer.promise;
+      };
+
       Filter.prototype.getNextPage = function () {
         if (this._needsPostFiltering()) {
           return this.getCommits(this.firstResult + this.maxResults, this.maxResults);
