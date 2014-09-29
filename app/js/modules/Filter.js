@@ -191,6 +191,26 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
         return this.options.meta.isSaved;
       };
 
+      Filter.prototype.reset = function () {
+        this.options = {
+          repo: null,
+          user: null,
+          sha: 'master',
+          since: {},
+          until: {},
+          path: null,
+          authors: [],
+          contributor: null,
+          meta: {
+            isSaved: false,
+            lastEdited: null,
+            customFilter: {},
+            id: null
+          }
+        };
+        this.init();
+      };
+
       Filter.prototype._needsPostFiltering = function () {
         return (_.size(this.options.meta.customFilter) > 0);
       };
