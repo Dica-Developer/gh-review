@@ -4,6 +4,7 @@ require.config({
     angularRoute: '../bower_components/angular-ui-router/release/angular-ui-router.min',
     angularMocks: '../bower_components/angular-mocks/angular-mocks',
     angularUi: '../bower_components/angular-bootstrap/ui-bootstrap-tpls.min',
+    angularUiSelect: '../bower_components/angular-ui-select/dist/select',
     angularAnimate: '../bower_components/angular-animate/angular-animate.min',
     angularSanitize: '../bower_components/angular-sanitize/angular-sanitize.min',
     angularLocalStorage: '../bower_components/angular-local-storage/angular-local-storage.min',

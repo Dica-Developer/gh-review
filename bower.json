@@ -20,6 +20,7 @@
     "dcjs": "https://github.com/dc-js/dc.js.git#289591d83c89c351440c11f10f1bafd964dcdafa",
     "requirejs-text": "~2.0.12",
     "angular-highlightjs": "~0.3.0",
-    "angular-hotkeys": "chieffancypants/angular-hotkeys#~1.4.5"
+    "angular-hotkeys": "chieffancypants/angular-hotkeys#~1.4.5",
+    "angular-ui-select": "~0.7.0"
   }
 }
