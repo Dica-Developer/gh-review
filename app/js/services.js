@@ -269,6 +269,51 @@ define(['angular', 'githubjs', 'moment', 'lodash', 'options'], function (angular
     }
   ]);
 
+  services.factory('getAllRepos', ['$q', 'githubUserData', 'localStorageService',
+    function ($q, githubUserData, localStorageService) {
+      return function () {
+        var defer = $q.defer();
+        var getReposWorker = new Worker('js/worker/getAllReposAndBranches.js');
+        var accessToken = localStorageService.get('accessToken');
+        getReposWorker.onmessage = function (event) {
+          defer.resolve(event.data.repos);
+          getReposWorker.terminate();
+        };
+
+        githubUserData.get()
+          .then(function (userData) {
+            getReposWorker.postMessage({
+              type: 'getAllRepos',
+              user: userData.login,
+              accessToken: accessToken
+            });
+          });
+        return defer.promise;
+      };
+    }
+  ]);
+
+  services.factory('getBranchesForRepo', ['$q', 'githubUserData', 'localStorageService',
+    function ($q, githubUserData, localStorageService) {
+      return function (repo) {
+        var defer = $q.defer();
+        var getReposWorker = new Worker('js/worker/getAllReposAndBranches.js');
+        var accessToken = localStorageService.get('accessToken');
+        getReposWorker.onmessage = function (event) {
+          defer.resolve(event.data.branches);
+          getReposWorker.terminate();
+        };
+
+        getReposWorker.postMessage({
+          type: 'getBranchesForRepo',
+          accessToken: accessToken,
+          repo: repo
+        });
+        return defer.promise;
+      };
+    }
+  ]);
+
   services.factory('getTreeData', ['$q', 'github',
     function ($q, github) {
       return function (user, repo, sha) {
