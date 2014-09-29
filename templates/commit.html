@@ -48,7 +48,7 @@
             <div class="table-wrapper" ng-if="file.isOpen">
                 <div class="div-table">
                     <div ng-repeat="line in file.lines.lines" ng-model="line">
-                        <div class="div-table-row" ng-class="line.format" ng-dblclick="addComment($event, line, file, commit)">
+                        <div class="div-table-row" ng-class="line.format" ng-dblclick="addComment(line)">
                             <div class="div-table-cell"></div>
                             <div class="div-table-cell lineNr">{{line.lineNrLeft}}</div>
                             <div class="div-table-cell lineNr">{{line.lineNrRight}}</div>
@@ -62,6 +62,12 @@
                                 <div class="div-table-cell lineNr"></div>
                                 <div class="div-table-cell lineNr"></div>
                                 <div class="lineComment panel panel-default" content="comment" mode="comment.mode" comment></div>
+                            </div>
+                            <div class="comments div-table-row">
+                                <div class="div-table-cell"></div>
+                                <div class="div-table-cell lineNr"></div>
+                                <div class="div-table-cell lineNr"></div>
+                                <button type="button" class="btn btn-info btn-sm" ng-click="addComment(line)">Add comment</button>
                             </div>
                         </div>
                     </div>
@@ -85,12 +91,13 @@
 
 <div class="row" ng-cloak>
     <div class="col-sm-12">
-        <div class="pull-right" ng-if="!loggedInUserIsApprover">
-            <button type="button" class="btn btn-success" ng-click="approveCommit()">Approve Commit</button>
+
+        <div class="pull-left">
+            <button type="button" class="btn btn-info" ng-click="addCommitComment()">Add Comment</button>
         </div>
-        {{approvers[loggedInUser.login]}}
-        <div class="pull-right" ng-if="loggedInUserIsApprover">
-            <button type="button" class="btn btn-danger" ng-click="unapproveCommit()">Unapprove Commit</button>
+        <div class="pull-right">
+            <button ng-if="!loggedInUserIsApprover" type="button" class="btn btn-success" ng-click="approveCommit()">Approve Commit</button>
+            <button ng-if="loggedInUserIsApprover" type="button" class="btn btn-danger" ng-click="unapproveCommit()">Unapprove Commit</button>
         </div>
     </div>
 </div>
