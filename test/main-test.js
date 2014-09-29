@@ -27,10 +27,6 @@ require.config({
     text: '../bower_components/requirejs-text/text',
     'underscore.string': '../bower_components/underscore.string/dist/underscore.string.min',
 
-    'd3': '../bower_components/d3/d3',
-    'dcjs': '../bower_components/dcjs/dc',
-    'crossfilter': '../bower_components/crossfilter/crossfilter',
-
     'highlightjs': '../bower_components/highlightjs/highlight.pack',
 
     githubjs: '../bower_components/github-js/dist/github.min',
@@ -42,7 +38,6 @@ require.config({
     //Modules
     Filter: 'modules/Filter',
     Chunk: 'modules/Chunk',
-    Charts: 'modules/Charts',
     Comment: 'modules/Comment',
     CommentProvider: 'modules/CommentProvider',
     CommitProvider: 'modules/CommitProvider',
@@ -78,10 +73,6 @@ require.config({
       deps: ['angular'],
       'exports': 'angular.mock'
     },
-    'crossfilter': {
-      exports: 'crossfilter'
-    },
-    'dcjs': ['crossfilter'],
     'highlightjs': {
       exports: 'hljs'
     }
@@ -92,14 +83,11 @@ require.config({
 });
 
 require([
-  'd3',
   'lodash',
   'underscore.string',
   'angular'
-], function (d3, _, str) {
+], function (_, str) {
   'use strict';
-  // FIXME removed for now because it is set in d3.js itself to window.d3 and set for me only undefied to undefined
-  //window.d3 = d3;
   _.str = str;
 
   //bind polyfill for PhantomJS

@@ -17,7 +17,6 @@
     "underscore.string": "~2.3.3",
     "angular-sanitize": "~1.2.16",
     "angular-animate": "~1.2.17",
-    "dcjs": "https://github.com/dc-js/dc.js.git#289591d83c89c351440c11f10f1bafd964dcdafa",
     "requirejs-text": "~2.0.12",
     "angular-highlightjs": "~0.3.0",
     "angular-hotkeys": "chieffancypants/angular-hotkeys#~1.4.5",
