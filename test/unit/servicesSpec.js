@@ -373,31 +373,16 @@ define([
         expect(authenticated.get).toHaveBeenCalled();
       });
 
-      it('Should call githubUserData.get', function () {
-        spyOn(authenticated, 'get').and.returnValue(true);
-        spyOn(githubUserData, 'get').and.returnValue({
-          then: function () {}
-        });
-        getAllAvailableRepos();
-        expect(githubUserData.get).toHaveBeenCalled();
-      });
-
       it('Should call github.repos.getAll', function () {
         spyOn(authenticated, 'get').and.returnValue(true);
-        spyOn(github.user, 'get');
         spyOn(github.repos, 'getAll');
         getAllAvailableRepos();
-        var getCallback = github.user.get.calls.argsFor(0)[1];
-        getCallback(null, {
-          login: 'testUser'
-        });
         $rootScope.$apply();
         expect(github.repos.getAll).toHaveBeenCalled();
       });
 
       it('Should return promise and resolve if data exist', function (done) {
         spyOn(authenticated, 'get').and.returnValue(true);
-        spyOn(github.user, 'get');
         spyOn(github.repos, 'getAll');
         getAllAvailableRepos()
           .then(function (data) {
@@ -405,10 +390,6 @@ define([
             done();
           });
 
-        var getCallback = github.user.get.calls.argsFor(0)[1];
-        getCallback(null, {
-          login: 'testUser'
-        });
         $rootScope.$apply();
 
         var getAllAvailableReposCallback = github.repos.getAll.calls.argsFor(0)[1];
@@ -418,7 +399,6 @@ define([
 
       it('Should return promise and reject if error exist', function (done) {
         spyOn(authenticated, 'get').and.returnValue(true);
-        spyOn(github.user, 'get');
         spyOn(github.repos, 'getAll');
         getAllAvailableRepos()
           .then(null, function (data) {
@@ -427,10 +407,6 @@ define([
             done();
           });
 
-        var getCallback = github.user.get.calls.argsFor(0)[1];
-        getCallback(null, {
-          login: 'testUser'
-        });
         $rootScope.$apply();
 
         var getAllAvailableReposCallback = github.repos.getAll.calls.argsFor(0)[1];

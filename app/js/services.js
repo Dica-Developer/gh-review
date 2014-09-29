@@ -188,18 +188,13 @@ define(['angular', 'githubjs', 'moment', 'lodash', 'options'], function (angular
       return function () {
         var defer = $q.defer();
         if (authenticated.get()) {
-          githubUserData.get()
-            .then(function (userData) {
-              github.repos.getAll({
-                user: userData.login
-              }, function (error, res) {
-                if (error) {
-                  defer.reject(error);
-                } else {
-                  defer.resolve(res);
-                }
-              });
-            });
+          github.repos.getAll({}, function (error, res) {
+            if (error) {
+              defer.reject(error);
+            } else {
+              defer.resolve(res);
+            }
+          });
         } else {
           defer.reject(new Error('Not authenticated yet'));
         }
