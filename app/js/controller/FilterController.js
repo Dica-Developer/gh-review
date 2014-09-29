@@ -5,146 +5,157 @@ define(['angular', 'controllers', 'lodash'], function (angular, controllers, _) 
     .controller('FilterController', [
       '$scope',
       '$stateParams',
-      'getAllReposAndBranches',
-      'getTreeData',
-      'Charts',
+      'getAllRepos',
+      'getBranchesForRepo',
       'Filter',
-      'commentCollector',
-      function ($scope, $stateParams, getAllReposAndBranches, getTreeData, Charts, Filter, commentCollector) {
-        var filter = null;
-        if ($stateParams.filterId) {
-          filter = new Filter($stateParams.filterId);
-        } else {
-          filter = new Filter();
-        }
-        var charts = new Charts();
-        var updateCommitsTimeout = null;
+      function ($scope, $stateParams, getAllRepos, getBranchesForRepo, Filter) {
+        var filter = new Filter();
 
-        getAllReposAndBranches()
-          .then(charts.addRepoCharts.bind(charts));
+        //Set initial to new Filter to reduce commit size
+        filter.setSince({
+          pattern: 'weeks',
+          amount: 2
+        });
+        $scope.scope = $scope;
 
-        $scope.filter = filter.options;
-        $scope.branches = null;
+        $scope.allRepos = false;
+        $scope.selectedRepo = null;
         $scope.selectedBranch = null;
-        $scope.sinceAmount = 2;
-        $scope.sincePatterns = [{
-          display: 'Days',
-          value: 'days'
-        }, {
-          display: 'Weeks',
-          value: 'weeks'
-        }, {
-          display: 'Years',
-          value: 'years'
-        }];
-        $scope.sincePattern = $scope.sincePatterns[1];
+        $scope.branchSelection = null;
+        $scope.contributor = null;
+        $scope.contributorList = null;
+        $scope.commits = null;
 
-        $scope.save = function () {
+        $scope.fetchingRepos = true;
+        $scope.fetchingBranches = false;
+        $scope.fetchingCommits = true;
+
+        $scope.availableFilterSincePattern = ['days', 'weeks', 'years'];
+        $scope.filterSinceAmount = filter.getSince().amount;
+        $scope.filterSincePattern = $scope.availableFilterSincePattern[_.indexOf($scope.availableFilterSincePattern, filter.getSince().pattern)];
+
+        function setRepos(repos) {
+          $scope.allRepos = repos;
+          $scope.fetchingRepos = false;
+        }
+
+        function setBranchSelection(branches) {
+          $scope.fetchingBranches = false;
+          $scope.branches = branches;
+          $scope.branchSelection = _.pluck(branches, 'name');
+          /*jshint camelcase:false*/
+          $scope.selectedBranch = $scope.branchSelection[_.indexOf($scope.branchSelection, $scope.selectedRepo.default_branch)];
+        }
+
+        function getCommitList() {
+          $scope.fetchingCommits = true;
+          $scope.commits = [];
+          filter.getCommits()
+            .then(function(commits){
+              $scope.commits = commits;
+              $scope.fetchingCommits = false;
+            });
+        }
+
+        function getContributorList() {
+          filter.getContributorList()
+            .then(function(contributorList){
+              $scope.contributorList = contributorList;
+            });
+        }
+
+        function checkIfSettingAreUpdated(newValue, oldValue) {
+          if(newValue && !_.isNull(oldValue) && newValue !== oldValue){
+            var updated = false;
+            var contributor = filter.getAuthors();
+            var filterSincePattern = filter.getSince().pattern;
+            var filterSinceAmount = filter.getSince().amount;
+
+            if(!_.isEqual($scope.contributor, contributor)){
+              updated = true;
+            }
+
+            if(!_.isEqual(filterSincePattern, $scope.filterSincePattern)){
+              updated = true;
+            }
+
+            if(!_.isEqual(filterSinceAmount, $scope.filterSinceAmount)){
+              updated = true;
+            }
+
+            $scope.settingsUpdated = updated;
+          }
+        }
+
+        $scope.updateCommits = function(){
+          filter.addAuthor($scope.contributor);
+          filter.setSince({
+            pattern: $scope.filterSincePattern,
+            amount: filter.getSince().amount
+          });
+          $scope.settingsUpdated = false;
+          getCommitList();
+        };
+
+        $scope.$watch('selectedRepo', function (newSelectedRepo) {
+          if(newSelectedRepo){
+            filter.setRepo(newSelectedRepo.name);
+            filter.setOwner(newSelectedRepo.owner.login);
+            filter.setOwner(newSelectedRepo.owner.login);
+            $scope.branchSelection = [];
+            $scope.selectedBranch = null;
+            $scope.fetchingBranches = true;
+            /*jshint camelcase:false*/
+            getBranchesForRepo(newSelectedRepo.full_name)
+              .then(setBranchSelection);
+          }
+        });
+
+        $scope.$watch('selectedBranch', function (newSelectedBranch) {
+          if(newSelectedBranch) {
+            $scope.commits = [];
+            $scope.contributorList = [];
+            filter.setBranch(newSelectedBranch);
+            getCommitList();
+            getContributorList();
+          }
+        });
+
+        $scope.$watch('contributor', checkIfSettingAreUpdated);
+
+        $scope.$watch('filterSinceAmount', checkIfSettingAreUpdated);
+
+        $scope.$watch('filterSincePattern', checkIfSettingAreUpdated);
+
+        $scope.repoGroupFn = function (item){
+          return item.owner.login;
+        };
+
+        $scope.filterIsSaved = function (){
+          return filter.isSaved();
+        };
+
+        $scope.saveFilter = function (){
           filter.save();
         };
 
-        $scope.selectRepo = function (event) {
-          /*jshint camelcase: false */
-          var data = event.target.__data__;
-          var table = angular.element(event.currentTarget);
-          table.find('.success').removeClass('success');
-
-          var tr = angular.element(event.target.parentNode);
-          tr.addClass('success');
-          $scope.branches = data.branches;
-          $scope.selectedBranch = _.find(data.branches, {
-            name: 'master'
+        $scope.reset = function (){
+          filter.reset();
+          filter.setSince({
+            pattern: 'weeks',
+            amount: 2
           });
-          filter.setRepo(data.name);
-          filter.setOwner(data.owner.login);
-          filter.setBranch($scope.selectedBranch.name);
-          $scope.updated = new Date().getTime();
-          getTree();
+          $scope.selectedRepo = null;
+          $scope.selectedBranch = null;
+          $scope.branchSelection = null;
+          $scope.contributor = null;
+          $scope.contributorList = null;
+          $scope.commits = null;
+          setRepos($scope.allRepos);
         };
 
-        var filterComplete = function () {
-          var sha = _.isUndefined(filter.getBranch()) || _.isNull(filter.getBranch());
-          var repo = _.isUndefined(filter.getRepo()) || _.isNull(filter.getRepo());
-          var user = _.isUndefined(filter.getOwner()) || _.isNull(filter.getOwner());
-          var since = _.isUndefined(filter.getSince()) || _.isNull(filter.getSince());
-          return (!sha && !repo && !user && !since);
-        };
-
-        var changeFilterSinceSettings = function (newValue) {
-          if (!_.isUndefined(newValue) && !_.isNull(newValue)) {
-            //TODO move since pattern handling to Filter
-            filter.setSince({
-              amount: $scope.sinceAmount,
-              pattern: $scope.sincePattern.value
-            });
-            $scope.updated = new Date().getTime();
-          }
-        };
-
-        var getTree = function () {
-          if (filterComplete()) {
-            var user = filter.getOwner();
-            var repo = filter.getRepo();
-            var sha = filter.getBranch();
-            getTreeData(user, repo, sha)
-              .then(function (data) {
-                $scope.tree = data.tree;
-              });
-          }
-        };
-
-        $scope.$watch('sinceAmount', changeFilterSinceSettings);
-        $scope.$watch('sincePattern', changeFilterSinceSettings);
-        $scope.$watch('filter.sha', getTree);
-
-        var updateCommits = function (newValue) {
-          if (filterComplete() && (!_.isUndefined(newValue) && !_.isNull(newValue))) {
-            clearTimeout(updateCommitsTimeout);
-            updateCommitsTimeout = setTimeout(function () {
-              filter.getCommits()
-                .then(function (result) {
-                  var timeChartWidth = document.getElementById('timeWindowFilter').offsetWidth;
-                  var otherChartsWidth = document.getElementById('commitFilterCharts').offsetWidth;
-                  charts.processCommitData(result);
-                  charts.timeChart(timeChartWidth, 150);
-                  charts.commitsPerAuthorChart(otherChartsWidth, 150);
-                  commentCollector.announceRepositoryAndWaitForFinish(filter)
-                    .then(commentCollector.getCommitApproved)
-                    .then(function (commitApproved) {
-                      charts.proccessCommentData(commitApproved);
-                      charts.reviewStateChart(otherChartsWidth, 150);
-                    });
-                });
-            }, 1000);
-          }
-        };
-
-        $scope.$watch('updated', _.debounce(updateCommits, 500));
-
-        $scope.$on('filter:change:state', function (event, state) {
-          var filterState = '';
-          switch (state) {
-          case 'Not Reviewed':
-            filterState = 'unseen';
-            break;
-          case 'Not Approved':
-            filterState = 'reviewed';
-            break;
-          case 'Approved':
-            filterState = 'approved';
-            break;
-          default:
-            throw new Error('Unknown state: ' + state);
-          }
-        });
-
-        $scope.$on('filter:change:author', function (event, author) {
-          if (filter.hasAuthor(author)) {
-            filter.removeAuthor(author);
-          } else {
-            filter.addAuthor(author);
-          }
-        });
+        getAllRepos()
+          .then(setRepos);
       }
     ]);
 });
