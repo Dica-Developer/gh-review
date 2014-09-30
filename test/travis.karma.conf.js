@@ -3,6 +3,7 @@ module.exports = function (config) {
     basePath: '../',
     frameworks: ['jasmine'],
     files: [
+      'test/helper/shim-polyfill.js',
       'app/bower_components/moment/min/moment.min.js',
       'app/bower_components/lodash/dist/lodash.min.js',
       'app/bower_components/highlightjs/highlight.pack.js',
@@ -26,7 +27,7 @@ module.exports = function (config) {
       'app/js/worker/*.*'
     ],
 
-    reporters: ['dots', 'coverage'],
+    reporters: ['story', 'coverage'],
     preprocessors: {
       'app/js/**/*.js': ['coverage'],
       'app/templates/*.html': ['ng-html2js']
