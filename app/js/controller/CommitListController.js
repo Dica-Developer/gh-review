@@ -41,15 +41,17 @@
           .add({
             combo: 'enter',
             description: 'Navigate through commits',
-            callback: function(event) {
+            callback: function (event) {
               event.preventDefault();
-              var sha = flattenedCommitList[currentCommitPointer].sha;
-              $scope.loader = sha;
-              $state.go('commitBySha', {
-                sha: sha,
-                user: filterById.getOwner(),
-                repo: filterById.getRepo()
-              });
+              if (currentCommitPointer > -1) {
+                var sha = flattenedCommitList[currentCommitPointer].sha;
+                $scope.loader = sha;
+                $state.go('commitBySha', {
+                  sha: sha,
+                  user: filterById.getOwner(),
+                  repo: filterById.getRepo()
+                });
+              }
             }
           })
           .add({
