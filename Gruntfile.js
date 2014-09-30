@@ -337,6 +337,7 @@ module.exports = function (grunt) {
   grunt.registerTask('travis', [
     'processTmpl:dev',
     'karma:travis',
+    'e2e',
     'coveralls'
   ]);
 
