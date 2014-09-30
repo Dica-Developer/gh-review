@@ -11,6 +11,7 @@ module.exports = function (grunt) {
     dev: 'dev',
     dist: 'dist',
     test: 'test',
+    coverage: 'test/coverage',
     distOptions: {
       clientId: '833c028df47be8e881d9',
       apiScope: 'user, repo',
@@ -157,12 +158,6 @@ module.exports = function (grunt) {
             cwd: '<%= config.app %>/bower_components/bootstrap/dist/fonts',
             dest: '<%= config.dev %>/fonts',
             src: '*'
-          },
-          {
-            expand: true,
-            cwd: '<%= config.app %>/bower_components/requirejs',
-            dest: '<%= config.dev %>/js',
-            src: 'require.js'
           }
         ]
       },
@@ -182,12 +177,6 @@ module.exports = function (grunt) {
           },
           {
             expand: true,
-            cwd: '<%= config.app %>/bower_components/requirejs',
-            dest: '<%= config.dist %>/js',
-            src: 'require.js'
-          },
-          {
-            expand: true,
             cwd: '<%= config.app %>/bower_components/lodash/dist',
             dest: '<%= config.dist %>/js',
             src: 'lodash.min.js'
@@ -201,33 +190,12 @@ module.exports = function (grunt) {
         ]
       }
     },
-    requirejs: {
-      options: {
-        loglevel: 5,
-        findNestedDependencies: true,
-        inlineText: true,
-        mainConfigFile: '<%= config.app %>/js/main.js'
-      },
-      dist: {
-        options: {
-          out: '<%= config.dist %>/js/main.js',
-          optimize: 'uglify2',
-          name: 'main'
-        }
-      }
-    },
     karma: {
       dev: {
         configFile: '<%= config.test %>/dev.karma.conf.js'
       },
       travis: {
         configFile: '<%= config.test %>/travis.karma.conf.js'
-      }
-    },
-    ngdocs: {
-      options: {
-        deferLoad: true,
-        all: ['app/js/main.js']
       }
     },
     coveralls: {
@@ -306,14 +274,6 @@ module.exports = function (grunt) {
   grunt.registerTask('postProcess', function () {
     var done = this.async();
     var fs = require('fs');
-    var indexHtml = fs.readFileSync('dist/index.html', {
-      encoding: 'UTF8'
-    });
-    indexHtml = indexHtml.replace('bower_components/requirejs/require.js', 'js/require.js');
-    fs.writeFileSync('dist/index.html', indexHtml, {
-      encoding: 'UTF8'
-    });
-
     var collectorJs = fs.readFileSync('dist/js/worker/collector.js', {
       encoding: 'UTF8'
     });
@@ -329,13 +289,11 @@ module.exports = function (grunt) {
     'less:dist',
     'processTmpl:dist',
     'copy:dist',
-    'requirejs:dist',
     'postProcess'
   ]);
 
   grunt.registerTask('devWatch', [
     'jshint',
-    //        'ngdocs',
     'less:dev',
     'copy:dev'
   ]);
@@ -343,7 +301,6 @@ module.exports = function (grunt) {
   grunt.registerTask('dev', [
     'clean:dev',
     'jshint',
-    //        'ngdocs',
     'processTmpl:dev',
     'copy:dev',
     'less:dev',
