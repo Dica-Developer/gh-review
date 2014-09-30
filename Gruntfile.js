@@ -55,9 +55,10 @@ module.exports = function (grunt) {
         configFile: '<%= config.test %>/e2e/conf.js',
         keepAlive: false,
         noColor: false,
-        souceUser: 'JayGray',
-        souceKey: 'a8751009-5b79-4117-b990-507d09465216',
-        args: {}
+        args: {
+          souceUser: 'JayGray',
+          souceKey: 'a8751009-5b79-4117-b990-507d09465216'
+        }
       },
       startPage: {
         options: {
