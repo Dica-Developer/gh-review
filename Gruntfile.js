@@ -56,8 +56,8 @@ module.exports = function (grunt) {
         keepAlive: false,
         noColor: false,
         args: {
-          souceUser: 'JayGray',
-          souceKey: 'a8751009-5b79-4117-b990-507d09465216'
+          sauceUser: 'JayGray',
+          sauceKey: 'a8751009-5b79-4117-b990-507d09465216'
         }
       },
       startPage: {
