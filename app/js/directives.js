@@ -19,7 +19,7 @@
         returnVal.link = function ($scope) {
           hotkeys.bindTo($scope)
             .add({
-              combo: 'alt+f',
+              combo: 'g f',
               description: 'Go to filter list',
               callback: function (event) {
                 event.preventDefault();
@@ -27,7 +27,7 @@
               }
             })
             .add({
-              combo: 'alt+m',
+              combo: 'g m',
               description: 'Go to module search',
               callback: function (event) {
                 event.preventDefault();
@@ -35,7 +35,7 @@
               }
             })
             .add({
-              combo: 'alt+w',
+              combo: 'g w',
               description: 'Go to "Who Am I" page',
               callback: function (event) {
                 event.preventDefault();
@@ -43,7 +43,7 @@
               }
             })
             .add({
-              combo: 'alt+q',
+              combo: ': q',
               description: 'Logout',
               callback: function (event) {
                 event.preventDefault();
