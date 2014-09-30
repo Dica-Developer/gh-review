@@ -2,7 +2,7 @@
 .DS_Store
 /node_modules
 /app/bower_components
-/coverage
+/test/coverage
 /dev
 /dist
 /app/js/options.js

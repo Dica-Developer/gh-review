@@ -234,7 +234,7 @@ module.exports = function (grunt) {
       options: {
         debug: false,
         /*jshint camelcase:false*/
-        coverage_dir: 'coverage',
+        coverage_dir: 'test/coverage',
         force: false
       }
     }
