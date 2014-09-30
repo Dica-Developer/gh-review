@@ -4,10 +4,10 @@
   var oneTimeCallback = null;
   var commentCollectorModule = angular.module('GHReview');
 
-  commentCollectorModule.provider('commentCollector', ['_', function (_) {
+  commentCollectorModule.provider('commentCollector', function () {
 
-    this.$get = ['$q',
-      function ($q) {
+    this.$get = ['$q', '_',
+      function ($q, _) {
         var worker = void 0;
         var comments = void 0;
         var commitApproved = void 0;
@@ -115,5 +115,5 @@
         };
       }
     ];
-  }]);
+  });
 }(angular));
