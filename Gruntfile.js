@@ -56,8 +56,6 @@ module.exports = function (grunt) {
         keepAlive: false,
         noColor: false,
         args: {
-          sauceUser: 'JayGray',
-          sauceKey: 'a8751009-5b79-4117-b990-507d09465216'
         }
       },
       startPage: {
@@ -65,7 +63,9 @@ module.exports = function (grunt) {
           args: {
             suite: 'startWithToken',
             capabilities: {
-              browserName: 'firefox'
+              browserName: 'firefox',
+              sauceUser: 'JayGray',
+              sauceKey: 'a8751009-5b79-4117-b990-507d09465216'
             }
           }
         }
@@ -73,7 +73,9 @@ module.exports = function (grunt) {
       reviewModules: {
         options: {
           args: {
-            suite: 'reviewModules'
+            suite: 'reviewModules',
+            sauceUser: 'JayGray',
+            sauceKey: 'a8751009-5b79-4117-b990-507d09465216'
           }
         }
       }
