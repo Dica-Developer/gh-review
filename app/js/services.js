@@ -393,8 +393,8 @@
     }
   ]);
 
-  services.factory('unapproveCommit', ['$q', 'github', 'version', 'authenticated', 'githubUserData', 'commentCollector',
-    function ($q, github, version, authenticated, githubUserData, commentCollector) {
+  services.factory('unapproveCommit', ['$q', 'github', 'authenticated', 'githubUserData', 'commentCollector',
+    function ($q, github, authenticated, githubUserData, commentCollector) {
       return function (commentId, sha, user, repo) {
         var defer = $q.defer();
 
