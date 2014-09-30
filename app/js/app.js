@@ -47,9 +47,6 @@ define([
     'ngSanitize',
     'ngAnimate',
     'hljs'
-  ])
-    .config(['hotkeysProvider', function(hotkeysProvider) {
-      hotkeysProvider.includeCheatSheet = true;
-    }]);
+  ]);
 
 });
