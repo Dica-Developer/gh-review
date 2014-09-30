@@ -13,15 +13,15 @@
       'events',
       'hotkeys',
       function ($scope, $state, $stateParams, $location, _, moment, commitsApproved, filter, events, hotkeys) {
-        var flattenedCommitList = [], currentCommitPointer = 0;
+        var flattenedCommitList = [], currentCommitPointer = -1;
 
         hotkeys.bindTo($scope)
           .add({
             combo: 'down',
             description: 'Navigate through commits',
-            callback: function(event) {
+            callback: function (event) {
               event.preventDefault();
-              if(currentCommitPointer < flattenedCommitList.length -1){
+              if (currentCommitPointer < flattenedCommitList.length - 1) {
                 currentCommitPointer++;
                 setSelectedCommit();
               }
@@ -118,7 +118,6 @@
           $scope.sortedGroupedCommits = getSortedCommits(commits);
           $scope.filterEvents = events.getForFilter(filterById);
           setButtonStates();
-          setSelectedCommit();
         });
 
         $scope.getNextPage = function () {
