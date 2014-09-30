@@ -91,7 +91,7 @@ define(['angular', 'controllers', 'lodash'], function (angular, controllers, _) 
           filter.addAuthor($scope.contributor);
           filter.setSince({
             pattern: $scope.filterSincePattern,
-            amount: filter.getSince().amount
+            amount: $scope.filterSinceAmount
           });
           $scope.settingsUpdated = false;
           getCommitList();
