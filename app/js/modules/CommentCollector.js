@@ -1,10 +1,10 @@
-define(['angular', 'lodash'], function (angular, _) {
+(function (angular) {
   'use strict';
 
   var oneTimeCallback = null;
-  var commentCollectorModule = angular.module('GHReview.CommentCollector', []);
+  var commentCollectorModule = angular.module('GHReview');
 
-  commentCollectorModule.provider('commentCollector', function () {
+  commentCollectorModule.provider('commentCollector', ['_', function (_) {
 
     this.$get = ['$q',
       function ($q) {
@@ -115,5 +115,5 @@ define(['angular', 'lodash'], function (angular, _) {
         };
       }
     ];
-  });
-});
+  }]);
+}(angular));

@@ -1,9 +1,9 @@
-define(['angular'], function (angular) {
+(function (angular) {
   'use strict';
 
   /* Controllers */
 
-  return angular.module('GHReview.controllers', [])
+  return angular.module('GHReview')
     .controller('RootController', [
       '$scope',
       '$location',
@@ -61,4 +61,4 @@ define(['angular'], function (angular) {
           });
       }
     ]);
-});
+}(angular));

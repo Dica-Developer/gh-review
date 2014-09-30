@@ -1,16 +1,18 @@
-define(['controllers', 'lodash', 'moment'], function (controllers, _, moment) {
+(function (angular) {
   'use strict';
-  controllers
+  angular.module('GHReview')
     .controller('CommitListController', [
       '$scope',
       '$state',
       '$stateParams',
       '$location',
+      '_',
+      'moment',
       'commitsApproved',
       'filter',
       'events',
       'hotkeys',
-      function ($scope, $state, $stateParams, $location, commitsApproved, filter, events, hotkeys) {
+      function ($scope, $state, $stateParams, $location, _, moment, commitsApproved, filter, events, hotkeys) {
         var flattenedCommitList = [], currentCommitPointer = 0;
 
         hotkeys.bindTo($scope)
@@ -141,4 +143,4 @@ define(['controllers', 'lodash', 'moment'], function (controllers, _, moment) {
         };
       }
     ]);
-});
+}(angular));

@@ -1,10 +1,11 @@
-define(['lodash', 'controllers'], function (_, controllers) {
+(function (angular) {
   'use strict';
 
-  controllers
+  angular.module('GHReview')
     .controller('CommitController', [
       '$scope',
       '$stateParams',
+      '_',
       'commitsAndComments',
       'Comment',
       'approveCommit',
@@ -13,7 +14,7 @@ define(['lodash', 'controllers'], function (_, controllers) {
       'isCommentNotApprovalComment',
       'isCommentApprovalCommentFromUser',
       'events',
-      function ($scope, $stateParams, commitsAndComments, Comment, approveCommit, unapproveCommit, loggedInUser, isCommentNotApprovalComment, isCommentApprovalCommentFromUser, events) {
+      function ($scope, $stateParams, _, commitsAndComments, Comment, approveCommit, unapproveCommit, loggedInUser, isCommentNotApprovalComment, isCommentApprovalCommentFromUser, events) {
         var commit = commitsAndComments[0].commitInfos ? commitsAndComments[0] : commitsAndComments[1],
           comments = commitsAndComments[0].commitInfos ? commitsAndComments[1] : commitsAndComments[0],
           lineWithNewComment = [],
@@ -131,4 +132,4 @@ define(['lodash', 'controllers'], function (_, controllers) {
         });
       }
     ]);
-});
+}(angular));

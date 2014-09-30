@@ -1,14 +1,9 @@
-define(function (require) {
+(function (angular) {
   'use strict';
-
-  var angular = require('angular'),
-    commentTemplate = require('text!../templates/comment.html'),
-    commitHeaderTemplate = require('text!../templates/commitHeader.html'),
-    commitHeaderCollabsibleTemplate = require('text!../templates/commitHeaderCollabsible.html');
 
   /* Directives */
 
-  var directives = angular.module('GHReview.directives', []);
+  var directives = angular.module('GHReview');
 
   directives.directive('menu', ['$state', 'authenticated', 'githubUserData', 'collectComments', 'hotkeys',
     function ($state, authenticated, githubUserData, collectComments, hotkeys) {
@@ -26,7 +21,7 @@ define(function (require) {
             .add({
               combo: 'alt+f',
               description: 'Go to filter list',
-              callback: function(event) {
+              callback: function (event) {
                 event.preventDefault();
                 $state.go('filter');
               }
@@ -34,7 +29,7 @@ define(function (require) {
             .add({
               combo: 'alt+m',
               description: 'Go to module search',
-              callback: function(event) {
+              callback: function (event) {
                 event.preventDefault();
                 $state.go('modules');
               }
@@ -42,7 +37,7 @@ define(function (require) {
             .add({
               combo: 'alt+w',
               description: 'Go to "Who Am I" page',
-              callback: function(event) {
+              callback: function (event) {
                 event.preventDefault();
                 $state.go('whoami');
               }
@@ -50,7 +45,7 @@ define(function (require) {
             .add({
               combo: 'alt+q',
               description: 'Logout',
-              callback: function(event) {
+              callback: function (event) {
                 event.preventDefault();
                 $state.go('logout');
               }
@@ -74,7 +69,7 @@ define(function (require) {
         template: '<span tooltip-placement="top" tooltip="{{formattedDate}}">{{date}}</span>',
         link: function ($scope, element, attr) {
           $scope.$watch(attr.date, function (value) {
-            if(attr.format && attr.format !== '') {
+            if (attr.format && attr.format !== '') {
               $scope.formattedDate = humanReadableDate.format(value);
               $scope.date = humanReadableDate.customFormat(value, attr.format);
             } else {
@@ -113,7 +108,7 @@ define(function (require) {
     function () {
       return {
         restrict: 'A',
-        template: commentTemplate,
+        templateUrl: 'templates/comment.html',
         scope: {
           comment: '=content'
         }
@@ -140,23 +135,22 @@ define(function (require) {
   });
 
   directives.directive('commitHeader', ['$compile',
-    function ($compile) {
+    function () {
+      var shouldBeCollabsible = false;
       return {
         restrict: 'E',
+        templateUrl: function(){
+          return shouldBeCollabsible ? 'templates/commitHeaderCollabsible.html' : 'templates/commitHeader.html';
+        },
         link: function ($scope, element, attr) {
           $scope.$watch(attr.commit, function (value) {
             var message = value.message;
             var splittedMessage = message.split('\n');
             var firstLine = splittedMessage[0];
-            var shouldBeCollabsible = splittedMessage.length > 1 || firstLine.length >= maxLengthForFirstLine;
-            if (shouldBeCollabsible) {
-              $compile(element.html(commitHeaderCollabsibleTemplate).contents())($scope);
-            } else {
-              $compile(element.html(commitHeaderTemplate).contents())($scope);
-            }
+            shouldBeCollabsible = splittedMessage.length > 1 || firstLine.length >= maxLengthForFirstLine;
           });
         }
       };
     }
   ]);
-});
+}(angular));

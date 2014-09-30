@@ -1,8 +1,8 @@
-define(['angular', 'lodash'], function (angular, _) {
+(function (angular) {
   'use strict';
-  var services = angular.module('GHReview.Comment', []);
-  services.factory('Comment', ['$q', '$rootScope', 'github',
-    function ($q, $rootScope, github) {
+  var services = angular.module('GHReview');
+  services.factory('Comment', ['$q', '$rootScope', 'github', '_',
+    function ($q, $rootScope, github, _) {
 
       function Comment(options) {
         if (!options.mode) {
@@ -109,11 +109,11 @@ define(['angular', 'lodash'], function (angular, _) {
         }, githubCallback);
       };
 
-      Comment.prototype.shouldShowEditButton = function(){
+      Comment.prototype.shouldShowEditButton = function () {
         return this.mode === 'show';
       };
 
       return Comment;
     }
   ]);
-});
+}(angular));

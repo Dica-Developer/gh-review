@@ -1,14 +1,15 @@
-define(['angular', 'controllers', 'lodash'], function (angular, controllers, _) {
+(function (angular) {
   'use strict';
 
-  controllers
+  angular.module('GHReview')
     .controller('FilterController', [
       '$scope',
       '$stateParams',
+      '_',
       'getAllRepos',
       'getBranchesForRepo',
       'Filter',
-      function ($scope, $stateParams, getAllRepos, getBranchesForRepo, Filter) {
+      function ($scope, $stateParams, _, getAllRepos, getBranchesForRepo, Filter) {
         var filter = new Filter();
 
         //Set initial to new Filter to reduce commit size
@@ -157,4 +158,4 @@ define(['angular', 'controllers', 'lodash'], function (angular, controllers, _) 
           .then(setRepos);
       }
     ]);
-});
+}(angular));

@@ -1,5 +1,4 @@
-/*global define*/
-define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
+(function (angular) {
   'use strict';
 
   var generateUUID = function () {
@@ -13,9 +12,9 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
 
   var tmpCommits = {};
 
-  var services = angular.module('GHReview.Filter', []);
-  services.factory('Filter', ['$q', 'github', 'commentCollector', 'localStorageService',
-    function ($q, github, commentCollector, localStorageService) {
+  var services = angular.module('GHReview');
+  services.factory('Filter', ['$q', '_', 'moment', 'github', 'commentCollector', 'localStorageService',
+    function ($q, _, moment, github, commentCollector, localStorageService) {
       var Filter = function (filterId) {
         this.options = {
           repo: null,
@@ -440,4 +439,4 @@ define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
       return Filter;
     }
   ]);
-});
+}(angular));
