@@ -1,14 +1,15 @@
-define(function(){
+(function(angular){
     'use strict';
-    return {
-        github: {
-            clientId: '<%= clientId %>',
-            apiScope: '<%= apiScope %>',
-            redirectUri: '<%= redirectUri %>',
-            accessTokenUrl: '<%= accessTokenUrl %>'
-        },
-        'ghReview': {
-            version: '<%= version %>'
-        }
-    };
-});
+    angular.module('GHReview')
+        .constant('options', {
+             github: {
+                 clientId: '<%= clientId %>',
+                 apiScope: '<%= apiScope %>',
+                 redirectUri: '<%= redirectUri %>',
+                 accessTokenUrl: '<%= accessTokenUrl %>'
+             },
+             'ghReview': {
+                 version: '<%= version %>'
+             }
+         });
+}(angular));

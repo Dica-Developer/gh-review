@@ -6,7 +6,6 @@
 
   var services = angular.module('GHReview');
 
-  services.value('version', '0.3.0');
   services.value('githubOptions', {
     clientId: '5082108e53d762d90c00',
     apiScope: 'user, repo',
@@ -354,8 +353,8 @@
     }
   ]);
 
-  services.factory('approveCommit', ['$q', '_', 'github', 'version', 'authenticated', 'githubUserData', 'commentCollector',
-    function ($q, _, github, version, authenticated, githubUserData, commentCollector) {
+  services.factory('approveCommit', ['$q', '_', 'github', 'options', 'authenticated', 'githubUserData', 'commentCollector',
+    function ($q, _, github, options, authenticated, githubUserData, commentCollector) {
       return function (sha, user, repo) {
         var defer = $q.defer();
 
@@ -363,7 +362,7 @@
           githubUserData.get()
             .then(function (userData) {
               var commitState = {
-                version: version,
+                version: options.ghReview.version,
                 approved: true,
                 approver: userData.login,
                 approvalDate: Date.now()
