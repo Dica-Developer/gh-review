@@ -30,9 +30,9 @@
           .add({
             combo: 'up',
             description: 'Navigate through commits',
-            callback: function(event) {
+            callback: function (event) {
               event.preventDefault();
-              if(currentCommitPointer > 0){
+              if (currentCommitPointer > 0) {
                 currentCommitPointer--;
                 setSelectedCommit();
               }
@@ -57,9 +57,9 @@
           .add({
             combo: 'right',
             description: 'Next page',
-            callback: function(event) {
+            callback: function (event) {
               event.preventDefault();
-              if(filterById.hasNextPage){
+              if (filterById.hasNextPage) {
                 $scope.getNextPage();
               }
             }
@@ -67,16 +67,16 @@
           .add({
             combo: 'left',
             description: 'Previous page',
-            callback: function(event) {
+            callback: function (event) {
               event.preventDefault();
-              if(filterById.hasPreviousPage){
+              if (filterById.hasPreviousPage) {
                 $scope.getPreviousPage();
               }
             }
           });
 
-        function setSelectedCommit () {
-          if(flattenedCommitList.length > 0){
+        function setSelectedCommit() {
+          if (flattenedCommitList.length > 0) {
             var sha = flattenedCommitList[currentCommitPointer].sha;
             $scope.selectedCommit = sha;
             $location.hash(sha);
@@ -102,12 +102,12 @@
           $scope.hasFirst = filterById.hasFirstPage;
         };
 
-        function getSortedCommits (commits) {
-          var groupedCommits = _.groupBy(commits, function(commit){
+        function getSortedCommits(commits) {
+          var groupedCommits = _.groupBy(commits, function (commit) {
             return moment(commit.commit.committer.date).format('YYYY-MM-DD');
           });
 
-          var groupedSortedCommits = _.sortBy(groupedCommits, function(a, b){
+          var groupedSortedCommits = _.sortBy(groupedCommits, function (a, b) {
             return moment(a).isBefore(b);
           });
 
