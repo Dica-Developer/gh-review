@@ -45,7 +45,7 @@ module.exports = function (grunt) {
       e2e: {
         options: {
           port: 9001,
-          base: '<%= config.dev %>',
+          base: '<%= config.dist %>',
           livereload: false
         }
       }
@@ -190,6 +190,12 @@ module.exports = function (grunt) {
         ]
       }
     },
+    useminPrepare: {
+      html: 'app/index.html'
+    },
+    'usemin': {
+      html: 'dist/index.html'
+    },
     karma: {
       dev: {
         configFile: '<%= config.test %>/dev.karma.conf.js'
@@ -289,8 +295,26 @@ module.exports = function (grunt) {
     'less:dist',
     'processTmpl:dist',
     'copy:dist',
+    'useminPrepare',
+    'concat:generated',
+    'uglify:generated',
+    'usemin',
     'postProcess'
   ]);
+
+  grunt.registerTask('dist', function(template){
+    grunt.task.run([
+      'clean:dist',
+      'less:dist',
+      'processTmpl:' + (template || 'dist'),
+      'copy:dist',
+      'useminPrepare',
+      'concat:generated',
+      'uglify:generated',
+      'usemin',
+      'postProcess'
+    ]);
+  });
 
   grunt.registerTask('devWatch', [
     'jshint',
@@ -309,11 +333,7 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('e2e', [
-    'clean:dev',
-    'jshint',
-    'processTmpl:dev',
-    'copy:dev',
-    'less:dev',
+    'dist:dev',
     'connect:e2e',
     'protractor:startPage',
     'protractor:reviewModules'

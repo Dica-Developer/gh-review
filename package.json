@@ -33,6 +33,7 @@
     "grunt-karma-coveralls": "^2.5.2",
     "grunt-ngdocs": "^0.2.3",
     "grunt-protractor-runner": "^1.1.4",
+    "grunt-usemin": "^2.4.0",
     "karma": "^0.12.23",
     "karma-chrome-launcher": "^0.1.4",
     "karma-coverage": "^0.2.6",
