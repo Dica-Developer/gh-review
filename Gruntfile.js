@@ -60,7 +60,10 @@ module.exports = function (grunt) {
       startPage: {
         options: {
           args: {
-            suite: 'startWithToken'
+            suite: 'startWithToken',
+            capabilities: {
+              browserName: 'firefox'
+            }
           }
         }
       },
@@ -289,18 +292,6 @@ module.exports = function (grunt) {
     });
     done();
   });
-
-  grunt.registerTask('dist', [
-    'clean:dist',
-    'less:dist',
-    'processTmpl:dist',
-    'copy:dist',
-    'useminPrepare',
-    'concat:generated',
-    'uglify:generated',
-    'usemin',
-    'postProcess'
-  ]);
 
   grunt.registerTask('dist', function(template){
     grunt.task.run([

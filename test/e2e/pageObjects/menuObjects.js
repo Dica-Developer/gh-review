@@ -39,7 +39,7 @@ exports.HeaderMenu = function () {
                 .then(function (url) {
                     return url === 'http://localhost:9001/#/filter/modules';
                 });
-        }, 1000, 'Navigate to review modules timed out');
+        }, 1000, 'Navigate to filter/modules timed out');
     };
 };
 
