@@ -1,15 +1,15 @@
 (function(angular){
-    'use strict';
-    angular.module('GHReview')
-        .constant('options', {
-             github: {
-                 clientId: '<%= clientId %>',
-                 apiScope: '<%= apiScope %>',
-                 redirectUri: '<%= redirectUri %>',
-                 accessTokenUrl: '<%= accessTokenUrl %>'
-             },
-             'ghReview': {
-                 version: '<%= version %>'
-             }
-         });
+  'use strict';
+  angular.module('GHReview')
+    .constant('options', {
+      github: {
+        clientId: '<%= clientId %>',
+        apiScope: '<%= apiScope %>',
+        redirectUri: '<%= redirectUri %>',
+        accessTokenUrl: '<%= accessTokenUrl %>'
+      },
+      'ghReview': {
+        version: '<%= version %>'
+      }
+    });
 }(angular));
