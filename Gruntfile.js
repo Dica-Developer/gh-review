@@ -362,7 +362,7 @@ module.exports = function (grunt) {
   grunt.registerTask('travis', [
     'processTmpl:dev',
     'karma:travis',
-    'e2e:saucelabs',
+//    'e2e:saucelabs',
     'coveralls'
   ]);
 
