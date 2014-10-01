@@ -51,31 +51,49 @@ module.exports = function (grunt) {
       }
     },
     protractor: {
-      options: {
-        configFile: '<%= config.test %>/e2e/conf.js',
-        keepAlive: false,
-        noColor: false,
-        args: {
-        }
-      },
-      startPage: {
+      saucelabs: {
         options: {
-          args: {
-            suite: 'startWithToken',
-            capabilities: {
-              browserName: 'firefox',
-              sauceUser: 'JayGray',
-              sauceKey: 'a8751009-5b79-4117-b990-507d09465216'
+          configFile: '<%= config.test %>/e2e/travis.conf.js'
+        },
+        startPage: {
+          options: {
+            args: {
+              suite: 'startWithToken',
+              sauceUser: process.env.SAUCE_USERNAME,
+              sauceKey: process.env.SAUCE_ACCESS_KEY
+            }
+          }
+        },
+        reviewModules: {
+          options: {
+            args: {
+              suite: 'reviewModules',
+              sauceUser: process.env.SAUCE_USERNAME,
+              sauceKey: process.env.SAUCE_ACCESS_KEY
             }
           }
         }
       },
-      reviewModules: {
+      local: {
         options: {
+          configFile: '<%= config.test %>/e2e/conf.js',
+          keepAlive: false,
+          noColor: false,
           args: {
-            suite: 'reviewModules',
-            sauceUser: 'JayGray',
-            sauceKey: 'a8751009-5b79-4117-b990-507d09465216'
+          }
+        },
+        startPage: {
+          options: {
+            args: {
+              suite: 'startWithToken'
+            }
+          }
+        },
+        reviewModules: {
+          options: {
+            args: {
+              suite: 'reviewModules'
+            }
           }
         }
       }
@@ -328,12 +346,14 @@ module.exports = function (grunt) {
     'watch:dev'
   ]);
 
-  grunt.registerTask('e2e', [
-    'dist:dev',
-    'connect:e2e',
-    'protractor:startPage',
-    'protractor:reviewModules'
-  ]);
+  grunt.registerTask('e2e', function(platform){
+    grunt.task.run([
+      'dist:dev',
+      'connect:e2e',
+      'protractor:' + platform + ':startPage',
+      'protractor:'+ platform +':reviewModules'
+    ]);
+  });
 
   grunt.registerTask('test', [
     'karma:dev'
