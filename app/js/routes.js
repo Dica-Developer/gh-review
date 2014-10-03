@@ -32,12 +32,12 @@
           })
           .state('addFilter', {
             url: '/filter/add',
-            templateUrl: 'templates/addFilter.html',
+            templateUrl: 'templates/filter.html',
             controller: 'FilterController'
           })
           .state('editFilter', {
             url: '/filter/edit/{filterId}',
-            templateUrl: 'templates/addFilter.html',
+            templateUrl: 'templates/filter.html',
             controller: 'FilterController'
           })
           .state('modules', {
