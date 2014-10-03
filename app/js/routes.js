@@ -54,8 +54,8 @@
           })
           .state('commitsByFilter', {
             url: '/filter/{filterId}/commits',
-            templateUrl: 'templates/commitList.html',
-            controller: 'CommitListController',
+            templateUrl: 'templates/filter.html',
+            controller: 'FilterController',
             resolve: {
               commitsApproved: 'getCommitApproved'
             }
