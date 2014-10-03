@@ -56,7 +56,7 @@
                 <div ng-if="commits.length <= 0 && fetchingCommits" class="well">
                     Fetching commits for {{scope.selectedRepo.full_name}} - {{scope.selectedBranch}}
                 </div>
-                <ghreview-commit-list ng-if="commits.length > 0 && !fetchingCommits" commit-list="commits" filter="filter"></ghreview-commit-list>
+                <ghreview-commit-list ng-if="commits.length > 0 && !fetchingCommits" x-commit-list="commits" x-filter="filter"></ghreview-commit-list>
             </div>
         </div>
     </div>
