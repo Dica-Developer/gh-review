@@ -464,7 +464,37 @@
             _.each(commits, function (commit) {
               var selectCommit = true;
               if (!_.isUndefined(authors)) {
-                if (!_.contains(authors, commit.author.login)) {
+                /*
+                  TODO commit.author can be null how to find the login name of an author
+                  example commit object without author:
+                  {
+                     author: null
+                     comments_url: "https://api.github.com/repos/Datameer-Inc/dap/commits/67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b/comments"
+                     commit: {
+                        author: {
+                           date: "2014-09-26T07:00:52Z"
+                           email: "author@email.com"
+                           name: "Author Name"
+                        }
+                       comment_count: 0
+                       committer: {
+                         date: "2014-09-26T07:00:52Z"
+                         email: "author@email.com"
+                         name: "Author Name"
+                       }
+                       message: "added id's for workbook filter dialog plus/minus icons to ensure new ui-tests"
+                       tree: {sha:0bf402614436f1f9bc7326b77b7815b3a6bcafe6,…}
+                       url: "https://api.github.com/repos/Datameer-Inc/dap/git/commits/67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b"
+                     }
+                     committer: null
+                     html_url: "https://github.com/Datameer-Inc/dap/commit/67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b"
+                     parents: [{sha:960d78b69fab212d608d78ad86364162460f5654,…}]
+                     sha: "67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b"
+                     url: "https://api.github.com/repos/Datameer-Inc/dap/commits/67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b"
+                  }
+                 */
+                var author = commit.author ? commit.author.login : commit.commit.author.login;
+                if (!_.contains(authors, author)) {
                   selectCommit = false;
                 }
               }
