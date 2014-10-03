@@ -39,6 +39,9 @@
 
 
       function Filter(filterId) {
+        this.commitCache = {};
+        this.branchList = [];
+        this.contributorList = {};
         this.options = {
           repo: null,
           user: null,
@@ -55,7 +58,7 @@
           }
         };
         this.init();
-      };
+      }
 
       Filter.prototype.hasNextPage = false;
       Filter.prototype.hasPreviousPage = false;
@@ -65,12 +68,18 @@
       Filter.prototype.init = function () {
         if (!_.isNull(this.options.meta.id)) {
           _.extend(this.options, localStorageService.get('filter-' + this.options.meta.id), true);
+          this.getContributorList();
+          this.getBranchList();
         } else {
           this.options.meta.id = generateUUID();
+          this.options.meta.isNew = true;
         }
       };
 
       Filter.prototype.save = function () {
+        if (!_.isUndefined(this.options.meta.isNew)) {
+          delete this.options.meta.isNew;
+        }
         this.options.meta.isSaved = true;
         var filterIdsString = localStorageService.get('filter');
         var filterIds = [];
@@ -85,6 +94,7 @@
       };
 
       Filter.prototype.set = function (key, value) {
+        this.commitCache = {};
         if (_.isUndefined(this.options[key])) {
           throw new Error('Unknown filter property');
         } else {
@@ -95,6 +105,7 @@
       };
 
       Filter.prototype.setCustomFilter = function (key, value) {
+        this.commitCache = {};
         this.options.meta.customFilter[key] = value;
         this.options.meta.lastEdited = new Date().getTime();
         this.options.meta.isSaved = false;
@@ -125,7 +136,8 @@
       };
 
       Filter.prototype.addAuthor = function (author) {
-        if(_.isArray(author)){
+        this.commitCache = {};
+        if (_.isArray(author)) {
           this.options.authors = author;
         } else {
           this.options.authors.push(author);
@@ -134,6 +146,7 @@
       };
 
       Filter.prototype.removeAuthor = function (author) {
+        this.commitCache = {};
         this.options.authors.pop(author);
         this.options.meta.isSaved = false;
       };
@@ -211,6 +224,7 @@
       };
 
       Filter.prototype.reset = function () {
+        this.commitCache = {};
         this.options = {
           repo: null,
           user: null,
@@ -234,25 +248,54 @@
         return (_.size(this.options.meta.customFilter) > 0);
       };
 
-      Filter.prototype.getContributorList= function () {
-        var defer = $q.defer();
-        github.repos.getContributors(
-          {
-            user: this.getOwner(),
-            repo: this.getRepo()
-          },
-          function(err, res){
-            if(!err){
-              defer.resolve(res);
-            } else {
-              defer.reject();
+      Filter.prototype.getContributorList = function () {
+        var defer = $q.defer(),
+          repo = this.getRepo(),
+          _this = this;
+        if (!_.isUndefined(this.contributorList[repo])) {
+          defer.resolve(this.contributorList[repo]);
+        } else {
+          github.repos.getContributors(
+            {
+              user: this.getOwner(),
+              repo: this.getRepo()
+            },
+            function (err, res) {
+              if (!err) {
+                _this.contributorList[repo] = res;
+                defer.resolve(res);
+              } else {
+                defer.reject();
+              }
             }
-          }
-        );
+          );
+        }
+        return defer.promise;
+      };
+
+      Filter.prototype.getBranchList = function () {
+        var defer = $q.defer(),
+          repoFullName = this.getOwner() + '/' + this.getRepo();
+        if (!_.isUndefined(this.branchList[repoFullName])) {
+          defer.resolve(this.branchList[repoFullName]);
+        } else {
+          getBranchesForRepo(repoFullName)
+            .then(function (branches) {
+              this.branchList[repoFullName] = branches;
+              defer.resolve(branches);
+            }.bind(this));
+        }
         return defer.promise;
       };
 
       Filter.prototype.getNextPage = function () {
+        var prevPage = 2,
+          urlParameter = $location.search();
+        if (urlParameter.page) {
+          prevPage = urlParameter.page++;
+        }
+        this.commitCache = {};
+        $location.search('page', prevPage);
         if (this._needsPostFiltering()) {
           return this.getCommits(this.firstResult + this.maxResults, this.maxResults);
         } else {
@@ -263,6 +306,8 @@
       };
 
       Filter.prototype.getFirstPage = function () {
+        this.commitCache = {};
+        $location.search('page', 1);
         if (this._needsPostFiltering()) {
           return this.getCommits(0, this.maxResults);
         } else {
@@ -273,6 +318,13 @@
       };
 
       Filter.prototype.getPreviousPage = function () {
+        var prevPage,
+          urlParameter = $location.search();
+        if (urlParameter.page) {
+          prevPage = urlParameter.page > 2 ? urlParameter.page-- : 1;
+        }
+        this.commitCache = {};
+        $location.search('page', prevPage);
         if (this._needsPostFiltering()) {
           return this.getCommits(Math.max(0, this.firstResult - this.maxResults), this.maxResults);
         } else {
@@ -347,22 +399,17 @@
       };
 
       Filter.prototype.getCommits = function (firstResult, maxResults) {
-        this.firstResult = firstResult || 0;
-        this.maxResults = maxResults || -1;
-        if (this._needsPostFiltering() || this.maxResults === -1) {
-          return this._getCommitsPostFiltered();
+        if (!_.isUndefined(this.commitCache[getCurrentCommitCacheId()])) {
+          return $q.when(this.commitCache[getCurrentCommitCacheId()]);
         } else {
-          return this._getCommitsDirect();
+          this.firstResult = firstResult || 0;
+          this.maxResults = maxResults || -1;
+          if (this._needsPostFiltering() || this.maxResults === -1) {
+            return this._getCommitsPostFiltered();
+          } else {
+            return this._getCommitsDirect();
+          }
         }
-      };
-
-      Filter.prototype.getAllCommitsFromBranch = function () {
-        var githubMsg = this.prepareGithubApiCallOptions();
-        delete githubMsg.customFilter;
-        if (githubMsg.author) {
-          delete githubMsg.author;
-        }
-        return this.getCommits(null, githubMsg);
       };
 
       Filter.prototype._getCommitsCallback = function (error, commits) {
@@ -378,6 +425,7 @@
             if (!_.isUndefined(commits.meta)) {
               commits = this._extractMeta(commits);
             }
+            this.commitCache[getCurrentCommitCacheId()] = commits;
             this.getCommitsRefer.resolve(commits);
           }
         }
@@ -445,11 +493,14 @@
                 tmpCommits.push(commit);
               }
             });
+            var finalizedCommits;
             if (this.maxResults > -1) {
-              this.getCommitsRefer.resolve(_.first(_.rest(tmpCommits, this.firstResult), this.maxResults));
+              finalizedCommits = _.first(_.rest(tmpCommits, this.firstResult), this.maxResults);
             } else {
-              this.getCommitsRefer.resolve(_.rest(tmpCommits, this.firstResult));
+              finalizedCommits = _.rest(tmpCommits, this.firstResult);
             }
+            this.commitCache[getCurrentCommitCacheId()] = finalizedCommits;
+            this.getCommitsRefer.resolve(finalizedCommits);
           }.bind(this));
       };
 
