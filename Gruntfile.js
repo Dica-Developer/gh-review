@@ -21,7 +21,7 @@ module.exports = function (grunt) {
     devOptions: {
       clientId: '5082108e53d762d90c00',
       apiScope: 'user, repo',
-      redirectUri: 'http://localhost:9000',
+      redirectUri: 'http://localhost:9000/oauth',
       accessTokenUrl: 'http://gh-review.herokuapp.com/bemdsvdsynggmvweibduvjcbgf'
     }
   };
@@ -109,6 +109,7 @@ module.exports = function (grunt) {
           '<%= config.app %>/worker/**/*',
           '<%= config.app %>/*.html',
           '<%= config.app %>/templates/**/*',
+          '<%= config.app %>/oauth/**/*',
           '!<%= config.app %>/bower_components/*'
         ],
         tasks: ['devWatch']

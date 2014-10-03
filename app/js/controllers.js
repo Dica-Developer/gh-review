@@ -3,32 +3,15 @@
 
   /* Controllers */
 
-  return angular.module('GHReview')
+  angular.module('GHReview')
     .controller('RootController', [
-      '$scope',
-      '$location',
-      '$http',
-      '$window',
-      'authenticated',
-      'options',
-      function ($scope, $location, $http, $window, authenticated, options) {
-        var absUrl = $location.absUrl();
-        var codeIndex = absUrl.indexOf('code');
-        var equalIndex = absUrl.indexOf('=');
-        var hashIndex = absUrl.indexOf('#');
-        if (codeIndex > -1) {
-          var authCode = absUrl.slice(equalIndex + 1, hashIndex);
-          var url = options.github.accessTokenUrl + '?' +
-            'client_id=' + options.github.clientId + '&' +
-            'code=' + authCode + '&' +
-            'scope=' + options.github.apiScope;
-          $http.post(url)
-            .then(function (resp) {
-              if (!resp.data.error) {
-                authenticated.set(resp.data);
-              }
-              $window.location.href = $window.location.origin + $window.location.pathname;
-            });
+      '$state',
+      'filter',
+      function ($state, filter) {
+        if (filter.getAll().length > 0) {
+          $state.go('filter');
+        } else {
+          $state.go('addFilter');
         }
       }
     ])
