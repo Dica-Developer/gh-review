@@ -47,7 +47,6 @@
           until: {},
           path: null,
           authors: [],
-          contributor: null,
           meta: {
             isSaved: false,
             lastEdited: null,
@@ -141,11 +140,6 @@
 
       Filter.prototype.getAuthors = function () {
         return this.options.authors;
-      };
-
-      Filter.prototype.setContributor = function (contributor) {
-        this.options.contributor = contributor;
-        this.options.meta.isSaved = false;
       };
 
       Filter.prototype.setBranch = function (branch) {
