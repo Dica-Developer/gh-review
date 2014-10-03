@@ -1,21 +1,44 @@
 (function (angular) {
   'use strict';
 
-  var generateUUID = function () {
-    var d = new Date().getTime();
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-      var r = (d + Math.random() * 16) % 16 | 0;
-      d = Math.floor(d / 16);
-      return (c === 'x' ? r : (r & 0x7 | 0x8)).toString(16);
-    });
-  };
-
-  var tmpCommits = {};
 
   var services = angular.module('GHReview');
-  services.factory('Filter', ['$q', '_', 'moment', 'github', 'commentCollector', 'localStorageService',
-    function ($q, _, moment, github, commentCollector, localStorageService) {
-      var Filter = function (filterId) {
+  services.factory('filterProvider', [
+    '$q',
+    '$location',
+    '_',
+    'moment',
+    'github',
+    'commentCollector',
+    'localStorageService',
+    'getBranchesForRepo',
+    function ($q, $location, _, moment, github, commentCollector, localStorageService, getBranchesForRepo) {
+
+      var tmpCommits = {},
+        filterHolder = {},
+        generateUUID = function () {
+          var d = new Date().getTime();
+          return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = (d + Math.random() * 16) % 16 | 0;
+            d = Math.floor(d / 16);
+            return (c === 'x' ? r : (r & 0x7 | 0x8)).toString(16);
+          });
+        },
+        getCurrentCommitCacheId = function () {
+          var commitCacheId = $location.url();
+          var urlParameter = $location.search();
+          if (urlParameter.page) {
+            commitCacheId = commitCacheId + '?page=' + urlParameter.page;
+          }
+
+          if (commitCacheId.indexOf('#') > -1) {
+            commitCacheId = commitCacheId.substr(0, commitCacheId.indexOf('#'));
+          }
+          return commitCacheId;
+        };
+
+
+      function Filter(filterId) {
         this.options = {
           repo: null,
           user: null,
@@ -436,7 +459,19 @@
           }.bind(this));
       };
 
-      return Filter;
+      return {
+        get: function (id) {
+          if (!filterHolder[id]) {
+            filterHolder[id] = new Filter(id);
+          }
+          return filterHolder[id];
+        },
+        getNew: function () {
+          var newFilter = new Filter();
+          filterHolder[newFilter.getId()] = newFilter;
+          return newFilter;
+        }
+      };
     }
   ]);
 }(angular));

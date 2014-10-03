@@ -102,22 +102,22 @@
     }
   ]);
 
-  services.factory('filter', ['_', 'localStorageService', 'Filter',
-    function (_, localStorageService, Filter) {
+  services.factory('filter', ['_', 'localStorageService', 'filterProvider',
+    function (_, localStorageService, filterProvider) {
 
       var getAll = function () {
         var filter = [];
         var filterIds = localStorageService.get('filter');
         if (filterIds !== null) {
           filterIds.split(',').forEach(function (id) {
-            filter.push(new Filter(id));
+            filter.push(filterProvider.get(id));
           });
         }
         return filter;
       };
 
       var getById = function (filterId) {
-        return new Filter(filterId);
+        return filterProvider.get(filterId);
       };
 
       var remove = function (filterId) {
