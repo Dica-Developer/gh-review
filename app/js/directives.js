@@ -134,7 +134,7 @@
     };
   });
 
-  directives.directive('commitHeader', ['$compile',
+  directives.directive('commitHeader', [
     function () {
       var shouldBeCollabsible = false;
       return {
