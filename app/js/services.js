@@ -274,37 +274,56 @@
     }
   ]);
 
-  services.factory('getAllRepos', ['$q', 'githubUserData', 'localStorageService',
-    function ($q, githubUserData, localStorageService) {
+  services.factory('getAllRepos', ['$q', '$interval', 'githubUserData', 'localStorageService',
+    function ($q, $interval, githubUserData, localStorageService) {
+      var repositoriesCache = [];
+      $interval(function clearRepoCache(){
+        repositoriesCache = [];
+      }, 1800000); //1800000 = 1/2 hour
+
       return function () {
         var defer = $q.defer();
-        var getReposWorker = new Worker('js/worker/getAllReposAndBranches.js');
-        var accessToken = localStorageService.get('accessToken');
-        getReposWorker.onmessage = function (event) {
-          defer.resolve(event.data.repos);
-          getReposWorker.terminate();
-        };
+        if (repositoriesCache.length > 0) {
+          defer.resolve(repositoriesCache);
+        } else {
+          var getReposWorker = new Worker('js/worker/getAllReposAndBranches.js');
+          var accessToken = localStorageService.get('accessToken');
+          getReposWorker.onmessage = function (event) {
+            repositoriesCache = event.data.repos;
+            defer.resolve(event.data.repos);
+            getReposWorker.terminate();
+          };
 
-        githubUserData.get()
-          .then(function (userData) {
-            getReposWorker.postMessage({
-              type: 'getAllRepos',
-              user: userData.login,
-              accessToken: accessToken
+          githubUserData.get()
+            .then(function (userData) {
+              getReposWorker.postMessage({
+                type: 'getAllRepos',
+                user: userData.login,
+                accessToken: accessToken
+              });
             });
-          });
+        }
         return defer.promise;
       };
     }
   ]);
 
-  services.factory('getBranchesForRepo', ['$q', 'githubUserData', 'localStorageService',
-    function ($q, githubUserData, localStorageService) {
-      return function (repo) {
-        var defer = $q.defer();
-        var getReposWorker = new Worker('js/worker/getAllReposAndBranches.js');
-        var accessToken = localStorageService.get('accessToken');
+  services.factory('getBranchesForRepo', ['$q', '$interval', 'localStorageService',
+    function ($q, $interval, localStorageService) {
+      var branchesCache = {};
+      $interval(function updateBranchesCache(){
+        Object.keys(branchesCache).forEach(function(repoFullName){
+          getBranchesForRepo(repoFullName);
+        });
+        branchesCache = {};
+      }, 600000); //600000 = 10min
+
+      function getBranchesForRepo(repoFullName) {
+        var defer = $q.defer(),
+          getReposWorker = new Worker('js/worker/getAllReposAndBranches.js'),
+          accessToken = localStorageService.get('accessToken');
         getReposWorker.onmessage = function (event) {
+          branchesCache[repoFullName] = event.data.branches;
           defer.resolve(event.data.branches);
           getReposWorker.terminate();
         };
@@ -312,9 +331,17 @@
         getReposWorker.postMessage({
           type: 'getBranchesForRepo',
           accessToken: accessToken,
-          repo: repo
+          repo: repoFullName
         });
         return defer.promise;
+      }
+
+      return function (repoFullName) {
+        if(branchesCache[repoFullName]){
+          return $q.when(branchesCache[repoFullName]);
+        } else {
+          return getBranchesForRepo(repoFullName);
+        }
       };
     }
   ]);
