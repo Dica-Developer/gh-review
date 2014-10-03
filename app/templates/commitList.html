@@ -1,10 +1,10 @@
 <commit-list-paginator></commit-list-paginator>
 
 <div class="col-lg-12">
-    <div class="panel panel-default" ng-repeat="commits in sortedGroupedCommits">
+    <div class="panel panel-default" ng-repeat="commits in sortedCommits">
         <div class="panel-heading" formatted-date format="LL" date="commits[0].commit.committer.date"></div>
         <ul id="commitList" class="list-group">
-            <a ng-class="{'selected-commit': (selectedCommit === commit.sha)}" ng-repeat="commit in commits" ui-sref="commitBySha({sha: commit.sha, user: user, repo: repo})"
+            <a ng-class="{'selected-commit': (selectedCommit === commit.sha)}" ng-repeat="commit in commits" ui-sref="commitBySha({sha: commit.sha, user: filter.getOwner(), repo: filter.getRepo()})"
                class="list-group-item" ng-click="loader = commit.sha">
                 <div id="{{commit.sha}}" class="scroll-anchor"></div>
                 <div class="media">
