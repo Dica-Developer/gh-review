@@ -36,9 +36,9 @@
                     </div>
                     <div ng-if="contributorList.length > 0" class="form-group">
                         <label for="filterContributor">Contributor: </label>
-                        <ui-select id="filterContributor" multiple ng-model="scope.contributor" class="input-sm" style="width: 300px;">
+                        <ui-select id="filterContributor" multiple ng-model="scope.selectedContributor" class="input-sm" style="width: 300px;">
                             <ui-select-match placeholder="Select contributor...">{{$item.login}}</ui-select-match>
-                            <ui-select-choices repeat="contributor.login as contributor in contributorList | filter:$select.search">
+                            <ui-select-choices repeat="contributor in contributorList | filter:$select.search">
                                 <img height="36px" class="media-object pull-left" ng-src="{{contributor.avatar_url}}" />&nbsp;<div ng-bind-html="contributor.login| highlight: $select.search"></div>
                             </ui-select-choices>
                         </ui-select>
@@ -56,34 +56,7 @@
                 <div ng-if="commits.length <= 0 && fetchingCommits" class="well">
                     Fetching commits for {{scope.selectedRepo.full_name}} - {{scope.selectedBranch}}
                 </div>
-                <ul ng-if="commits.length > 0 && !fetchingCommits" id="commitList" class="list-group">
-                    <li ng-repeat="commit in commits" class="list-group-item">
-                        <div class="media">
-                            <img height="36px" class="media-object pull-left" ng-src="{{commit.author.avatar_url}}"
-                                 title="{{commit.commit.author.name}}">
-
-                            <div class="media-body">
-                                <div class="commit-message" title="{{commit.commit.message}}">
-                                    <strong class="breakLine">{{commit.commit.message}}</strong>
-                                </div>
-                                <div class="commit-meta">
-                                    {{commit.commit.author.name}}
-                                    <small formatted-date date="commit.commit.committer.date"></small>
-                                </div>
-                                <div class="pull-right">
-                                    <span ng-show="commit.commit.comment_count > 0" class="label label-info">
-                                        <ng-pluralize count="commit.commit.comment_count"
-                                                      when="{
-                                                            'one': '1 comment',
-                                                            'other': '{} comments'}
-                                                            ">
-                                        </ng-pluralize>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
+                <ghreview-commit-list ng-if="commits.length > 0 && !fetchingCommits" commit-list="commits" filter="filter"></ghreview-commit-list>
             </div>
         </div>
     </div>
