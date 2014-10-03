@@ -14,11 +14,17 @@
             '$scope',
             '$location',
             '$state',
+            'getCommitApproved',
             'moment',
             '_',
             'hotkeys',
-            function ($scope, $location, $state, moment, _, hotkeys) {
-              var flattenedCommitList = [], currentCommitPointer = -1;
+            function ($scope, $location, $state, getCommitApproved, moment, _, hotkeys) {
+              var flattenedCommitList = [], currentCommitPointer = -1, approvedCommits;
+
+              getCommitApproved
+                .then(function (result) {
+                  approvedCommits = result;
+                });
 
               hotkeys.bindTo($scope)
                 .add({
@@ -112,7 +118,12 @@
               $scope.hasNext = $scope.filter.hasNextPage;
               $scope.hasPrevious = $scope.filter.hasPreviousPage;
               $scope.hasFirst = $scope.filter.hasFirstPage;
-            }],
+
+              $scope.commitApproved = function (sha) {
+                return (true === approvedCommits[sha]);
+              };
+            }
+          ],
           link: function ($scope, element, attr, controller) {
             $scope.$watch(attr.commits, function () {
               controller.setSortedCommits();
