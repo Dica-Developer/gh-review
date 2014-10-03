@@ -1,4 +1,4 @@
-(function(angular){
+(function (angular) {
 //TODO options
   'use strict';
 
