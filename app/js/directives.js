@@ -3,63 +3,65 @@
 
   /* Directives */
 
-  var directives = angular.module('GHReview');
+  var app = angular.module('GHReview');
 
-  directives.directive('menu', [
+  app.controller('menuDirectiveController', ['$scope', '$state', 'authenticated', 'githubUserData', 'collectComments', 'hotkeys', function ($scope, $state, authenticated, githubUserData, collectComments, hotkeys) {
+    $scope.authenticated = authenticated.get() ? true : false;
+    if($scope.authenticated){
+      collectComments();
+      hotkeys.bindTo($scope)
+        .add({
+          combo: 'g f',
+          description: 'Go to filter list',
+          callback: function (event) {
+            event.preventDefault();
+            $state.go('listFilter');
+          }
+        })
+        .add({
+          combo: 'g m',
+          description: 'Go to module search',
+          callback: function (event) {
+            event.preventDefault();
+            $state.go('modules');
+          }
+        })
+        .add({
+          combo: 'g w',
+          description: 'Go to "Who Am I" page',
+          callback: function (event) {
+            event.preventDefault();
+            $state.go('whoami');
+          }
+        })
+        .add({
+          combo: ': q',
+          description: 'Logout',
+          callback: function (event) {
+            event.preventDefault();
+            $state.go('logout');
+          }
+        });
+      githubUserData.get()
+        .then(function (userData) {
+          $scope.name = userData.name;
+        });
+    }
+  }]);
+
+  app.directive('menu', [
     function () {
       return {
         restrict: 'A',
         templateUrl: 'templates/menu.html',
-        controller: ['$scope', '$state', 'authenticated', 'githubUserData', 'collectComments', 'hotkeys', function ($scope, $state, authenticated, githubUserData, collectComments, hotkeys) {
-          $scope.authenticated = authenticated.get() ? true : false;
-          if($scope.authenticated){
-            collectComments();
-            hotkeys.bindTo($scope)
-              .add({
-                combo: 'g f',
-                description: 'Go to filter list',
-                callback: function (event) {
-                  event.preventDefault();
-                  $state.go('listFilter');
-                }
-              })
-              .add({
-                combo: 'g m',
-                description: 'Go to module search',
-                callback: function (event) {
-                  event.preventDefault();
-                  $state.go('modules');
-                }
-              })
-              .add({
-                combo: 'g w',
-                description: 'Go to "Who Am I" page',
-                callback: function (event) {
-                  event.preventDefault();
-                  $state.go('whoami');
-                }
-              })
-              .add({
-                combo: ': q',
-                description: 'Logout',
-                callback: function (event) {
-                  event.preventDefault();
-                  $state.go('logout');
-                }
-              });
-            githubUserData.get()
-              .then(function (userData) {
-                $scope.name = userData.name;
-              });
-          }
-        }],
+        controller: 'menuDirectiveController',
         link: [function () {
         }]
       };
     }
   ]);
 
-  directives.directive('formattedDate', ['humanReadableDate',
+  app.directive('formattedDate', ['humanReadableDate',
     function (humanReadableDate) {
       return {
         restrict: 'AE',
@@ -79,14 +81,14 @@
     }
   ]);
 
-  directives.directive('commitListPaginator', function () {
+  app.directive('commitListPaginator', function () {
     return {
       restrict: 'E',
       templateUrl: 'templates/commitListPaginator.html'
     };
   });
 
-  directives.directive('avatar', function () {
+  app.directive('avatar', function () {
     return {
       restrict: 'E',
       template: '<a href="{{link}}" title="{{name}}" target="_blank"><img height="32px" class="media-object pull-left" ng-src="{{imgLink}}"></a>',
@@ -101,7 +103,7 @@
     };
   });
 
-  directives.directive('comment', [
+  app.directive('comment', [
     function () {
       return {
         restrict: 'A',
@@ -114,7 +116,7 @@
   ]);
 
   var maxLengthForFirstLine = 100;
-  directives.directive('commitMessageTeaser', function () {
+  app.directive('commitMessageTeaser', function () {
     return {
       restrict: 'E',
       link: function ($scope, element, attr) {
@@ -131,7 +133,7 @@
     };
   });
 
-  directives.directive('commitHeader', [
+  app.directive('commitHeader', [
     function () {
       var shouldBeCollabsible = false;
       return {
