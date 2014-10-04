@@ -37,6 +37,7 @@
     ])
 
     .controller('WelcomeController', [
+      /* istanbul ignore next */
       function () {
       }
     ])
