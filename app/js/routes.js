@@ -4,13 +4,21 @@
   angular.module('GHReview')
     .config(['$stateProvider', '$urlRouterProvider',
       function ($stateProvider, $urlRouterProvider) {
+
+        function checkIfAuthenticated($state, authenticated){
+          if(!authenticated.get()){
+            $state.go('welcome');
+          }
+        }
+
         $urlRouterProvider.otherwise('/');
         // Now set up the states
         $stateProvider
           .state('index', {
             url: '/',
             templateUrl: 'templates/welcome.html',
-            controller: 'RootController'
+            controller: 'RootController',
+            onEnter: ['$state', 'authenticated', checkIfAuthenticated]
           })
           .state('login', {
             url: '/login',
@@ -28,27 +36,32 @@
           .state('whoami', {
             url: '/whoami',
             templateUrl: 'templates/whoami.html',
-            controller: 'WhoAmIController'
+            controller: 'WhoAmIController',
+            onEnter: ['$state', 'authenticated', checkIfAuthenticated]
           })
           .state('filter', {
             url: '/filter',
             templateUrl: 'templates/filterList.html',
-            controller: 'FilterListController'
+            controller: 'FilterListController',
+            onEnter: ['$state', 'authenticated', checkIfAuthenticated]
           })
           .state('addFilter', {
             url: '/filter/add',
             templateUrl: 'templates/filter.html',
-            controller: 'FilterController'
+            controller: 'FilterController',
+            onEnter: ['$state', 'authenticated', checkIfAuthenticated]
           })
           .state('editFilter', {
             url: '/filter/edit/{filterId}',
             templateUrl: 'templates/filter.html',
-            controller: 'FilterController'
+            controller: 'FilterController',
+            onEnter: ['$state', 'authenticated', checkIfAuthenticated]
           })
           .state('modules', {
             url: '/filter/modules',
             templateUrl: 'templates/moduleFilter.html',
             controller: 'ModuleFilterController',
+            onEnter: ['$state', 'authenticated', checkIfAuthenticated],
             resolve: {
               allRepos: ['getAllAvailableRepos',
                 function (getAllAvailableRepos) {
@@ -61,6 +74,7 @@
             url: '/filter/{filterId}/commits',
             templateUrl: 'templates/filter.html',
             controller: 'FilterController',
+            onEnter: ['$state', 'authenticated', checkIfAuthenticated],
             resolve: {
               commitsApproved: 'getCommitApproved'
             }
@@ -69,6 +83,7 @@
             url: '/{user}/{repo}/commit/{sha}',
             templateUrl: 'templates/commit.html',
             controller: 'CommitController',
+            onEnter: ['$state', 'authenticated', checkIfAuthenticated],
             resolve: {
               commitsAndComments: ['$q', '$stateParams', 'commentProviderService', 'commitProviderService',
                 function ($q, $stateParams, commentProviderService, commitProviderService) {
@@ -86,6 +101,7 @@
             url: '/{user}/{repo}/blob/{sha}/*path?ref',
             templateUrl: 'templates/file.html',
             controller: 'FileController',
+            onEnter: ['$state', 'authenticated', checkIfAuthenticated],
             resolve: {
               /**
                *
