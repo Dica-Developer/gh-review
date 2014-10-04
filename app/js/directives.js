@@ -139,7 +139,7 @@
       var shouldBeCollabsible = false;
       return {
         restrict: 'E',
-        templateUrl: function(){
+        templateUrl: function () {
           return shouldBeCollabsible ? 'templates/commitHeaderCollabsible.html' : 'templates/commitHeader.html';
         },
         link: function ($scope, element, attr) {
