@@ -22,41 +22,33 @@ describe('#Filter', function () {
     }
   };
 
-  it('Should be defined', inject(['Filter',
-    function (Filter) {
-      expect(Filter).toBeDefined();
+  it('Should be defined', inject(['filterProvider',
+    function (filterProvider) {
+      expect(filterProvider).toBeDefined();
     }
   ]));
 
   describe('#Filter.init', function () {
 
-    it('Should be called', inject(['Filter',
-      function (Filter) {
-        spyOn(Filter.prototype, 'init');
-        new Filter();
-        expect(Filter.prototype.init).toHaveBeenCalled();
-      }
-    ]));
-
-    it('Should set new id if not provided', inject(['Filter',
-      function (Filter) {
-        var filter = new Filter();
+    it('Should set new id if not provided', inject(['filterProvider',
+      function (filterProvider) {
+        var filter = filterProvider.getNew();
         expect(filter.options.id).not.toBeNull();
       }
     ]));
 
-    it('Should call localStorageService if filterId is provided', inject(['Filter', 'localStorageService',
-      function (Filter, localStorageService) {
+    it('Should call localStorageService if filterId is provided', inject(['filterProvider', 'localStorageService',
+      function (filterProvider, localStorageService) {
         spyOn(localStorageService, 'get');
-        new Filter('filterId');
+        filterProvider.get('filterId');
         expect(localStorageService.get).toHaveBeenCalledWith('filter-filterId');
       }
     ]));
 
-    it('Should set options to what localStorageService returns', inject(['Filter',
-      function (Filter) {
+    it('Should set options to what localStorageService returns', inject(['filterProvider',
+      function (filterProvider) {
         window.localStorage.setItem('ghreview.filter-filterId', JSON.stringify(filterOptions));
-        var filter = new Filter('filterId');
+        var filter = filterProvider.get('filterId');
         _.each(filterOptions, function (value, key) {
           expect(filter.options[key]).toEqual(value);
         });
@@ -67,12 +59,11 @@ describe('#Filter', function () {
   });
 
   describe('setter', function () {
-    var filterProtos, filter;
-    beforeEach(inject(['Filter',
-      function (Filter) {
+    var filter;
+    beforeEach(inject(['filterProvider',
+      function (filterProvider) {
         window.localStorage.setItem('ghreview.filter-filterId', JSON.stringify(filterOptions));
-        filter = new Filter('filterId');
-        filterProtos = Filter.prototype;
+        filter = filterProvider.get('filterId');
       }
     ]));
     afterEach(function () {
@@ -131,12 +122,6 @@ describe('#Filter', function () {
       expect(filter.hasAuthor('TestAuthor')).toBe(false);
     });
 
-    it('setContributor should set contributor to given string', function () {
-      expect(filter.options.contributor).toBeNull();
-      filter.setContributor('TestContributor');
-      expect(filter.options.contributor).toBe('TestContributor');
-    });
-
     it('setSince should accept only object', function () {
       expect(function () {
         filter.setSince('TestContributor');
@@ -181,12 +166,11 @@ describe('#Filter', function () {
   });
 
   describe('getter', function () {
-    var filterProtos, filter;
-    beforeEach(inject(['Filter',
-      function (Filter) {
+    var filter;
+    beforeEach(inject(['filterProvider',
+      function (filterProvider) {
         window.localStorage.setItem('ghreview.filter-filterId', JSON.stringify(filterOptions));
-        filter = new Filter('filterId');
-        filterProtos = Filter.prototype;
+        filter = filterProvider.get('filterId');
       }
     ]));
 
@@ -250,12 +234,11 @@ describe('#Filter', function () {
   });
 
   describe('#Filter.save', function () {
-    var filterProtos, filter, lSS;
-    beforeEach(inject(['Filter', 'localStorageService',
-      function (Filter, localStorageService) {
+    var filter, lSS;
+    beforeEach(inject(['filterProvider', 'localStorageService',
+      function (filterProvider, localStorageService) {
         window.localStorage.setItem('ghreview.filter-filterId', JSON.stringify(filterOptions));
-        filter = new Filter('filterId');
-        filterProtos = Filter.prototype;
+        filter = filterProvider.get('filterId');
         lSS = localStorageService;
       }
     ]));
@@ -294,7 +277,7 @@ describe('#Filter', function () {
   });
 
   describe('core functions', function () {
-    var filterProtos, filter, $q, github, $rootScope;
+    var filter, $q, github, $rootScope;
     beforeEach(inject(function ($injector) {
       window.localStorage.setItem('ghreview.filter-filterId', JSON.stringify(filterOptions));
       window.localStorage.setItem('ls.accessToken', 'abc');
@@ -302,10 +285,8 @@ describe('#Filter', function () {
       $q = $injector.get('$q');
       github = $injector.get('github');
       $rootScope = $injector.get('$rootScope');
-
-      var Filter = $injector.get('Filter');
-      filterProtos = Filter.prototype;
-      filter = new Filter('filterId');
+      var filterProvider = $injector.get('filterProvider');
+      filter = filterProvider.get('filterId');
 
     }));
 
@@ -344,7 +325,7 @@ describe('#Filter', function () {
     });
 
     it('#Filter.getNextPage should call #Filter.getCommits if customFilter is set', function () {
-      var getCommitsSpy = spyOn(filterProtos, 'getCommits');
+      var getCommitsSpy = spyOn(filter, 'getCommits');
       filter.getNextPage();
       expect(getCommitsSpy).toHaveBeenCalled();
     });
@@ -357,7 +338,7 @@ describe('#Filter', function () {
     });
 
     it('#Filter.getFirstPage should call #Filter.getCommits if customFilter is set', function () {
-      var getCommitsSpy = spyOn(filterProtos, 'getCommits');
+      var getCommitsSpy = spyOn(filter, 'getCommits');
       filter.getFirstPage();
       expect(getCommitsSpy).toHaveBeenCalled();
     });
@@ -370,7 +351,7 @@ describe('#Filter', function () {
     });
 
     it('#Filter.getPreviousPage should call #Filter.getCommits if customFilter is set', function () {
-      var getCommitsSpy = spyOn(filterProtos, 'getCommits');
+      var getCommitsSpy = spyOn(filter, 'getCommits');
       filter.getPreviousPage();
       expect(getCommitsSpy).toHaveBeenCalled();
     });
