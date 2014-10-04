@@ -7,7 +7,7 @@
 
   app.controller('menuDirectiveController', ['$scope', '$state', 'authenticated', 'githubUserData', 'collectComments', 'hotkeys', function ($scope, $state, authenticated, githubUserData, collectComments, hotkeys) {
     $scope.authenticated = authenticated.get() ? true : false;
-    if($scope.authenticated){
+    if ($scope.authenticated) {
       collectComments();
       hotkeys.bindTo($scope)
         .add({
@@ -55,8 +55,11 @@
         restrict: 'A',
         templateUrl: 'templates/menu.html',
         controller: 'menuDirectiveController',
-        link: [function () {
-        }]
+        link: [
+          /* istanbul ignore next */
+          function () {
+          }
+        ]
       };
     }
   ]);
