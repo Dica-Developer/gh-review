@@ -288,4 +288,14 @@ describe('#Directives', function () {
     });
 
   });
+
+  describe('menu', function () {
+
+    it('Should hide menu if user is not authenticated', function () {
+      var element = $compile('<div menu></div>')($rootScope);
+      $rootScope.$digest();
+      expect(element.find('a').text()).toBe('Sign in with Github');
+    });
+
+  });
 });
