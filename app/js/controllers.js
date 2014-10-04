@@ -28,11 +28,16 @@
     ])
 
     .controller('LogoutController', [
-      '$window',
+      '$state',
       'localStorageService',
-      function ($window, localStorageService) {
+      function ($state, localStorageService) {
         localStorageService.remove('accessToken');
-        $window.location.replace($window.location.origin + $window.location.pathname);
+        $state.go('welcome');
+      }
+    ])
+
+    .controller('WelcomeController', [
+      function () {
       }
     ])
 

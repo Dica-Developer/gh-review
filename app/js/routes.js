@@ -20,6 +20,11 @@
             url: '/logout',
             controller: 'LogoutController'
           })
+          .state('welcome', {
+            url: '/welcome',
+            templateUrl: 'templates/welcome.html',
+            controller: 'WelcomeController'
+          })
           .state('whoami', {
             url: '/whoami',
             templateUrl: 'templates/whoami.html',
