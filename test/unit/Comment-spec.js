@@ -31,8 +31,13 @@ describe('#Comment', function () {
   beforeEach(angular.mock.module('GHReview'));
 
   beforeEach(inject(function ($injector) {
+    localStorage.setItem('ghreview.accessToken', '44046cd4b4b85afebfe3ccaec13fd8c08cc80aad');
     Comment = $injector.get('Comment');
   }));
+
+  afterEach(function(){
+    localStorage.clear();
+  });
 
   it('Should be defined', function () {
     expect(Comment).toBeDefined();
