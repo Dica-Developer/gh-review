@@ -5,60 +5,57 @@
 
   var directives = angular.module('GHReview');
 
-  directives.directive('menu', ['$state', 'authenticated', 'githubUserData', 'collectComments', 'hotkeys',
-    function ($state, authenticated, githubUserData, collectComments, hotkeys) {
-      var commentCollectorInitialized = false;
-      if (!commentCollectorInitialized) {
-        commentCollectorInitialized = collectComments();
-      }
-      var returnVal = {
-        restrict: 'A'
+  directives.directive('menu', [
+    function () {
+      return {
+        restrict: 'A',
+        templateUrl: 'templates/menu.html',
+        controller: ['$scope', '$state', 'authenticated', 'githubUserData', 'collectComments', 'hotkeys', function ($scope, $state, authenticated, githubUserData, collectComments, hotkeys) {
+          $scope.authenticated = authenticated.get() ? true : false;
+          if($scope.authenticated){
+            collectComments();
+            hotkeys.bindTo($scope)
+              .add({
+                combo: 'g f',
+                description: 'Go to filter list',
+                callback: function (event) {
+                  event.preventDefault();
+                  $state.go('filter');
+                }
+              })
+              .add({
+                combo: 'g m',
+                description: 'Go to module search',
+                callback: function (event) {
+                  event.preventDefault();
+                  $state.go('modules');
+                }
+              })
+              .add({
+                combo: 'g w',
+                description: 'Go to "Who Am I" page',
+                callback: function (event) {
+                  event.preventDefault();
+                  $state.go('whoami');
+                }
+              })
+              .add({
+                combo: ': q',
+                description: 'Logout',
+                callback: function (event) {
+                  event.preventDefault();
+                  $state.go('logout');
+                }
+              });
+            githubUserData.get()
+              .then(function (userData) {
+                $scope.name = userData.name;
+              });
+          }
+        }],
+        link: [function () {
+        }]
       };
-      if (authenticated.get()) {
-        returnVal.templateUrl = 'templates/authenticatedMenu.html';
-        returnVal.link = function ($scope) {
-          hotkeys.bindTo($scope)
-            .add({
-              combo: 'g f',
-              description: 'Go to filter list',
-              callback: function (event) {
-                event.preventDefault();
-                $state.go('filter');
-              }
-            })
-            .add({
-              combo: 'g m',
-              description: 'Go to module search',
-              callback: function (event) {
-                event.preventDefault();
-                $state.go('modules');
-              }
-            })
-            .add({
-              combo: 'g w',
-              description: 'Go to "Who Am I" page',
-              callback: function (event) {
-                event.preventDefault();
-                $state.go('whoami');
-              }
-            })
-            .add({
-              combo: ': q',
-              description: 'Logout',
-              callback: function (event) {
-                event.preventDefault();
-                $state.go('logout');
-              }
-            });
-          githubUserData.get()
-            .then(function (userData) {
-              $scope.name = userData.name;
-            });
-        };
-      } else {
-        returnVal.templateUrl = 'templates/menu.html';
-      }
-      return returnVal;
     }
   ]);
 
