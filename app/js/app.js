@@ -1,55 +1,18 @@
-define([
-  'angular',
-  'Filter',
-  'Chunk',
-  'Charts',
-  'Comment',
-  'CommentCollector',
-  'CommentProvider',
-  'CommitProvider',
-  'services',
-  'directives',
-  'controllers',
-  'angularRoute',
-  'angularUi',
-  'angularLocalStorage',
-  'angularSanitize',
-  'angularAnimate',
-  'angularHighlightJS',
-  'angularHotkeys',
-
-  'FilterController',
-  'FilterListController',
-  'FileController',
-  'ModuleFilterController',
-  'CommitController',
-  'CommitListController',
-  'Events'
-], function (angular) {
+(function (angular) {
   'use strict';
 
-  return angular.module('GHReview', [
-    'GHReview.Filter',
-    'GHReview.CommentProvider',
-    'GHReview.CommentCollector',
-    'GHReview.CommitProvider',
-    'GHReview.Chunk',
-    'GHReview.Charts',
-    'GHReview.Comment',
-    'GHReview.controllers',
-    'GHReview.services',
-    'GHReview.directives',
-    'GHReview.Events',
+  angular.module('GHReview', [
     'ui.router',
+    'ui.select',
     'ui.bootstrap',
     'cfp.hotkeys',
     'LocalStorageModule',
     'ngSanitize',
     'ngAnimate',
     'hljs'
-  ])
-    .config(['hotkeysProvider', function(hotkeysProvider) {
-      hotkeysProvider.includeCheatSheet = true;
-    }]);
-
-});
+  ]).config(['localStorageServiceProvider',
+    function (localStorageServiceProvider) {
+      localStorageServiceProvider.setPrefix('ghreview');
+    }
+  ]);
+}(angular));

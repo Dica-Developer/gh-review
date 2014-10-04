@@ -66,7 +66,7 @@
                 expect(userMenu.getLinkUrl(userMenu.moreLink)).toEqual('https://github.com/Dica-Developer/gh-review');
                 expect(userMenu.getLinkUrl(userMenu.howtoLink)).toEqual('https://github.com/Dica-Developer/gh-review/wiki');
                 expect(userMenu.getLinkUrl(userMenu.aboutLink)).toBeNull();
-                expect(userMenu.getLinkUrl(userMenu.logoutLink)).toBeNull();
+                expect(userMenu.getLinkUrl(userMenu.logoutLink)).toEqual('http://localhost:9001/#/logout');
                 userMenu.hide();
             });
         });

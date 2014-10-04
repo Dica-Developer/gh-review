@@ -1,10 +1,9 @@
-/*global define*/
-define(['angular', 'lodash'], function (angular, _) {
+(function (angular) {
   'use strict';
 
-  var chunkModule = angular.module('GHReview.Chunk', []);
+  var chunkModule = angular.module('GHReview');
 
-  chunkModule.factory('Chunk', function () {
+  chunkModule.factory('Chunk', ['_', function (_) {
     if (typeof String.prototype.startsWith !== 'function') {
       String.prototype.startsWith = function (str) {
         return this.slice(0, str.length) === str;
@@ -100,5 +99,5 @@ define(['angular', 'lodash'], function (angular, _) {
     };
 
     return Chunk;
-  });
-});
+  }]);
+}(angular));

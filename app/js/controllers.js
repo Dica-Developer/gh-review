@@ -1,55 +1,44 @@
-define(['angular'], function (angular) {
+(function (angular) {
   'use strict';
 
   /* Controllers */
 
-  return angular.module('GHReview.controllers', [])
+  angular.module('GHReview')
     .controller('RootController', [
-      '$scope',
-      '$location',
-      '$http',
-      '$window',
-      'authenticated',
-      'githubOptions',
-      function ($scope, $location, $http, $window, authenticated, githubOptions) {
-        var absUrl = $location.absUrl();
-        var codeIndex = absUrl.indexOf('code');
-        var equalIndex = absUrl.indexOf('=');
-        var hashIndex = absUrl.indexOf('#');
-        if (codeIndex > -1) {
-          var authCode = absUrl.slice(equalIndex + 1, hashIndex);
-          var url = githubOptions.accessTokenUrl + '?' +
-            'client_id=' + githubOptions.clientId + '&' +
-            'code=' + authCode + '&' +
-            'scope=' + githubOptions.apiScope;
-          $http.post(url)
-            .then(function (resp) {
-              if (!resp.data.error) {
-                authenticated.set(resp.data);
-              }
-              $window.location.href = $window.location.origin + $window.location.pathname;
-            });
+      '$state',
+      'filter',
+      function ($state, filter) {
+        if (filter.getAll().length > 0) {
+          $state.go('listFilter');
+        } else {
+          $state.go('addFilter');
         }
       }
     ])
 
-    .controller('LoginController', ['$scope', '$window', 'githubOptions',
-      function ($scope, $window, githubOptions) {
+    .controller('LoginController', ['$scope', '$window', 'options',
+      function ($scope, $window, options) {
         var url = 'https://github.com/login/oauth/authorize?' +
-          'client_id=' + githubOptions.clientId + '&' +
-          'redirect_uri=' + githubOptions.redirectUri + '&' +
-          'scope=' + githubOptions.apiScope;
+          'client_id=' + options.github.clientId + '&' +
+          'redirect_uri=' + options.github.redirectUri + '&' +
+          'scope=' + options.github.apiScope;
 
         $window.location.href = url;
       }
     ])
 
     .controller('LogoutController', [
-      '$window',
+      '$state',
       'localStorageService',
-      function ($window, localStorageService) {
+      function ($state, localStorageService) {
         localStorageService.remove('accessToken');
-        $window.location.replace($window.location.origin + $window.location.pathname);
+        $state.go('welcome');
+      }
+    ])
+
+    .controller('WelcomeController', [
+      /* istanbul ignore next */
+      function () {
       }
     ])
 
@@ -61,4 +50,4 @@ define(['angular'], function (angular) {
           });
       }
     ]);
-});
+}(angular));
