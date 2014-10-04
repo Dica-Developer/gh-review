@@ -112,7 +112,9 @@
         restrict: 'A',
         templateUrl: 'templates/comment.html',
         scope: {
-          comment: '=content'
+          'comment': '=content',
+          'cancel': '&',
+          'delete': '&'
         }
       };
     }
