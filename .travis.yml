@@ -5,6 +5,13 @@ before_script:
   - npm install -g grunt-cli
   - npm install -g bower
   - bower install --config.interactive=false
+env:
+  global:
+    - SAUCE_USERNAME=JayGray
+    - SAUCE_ACCESS_KEY=a8751009-5b79-4117-b990-507d09465216
+
+addons:
+  sauce_connect: true
 notifications:
   email:
     - ci@dica-developer.org

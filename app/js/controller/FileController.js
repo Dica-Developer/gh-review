@@ -1,15 +1,17 @@
-define(['lodash', 'controllers'], function (_, controllers) {
+(function (angular) {
   'use strict';
-  controllers
+  angular.module('GHReview')
     .controller('FileController', [
       '$scope',
       '$q',
       '$stateParams',
+      '_',
+      'moment',
       'fileContent',
       'commits',
       'Chunk',
       'commentProvider',
-      function ($scope, $q, $stateParams, fileContent, commits, Chunk, commentProvider) {
+      function ($scope, $q, $stateParams, _, moment, fileContent, commits, Chunk, commentProvider) {
 
         var filePath = $stateParams.path,
           filePathSplit = filePath.split('.'),
@@ -252,4 +254,4 @@ define(['lodash', 'controllers'], function (_, controllers) {
 
       }
     ]);
-});
+}(angular));
