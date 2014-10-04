@@ -21,6 +21,13 @@ describe('#Directives', function () {
       expect(element.find('span').attr('tooltip')).toBe(moment(date).format('llll'));
     });
 
+    it('Should set date with custom format', function () {
+      var date = moment().subtract('week', 2);
+      var element = $compile('<small formatted-date date="' + date + '" format="LL"></small>')($rootScope);
+      $rootScope.$digest();
+      expect(element.text()).toBe(moment(date).format('LL'));
+    });
+
   });
 
   describe('commitListPaginator', function () {
