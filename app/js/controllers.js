@@ -9,7 +9,7 @@
       'filter',
       function ($state, filter) {
         if (filter.getAll().length > 0) {
-          $state.go('filter');
+          $state.go('listFilter');
         } else {
           $state.go('addFilter');
         }

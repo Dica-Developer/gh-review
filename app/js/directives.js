@@ -20,7 +20,7 @@
                 description: 'Go to filter list',
                 callback: function (event) {
                   event.preventDefault();
-                  $state.go('filter');
+                  $state.go('listFilter');
                 }
               })
               .add({

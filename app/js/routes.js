@@ -39,8 +39,8 @@
             controller: 'WhoAmIController',
             onEnter: ['$state', 'authenticated', checkIfAuthenticated]
           })
-          .state('filter', {
-            url: '/filter',
+          .state('listFilter', {
+            url: '/filter/list',
             templateUrl: 'templates/filterList.html',
             controller: 'FilterListController',
             onEnter: ['$state', 'authenticated', checkIfAuthenticated]
