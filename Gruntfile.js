@@ -194,7 +194,7 @@ module.exports = function (grunt) {
             expand: true,
             cwd: '<%= config.app %>',
             dest: '<%= config.dist %>',
-            src: ['js/worker/*', 'img/**/*', 'templates/**/*', 'fonts/**/*', '*.html']
+            src: ['js/worker/*', 'img/**/*', 'templates/**/*', 'fonts/**/*', '*.html', 'oauth/*.html']
           },
           {
             expand: true,
@@ -218,10 +218,19 @@ module.exports = function (grunt) {
       }
     },
     useminPrepare: {
-      html: 'app/index.html'
+      app: {
+        src: 'app/index.html'
+      },
+      oauth: {
+        src: 'app/oauth/index.html',
+        options: {
+          root: 'app/oauth',
+          dest: 'dist/oauth'
+        }
+      }
     },
     'usemin': {
-      html: 'dist/index.html'
+      html: ['dist/oauth/index.html', 'dist/index.html']
     },
     karma: {
       dev: {
