@@ -1,12 +1,17 @@
-define(['angular', 'githubjs', 'moment', 'lodash', 'options'], function (angular, GitHub, moment, _, options) {
+(function (angular) {
+//TODO options
   'use strict';
 
   /* Services */
 
-  var services = angular.module('GHReview.services', []);
+  var services = angular.module('GHReview');
 
-  services.value('version', options.ghReview.version);
-  services.value('githubOptions', options.github);
+  services.value('githubOptions', {
+    clientId: '5082108e53d762d90c00',
+    apiScope: 'user, repo',
+    redirectUri: 'http://localhost:9000',
+    accessTokenUrl: 'http://gh-review.herokuapp.com/bemdsvdsynggmvweibduvjcbgf'
+  });
 
   services.factory('authenticated', ['localStorageService',
     function (localStorageService) {
@@ -23,8 +28,8 @@ define(['angular', 'githubjs', 'moment', 'lodash', 'options'], function (angular
   ]);
 
   var github = false;
-  services.factory('github', ['localStorageService',
-    function (localStorageService) {
+  services.factory('github', ['GitHub', 'localStorageService',
+    function (GitHub, localStorageService) {
       if (!github) {
         var message = {
           type: 'oauth',
@@ -97,22 +102,22 @@ define(['angular', 'githubjs', 'moment', 'lodash', 'options'], function (angular
     }
   ]);
 
-  services.factory('filter', ['localStorageService', 'Filter',
-    function (localStorageService, Filter) {
+  services.factory('filter', ['_', 'localStorageService', 'filterProvider',
+    function (_, localStorageService, filterProvider) {
 
       var getAll = function () {
         var filter = [];
         var filterIds = localStorageService.get('filter');
         if (filterIds !== null) {
           filterIds.split(',').forEach(function (id) {
-            filter.push(new Filter(id));
+            filter.push(filterProvider.get(id));
           });
         }
         return filter;
       };
 
       var getById = function (filterId) {
-        return new Filter(filterId);
+        return filterProvider.get(filterId);
       };
 
       var remove = function (filterId) {
@@ -133,7 +138,7 @@ define(['angular', 'githubjs', 'moment', 'lodash', 'options'], function (angular
     }
   ]);
 
-  services.factory('humanReadableDate', function () {
+  services.factory('humanReadableDate', ['moment', function (moment) {
     return {
       fromNow: function (date) {
         var retVal = null;
@@ -157,7 +162,7 @@ define(['angular', 'githubjs', 'moment', 'lodash', 'options'], function (angular
         return retVal;
       }
     };
-  });
+  }]);
 
   /**
    * @deprecated should handled by worker as well and triggered from another place then menu directive
@@ -188,18 +193,13 @@ define(['angular', 'githubjs', 'moment', 'lodash', 'options'], function (angular
       return function () {
         var defer = $q.defer();
         if (authenticated.get()) {
-          githubUserData.get()
-            .then(function (userData) {
-              github.repos.getAll({
-                user: userData.login
-              }, function (error, res) {
-                if (error) {
-                  defer.reject(error);
-                } else {
-                  defer.resolve(res);
-                }
-              });
-            });
+          github.repos.getAll({}, function (error, res) {
+            if (error) {
+              defer.reject(error);
+            } else {
+              defer.resolve(res);
+            }
+          });
         } else {
           defer.reject(new Error('Not authenticated yet'));
         }
@@ -226,8 +226,8 @@ define(['angular', 'githubjs', 'moment', 'lodash', 'options'], function (angular
     }
   ]);
 
-  services.factory('getFileContent', ['$q', 'github',
-    function ($q, github) {
+  services.factory('getFileContent', ['$q', '_', 'github',
+    function ($q, _, github) {
       return function (options) {
         if (_.isUndefined(options.ref) || _.isNull(options.ref)) {
           delete options.ref;
@@ -274,6 +274,78 @@ define(['angular', 'githubjs', 'moment', 'lodash', 'options'], function (angular
     }
   ]);
 
+  services.factory('getAllRepos', ['$q', '$interval', 'githubUserData', 'localStorageService',
+    function ($q, $interval, githubUserData, localStorageService) {
+      var repositoriesCache = [];
+      $interval(function clearRepoCache(){
+        repositoriesCache = [];
+      }, 1800000); //1800000 = 1/2 hour
+
+      return function () {
+        var defer = $q.defer();
+        if (repositoriesCache.length > 0) {
+          defer.resolve(repositoriesCache);
+        } else {
+          var getReposWorker = new Worker('js/worker/getAllReposAndBranches.js');
+          var accessToken = localStorageService.get('accessToken');
+          getReposWorker.onmessage = function (event) {
+            repositoriesCache = event.data.repos;
+            defer.resolve(event.data.repos);
+            getReposWorker.terminate();
+          };
+
+          githubUserData.get()
+            .then(function (userData) {
+              getReposWorker.postMessage({
+                type: 'getAllRepos',
+                user: userData.login,
+                accessToken: accessToken
+              });
+            });
+        }
+        return defer.promise;
+      };
+    }
+  ]);
+
+  services.factory('getBranchesForRepo', ['$q', '$interval', 'localStorageService',
+    function ($q, $interval, localStorageService) {
+      var branchesCache = {};
+      $interval(function updateBranchesCache(){
+        Object.keys(branchesCache).forEach(function(repoFullName){
+          getBranchesForRepo(repoFullName);
+        });
+        branchesCache = {};
+      }, 600000); //600000 = 10min
+
+      function getBranchesForRepo(repoFullName) {
+        var defer = $q.defer(),
+          getReposWorker = new Worker('js/worker/getAllReposAndBranches.js'),
+          accessToken = localStorageService.get('accessToken');
+        getReposWorker.onmessage = function (event) {
+          branchesCache[repoFullName] = event.data.branches;
+          defer.resolve(event.data.branches);
+          getReposWorker.terminate();
+        };
+
+        getReposWorker.postMessage({
+          type: 'getBranchesForRepo',
+          accessToken: accessToken,
+          repo: repoFullName
+        });
+        return defer.promise;
+      }
+
+      return function (repoFullName) {
+        if(branchesCache[repoFullName]){
+          return $q.when(branchesCache[repoFullName]);
+        } else {
+          return getBranchesForRepo(repoFullName);
+        }
+      };
+    }
+  ]);
+
   services.factory('getTreeData', ['$q', 'github',
     function ($q, github) {
       return function (user, repo, sha) {
@@ -308,8 +380,8 @@ define(['angular', 'githubjs', 'moment', 'lodash', 'options'], function (angular
     }
   ]);
 
-  services.factory('approveCommit', ['$q', 'github', 'version', 'authenticated', 'githubUserData', 'commentCollector',
-    function ($q, github, version, authenticated, githubUserData, commentCollector) {
+  services.factory('approveCommit', ['$q', '_', 'github', 'options', 'authenticated', 'githubUserData', 'commentCollector',
+    function ($q, _, github, options, authenticated, githubUserData, commentCollector) {
       return function (sha, user, repo) {
         var defer = $q.defer();
 
@@ -317,7 +389,7 @@ define(['angular', 'githubjs', 'moment', 'lodash', 'options'], function (angular
           githubUserData.get()
             .then(function (userData) {
               var commitState = {
-                version: version,
+                version: options.ghReview.version,
                 approved: true,
                 approver: userData.login,
                 approvalDate: Date.now()
@@ -350,8 +422,8 @@ define(['angular', 'githubjs', 'moment', 'lodash', 'options'], function (angular
     }
   ]);
 
-  services.factory('unapproveCommit', ['$q', 'github', 'version', 'authenticated', 'commentCollector',
-    function ($q, github, version, authenticated, commentCollector) {
+  services.factory('unapproveCommit', ['$q', 'github', 'authenticated', 'githubUserData', 'commentCollector',
+    function ($q, github, authenticated, githubUserData, commentCollector) {
       return function (commentId, sha, user, repo) {
         var defer = $q.defer();
         if (authenticated.get()) {
@@ -390,4 +462,4 @@ define(['angular', 'githubjs', 'moment', 'lodash', 'options'], function (angular
       };
     }
   ]);
-});
+}(angular));

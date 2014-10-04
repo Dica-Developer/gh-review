@@ -11,6 +11,7 @@ module.exports = function (grunt) {
     dev: 'dev',
     dist: 'dist',
     test: 'test',
+    coverage: 'test/coverage',
     distOptions: {
       clientId: '833c028df47be8e881d9',
       apiScope: 'user, repo',
@@ -20,7 +21,7 @@ module.exports = function (grunt) {
     devOptions: {
       clientId: '5082108e53d762d90c00',
       apiScope: 'user, repo',
-      redirectUri: 'http://localhost:9000',
+      redirectUri: 'http://localhost:9000/oauth',
       accessTokenUrl: 'http://gh-review.herokuapp.com/bemdsvdsynggmvweibduvjcbgf'
     }
   };
@@ -44,29 +45,55 @@ module.exports = function (grunt) {
       e2e: {
         options: {
           port: 9001,
-          base: '<%= config.dev %>',
+          base: '<%= config.dist %>',
           livereload: false
         }
       }
     },
     protractor: {
-      options: {
-        configFile: '<%= config.test %>/e2e/conf.js',
-        keepAlive: false,
-        noColor: false,
-        args: {}
-      },
-      startPage: {
+      saucelabs: {
         options: {
-          args: {
-            suite: 'startWithToken'
+          configFile: '<%= config.test %>/e2e/travis.conf.js'
+        },
+        startPage: {
+          options: {
+            args: {
+              suite: 'startWithToken',
+              sauceUser: process.env.SAUCE_USERNAME,
+              sauceKey: process.env.SAUCE_ACCESS_KEY
+            }
+          }
+        },
+        reviewModules: {
+          options: {
+            args: {
+              suite: 'reviewModules',
+              sauceUser: process.env.SAUCE_USERNAME,
+              sauceKey: process.env.SAUCE_ACCESS_KEY
+            }
           }
         }
       },
-      reviewModules: {
+      local: {
         options: {
+          configFile: '<%= config.test %>/e2e/conf.js',
+          keepAlive: false,
+          noColor: false,
           args: {
-            suite: 'reviewModules'
+          }
+        },
+        startPage: {
+          options: {
+            args: {
+              suite: 'startWithToken'
+            }
+          }
+        },
+        reviewModules: {
+          options: {
+            args: {
+              suite: 'reviewModules'
+            }
           }
         }
       }
@@ -82,6 +109,7 @@ module.exports = function (grunt) {
           '<%= config.app %>/worker/**/*',
           '<%= config.app %>/*.html',
           '<%= config.app %>/templates/**/*',
+          '<%= config.app %>/oauth/**/*',
           '!<%= config.app %>/bower_components/*'
         ],
         tasks: ['devWatch']
@@ -157,12 +185,6 @@ module.exports = function (grunt) {
             cwd: '<%= config.app %>/bower_components/bootstrap/dist/fonts',
             dest: '<%= config.dev %>/fonts',
             src: '*'
-          },
-          {
-            expand: true,
-            cwd: '<%= config.app %>/bower_components/requirejs',
-            dest: '<%= config.dev %>/js',
-            src: 'require.js'
           }
         ]
       },
@@ -172,19 +194,13 @@ module.exports = function (grunt) {
             expand: true,
             cwd: '<%= config.app %>',
             dest: '<%= config.dist %>',
-            src: ['js/worker/*', 'img/**/*', 'templates/**/*', 'fonts/**/*', '*.html']
+            src: ['js/worker/*', 'img/**/*', 'templates/**/*', 'fonts/**/*', '*.html', 'oauth/*.html']
           },
           {
             expand: true,
             cwd: '<%= config.app %>/bower_components/bootstrap/dist/fonts',
             dest: '<%= config.dist %>/fonts',
             src: '*'
-          },
-          {
-            expand: true,
-            cwd: '<%= config.app %>/bower_components/requirejs',
-            dest: '<%= config.dist %>/js',
-            src: 'require.js'
           },
           {
             expand: true,
@@ -201,20 +217,20 @@ module.exports = function (grunt) {
         ]
       }
     },
-    requirejs: {
-      options: {
-        loglevel: 5,
-        findNestedDependencies: true,
-        inlineText: true,
-        mainConfigFile: '<%= config.app %>/js/main.js'
+    useminPrepare: {
+      app: {
+        src: 'app/index.html'
       },
-      dist: {
+      oauth: {
+        src: 'app/oauth/index.html',
         options: {
-          out: '<%= config.dist %>/js/main.js',
-          optimize: 'uglify2',
-          name: 'main'
+          root: 'app/oauth',
+          dest: 'dist/oauth'
         }
       }
+    },
+    'usemin': {
+      html: ['dist/oauth/index.html', 'dist/index.html']
     },
     karma: {
       dev: {
@@ -224,17 +240,11 @@ module.exports = function (grunt) {
         configFile: '<%= config.test %>/travis.karma.conf.js'
       }
     },
-    ngdocs: {
-      options: {
-        deferLoad: true,
-        all: ['app/js/main.js']
-      }
-    },
     coveralls: {
       options: {
         debug: false,
         /*jshint camelcase:false*/
-        coverage_dir: 'coverage',
+        coverage_dir: 'test/coverage',
         force: false
       }
     }
@@ -306,14 +316,6 @@ module.exports = function (grunt) {
   grunt.registerTask('postProcess', function () {
     var done = this.async();
     var fs = require('fs');
-    var indexHtml = fs.readFileSync('dist/index.html', {
-      encoding: 'UTF8'
-    });
-    indexHtml = indexHtml.replace('bower_components/requirejs/require.js', 'js/require.js');
-    fs.writeFileSync('dist/index.html', indexHtml, {
-      encoding: 'UTF8'
-    });
-
     var collectorJs = fs.readFileSync('dist/js/worker/collector.js', {
       encoding: 'UTF8'
     });
@@ -324,18 +326,22 @@ module.exports = function (grunt) {
     done();
   });
 
-  grunt.registerTask('dist', [
-    'clean:dist',
-    'less:dist',
-    'processTmpl:dist',
-    'copy:dist',
-    'requirejs:dist',
-    'postProcess'
-  ]);
+  grunt.registerTask('dist', function(template){
+    grunt.task.run([
+      'clean:dist',
+      'less:dist',
+      'processTmpl:' + (template || 'dist'),
+      'copy:dist',
+      'useminPrepare',
+      'concat:generated',
+      'uglify:generated',
+      'usemin',
+      'postProcess'
+    ]);
+  });
 
   grunt.registerTask('devWatch', [
     'jshint',
-    //        'ngdocs',
     'less:dev',
     'copy:dev'
   ]);
@@ -343,7 +349,6 @@ module.exports = function (grunt) {
   grunt.registerTask('dev', [
     'clean:dev',
     'jshint',
-    //        'ngdocs',
     'processTmpl:dev',
     'copy:dev',
     'less:dev',
@@ -351,16 +356,14 @@ module.exports = function (grunt) {
     'watch:dev'
   ]);
 
-  grunt.registerTask('e2e', [
-    'clean:dev',
-    'jshint',
-    'processTmpl:dev',
-    'copy:dev',
-    'less:dev',
-    'connect:e2e',
-    'protractor:startPage',
-    'protractor:reviewModules'
-  ]);
+  grunt.registerTask('e2e', function(platform){
+    grunt.task.run([
+      'dist:dev',
+      'connect:e2e',
+      'protractor:' + platform + ':startPage',
+      'protractor:'+ platform +':reviewModules'
+    ]);
+  });
 
   grunt.registerTask('test', [
     'karma:dev'
@@ -369,6 +372,7 @@ module.exports = function (grunt) {
   grunt.registerTask('travis', [
     'processTmpl:dev',
     'karma:travis',
+//    'e2e:saucelabs',
     'coveralls'
   ]);
 

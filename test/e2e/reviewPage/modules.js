@@ -38,7 +38,7 @@ describe('Review modules', function () {
                 });
         }, 1000, 'wait for results more then 0 timed out')
             .then(function () {
-                expect(resultItems.count()).toBe(5);
+                expect(resultItems.count()).toBeGreaterThan(1);
             });
 
 
