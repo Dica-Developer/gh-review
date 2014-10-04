@@ -1,6 +1,6 @@
-(function (angular) {
+define(['controllers'], function (controllers) {
   'use strict';
-  angular.module('GHReview')
+  controllers
     .controller('ModuleFilterController', ['$scope', 'githubFreeSearch',
       function ($scope, githubFreeSearch) {
         $scope.searchString = '';
@@ -12,4 +12,4 @@
         };
       }
     ]);
-}(angular));
+});

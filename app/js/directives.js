@@ -1,77 +1,80 @@
-(function (angular) {
+define(function (require) {
   'use strict';
+
+  var angular = require('angular'),
+    commentTemplate = require('text!../templates/comment.html'),
+    commitHeaderTemplate = require('text!../templates/commitHeader.html'),
+    commitHeaderCollabsibleTemplate = require('text!../templates/commitHeaderCollabsible.html');
 
   /* Directives */
 
-  var app = angular.module('GHReview');
+  var directives = angular.module('GHReview.directives', []);
 
-  app.controller('menuDirectiveController', ['$scope', '$state', 'authenticated', 'githubUserData', 'collectComments', 'hotkeys', function ($scope, $state, authenticated, githubUserData, collectComments, hotkeys) {
-    $scope.authenticated = authenticated.get() ? true : false;
-    if ($scope.authenticated) {
-      collectComments();
-      hotkeys.bindTo($scope)
-        .add({
-          combo: 'g f',
-          description: 'Go to filter list',
-          callback: function (event) {
-            event.preventDefault();
-            $state.go('listFilter');
-          }
-        })
-        .add({
-          combo: 'g m',
-          description: 'Go to module search',
-          callback: function (event) {
-            event.preventDefault();
-            $state.go('modules');
-          }
-        })
-        .add({
-          combo: 'g w',
-          description: 'Go to "Who Am I" page',
-          callback: function (event) {
-            event.preventDefault();
-            $state.go('whoami');
-          }
-        })
-        .add({
-          combo: ': q',
-          description: 'Logout',
-          callback: function (event) {
-            event.preventDefault();
-            $state.go('logout');
-          }
-        });
-      githubUserData.get()
-        .then(function (userData) {
-          $scope.name = userData.name;
-        });
-    }
-  }]);
-
-  app.directive('menu', [
-    function () {
-      return {
-        restrict: 'A',
-        templateUrl: 'templates/menu.html',
-        controller: 'menuDirectiveController',
-        link: [
-          /* istanbul ignore next */
-          function () {
-          }
-        ]
+  directives.directive('menu', ['$state', 'authenticated', 'githubUserData', 'collectComments', 'hotkeys',
+    function ($state, authenticated, githubUserData, collectComments, hotkeys) {
+      var commentCollectorInitialized = false;
+      if (!commentCollectorInitialized) {
+        commentCollectorInitialized = collectComments();
+      }
+      var returnVal = {
+        restrict: 'A'
       };
+      if (authenticated.get()) {
+        returnVal.templateUrl = 'templates/authenticatedMenu.html';
+        returnVal.link = function ($scope) {
+          hotkeys.bindTo($scope)
+            .add({
+              combo: 'alt+f',
+              description: 'Go to filter list',
+              callback: function(event) {
+                event.preventDefault();
+                $state.go('filter');
+              }
+            })
+            .add({
+              combo: 'alt+m',
+              description: 'Go to module search',
+              callback: function(event) {
+                event.preventDefault();
+                $state.go('modules');
+              }
+            })
+            .add({
+              combo: 'alt+w',
+              description: 'Go to "Who Am I" page',
+              callback: function(event) {
+                event.preventDefault();
+                $state.go('whoami');
+              }
+            })
+            .add({
+              combo: 'alt+q',
+              description: 'Logout',
+              callback: function(event) {
+                event.preventDefault();
+                $state.go('logout');
+              }
+            });
+          githubUserData.get()
+            .then(function (userData) {
+              $scope.name = userData.name;
+            });
+        };
+      } else {
+        returnVal.templateUrl = 'templates/menu.html';
+      }
+      return returnVal;
     }
   ]);
 
-  app.directive('formattedDate', ['humanReadableDate',
+  directives.directive('formattedDate', ['humanReadableDate',
     function (humanReadableDate) {
       return {
         restrict: 'AE',
         template: '<span tooltip-placement="top" tooltip="{{formattedDate}}">{{date}}</span>',
         link: function ($scope, element, attr) {
           $scope.$watch(attr.date, function (value) {
-            if (attr.format && attr.format !== '') {
+            if(attr.format && attr.format !== '') {
               $scope.formattedDate = humanReadableDate.format(value);
               $scope.date = humanReadableDate.customFormat(value, attr.format);
             } else {
@@ -84,14 +87,14 @@
     }
   ]);
 
-  app.directive('commitListPaginator', function () {
+  directives.directive('commitListPaginator', function () {
     return {
       restrict: 'E',
       templateUrl: 'templates/commitListPaginator.html'
     };
   });
 
-  app.directive('avatar', function () {
+  directives.directive('avatar', function () {
     return {
       restrict: 'E',
       template: '<a href="{{link}}" title="{{name}}" target="_blank"><img height="32px" class="media-object pull-left" ng-src="{{imgLink}}"></a>',
@@ -106,11 +109,11 @@
     };
   });
 
-  app.directive('comment', [
+  directives.directive('comment', [
     function () {
       return {
         restrict: 'A',
-        templateUrl: 'templates/comment.html',
+        template: commentTemplate,
         scope: {
           comment: '=content'
         }
@@ -119,7 +122,7 @@
   ]);
 
   var maxLengthForFirstLine = 100;
-  app.directive('commitMessageTeaser', function () {
+  directives.directive('commitMessageTeaser', function () {
     return {
       restrict: 'E',
       link: function ($scope, element, attr) {
@@ -136,25 +139,24 @@
     };
   });
 
-  app.directive('commitHeader', [
-    function () {
-      var shouldBeCollabsible = false;
+  directives.directive('commitHeader', ['$compile',
+    function ($compile) {
       return {
         restrict: 'E',
-        templateUrl: function () {
-          return shouldBeCollabsible ? 'templates/commitHeaderCollabsible.html' : 'templates/commitHeader.html';
-        },
         link: function ($scope, element, attr) {
           $scope.$watch(attr.commit, function (value) {
             var message = value.message;
             var splittedMessage = message.split('\n');
             var firstLine = splittedMessage[0];
-            shouldBeCollabsible = splittedMessage.length > 1 || firstLine.length >= maxLengthForFirstLine;
+            var shouldBeCollabsible = splittedMessage.length > 1 || firstLine.length >= maxLengthForFirstLine;
+            if (shouldBeCollabsible) {
+              $compile(element.html(commitHeaderCollabsibleTemplate).contents())($scope);
+            } else {
+              $compile(element.html(commitHeaderTemplate).contents())($scope);
+            }
           });
         }
       };
     }
   ]);
-
-
-}(angular));
+});

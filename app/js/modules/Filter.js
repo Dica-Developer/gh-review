@@ -1,47 +1,22 @@
-(function (angular) {
+/*global define*/
+define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
   'use strict';
 
+  var generateUUID = function () {
+    var d = new Date().getTime();
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      var r = (d + Math.random() * 16) % 16 | 0;
+      d = Math.floor(d / 16);
+      return (c === 'x' ? r : (r & 0x7 | 0x8)).toString(16);
+    });
+  };
 
-  var services = angular.module('GHReview');
-  services.factory('filterProvider', [
-    '$q',
-    '$location',
-    '_',
-    'moment',
-    'github',
-    'commentCollector',
-    'localStorageService',
-    'getBranchesForRepo',
-    function ($q, $location, _, moment, github, commentCollector, localStorageService, getBranchesForRepo) {
+  var tmpCommits = {};
 
-      var tmpCommits = {},
-        filterHolder = {},
-        generateUUID = function () {
-          var d = new Date().getTime();
-          return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            var r = (d + Math.random() * 16) % 16 | 0;
-            d = Math.floor(d / 16);
-            return (c === 'x' ? r : (r & 0x7 | 0x8)).toString(16);
-          });
-        },
-        getCurrentCommitCacheId = function () {
-          var commitCacheId = $location.url();
-          var urlParameter = $location.search();
-          if (urlParameter.page) {
-            commitCacheId = commitCacheId + '?page=' + urlParameter.page;
-          }
-
-          if (commitCacheId.indexOf('#') > -1) {
-            commitCacheId = commitCacheId.substr(0, commitCacheId.indexOf('#'));
-          }
-          return commitCacheId;
-        };
-
-
-      function Filter(filterId) {
-        this.commitCache = {};
-        this.branchList = [];
-        this.contributorList = {};
+  var services = angular.module('GHReview.Filter', []);
+  services.factory('Filter', ['$q', 'github', 'commentCollector', 'localStorageService',
+    function ($q, github, commentCollector, localStorageService) {
+      var Filter = function (filterId) {
         this.options = {
           repo: null,
           user: null,
@@ -50,6 +25,7 @@
           until: {},
           path: null,
           authors: [],
+          contributor: null,
           meta: {
             isSaved: false,
             lastEdited: null,
@@ -58,7 +34,7 @@
           }
         };
         this.init();
-      }
+      };
 
       Filter.prototype.hasNextPage = false;
       Filter.prototype.hasPreviousPage = false;
@@ -68,18 +44,12 @@
       Filter.prototype.init = function () {
         if (!_.isNull(this.options.meta.id)) {
           _.extend(this.options, localStorageService.get('filter-' + this.options.meta.id), true);
-          this.getContributorList();
-          this.getBranchList();
         } else {
           this.options.meta.id = generateUUID();
-          this.options.meta.isNew = true;
         }
       };
 
       Filter.prototype.save = function () {
-        if (!_.isUndefined(this.options.meta.isNew)) {
-          delete this.options.meta.isNew;
-        }
         this.options.meta.isSaved = true;
         var filterIdsString = localStorageService.get('filter');
         var filterIds = [];
@@ -94,7 +64,6 @@
       };
 
       Filter.prototype.set = function (key, value) {
-        this.commitCache = {};
         if (_.isUndefined(this.options[key])) {
           throw new Error('Unknown filter property');
         } else {
@@ -105,7 +74,6 @@
       };
 
       Filter.prototype.setCustomFilter = function (key, value) {
-        this.commitCache = {};
         this.options.meta.customFilter[key] = value;
         this.options.meta.lastEdited = new Date().getTime();
         this.options.meta.isSaved = false;
@@ -136,23 +104,19 @@
       };
 
       Filter.prototype.addAuthor = function (author) {
-        this.commitCache = {};
-        if (_.isArray(author)) {
-          this.options.authors = author;
-        } else {
-          this.options.authors.push(author);
-        }
-        this.options.meta.isSaved = false;
+        this.options.authors.push(author);
       };
 
       Filter.prototype.removeAuthor = function (author) {
-        this.commitCache = {};
         this.options.authors.pop(author);
-        this.options.meta.isSaved = false;
       };
 
       Filter.prototype.getAuthors = function () {
         return this.options.authors;
+      };
+
+      Filter.prototype.setContributor = function (contributor) {
+        this.options.contributor = contributor;
       };
 
       Filter.prototype.setBranch = function (branch) {
@@ -219,83 +183,11 @@
         return this.options.meta.customFilter.state;
       };
 
-      Filter.prototype.isSaved = function () {
-        return this.options.meta.isSaved;
-      };
-
-      Filter.prototype.reset = function () {
-        this.commitCache = {};
-        this.options = {
-          repo: null,
-          user: null,
-          sha: 'master',
-          since: {},
-          until: {},
-          path: null,
-          authors: [],
-          contributor: null,
-          meta: {
-            isSaved: false,
-            lastEdited: null,
-            customFilter: {},
-            id: null
-          }
-        };
-        this.init();
-      };
-
       Filter.prototype._needsPostFiltering = function () {
         return (_.size(this.options.meta.customFilter) > 0);
       };
 
-      Filter.prototype.getContributorList = function () {
-        var defer = $q.defer(),
-          repo = this.getRepo(),
-          _this = this;
-        if (!_.isUndefined(this.contributorList[repo])) {
-          defer.resolve(this.contributorList[repo]);
-        } else {
-          github.repos.getContributors(
-            {
-              user: this.getOwner(),
-              repo: this.getRepo()
-            },
-            function (err, res) {
-              if (!err) {
-                _this.contributorList[repo] = res;
-                defer.resolve(res);
-              } else {
-                defer.reject();
-              }
-            }
-          );
-        }
-        return defer.promise;
-      };
-
-      Filter.prototype.getBranchList = function () {
-        var defer = $q.defer(),
-          repoFullName = this.getOwner() + '/' + this.getRepo();
-        if (!_.isUndefined(this.branchList[repoFullName])) {
-          defer.resolve(this.branchList[repoFullName]);
-        } else {
-          getBranchesForRepo(repoFullName)
-            .then(function (branches) {
-              this.branchList[repoFullName] = branches;
-              defer.resolve(branches);
-            }.bind(this));
-        }
-        return defer.promise;
-      };
-
       Filter.prototype.getNextPage = function () {
-        var prevPage = 2,
-          urlParameter = $location.search();
-        if (urlParameter.page) {
-          prevPage = urlParameter.page++;
-        }
-        this.commitCache = {};
-        $location.search('page', prevPage);
         if (this._needsPostFiltering()) {
           return this.getCommits(this.firstResult + this.maxResults, this.maxResults);
         } else {
@@ -306,8 +198,6 @@
       };
 
       Filter.prototype.getFirstPage = function () {
-        this.commitCache = {};
-        $location.search('page', 1);
         if (this._needsPostFiltering()) {
           return this.getCommits(0, this.maxResults);
         } else {
@@ -318,13 +208,6 @@
       };
 
       Filter.prototype.getPreviousPage = function () {
-        var prevPage,
-          urlParameter = $location.search();
-        if (urlParameter.page) {
-          prevPage = urlParameter.page > 2 ? urlParameter.page-- : 1;
-        }
-        this.commitCache = {};
-        $location.search('page', prevPage);
         if (this._needsPostFiltering()) {
           return this.getCommits(Math.max(0, this.firstResult - this.maxResults), this.maxResults);
         } else {
@@ -399,17 +282,22 @@
       };
 
       Filter.prototype.getCommits = function (firstResult, maxResults) {
-        if (!_.isUndefined(this.commitCache[getCurrentCommitCacheId()])) {
-          return $q.when(this.commitCache[getCurrentCommitCacheId()]);
+        this.firstResult = firstResult || 0;
+        this.maxResults = maxResults || -1;
+        if (this._needsPostFiltering() || this.maxResults === -1) {
+          return this._getCommitsPostFiltered();
         } else {
-          this.firstResult = firstResult || 0;
-          this.maxResults = maxResults || -1;
-          if (this._needsPostFiltering() || this.maxResults === -1) {
-            return this._getCommitsPostFiltered();
-          } else {
-            return this._getCommitsDirect();
-          }
+          return this._getCommitsDirect();
         }
+      };
+
+      Filter.prototype.getAllCommitsFromBranch = function () {
+        var githubMsg = this.prepareGithubApiCallOptions();
+        delete githubMsg.customFilter;
+        if (githubMsg.author) {
+          delete githubMsg.author;
+        }
+        return this.getCommits(null, githubMsg);
       };
 
       Filter.prototype._getCommitsCallback = function (error, commits) {
@@ -425,7 +313,6 @@
             if (!_.isUndefined(commits.meta)) {
               commits = this._extractMeta(commits);
             }
-            this.commitCache[getCurrentCommitCacheId()] = commits;
             this.getCommitsRefer.resolve(commits);
           }
         }
@@ -464,37 +351,7 @@
             _.each(commits, function (commit) {
               var selectCommit = true;
               if (!_.isUndefined(authors)) {
-                /*
-                  TODO commit.author can be null how to find the login name of an author
-                  example commit object without author:
-                  {
-                     author: null
-                     comments_url: "https://api.github.com/repos/Datameer-Inc/dap/commits/67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b/comments"
-                     commit: {
-                        author: {
-                           date: "2014-09-26T07:00:52Z"
-                           email: "author@email.com"
-                           name: "Author Name"
-                        }
-                       comment_count: 0
-                       committer: {
-                         date: "2014-09-26T07:00:52Z"
-                         email: "author@email.com"
-                         name: "Author Name"
-                       }
-                       message: "added id's for workbook filter dialog plus/minus icons to ensure new ui-tests"
-                       tree: {sha:0bf402614436f1f9bc7326b77b7815b3a6bcafe6,…}
-                       url: "https://api.github.com/repos/Datameer-Inc/dap/git/commits/67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b"
-                     }
-                     committer: null
-                     html_url: "https://github.com/Datameer-Inc/dap/commit/67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b"
-                     parents: [{sha:960d78b69fab212d608d78ad86364162460f5654,…}]
-                     sha: "67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b"
-                     url: "https://api.github.com/repos/Datameer-Inc/dap/commits/67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b"
-                  }
-                 */
-                var author = commit.author ? commit.author.login : commit.commit.author.login;
-                if (!_.contains(authors, author)) {
+                if (!_.contains(authors, commit.author.login)) {
                   selectCommit = false;
                 }
               }
@@ -523,30 +380,15 @@
                 tmpCommits.push(commit);
               }
             });
-            var finalizedCommits;
             if (this.maxResults > -1) {
-              finalizedCommits = _.first(_.rest(tmpCommits, this.firstResult), this.maxResults);
+              this.getCommitsRefer.resolve(_.first(_.rest(tmpCommits, this.firstResult), this.maxResults));
             } else {
-              finalizedCommits = _.rest(tmpCommits, this.firstResult);
+              this.getCommitsRefer.resolve(_.rest(tmpCommits, this.firstResult));
             }
-            this.commitCache[getCurrentCommitCacheId()] = finalizedCommits;
-            this.getCommitsRefer.resolve(finalizedCommits);
           }.bind(this));
       };
 
-      return {
-        get: function (id) {
-          if (!filterHolder[id]) {
-            filterHolder[id] = new Filter(id);
-          }
-          return filterHolder[id];
-        },
-        getNew: function () {
-          var newFilter = new Filter();
-          filterHolder[newFilter.getId()] = newFilter;
-          return newFilter;
-        }
-      };
+      return Filter;
     }
   ]);
-}(angular));
+});

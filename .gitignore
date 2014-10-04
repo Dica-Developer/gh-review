@@ -1,9 +1,8 @@
 /.idea
 .DS_Store
-.tmp
 /node_modules
 /app/bower_components
-/test/coverage
+/coverage
 /dev
 /dist
 /app/js/options.js

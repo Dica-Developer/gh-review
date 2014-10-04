@@ -1,11 +1,10 @@
-(function (angular) {
+define(['lodash', 'controllers'], function (_, controllers) {
   'use strict';
 
-  angular.module('GHReview')
+  controllers
     .controller('CommitController', [
       '$scope',
       '$stateParams',
-      '_',
       'commitsAndComments',
       'Comment',
       'approveCommit',
@@ -14,7 +13,7 @@
       'isCommentNotApprovalComment',
       'isCommentApprovalCommentFromUser',
       'events',
-      function ($scope, $stateParams, _, commitsAndComments, Comment, approveCommit, unapproveCommit, loggedInUser, isCommentNotApprovalComment, isCommentApprovalCommentFromUser, events) {
+      function ($scope, $stateParams, commitsAndComments, Comment, approveCommit, unapproveCommit, loggedInUser, isCommentNotApprovalComment, isCommentApprovalCommentFromUser, events) {
         var commit = commitsAndComments[0].commitInfos ? commitsAndComments[0] : commitsAndComments[1],
           comments = commitsAndComments[0].commitInfos ? commitsAndComments[1] : commitsAndComments[0],
           lineWithNewComment = [],
@@ -132,4 +131,4 @@
         });
       }
     ]);
-}(angular));
+});

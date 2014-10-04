@@ -1,9 +1,10 @@
-(function (angular) {
+/*global define*/
+define(['angular', 'lodash'], function (angular, _) {
   'use strict';
 
-  var chunkModule = angular.module('GHReview');
+  var chunkModule = angular.module('GHReview.Chunk', []);
 
-  chunkModule.factory('Chunk', ['_', function (_) {
+  chunkModule.factory('Chunk', function () {
     if (typeof String.prototype.startsWith !== 'function') {
       String.prototype.startsWith = function (str) {
         return this.slice(0, str.length) === str;
@@ -99,5 +100,5 @@
     };
 
     return Chunk;
-  }]);
-}(angular));
+  });
+});

@@ -1,13 +1,8 @@
 // conf.js
 exports.config = {
-  capabilities: {
-    'browserName': 'firefox',
-    'name': 'Protractor Tests'
-  },
-  baseUrl: 'http://localhost:9001',
-  suites: {
+    suites: {
 //        startWithoutToken: 'startPage/withoutToken.js',
-    startWithToken: 'startPage/withToken.js',
-    reviewModules: 'reviewPage/modules.js'
-  }
+        startWithToken: 'startPage/withToken.js',
+        reviewModules: 'reviewPage/modules.js'
+    }
 };

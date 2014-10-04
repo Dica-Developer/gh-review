@@ -1,9 +1,12 @@
-(function (angular) {
+define(function (require) {
   'use strict';
 
-  angular.module('GHReview')
-    .controller('FilterListController', ['$scope', '$state', '_', 'filter', 'events',
-      function ($scope, $state, _, filter, events) {
+  var controllers = require('controllers'),
+    _ = require('lodash');
+
+  controllers
+    .controller('FilterListController', ['$scope', '$state', 'filter', 'events',
+      function ($scope, $state, filter, events) {
         $scope.groupingOptions = [
           {
             value: 'repo',
@@ -71,4 +74,4 @@
         updateFilterList();
       }
     ]);
-}(angular));
+});

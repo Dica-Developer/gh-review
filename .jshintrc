@@ -28,7 +28,6 @@
     "it": true,
     "xit": true,
     "spyOn": true,
-    "jasmine": true,
-    "angular": true
+    "jasmine": true
   }
 }

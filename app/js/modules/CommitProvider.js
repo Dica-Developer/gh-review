@@ -1,10 +1,10 @@
-(function (angular) {
+define(['angular', 'lodash'], function (angular, _) {
   'use strict';
 
-  var commitProviderModule = angular.module('GHReview');
+  var commitProviderModule = angular.module('GHReview.CommitProvider', []);
 
-  commitProviderModule.factory('commitProvider', ['$q', '$timeout', '_', 'authenticated', 'github', 'Chunk',
-    function ($q, $timeout, _, authenticated, github, Chunk) {
+  commitProviderModule.factory('commitProvider', ['$q', '$timeout', 'authenticated', 'github', 'Chunk',
+    function ($q, $timeout, authenticated, github, Chunk) {
       var computeChunk = function (resp) {
         var defer = $q.defer();
         var files = [];
@@ -107,4 +107,4 @@
       };
     }
   ]);
-}(angular));
+});

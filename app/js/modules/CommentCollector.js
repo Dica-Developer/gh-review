@@ -1,13 +1,13 @@
-(function (angular) {
+define(['angular', 'lodash'], function (angular, _) {
   'use strict';
 
   var oneTimeCallback = null;
-  var commentCollectorModule = angular.module('GHReview');
+  var commentCollectorModule = angular.module('GHReview.CommentCollector', []);
 
   commentCollectorModule.provider('commentCollector', function () {
 
-    this.$get = ['$q', '_',
-      function ($q, _) {
+    this.$get = ['$q',
+      function ($q) {
         var worker = void 0;
         var comments = void 0;
         var commitApproved = void 0;
@@ -116,4 +116,4 @@
       }
     ];
   });
-}(angular));
+});

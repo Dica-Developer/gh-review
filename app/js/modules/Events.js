@@ -1,7 +1,6 @@
-(function (angular) {
+/*global define*/
+define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
   'use strict';
-  var __ = null,
-    _moment = null;
 
   var fetchEventsForFilter = function (filter) {
     var _this = this,
@@ -23,10 +22,10 @@
       _this.github.events.getFromRepo(githubParams, function (err, res) {
         if (!err) {
           if (res.meta) {
-            if (!__.isUndefined(res.meta['x-poll-interval'])) {
+            if (!_.isUndefined(res.meta['x-poll-interval'])) {
               _this.maxPollInterval = Math.max(_this.maxPollInterval, parseInt(res.meta['x-poll-interval'], 10));
             }
-            if (!__.isUndefined(res.meta.etag)) {
+            if (!_.isUndefined(res.meta.etag)) {
               _this.urlEtags[url] = res.meta.etag;
             }
           }
@@ -41,7 +40,7 @@
       });
     };
 
-    if (__.contains(this.fetchedUrls, url)) {
+    if (_.contains(this.fetchedUrls, url)) {
       defer.resolve();
     } else {
       this.fetchedUrls.push(url);
@@ -55,34 +54,34 @@
     var filterRef = 'refs/heads/' + filter.getBranch(),
       eventsFilteredByPushEvent;
     if (lastUpdated) {
-      var eventsFilteredByLastUpdate = __.filter(eventsByUrl, function (event) {
+      var eventsFilteredByLastUpdate = _.filter(eventsByUrl, function (event) {
         /*jshint camelcase:false*/
-        if (_moment(lastUpdated).isBefore(event.created_at)) {
+        if (moment(lastUpdated).isBefore(event.created_at)) {
           return event;
         }
       });
-      eventsFilteredByPushEvent = __.filter(eventsFilteredByLastUpdate, {type: 'PushEvent'});
+      eventsFilteredByPushEvent = _.filter(eventsFilteredByLastUpdate, {type: 'PushEvent'});
     } else {
-      eventsFilteredByPushEvent = __.filter(eventsByUrl, {type: 'PushEvent'});
+      eventsFilteredByPushEvent = _.filter(eventsByUrl, {type: 'PushEvent'});
     }
-    var eventsFilteredByActor = __.filter(eventsFilteredByPushEvent, function (event) {
+    var eventsFilteredByActor = _.filter(eventsFilteredByPushEvent, function (event) {
       var eventActor = event.actor.login;
-      if (eventActor !== currentUserLogin && ((filterAuthors.length > 0 && __.contains(filterAuthors, eventActor)) || (filterAuthors.length === 0))) {
+      if (eventActor !== currentUserLogin && ((filterAuthors.length > 0 && _.contains(filterAuthors, eventActor)) || (filterAuthors.length === 0))) {
         return event;
       }
     });
-    var pushEventsFilteredByRef = __.filter(eventsFilteredByActor, {payload: {ref: filterRef}});
-    var eventPayloads = __.pluck(pushEventsFilteredByRef, 'payload');
-    var eventCommits = __.pluck(eventPayloads, 'commits');
-    var flattenedCommitArray = __.flatten(eventCommits);
-    return __.pluck(flattenedCommitArray, 'sha');
+    var pushEventsFilteredByRef = _.filter(eventsFilteredByActor, {payload: {ref: filterRef}});
+    var eventPayloads = _.pluck(pushEventsFilteredByRef, 'payload');
+    var eventCommits = _.pluck(eventPayloads, 'commits');
+    var flattenedCommitArray = _.flatten(eventCommits);
+    return _.pluck(flattenedCommitArray, 'sha');
   }
 
   var prozessEvents = function () {
     var defer = this.$q.defer(),
       deferList = [];
 
-    __.each(this.filter.getAll(), function (filter/*, index*/) {
+    _.each(this.filter.getAll(), function (filter/*, index*/) {
       var defer = this.$q.defer(),
         filterUrl = filter.getOwner() + '/' + filter.getRepo(),
         filterAuthors = filter.getAuthors(),
@@ -99,7 +98,7 @@
           lastUpdated = this.allEvents[filter.getId()].lastUpdated;
         }
         this.allEvents[filter.getId()].commits = getNewCommits(filter, eventsByUrl, filterAuthors, this.userData.login, lastUpdated);
-        this.allEvents[filter.getId()].lastUpdated = _moment().format();
+        this.allEvents[filter.getId()].lastUpdated = moment().format();
       }
 
       defer.resolve();
@@ -110,9 +109,7 @@
     return defer.promise;
   };
 
-  function Events($q, _, moment, github, filter, localStorageService, githubUserData) {
-    __ = _;
-    _moment = moment;
+  function Events($q, github, filter, localStorageService, githubUserData) {
     this.$q = $q;
     this.github = github;
     this.filter = filter;
@@ -151,8 +148,8 @@
   };
 
   Events.prototype.removeNewCommit = function (commitSha) {
-    __.each(this.allEvents, function (events) {
-      __.remove(events.commits, function (sha) {
+    _.each(this.allEvents, function (events) {
+      _.remove(events.commits, function (sha) {
         return sha === commitSha;
       });
     });
@@ -162,18 +159,19 @@
   Events.prototype.fetch = function () {
     var _this = this;
     var allFilter = this.filter.getAll();
-    var deferList = __.map(allFilter, fetchEventsForFilter, this);
+    var deferList = _.map(allFilter, fetchEventsForFilter, this);
     this.$q.all(deferList)
       .then(prozessEvents.bind(this))
       .then(function () {
         _this.localStorageService.set('events', _this.allEvents);
         _this.localStorageService.set('eventsUrlEtags', _this.urlEtags);
         _this.fetchedUrls = [];
-        __.delay(_this.fetch.bind(_this), _this.maxPollInterval * 1000);
+        _.delay(_this.fetch.bind(_this), _this.maxPollInterval * 1000);
       });
   };
 
-  var eventsModule = angular.module('GHReview');
-  eventsModule.service('events', ['$q', '_', 'moment', 'github', 'filter', 'localStorageService', 'githubUserData', Events]);
+  var eventsModule = angular.module('GHReview.Events', []);
+  eventsModule.service('events', ['$q', 'github', 'filter', 'localStorageService', 'githubUserData', Events]);
 
-}(angular));
+})
+;

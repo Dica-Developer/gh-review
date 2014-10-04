@@ -1,10 +1,10 @@
-(function (angular) {
+define(['angular', 'lodash'], function (angular, _) {
   'use strict';
 
-  var commentProviderModule = angular.module('GHReview');
+  var commentProviderModule = angular.module('GHReview.CommentProvider', []);
 
-  commentProviderModule.factory('commentProvider', ['$q', '_', 'authenticated', 'github', 'commentCollector', 'Comment',
-    function ($q, _, authenticated, github, commentCollector, Comment) {
+  commentProviderModule.factory('commentProvider', ['$q', 'authenticated', 'github', 'commentCollector', 'Comment',
+    function ($q, authenticated, github, commentCollector, Comment) {
 
       var getApproversFromComments = function (comments) {
         var defer = $q.defer();
@@ -125,4 +125,4 @@
       };
     }
   ]);
-}(angular));
+});
