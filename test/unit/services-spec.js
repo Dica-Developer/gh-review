@@ -1,6 +1,8 @@
 /*global inject*/
 
 describe('#Services', function () {
+  'use strict';
+
   beforeEach(angular.mock.module('GHReview'));
 
   describe('authenticated', function () {
