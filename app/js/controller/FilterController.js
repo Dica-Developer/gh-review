@@ -196,7 +196,7 @@
         }
 
         $scope.updateCommits = function () {
-          filter.addAuthor($scope.contributor);
+          filter.addAuthor(_.pluck($scope.selectedContributor, 'login'));
           filter.setSince({
             pattern: $scope.filterSincePattern,
             amount: $scope.filterSinceAmount
