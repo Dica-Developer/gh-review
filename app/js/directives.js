@@ -84,13 +84,6 @@
     }
   ]);
 
-  app.directive('commitListPaginator', function () {
-    return {
-      restrict: 'E',
-      templateUrl: 'templates/commitListPaginator.html'
-    };
-  });
-
   app.directive('avatar', function () {
     return {
       restrict: 'E',
