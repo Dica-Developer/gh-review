@@ -51,6 +51,11 @@
             .then(setScopeVariables);
         }
 
+        function setCurrentPage(newValue){
+          filter.setCurrentPage(newValue);
+          setCommits(filter.getPage());
+        }
+
         function setScopeVariables() {
           var repoSetInFilter = filter.getRepo();
           var branchSetInFilter = filter.getBranch();
@@ -58,6 +63,7 @@
           var sinceSetInFilter = filter.getSince();
 
           $scope.scope = $scope;
+          $scope.currentPage = filter.getCurrentPage();
           $scope.filter = filter;
           $scope.allRepos = repoList;
           $scope.branches = branchList;
@@ -128,6 +134,8 @@
           $scope.$watch('filterSinceAmount', checkIfSettingAreUpdated);
 
           $scope.$watch('filterSincePattern', checkIfSettingAreUpdated);
+
+          $scope.$watch('currentPage', setCurrentPage);
         }
 
         function setRepos(repos) {
@@ -146,6 +154,7 @@
 
         function setCommits(commits) {
           $scope.commits = commits;
+          $scope.commitsLength = filter.getTotalCommitsLength();
           $scope.fetchingCommits = false;
           return $q.when();
         }
@@ -154,7 +163,7 @@
           $scope.fetchingCommits = true;
           $scope.commits = [];
           filter.getCommits()
-            .then(setCommits);
+            .then(setCommits, null, setCommits);
         }
 
         function setContributorList(contributorList) {
