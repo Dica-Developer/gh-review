@@ -30,37 +30,6 @@ describe('#Directives', function () {
 
   });
 
-  describe('commitListPaginator', function () {
-
-    it('Should enable first button', function () {
-      $rootScope.hasFirst = true;
-      var element = $compile('<commit-list-paginator></commit-list-paginator>')($rootScope);
-      $rootScope.$digest();
-      expect(angular.element(element.querySelectorAll('.first')).attr('disabled')).toBeUndefined();
-      expect(angular.element(element.querySelectorAll('.previous')).attr('disabled')).toBe('disabled');
-      expect(angular.element(element.querySelectorAll('.next')).attr('disabled')).toBe('disabled');
-    });
-
-    it('Should enable previous button', function () {
-      $rootScope.hasPrevious = true;
-      var element = $compile('<commit-list-paginator></commit-list-paginator>')($rootScope);
-      $rootScope.$digest();
-      expect(angular.element(element.querySelectorAll('.first')).attr('disabled')).toBe('disabled');
-      expect(angular.element(element.querySelectorAll('.previous')).attr('disabled')).toBeUndefined();
-      expect(angular.element(element.querySelectorAll('.next')).attr('disabled')).toBe('disabled');
-    });
-
-    it('Should enable previous next', function () {
-      $rootScope.hasNext = true;
-      var element = $compile('<commit-list-paginator></commit-list-paginator>')($rootScope);
-      $rootScope.$digest();
-      expect(angular.element(element.querySelectorAll('.first')).attr('disabled')).toBe('disabled');
-      expect(angular.element(element.querySelectorAll('.previous')).attr('disabled')).toBe('disabled');
-      expect(angular.element(element.querySelectorAll('.next')).attr('disabled')).toBeUndefined();
-    });
-
-  });
-
   describe('menu', function () {
     var $q, lSS, gh;
     beforeEach(inject(['$q', 'localStorageService', 'github',

@@ -324,45 +324,6 @@ describe('#Filter', function () {
       expect(filter._needsPostFiltering()).toBeFalsy();
     });
 
-    it('#Filter.getNextPage should call #Filter.getCommits if customFilter is set', function () {
-      var getCommitsSpy = spyOn(filter, 'getCommits');
-      filter.getNextPage();
-      expect(getCommitsSpy).toHaveBeenCalled();
-    });
-
-    it('#Filter.getNextPage should call #GIthub.getNextPage if no customFilter is set', function () {
-      filter.options.meta.customFilter = {};
-      var githubSpy = spyOn(Github.prototype, 'getNextPage');
-      filter.getNextPage();
-      expect(githubSpy).toHaveBeenCalled();
-    });
-
-    it('#Filter.getFirstPage should call #Filter.getCommits if customFilter is set', function () {
-      var getCommitsSpy = spyOn(filter, 'getCommits');
-      filter.getFirstPage();
-      expect(getCommitsSpy).toHaveBeenCalled();
-    });
-
-    it('#Filter.getFirstPage should call #GIthub.getFirstPage if no customFilter is set', function () {
-      filter.options.meta.customFilter = {};
-      var githubSpy = spyOn(Github.prototype, 'getFirstPage');
-      filter.getFirstPage();
-      expect(githubSpy).toHaveBeenCalled();
-    });
-
-    it('#Filter.getPreviousPage should call #Filter.getCommits if customFilter is set', function () {
-      var getCommitsSpy = spyOn(filter, 'getCommits');
-      filter.getPreviousPage();
-      expect(getCommitsSpy).toHaveBeenCalled();
-    });
-
-    it('#Filter.getPreviousPage should call #GIthub.getPreviousPage if no customFilter is set', function () {
-      filter.options.meta.customFilter = {};
-      var githubSpy = spyOn(Github.prototype, 'getPreviousPage');
-      filter.getPreviousPage();
-      expect(githubSpy).toHaveBeenCalled();
-    });
-
     it('#Filter.getCommentsUrl should return correct URL to fetch repo comments', function () {
       var url = filter.getCommentsUrl();
       expect(url).toBe('https://api.github.com/repos/Dica-Developer/gh-review/comments');
