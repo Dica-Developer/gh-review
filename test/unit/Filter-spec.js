@@ -326,10 +326,10 @@ describe('#Filter', function () {
 
     it('#Filter.getCommentsUrl should return correct URL to fetch repo comments', function () {
       var url = filter.getCommentsUrl();
-      expect(url).toBe('https://api.github.com/repos/Dica-Developer/gh-review/comments');
+      expect(url).toBe('https://api.github.com/repos/Dica-Developer/gh-review/comments?per_page=100');
       filter.options.user = '';
       url = filter.getCommentsUrl();
-      expect(url).toBe('https://api.github.com/repos/gh-review/comments');
+      expect(url).toBe('https://api.github.com/repos/gh-review/comments?per_page=100');
     });
 
     it('#Filter.prepareGithubApiCallOptions should filter all github API relevant options', function () {
