@@ -44,7 +44,7 @@
             customFilter: {
               excludeOwnCommits: false
             },
-            id: filterId || null,
+            id: filterId || null
           }
         };
         this.init();
