@@ -353,7 +353,7 @@
         var defer = $q.defer();
         if (!this._needsPostFiltering()) {
           this.commitList = commits;
-          defer.resolve(commits);
+          defer.resolve();
         } else {
           var tmpCommits = [];
           var customFilter = this.options.meta.customFilter;
@@ -424,7 +424,7 @@
                 }
               });
               this.commitList = tmpCommits;
-              defer.resolve(tmpCommits);
+              defer.resolve();
             }.bind(this));
         }
         return defer.promise;
