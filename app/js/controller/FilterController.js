@@ -71,6 +71,8 @@
           $scope.branches = branchList;
           $scope.contributorList = contributorList;
           $scope.availableFilterSincePattern = ['days', 'weeks', 'years'];
+          $scope.availableFilterReviewStates = ['unseen', 'reviewed', 'approved'];
+          $scope.filterReviewState = $scope.availableFilterReviewStates[$scope.availableFilterReviewStates.indexOf(filter.getState())] || null;
 
           if($scope.branches){
             $scope.branchSelection = _.pluck(branchList, 'name');
@@ -139,6 +141,8 @@
 
           $scope.$watch('excludeOwnCommits', checkIfSettingAreUpdated);
 
+          $scope.$watch('filterReviewState', checkIfSettingAreUpdated);
+
           $scope.$watch('currentPage', setCurrentPage);
         }
 
@@ -181,12 +185,20 @@
         }
 
         function checkIfSettingAreUpdated(newValue, oldValue) {
-          if (typeof newValue !== 'undefined' && newValue !== null && (newValue !== oldValue)) {
+          var shouldCheck = (typeof newValue !== 'undefined' && newValue !== null && (newValue !== oldValue));
+
+          //We allow null as review state which leads in non filtered results
+          if($scope.availableFilterReviewStates.indexOf(oldValue) > -1 && newValue === null){
+            shouldCheck = true;
+          }
+
+          if (shouldCheck) {
             var updated = false;
             var contributorList = filter.getAuthors();
             var filterSincePattern = filter.getSince().pattern;
             var filterSinceAmount = filter.getSince().amount;
             var filterExcludeOwnCommits = filter.getExcludeOwnCommits();
+            var filterReviewState = filter.getState() || null;
 
             var selectedContributor = [];
             contributorList.forEach(function(contributor){
@@ -209,6 +221,10 @@
               updated = true;
             }
 
+            if(!_.isEqual(filterReviewState, $scope.filterReviewState)){
+              updated = true;
+            }
+
             $scope.settingsUpdated = updated;
           }
         }
@@ -220,6 +236,7 @@
             amount: $scope.filterSinceAmount
           });
           filter.setExcludeOwnCommits($scope.excludeOwnCommits);
+          filter.setState($scope.filterReviewState);
           $scope.settingsUpdated = false;
           getCommitList();
         };

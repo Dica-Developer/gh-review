@@ -52,11 +52,21 @@
                         </div>
                     </div>
                 </form>
+                <!--Advanced filter section-->
                 <div collapse="!showAdvanced">
                     <form class="form-inline" role="form">
                         <div class="form-group">
                             <label for="excludeOwnCommits">Exclude own commits: </label>
                             <input type="checkbox" id="excludeOwnCommits" ng-model="excludeOwnCommits"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="filterReviewState">Review state: </label>
+                            <select id="filterReviewState"
+                                    class="form-control input-sm"
+                                    ng-model="scope.filterReviewState"
+                                    ng-options="reviewState for reviewState in availableFilterReviewStates">
+                                <option value=""> --- select review state ---</option>
+                                    </select>
                         </div>
                     </form>
                 </div>
