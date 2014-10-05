@@ -1,8 +1,6 @@
-/*global Promise, importScripts, _*/
+/*global Promise*/
 (function (worker) {
   'use strict';
-
-  importScripts('../../bower_components/lodash/dist/lodash.min.js');
 
   var _accessToken = '';
   var _urls = [];
@@ -67,8 +65,8 @@
   var analyzeComments = function () {
     return new Promise(function (resolve) {
       var sortOutPromises = [];
-      _.each(commentsForRepo, function (comments) {
-        sortOutPromises.push(sortOutApproveComments(comments));
+      Object.keys(commentsForRepo).forEach(function (key) {
+        sortOutPromises.push(sortOutApproveComments(commentsForRepo[key]));
       });
 
       Promise.all(sortOutPromises)
@@ -116,10 +114,13 @@
 
   var start = function () {
     clearTimeout(timeout);
-    var uniqUrls = _.uniq(_urls);
-    _.each(uniqUrls, function (url) {
-      commentsForRepo[url] = [];
-      urlPromises.push(getComments(url));
+    var uniqUrls = [];
+    _urls.forEach(function(url){
+      if(uniqUrls.indexOf(url) === -1){
+        uniqUrls.push(url);
+        commentsForRepo[url] = [];
+        urlPromises.push(getComments(url));
+      }
     });
     Promise.all(urlPromises)
       .then(analyzeComments)
@@ -136,7 +137,7 @@
       _urls = event.data.repositories;
       break;
     case 'repository':
-      if (_.indexOf(_urls, event.data.repository) === -1) {
+      if (_urls.indexOf(event.data.repository) === -1) {
         _urls.push(event.data.repository);
       }
       break;
