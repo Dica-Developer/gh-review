@@ -14,7 +14,8 @@
         var filter = null,
           branchList = null,
           contributorList = null,
-          repoList = null;
+          repoList = null,
+          repoTree = null;
 
         function isExistingFilter() {
           var defer = $q.defer();
@@ -41,17 +42,18 @@
         }
 
         function handleExistingFilter() {
-          $q.all([filter.getBranchList(), filter.getContributorList(), getAllRepos()])
+          $q.all([filter.getBranchList(), filter.getContributorList(), getAllRepos(), filter.getTree()])
             .then(function (results) {
               branchList = results[0];
               contributorList = results[1];
               repoList = results[2];
+              repoTree = results[3];
               return $q.when();
             })
             .then(setScopeVariables);
         }
 
-        function setCurrentPage(newValue){
+        function setCurrentPage(newValue) {
           filter.setCurrentPage(newValue);
           setCommits(filter.getPage());
         }
@@ -65,16 +67,18 @@
           $scope.scope = $scope;
           $scope.currentPage = filter.getCurrentPage();
           $scope.excludeOwnCommits = filter.getExcludeOwnCommits();
+          $scope.filterPath = filter.getPath();
           $scope.showAdvanced = false;
           $scope.filter = filter;
           $scope.allRepos = repoList;
           $scope.branches = branchList;
           $scope.contributorList = contributorList;
+          $scope.repoTree = repoTree;
           $scope.availableFilterSincePattern = ['days', 'weeks', 'years'];
           $scope.availableFilterReviewStates = ['unseen', 'reviewed', 'approved'];
           $scope.filterReviewState = $scope.availableFilterReviewStates[$scope.availableFilterReviewStates.indexOf(filter.getState())] || null;
 
-          if($scope.branches){
+          if ($scope.branches) {
             $scope.branchSelection = _.pluck(branchList, 'name');
           }
 
@@ -92,7 +96,7 @@
 
           if (contributorSetInFilter) {
             var selectedContributor = [];
-            contributorSetInFilter.forEach(function(name){
+            contributorSetInFilter.forEach(function (name) {
               var contributorIndex = _.findIndex($scope.contributorList, {login: name});
               selectedContributor.push($scope.contributorList[contributorIndex]);
             });
@@ -104,7 +108,7 @@
             $scope.filterSincePattern = $scope.availableFilterSincePattern[$scope.availableFilterSincePattern.indexOf(sinceSetInFilter.pattern)];
           }
 
-          if($scope.selectedRepo && $scope.selectedBranch) {
+          if ($scope.selectedRepo && $scope.selectedBranch) {
             getCommitList();
           } else {
             $scope.commits = null;
@@ -118,6 +122,10 @@
               filter.setBranch(newSelectedBranch);
               getCommitList();
               getContributorList();
+              filter.getTree()
+                .then(function (treeData) {
+                  $scope.repoTree = repoTree = treeData;
+                });
             }
           });
 
@@ -142,6 +150,8 @@
           $scope.$watch('excludeOwnCommits', checkIfSettingAreUpdated);
 
           $scope.$watch('filterReviewState', checkIfSettingAreUpdated);
+
+          $scope.$watch('filterPath', checkIfSettingAreUpdated);
 
           $scope.$watch('currentPage', setCurrentPage);
         }
@@ -188,7 +198,7 @@
           var shouldCheck = (typeof newValue !== 'undefined' && newValue !== null && (newValue !== oldValue));
 
           //We allow null as review state which leads in non filtered results
-          if($scope.availableFilterReviewStates.indexOf(oldValue) > -1 && newValue === null){
+          if ($scope.availableFilterReviewStates.indexOf(oldValue) > -1 && newValue === null) {
             shouldCheck = true;
           }
 
@@ -199,9 +209,10 @@
             var filterSinceAmount = filter.getSince().amount;
             var filterExcludeOwnCommits = filter.getExcludeOwnCommits();
             var filterReviewState = filter.getState() || null;
+            var filterPath = filter.getPath();
 
             var selectedContributor = [];
-            contributorList.forEach(function(contributor){
+            contributorList.forEach(function (contributor) {
               selectedContributor.push($scope.contributorList[_.findIndex($scope.contributorList, {login: contributor})]);
             });
 
@@ -221,7 +232,11 @@
               updated = true;
             }
 
-            if(!_.isEqual(filterReviewState, $scope.filterReviewState)){
+            if (!_.isEqual(filterReviewState, $scope.filterReviewState)) {
+              updated = true;
+            }
+
+            if (!_.isEqual(filterPath, $scope.filterPath)) {
               updated = true;
             }
 
@@ -237,6 +252,7 @@
           });
           filter.setExcludeOwnCommits($scope.excludeOwnCommits);
           filter.setState($scope.filterReviewState);
+          filter.setPath($scope.filterPath);
           $scope.settingsUpdated = false;
           getCommitList();
         };
@@ -265,6 +281,7 @@
           $scope.contributor = null;
           $scope.contributorList = [];
           $scope.commits = null;
+          $scope.repoTree = null;
           setRepos($scope.allRepos);
         };
 

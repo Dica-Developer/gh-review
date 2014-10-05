@@ -14,7 +14,8 @@
     'getBranchesForRepo',
     'getCommits',
     'githubUserData',
-    function ($q, $location, _, moment, github, commentCollector, localStorageService, getBranchesForRepo, getCommits, githubUserData) {
+    'getTreeData',
+    function ($q, $location, _, moment, github, commentCollector, localStorageService, getBranchesForRepo, getCommits, githubUserData, getTreeData) {
 
       var filterHolder = {},
         generateUUID = function () {
@@ -30,6 +31,7 @@
       function Filter(filterId) {
         this.branchList = [];
         this.contributorList = {};
+        this.tree = [];
         this.options = {
           repo: null,
           user: null,
@@ -60,6 +62,7 @@
           _.extend(this.options, localStorageService.get('filter-' + this.options.meta.id), true);
           this.getContributorList();
           this.getBranchList();
+          this.getTree();
         } else {
           this.options.meta.id = generateUUID();
           this.options.meta.isNew = true;
@@ -197,6 +200,10 @@
         this.set('path', null);
       };
 
+      Filter.prototype.getPath = function () {
+        return this.options.path;
+      };
+
       Filter.prototype.setState = function (state) {
         this.setCustomFilter('state', state);
       };
@@ -218,6 +225,7 @@
       };
 
       Filter.prototype.reset = function () {
+        this.tree = [];
         this.options = {
           repo: null,
           user: null,
@@ -276,6 +284,20 @@
             .then(function (branches) {
               this.branchList[repoFullName] = branches;
               defer.resolve(branches);
+            }.bind(this));
+        }
+        return defer.promise;
+      };
+
+      Filter.prototype.getTree = function(){
+        var defer = $q.defer();
+        if(this.tree.length > 0){
+          defer.resolve(this.tree);
+        } else {
+          getTreeData(this.getOwner(), this.getRepo(), this.getBranch())
+            .then(function(result){
+              this.tree = result;
+              defer.resolve(this.tree);
             }.bind(this));
         }
         return defer.promise;

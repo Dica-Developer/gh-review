@@ -353,7 +353,7 @@
           if (error) {
             defer.reject(error);
           } else {
-            defer.resolve(treeData);
+            defer.resolve(treeData.tree);
           }
         });
         return defer.promise;

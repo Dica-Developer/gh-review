@@ -72,7 +72,7 @@ onmessage = function (event) {
       url += '&until=' + githubMsg.until;
     }
 
-    if(githubMsg.path){
+    if(githubMsg.path && githubMsg.path !== ''){
       url += '&path=' + githubMsg.path;
     }
 
