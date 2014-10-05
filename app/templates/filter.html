@@ -56,9 +56,11 @@
                 <div ng-if="commits.length <= 0 && fetchingCommits" class="well">
                     Fetching commits for {{scope.selectedRepo.full_name}} - {{scope.selectedBranch}}
                 </div>
-                <pagination total-items="commitsLength" items-per-page="20" ng-model="scope.currentPage" max-size="5" class="pagination-sm" boundary-links="true" rotate="false"></pagination>
-                <ghreview-commit-list ng-if="commits.length > 0 && !fetchingCommits" x-commit-list="commits" x-filter="filter"></ghreview-commit-list>
-                <pagination total-items="commitsLength" items-per-page="20" ng-model="scope.currentPage" max-size="5" class="pagination-sm" boundary-links="true" rotate="false"></pagination>
+                <div class="col-lg-12">
+                    <pagination total-items="commitsLength" items-per-page="20" ng-model="scope.currentPage" max-size="5" class="pagination-sm" boundary-links="true" rotate="false"></pagination>
+                    <ghreview-commit-list ng-if="commits.length > 0 && !fetchingCommits" x-commit-list="commits" x-filter="filter"></ghreview-commit-list>
+                    <pagination total-items="commitsLength" items-per-page="20" ng-model="scope.currentPage" max-size="5" class="pagination-sm" boundary-links="true" rotate="false"></pagination>
+                </div>
             </div>
         </div>
     </div>
