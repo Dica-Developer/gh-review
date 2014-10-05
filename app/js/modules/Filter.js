@@ -14,8 +14,7 @@
     'getBranchesForRepo',
     function ($q, $location, _, moment, github, commentCollector, localStorageService, getBranchesForRepo) {
 
-      var tmpCommits = {},
-        filterHolder = {},
+      var filterHolder = {},
         generateUUID = function () {
           var d = new Date().getTime();
           return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -23,23 +22,10 @@
             d = Math.floor(d / 16);
             return (c === 'x' ? r : (r & 0x7 | 0x8)).toString(16);
           });
-        },
-        getCurrentCommitCacheId = function () {
-          var commitCacheId = $location.url();
-          var urlParameter = $location.search();
-          if (urlParameter.page) {
-            commitCacheId = commitCacheId + '?page=' + urlParameter.page;
-          }
-
-          if (commitCacheId.indexOf('#') > -1) {
-            commitCacheId = commitCacheId.substr(0, commitCacheId.indexOf('#'));
-          }
-          return commitCacheId;
         };
 
 
       function Filter(filterId) {
-        this.commitCache = {};
         this.branchList = [];
         this.contributorList = {};
         this.options = {
@@ -94,7 +80,6 @@
       };
 
       Filter.prototype.set = function (key, value) {
-        this.commitCache = {};
         if (_.isUndefined(this.options[key])) {
           throw new Error('Unknown filter property');
         } else {
@@ -136,7 +121,6 @@
       };
 
       Filter.prototype.addAuthor = function (author) {
-        this.commitCache = {};
         if (_.isArray(author)) {
           this.options.authors = author;
         } else {
@@ -146,7 +130,6 @@
       };
 
       Filter.prototype.removeAuthor = function (author) {
-        this.commitCache = {};
         this.options.authors.pop(author);
         this.options.meta.isSaved = false;
       };
@@ -224,7 +207,6 @@
       };
 
       Filter.prototype.reset = function () {
-        this.commitCache = {};
         this.options = {
           repo: null,
           user: null,
@@ -306,7 +288,6 @@
       };
 
       Filter.prototype.getFirstPage = function () {
-        this.commitCache = {};
         $location.search('page', 1);
         if (this._needsPostFiltering()) {
           return this.getCommits(0, this.maxResults);
@@ -323,7 +304,6 @@
         if (urlParameter.page) {
           prevPage = urlParameter.page > 2 ? urlParameter.page-- : 1;
         }
-        this.commitCache = {};
         $location.search('page', prevPage);
         if (this._needsPostFiltering()) {
           return this.getCommits(Math.max(0, this.firstResult - this.maxResults), this.maxResults);
