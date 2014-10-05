@@ -6,13 +6,6 @@
 
   var services = angular.module('GHReview');
 
-  services.value('githubOptions', {
-    clientId: '5082108e53d762d90c00',
-    apiScope: 'user, repo',
-    redirectUri: 'http://localhost:9000',
-    accessTokenUrl: 'http://gh-review.herokuapp.com/bemdsvdsynggmvweibduvjcbgf'
-  });
-
   services.factory('authenticated', ['localStorageService',
     function (localStorageService) {
       return {
@@ -277,7 +270,7 @@
   services.factory('getAllRepos', ['$q', '$interval', 'githubUserData', 'localStorageService',
     function ($q, $interval, githubUserData, localStorageService) {
       var repositoriesCache = [];
-      $interval(function clearRepoCache(){
+      $interval(function clearRepoCache() {
         repositoriesCache = [];
       }, 1800000); //1800000 = 1/2 hour
 
@@ -311,8 +304,8 @@
   services.factory('getBranchesForRepo', ['$q', '$interval', 'localStorageService',
     function ($q, $interval, localStorageService) {
       var branchesCache = {};
-      $interval(function updateBranchesCache(){
-        Object.keys(branchesCache).forEach(function(repoFullName){
+      $interval(function updateBranchesCache() {
+        Object.keys(branchesCache).forEach(function (repoFullName) {
           getBranchesForRepo(repoFullName);
         });
         branchesCache = {};
@@ -337,7 +330,7 @@
       }
 
       return function (repoFullName) {
-        if(branchesCache[repoFullName]){
+        if (branchesCache[repoFullName]) {
           return $q.when(branchesCache[repoFullName]);
         } else {
           return getBranchesForRepo(repoFullName);
