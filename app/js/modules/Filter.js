@@ -423,12 +423,6 @@
                   tmpCommits.push(commit);
                 }
               });
-//              var finalizedCommits;
-//              if (this.maxResults > -1) {
-//                finalizedCommits = _.first(_.rest(tmpCommits, this.firstResult), this.maxResults);
-//              } else {
-//                finalizedCommits = _.rest(tmpCommits, this.firstResult);
-//              }
               this.commitList = tmpCommits;
               defer.resolve(tmpCommits);
             }.bind(this));
