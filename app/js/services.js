@@ -243,30 +243,6 @@
     }
   ]);
 
-  services.factory('getAllReposAndBranches', ['$q', 'githubUserData', 'localStorageService',
-    function ($q, githubUserData, localStorageService) {
-      return function () {
-        var defer = $q.defer();
-        var getReposWorker = new Worker('js/worker/getAllReposAndBranches.js');
-        var accessToken = localStorageService.get('accessToken');
-        getReposWorker.onmessage = function (event) {
-          defer.resolve(event.data.repos);
-          getReposWorker.terminate();
-        };
-
-        githubUserData.get()
-          .then(function (userData) {
-            getReposWorker.postMessage({
-              type: 'getReposAndBranches',
-              user: userData.login,
-              accessToken: accessToken
-            });
-          });
-        return defer.promise;
-      };
-    }
-  ]);
-
   services.factory('getAllRepos', ['$q', '$interval', 'githubUserData', 'localStorageService',
     function ($q, $interval, githubUserData, localStorageService) {
       var repositoriesCache = [];
