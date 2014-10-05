@@ -301,6 +301,7 @@
           url += owner + '/';
         }
         url += repo + '/comments';
+        url += '?per_page=100';
         return url;
       };
 

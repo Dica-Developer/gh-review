@@ -90,7 +90,7 @@
           reject();
         }
       };
-      var url = baseUrl + 'repos/' + repo + '/branches';
+      var url = baseUrl + 'repos/' + repo + '/branches?per_page=100';
       askGithub(url, successCallback, reject);
     });
   };
@@ -113,6 +113,7 @@
       } else {
         url += 'user/repos';
       }
+      url += '?per_page=100';
 
       var successCallback = function (event) {
         var req = event.currentTarget;
@@ -127,6 +128,7 @@
 
   var getOrgsFromUser = function (user) {
     var url = baseUrl + 'user/orgs';
+    url += '?per_page=100';
 
     var successCallback = function (event) {
       var req = event.currentTarget;
@@ -151,6 +153,7 @@
 
   var getAllReposFromUser = function (user) {
     var url = baseUrl + 'user/orgs';
+    url += '?per_page=100';
 
     var successCallback = function (event) {
       var req = event.currentTarget;
