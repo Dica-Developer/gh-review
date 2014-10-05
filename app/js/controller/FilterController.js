@@ -91,12 +91,12 @@
           }
 
           if (contributorSetInFilter) {
-            var selectedConributor = [];
+            var selectedContributor = [];
             contributorSetInFilter.forEach(function(name){
               var contributorIndex = _.findIndex($scope.contributorList, {login: name});
-              selectedConributor.push($scope.contributorList[contributorIndex]);
+              selectedContributor.push($scope.contributorList[contributorIndex]);
             });
-            $scope.selectedContributor = selectedConributor;
+            $scope.selectedContributor = selectedContributor;
           }
 
           if (sinceSetInFilter) {
