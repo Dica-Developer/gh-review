@@ -586,7 +586,7 @@ describe('#Services', function () {
         });
       var callback = github.gitdata.getTree.calls.argsFor(0)[1];
       callback(null, {
-        data: 'testResult'
+        tree: [1,2,3,4]
       });
       expect(github.gitdata.getTree).toHaveBeenCalled();
       $rootScope.$apply();
