@@ -94,7 +94,7 @@
                 }
               }
 
-              this.setSortedCommits = function () {
+              var setSortedCommits = function () {
                 var groupedCommits = _.groupBy($scope.commits, function (commit) {
                   return moment(commit.commit.committer.date).format('YYYY-MM-DD');
                 });
@@ -115,19 +115,15 @@
                 $scope.sortedCommits = groupedSortedCommits;
               };
 
-              $scope.hasNext = $scope.filter.hasNextPage;
-              $scope.hasPrevious = $scope.filter.hasPreviousPage;
-              $scope.hasFirst = $scope.filter.hasFirstPage;
-
               $scope.commitApproved = function (sha) {
-                return (true === approvedCommits[sha]);
+                return approvedCommits && (true === approvedCommits[sha]);
               };
+              $scope.$watch('commits', function () {
+                setSortedCommits();
+              });
             }
           ],
-          link: function ($scope, element, attr, controller) {
-            $scope.$watch(attr.commits, function () {
-              controller.setSortedCommits();
-            });
+          link: function () {
           }
         };
       }
