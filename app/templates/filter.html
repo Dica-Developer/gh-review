@@ -48,15 +48,24 @@
                             <button ng-if="settingsUpdated" class="btn btn-primary" ng-click="updateCommits()">Update Preview</button>
                             <button ng-if="scope.selectedBranch && !filterIsSaved()" class="btn btn-success" ng-click="saveFilter()">Save</button>
                             <button ng-if="scope.selectedRepo" class="btn btn-warning" ng-click="reset()">Reset</button>
+                            <button class="btn btn-default" ng-click="showAdvanced = !showAdvanced">{{showAdvanced ? 'Less' : 'More'}}</button>
                         </div>
                     </div>
                 </form>
+                <div collapse="!showAdvanced">
+                    <form class="form-inline" role="form">
+                        <div class="form-group">
+                            <label for="excludeOwnCommits">Exclude own commits: </label>
+                            <input type="checkbox" id="excludeOwnCommits" ng-model="excludeOwnCommits"/>
+                        </div>
+                    </form>
+                </div>
             </div>
             <div class="panel-body" ng-if="commits.length > 0 || fetchingCommits">
                 <div ng-if="commits.length <= 0 && fetchingCommits" class="well">
                     Fetching commits for {{scope.selectedRepo.full_name}} - {{scope.selectedBranch}}
                 </div>
-                <div class="col-lg-12">
+                <div class="col-lg-12" ng-if="commits.length > 0 && !fetchingCommits">
                     <pagination total-items="commitsLength" items-per-page="20" ng-model="scope.currentPage" max-size="5" class="pagination-sm" boundary-links="true" rotate="false"></pagination>
                     <ghreview-commit-list ng-if="commits.length > 0 && !fetchingCommits" x-commit-list="commits" x-filter="filter"></ghreview-commit-list>
                     <pagination total-items="commitsLength" items-per-page="20" ng-model="scope.currentPage" max-size="5" class="pagination-sm" boundary-links="true" rotate="false"></pagination>

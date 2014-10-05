@@ -64,6 +64,8 @@
 
           $scope.scope = $scope;
           $scope.currentPage = filter.getCurrentPage();
+          $scope.excludeOwnCommits = filter.getExcludeOwnCommits();
+          $scope.showAdvanced = false;
           $scope.filter = filter;
           $scope.allRepos = repoList;
           $scope.branches = branchList;
@@ -135,6 +137,8 @@
 
           $scope.$watch('filterSincePattern', checkIfSettingAreUpdated);
 
+          $scope.$watch('excludeOwnCommits', checkIfSettingAreUpdated);
+
           $scope.$watch('currentPage', setCurrentPage);
         }
 
@@ -177,11 +181,12 @@
         }
 
         function checkIfSettingAreUpdated(newValue, oldValue) {
-          if (newValue && (newValue !== oldValue)) {
+          if (typeof newValue !== 'undefined' && newValue !== null && (newValue !== oldValue)) {
             var updated = false;
             var contributorList = filter.getAuthors();
             var filterSincePattern = filter.getSince().pattern;
             var filterSinceAmount = filter.getSince().amount;
+            var filterExcludeOwnCommits = filter.getExcludeOwnCommits();
 
             var selectedContributor = [];
             contributorList.forEach(function(contributor){
@@ -200,6 +205,10 @@
               updated = true;
             }
 
+            if (filterExcludeOwnCommits !== $scope.excludeOwnCommits) {
+              updated = true;
+            }
+
             $scope.settingsUpdated = updated;
           }
         }
@@ -210,6 +219,7 @@
             pattern: $scope.filterSincePattern,
             amount: $scope.filterSinceAmount
           });
+          filter.setExcludeOwnCommits($scope.excludeOwnCommits);
           $scope.settingsUpdated = false;
           getCommitList();
         };

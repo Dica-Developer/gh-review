@@ -13,7 +13,8 @@
     'localStorageService',
     'getBranchesForRepo',
     'getCommits',
-    function ($q, $location, _, moment, github, commentCollector, localStorageService, getBranchesForRepo, getCommits) {
+    'githubUserData',
+    function ($q, $location, _, moment, github, commentCollector, localStorageService, getBranchesForRepo, getCommits, githubUserData) {
 
       var filterHolder = {},
         generateUUID = function () {
@@ -40,8 +41,10 @@
           meta: {
             isSaved: false,
             lastEdited: null,
-            customFilter: {},
-            id: filterId || null
+            customFilter: {
+              excludeOwnCommits: false
+            },
+            id: filterId || null,
           }
         };
         this.init();
@@ -91,7 +94,6 @@
       };
 
       Filter.prototype.setCustomFilter = function (key, value) {
-        this.commitCache = {};
         this.options.meta.customFilter[key] = value;
         this.options.meta.lastEdited = new Date().getTime();
         this.options.meta.isSaved = false;
@@ -203,6 +205,14 @@
         return this.options.meta.customFilter.state;
       };
 
+      Filter.prototype.setExcludeOwnCommits = function (state) {
+        this.setCustomFilter('excludeOwnCommits', state);
+      };
+
+      Filter.prototype.getExcludeOwnCommits = function () {
+        return this.options.meta.customFilter.excludeOwnCommits;
+      };
+
       Filter.prototype.isSaved = function () {
         return this.options.meta.isSaved;
       };
@@ -312,7 +322,7 @@
             if (value.length === 1) {
               preparedGithubOptions.author = value[0];
             } else if (value.length > 1) {
-              this.options.meta.customFilter.authors = value;
+              this.setCustomFilter('authors', value);
             }
           } else if (key === 'since' && value !== null) {
             preparedGithubOptions.since = this.getSinceDateISO();
@@ -360,72 +370,82 @@
           var customFilter = this.options.meta.customFilter;
           var state = customFilter.state;
           var authors = customFilter.authors;
-          commentCollector.getCommitApproved()
-            .then(function (commitApproved) {
-              _.each(commits, function (commit) {
-                var selectCommit = true;
-                if (!_.isUndefined(authors)) {
-                  /*
-                   TODO commit.author can be null how to find the login name of an author
-                   example commit object without author:
-                   {
-                   author: null
-                   comments_url: "https://api.github.com/repos/Datameer-Inc/dap/commits/67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b/comments"
-                   commit: {
-                   author: {
-                   date: "2014-09-26T07:00:52Z"
-                   email: "author@email.com"
-                   name: "Author Name"
-                   }
-                   comment_count: 0
-                   committer: {
-                   date: "2014-09-26T07:00:52Z"
-                   email: "author@email.com"
-                   name: "Author Name"
-                   }
-                   message: "added id's for workbook filter dialog plus/minus icons to ensure new ui-tests"
-                   tree: {sha:0bf402614436f1f9bc7326b77b7815b3a6bcafe6,…}
-                   url: "https://api.github.com/repos/Datameer-Inc/dap/git/commits/67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b"
-                   }
-                   committer: null
-                   html_url: "https://github.com/Datameer-Inc/dap/commit/67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b"
-                   parents: [{sha:960d78b69fab212d608d78ad86364162460f5654,…}]
-                   sha: "67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b"
-                   url: "https://api.github.com/repos/Datameer-Inc/dap/commits/67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b"
-                   }
-                   */
-                  var author = commit.author ? commit.author.login : commit.commit.author.login;
-                  if (!_.contains(authors, author)) {
-                    selectCommit = false;
-                  }
-                }
-                if (!_.isUndefined(state)) {
-                  switch (state) {
-                  case 'approved':
-                    if (!commitApproved[commit.sha]) {
+          var excludeOwnCommits = customFilter.excludeOwnCommits;
+          githubUserData.get()
+            .then(function(result){
+              var userData = result;
+              commentCollector.getCommitApproved()
+                .then(function (commitApproved) {
+                  _.each(commits, function (commit) {
+                    var selectCommit = true,
+                      author = commit.author ? commit.author.login : commit.commit.author.login;
+                    if (!_.isUndefined(authors)) {
+                      /*
+                       TODO commit.author can be null how to find the login name of an author
+                       example commit object without author:
+                       {
+                       author: null
+                       comments_url: "https://api.github.com/repos/Datameer-Inc/dap/commits/67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b/comments"
+                       commit: {
+                       author: {
+                       date: "2014-09-26T07:00:52Z"
+                       email: "author@email.com"
+                       name: "Author Name"
+                       }
+                       comment_count: 0
+                       committer: {
+                       date: "2014-09-26T07:00:52Z"
+                       email: "author@email.com"
+                       name: "Author Name"
+                       }
+                       message: "added id's for workbook filter dialog plus/minus icons to ensure new ui-tests"
+                       tree: {sha:0bf402614436f1f9bc7326b77b7815b3a6bcafe6,…}
+                       url: "https://api.github.com/repos/Datameer-Inc/dap/git/commits/67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b"
+                       }
+                       committer: null
+                       html_url: "https://github.com/Datameer-Inc/dap/commit/67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b"
+                       parents: [{sha:960d78b69fab212d608d78ad86364162460f5654,…}]
+                       sha: "67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b"
+                       url: "https://api.github.com/repos/Datameer-Inc/dap/commits/67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b"
+                       }
+                       */
+                      if (!_.contains(authors, author)) {
+                        selectCommit = false;
+                      }
+                    }
+
+                    if(excludeOwnCommits && author === userData.login){
                       selectCommit = false;
                     }
-                    break;
-                  case 'reviewed':
-                    /*jshint camelcase:false*/
-                    if (!(!commitApproved[commit.sha] && commit.commit.comment_count > 0)) {
-                      selectCommit = false;
+
+                    if (!_.isUndefined(state)) {
+                      switch (state) {
+                      case 'approved':
+                        if (!commitApproved[commit.sha]) {
+                          selectCommit = false;
+                        }
+                        break;
+                      case 'reviewed':
+                        /*jshint camelcase:false*/
+                        if (!(!commitApproved[commit.sha] && commit.commit.comment_count > 0)) {
+                          selectCommit = false;
+                        }
+                        break;
+                      case 'unseen':
+                        /*jshint camelcase:false*/
+                        if (commit.commit.comment_count !== 0) {
+                          selectCommit = false;
+                        }
+                        break;
+                      }
                     }
-                    break;
-                  case 'unseen':
-                    /*jshint camelcase:false*/
-                    if (commit.commit.comment_count !== 0) {
-                      selectCommit = false;
+                    if (selectCommit) {
+                      tmpCommits.push(commit);
                     }
-                    break;
-                  }
-                }
-                if (selectCommit) {
-                  tmpCommits.push(commit);
-                }
-              });
-              this.commitList = tmpCommits;
-              defer.resolve();
+                  });
+                  this.commitList = tmpCommits;
+                  defer.resolve();
+                }.bind(this));
             }.bind(this));
         }
         return defer.promise;
