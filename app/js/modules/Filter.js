@@ -12,7 +12,8 @@
     'commentCollector',
     'localStorageService',
     'getBranchesForRepo',
-    function ($q, $location, _, moment, github, commentCollector, localStorageService, getBranchesForRepo) {
+    'getCommits',
+    function ($q, $location, _, moment, github, commentCollector, localStorageService, getBranchesForRepo, getCommits) {
 
       var filterHolder = {},
         generateUUID = function () {
@@ -46,9 +47,9 @@
         this.init();
       }
 
-      Filter.prototype.hasNextPage = false;
-      Filter.prototype.hasPreviousPage = false;
-      Filter.prototype.hasFirstPage = false;
+      Filter.prototype.maxResults = 20;
+      Filter.prototype.commitList = [];
+      Filter.prototype.currentPage = 1;
       Filter.prototype.tmpCommits = [];
 
       Filter.prototype.init = function () {
@@ -270,48 +271,26 @@
         return defer.promise;
       };
 
-      Filter.prototype.getNextPage = function () {
-        var prevPage = 2,
-          urlParameter = $location.search();
-        if (urlParameter.page) {
-          prevPage = urlParameter.page++;
-        }
-        this.commitCache = {};
-        $location.search('page', prevPage);
-        if (this._needsPostFiltering()) {
-          return this.getCommits(this.firstResult + this.maxResults, this.maxResults);
-        } else {
-          this.getCommitsRefer = $q.defer();
-          github.getNextPage(tmpCommits, this._getCommitsCallback.bind(this));
-          return this.getCommitsRefer.promise;
-        }
+      Filter.prototype.getCurrentPage = function(){
+        return this.currentPage;
       };
 
-      Filter.prototype.getFirstPage = function () {
-        $location.search('page', 1);
-        if (this._needsPostFiltering()) {
-          return this.getCommits(0, this.maxResults);
-        } else {
-          this.getCommitsRefer = $q.defer();
-          github.getFirstPage(tmpCommits, this._getCommitsCallback.bind(this));
-          return this.getCommitsRefer.promise;
-        }
+      Filter.prototype.setCurrentPage = function(page){
+        this.currentPage = page;
+        $location.search('page', this.currentPage);
       };
 
-      Filter.prototype.getPreviousPage = function () {
-        var prevPage,
-          urlParameter = $location.search();
-        if (urlParameter.page) {
-          prevPage = urlParameter.page > 2 ? urlParameter.page-- : 1;
+      Filter.prototype.getPage = function(){
+        if($location.search().page && $location.search().page !== this.currentPage){
+          this.setCurrentPage($location.search().page);
         }
-        $location.search('page', prevPage);
-        if (this._needsPostFiltering()) {
-          return this.getCommits(Math.max(0, this.firstResult - this.maxResults), this.maxResults);
-        } else {
-          this.getCommitsRefer = $q.defer();
-          github.getPreviousPage(tmpCommits, this._getCommitsCallback.bind(this));
-          return this.getCommitsRefer.promise;
-        }
+        var start = (this.currentPage * this.maxResults) - this.maxResults;
+        var end = start + this.maxResults;
+        return this.commitList.slice(start, end);
+      };
+
+      Filter.prototype.getTotalCommitsLength = function(){
+        return this.commitList.length;
       };
 
       Filter.prototype.getCommentsUrl = function () {
@@ -323,13 +302,6 @@
         }
         url += repo + '/comments';
         return url;
-      };
-
-      Filter.prototype._getCommitsDirect = function () {
-        this.getCommitsRefer = $q.defer();
-        var githubApiCallOptions = this.prepareGithubApiCallOptions();
-        github.repos.getCommits(githubApiCallOptions, this._getCommitsCallback.bind(this));
-        return this.getCommitsRefer.promise;
       };
 
       Filter.prototype.prepareGithubApiCallOptions = function () {
@@ -352,166 +324,116 @@
         return preparedGithubOptions;
       };
 
-      Filter.prototype._getCommitsPostFiltered = function (link) {
-        var githubMsg = this.prepareGithubApiCallOptions();
-        var callback = function (error, resp) {
-          if (!error) {
-            var link = resp.meta.link;
-            var hasNext = github.hasNextPage(link);
-            delete resp.meta;
-            this.tmpCommits = this.tmpCommits.concat(resp);
-            if (hasNext) {
-              this._getCommitsPostFiltered(link);
-            } else {
-              this._getCommitsCallback(error, this.tmpCommits);
-            }
+      Filter.prototype.getCommits = function (maxResults) {
+        this.maxResults = maxResults || this.maxResults;
+        var getCommitsRefer = $q.defer(),
+          _this = this;
+        getCommits(this.prepareGithubApiCallOptions())
+          .then(
+          function (commitList) {
+            _this._processCustomFilter(commitList)
+              .then(function(){
+                getCommitsRefer.resolve(_this.getPage());
+              });
+          },
+          function (err) {
+            getCommitsRefer.reject(err);
+          },
+          function (uncompleteCommitList) {
+            _this._processCustomFilter(uncompleteCommitList)
+              .then(function(){
+                getCommitsRefer.notify(_this.getPage());
+              });
           }
-        }.bind(this);
-
-        if (!link) {
-          this.tmpCommits = [];
-          this.getCommitsRefer = $q.defer();
-          github.repos.getCommits(githubMsg, callback);
-        } else {
-          github.getNextPage(link, callback);
-        }
-        return this.getCommitsRefer.promise;
-      };
-
-      Filter.prototype.getCommits = function (firstResult, maxResults) {
-        if (!_.isUndefined(this.commitCache[getCurrentCommitCacheId()])) {
-          return $q.when(this.commitCache[getCurrentCommitCacheId()]);
-        } else {
-          this.firstResult = firstResult || 0;
-          this.maxResults = maxResults || -1;
-          if (this._needsPostFiltering() || this.maxResults === -1) {
-            return this._getCommitsPostFiltered();
-          } else {
-            return this._getCommitsDirect();
-          }
-        }
-      };
-
-      Filter.prototype._getCommitsCallback = function (error, commits) {
-        if (!error) {
-          //indicates that this is a getAll request in that case we dont need to if there is a pagination option
-          if (!_.isUndefined(this.tmpCommits)) {
-            delete this.tmpCommits;
-          }
-          if (this._needsPostFiltering()) {
-            this._extractMetaPostFilter(commits);
-            this._processCustomFilter(commits);
-          } else {
-            if (!_.isUndefined(commits.meta)) {
-              commits = this._extractMeta(commits);
-            }
-            this.commitCache[getCurrentCommitCacheId()] = commits;
-            this.getCommitsRefer.resolve(commits);
-          }
-        }
-      };
-
-      Filter.prototype._extractMetaPostFilter = function (commits) {
-        tmpCommits = _.extend({}, commits);
-        if (this.maxResults > -1) {
-          this.hasNextPage = (this.maxResults + this.firstResult) < commits.length;
-        } else {
-          this.hasNextPage = false;
-        }
-        this.hasPreviousPage = this.firstResult > 0;
-        this.hasFirstPage = true;
-        if (!_.isUndefined(commits.meta)) {
-          delete commits.meta;
-        }
-      };
-
-      Filter.prototype._extractMeta = function (commits) {
-        tmpCommits = _.extend({}, commits);
-        this.hasNextPage = github.hasNextPage(commits);
-        this.hasPreviousPage = github.hasPreviousPage(commits);
-        this.hasFirstPage = github.hasFirstPage(commits);
-        delete commits.meta;
-        return commits;
+        );
+        return getCommitsRefer.promise;
       };
 
       Filter.prototype._processCustomFilter = function (commits) {
-        var tmpCommits = [];
-        var customFilter = this.options.meta.customFilter;
-        var state = customFilter.state;
-        var authors = customFilter.authors;
-        commentCollector.getCommitApproved()
-          .then(function (commitApproved) {
-            _.each(commits, function (commit) {
-              var selectCommit = true;
-              if (!_.isUndefined(authors)) {
-                /*
-                  TODO commit.author can be null how to find the login name of an author
-                  example commit object without author:
-                  {
-                     author: null
-                     comments_url: "https://api.github.com/repos/Datameer-Inc/dap/commits/67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b/comments"
-                     commit: {
-                        author: {
-                           date: "2014-09-26T07:00:52Z"
-                           email: "author@email.com"
-                           name: "Author Name"
-                        }
-                       comment_count: 0
-                       committer: {
-                         date: "2014-09-26T07:00:52Z"
-                         email: "author@email.com"
-                         name: "Author Name"
-                       }
-                       message: "added id's for workbook filter dialog plus/minus icons to ensure new ui-tests"
-                       tree: {sha:0bf402614436f1f9bc7326b77b7815b3a6bcafe6,…}
-                       url: "https://api.github.com/repos/Datameer-Inc/dap/git/commits/67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b"
-                     }
-                     committer: null
-                     html_url: "https://github.com/Datameer-Inc/dap/commit/67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b"
-                     parents: [{sha:960d78b69fab212d608d78ad86364162460f5654,…}]
-                     sha: "67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b"
-                     url: "https://api.github.com/repos/Datameer-Inc/dap/commits/67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b"
+        var defer = $q.defer();
+        if (!this._needsPostFiltering()) {
+          this.commitList = commits;
+          defer.resolve(commits);
+        } else {
+          var tmpCommits = [];
+          var customFilter = this.options.meta.customFilter;
+          var state = customFilter.state;
+          var authors = customFilter.authors;
+          commentCollector.getCommitApproved()
+            .then(function (commitApproved) {
+              _.each(commits, function (commit) {
+                var selectCommit = true;
+                if (!_.isUndefined(authors)) {
+                  /*
+                   TODO commit.author can be null how to find the login name of an author
+                   example commit object without author:
+                   {
+                   author: null
+                   comments_url: "https://api.github.com/repos/Datameer-Inc/dap/commits/67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b/comments"
+                   commit: {
+                   author: {
+                   date: "2014-09-26T07:00:52Z"
+                   email: "author@email.com"
+                   name: "Author Name"
+                   }
+                   comment_count: 0
+                   committer: {
+                   date: "2014-09-26T07:00:52Z"
+                   email: "author@email.com"
+                   name: "Author Name"
+                   }
+                   message: "added id's for workbook filter dialog plus/minus icons to ensure new ui-tests"
+                   tree: {sha:0bf402614436f1f9bc7326b77b7815b3a6bcafe6,…}
+                   url: "https://api.github.com/repos/Datameer-Inc/dap/git/commits/67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b"
+                   }
+                   committer: null
+                   html_url: "https://github.com/Datameer-Inc/dap/commit/67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b"
+                   parents: [{sha:960d78b69fab212d608d78ad86364162460f5654,…}]
+                   sha: "67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b"
+                   url: "https://api.github.com/repos/Datameer-Inc/dap/commits/67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b"
+                   }
+                   */
+                  var author = commit.author ? commit.author.login : commit.commit.author.login;
+                  if (!_.contains(authors, author)) {
+                    selectCommit = false;
                   }
-                 */
-                var author = commit.author ? commit.author.login : commit.commit.author.login;
-                if (!_.contains(authors, author)) {
-                  selectCommit = false;
                 }
-              }
-              if (!_.isUndefined(state)) {
-                switch (state) {
-                case 'approved':
-                  if (!commitApproved[commit.sha]) {
-                    selectCommit = false;
+                if (!_.isUndefined(state)) {
+                  switch (state) {
+                  case 'approved':
+                    if (!commitApproved[commit.sha]) {
+                      selectCommit = false;
+                    }
+                    break;
+                  case 'reviewed':
+                    /*jshint camelcase:false*/
+                    if (!(!commitApproved[commit.sha] && commit.commit.comment_count > 0)) {
+                      selectCommit = false;
+                    }
+                    break;
+                  case 'unseen':
+                    /*jshint camelcase:false*/
+                    if (commit.commit.comment_count !== 0) {
+                      selectCommit = false;
+                    }
+                    break;
                   }
-                  break;
-                case 'reviewed':
-                  /*jshint camelcase:false*/
-                  if (!(!commitApproved[commit.sha] && commit.commit.comment_count > 0)) {
-                    selectCommit = false;
-                  }
-                  break;
-                case 'unseen':
-                  /*jshint camelcase:false*/
-                  if (commit.commit.comment_count !== 0) {
-                    selectCommit = false;
-                  }
-                  break;
                 }
-              }
-              if (selectCommit) {
-                tmpCommits.push(commit);
-              }
-            });
-            var finalizedCommits;
-            if (this.maxResults > -1) {
-              finalizedCommits = _.first(_.rest(tmpCommits, this.firstResult), this.maxResults);
-            } else {
-              finalizedCommits = _.rest(tmpCommits, this.firstResult);
-            }
-            this.commitCache[getCurrentCommitCacheId()] = finalizedCommits;
-            this.getCommitsRefer.resolve(finalizedCommits);
-          }.bind(this));
+                if (selectCommit) {
+                  tmpCommits.push(commit);
+                }
+              });
+//              var finalizedCommits;
+//              if (this.maxResults > -1) {
+//                finalizedCommits = _.first(_.rest(tmpCommits, this.firstResult), this.maxResults);
+//              } else {
+//                finalizedCommits = _.rest(tmpCommits, this.firstResult);
+//              }
+              this.commitList = tmpCommits;
+              defer.resolve(tmpCommits);
+            }.bind(this));
+        }
+        return defer.promise;
       };
 
       return {
