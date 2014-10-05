@@ -346,6 +346,30 @@
     }
   ]);
 
+  services.factory('getCommits', ['$q', '$interval', 'localStorageService',
+    function ($q, $interval, localStorageService) {
+      var getCommitsWorker = new Worker('js/worker/commits.js');
+      return function getCommits(options) {
+        var defer = $q.defer(),
+          accessToken = localStorageService.get('accessToken');
+        getCommitsWorker.onmessage = function (event) {
+          if (event.data.type === 'progress') {
+            defer.notify(event.data.commits);
+          } else if (event.data.type === 'done') {
+            defer.resolve(event.data.commits);
+          }
+        };
+
+        getCommitsWorker.postMessage({
+          type: 'getCommits',
+          accessToken: accessToken,
+          msg: options
+        });
+        return defer.promise;
+      };
+    }
+  ]);
+
   services.factory('getTreeData', ['$q', 'github',
     function ($q, github) {
       return function (user, repo, sha) {
