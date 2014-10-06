@@ -7,6 +7,7 @@
   var branchPromises = [];
   var repos = [];
   var branches = {};
+  var singleRepoBranches = [];
 
   var askGithub = function (url, successCallback, errorCallback) {
     var req = new XMLHttpRequest();
@@ -42,6 +43,7 @@
       sortedResult[fullName] = {
         name: repo.name,
         fullName: fullName,
+        ownerName: fullName.split('/')[0],
         id: repo.id,
         branches: branches[fullName],
         language: repo.language,
@@ -67,13 +69,12 @@
   };
 
   //TODO add paging for branches eg. dap has more than 30
-  var getBranchesForRepo = function (repo) {
+  var getBranchesForSingleRepo = function (repo) {
     return new Promise(function (resolve, reject) {
       var successCallback = function (event) {
         var req = event.currentTarget;
         if (req.status === 200) {
-          branches[repo] = branches[repo] || [];
-          branches[repo] = branches[repo].concat(req.response);
+          singleRepoBranches = singleRepoBranches.concat(req.response);
           var links = req.getResponseHeader('Link');
           if (links && links !== '' && links.indexOf(':') !== -1) {
             var next = getPageLinks(links).next;
@@ -89,7 +90,7 @@
           reject();
         }
       };
-      var url = baseUrl + 'repos/' + repo + '/branches';
+      var url = baseUrl + 'repos/' + repo + '/branches?per_page=100';
       askGithub(url, successCallback, reject);
     });
   };
@@ -98,7 +99,7 @@
     repos.forEach(function (repo) {
       /*jshint camelcase:false*/
       var repoName = repo.full_name;
-      branchPromises.push(getBranchesForRepo(repoName));
+      branchPromises.push(getBranchesForSingleRepo(repoName));
     });
     Promise.all(branchPromises)
       .then(sortRepoAndBranches);
@@ -112,6 +113,7 @@
       } else {
         url += 'user/repos';
       }
+      url += '?per_page=100';
 
       var successCallback = function (event) {
         var req = event.currentTarget;
@@ -126,6 +128,7 @@
 
   var getOrgsFromUser = function (user) {
     var url = baseUrl + 'user/orgs';
+    url += '?per_page=100';
 
     var successCallback = function (event) {
       var req = event.currentTarget;
@@ -148,11 +151,59 @@
     askGithub(url, successCallback, errorCallback);
   };
 
+  var getAllReposFromUser = function (user) {
+    var url = baseUrl + 'user/orgs';
+    url += '?per_page=100';
+
+    var successCallback = function (event) {
+      var req = event.currentTarget;
+      if (req.status === 200) {
+        var orgs = req.response;
+        orgs.forEach(function (organization) {
+          var orgName = organization.login;
+          repoPromises.push(getRepos(orgName, true));
+        });
+        repoPromises.push(getRepos(user, false));
+        Promise.all(repoPromises)
+          .then(function(){
+            worker.postMessage({
+              type: 'result',
+              repos: repos
+            });
+          });
+      }
+    };
+
+    var errorCallback = function (event) {
+      console.log(event);
+    };
+
+    askGithub(url, successCallback, errorCallback);
+  };
+
+  var getBranchesForRepo = function(repo){
+    getBranchesForSingleRepo(repo)
+      .then(function(){
+        worker.postMessage({
+          type: 'result',
+          branches: singleRepoBranches
+        });
+      });
+  };
+
   worker.onmessage = function (event) {
+    var user = null;
     if ('getReposAndBranches' === event.data.type) {
-      var user = event.data.user;
+      user = event.data.user;
       _accessToken = event.data.accessToken;
       getOrgsFromUser(user);
+    } else if('getAllRepos' === event.data.type) {
+      user = event.data.user;
+      _accessToken = event.data.accessToken;
+      getAllReposFromUser(user);
+    } else if('getBranchesForRepo' === event.data.type) {
+      _accessToken = event.data.accessToken;
+      getBranchesForRepo(event.data.repo);
     }
   };
 }(this));

@@ -1,6 +1,6 @@
 @font-face {
-  font-family: SourceCodePro;
-  src: url('../fonts/SourceCodePro-ExtraLight.ttf');
+  font-family: DroidSansMono;
+  src: url('../fonts/DroidSansMono.ttf');
 }
 /*! normalize.css v3.0.0 | MIT License | git.io/normalize */
 html {
@@ -5873,6 +5873,137 @@ button.close {
     font-size: 1.2em;
   }
 }
+/*!
+ * ui-select
+ * http://github.com/angular-ui/ui-select
+ * Version: 0.7.0 - 2014-09-09T01:02:43.612Z
+ * License: MIT
+ */
+/* Style when highlighting a search. */
+.ui-select-highlight {
+  font-weight: bold;
+}
+.ui-select-offscreen {
+  clip: rect(0 0 0 0) !important;
+  width: 1px !important;
+  height: 1px !important;
+  border: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  position: absolute !important;
+  outline: 0 !important;
+  left: 0px !important;
+  top: 0px !important;
+}
+/* Select2 theme */
+/* Mark invalid Select2 */
+.ng-dirty.ng-invalid > a.select2-choice {
+  border-color: #D44950;
+}
+.select2-result-single {
+  padding-left: 0;
+}
+/* Selectize theme */
+/* Helper class to show styles when focus */
+.selectize-input.selectize-focus {
+  border-color: #007FBB !important;
+}
+/* Fix input width for Selectize theme */
+.selectize-control > .selectize-input > input {
+  width: 100%;
+}
+/* Fix dropdown width for Selectize theme */
+.selectize-control > .selectize-dropdown {
+  width: 100%;
+}
+/* Mark invalid Selectize */
+.ng-dirty.ng-invalid > div.selectize-input {
+  border-color: #D44950;
+}
+/* Bootstrap theme */
+/* Helper class to show styles when focus */
+.btn-default-focus {
+  color: #333;
+  background-color: #EBEBEB;
+  border-color: #ADADAD;
+  text-decoration: none;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+}
+/* Fix Bootstrap dropdown position when inside a input-group */
+.input-group > .ui-select-bootstrap.dropdown {
+  /* Instead of relative */
+  position: static;
+}
+.input-group > .ui-select-bootstrap > input.ui-select-search.form-control {
+  border-radius: 4px;
+  /* FIXME hardcoded value :-/ */
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.ui-select-bootstrap > .ui-select-match {
+  /* Instead of center because of .btn */
+  text-align: left;
+}
+.ui-select-bootstrap > .ui-select-match > .caret {
+  position: absolute;
+  top: 45%;
+  right: 15px;
+}
+/* See Scrollable Menu with Bootstrap 3 http://stackoverflow.com/questions/19227496 */
+.ui-select-bootstrap > .ui-select-choices {
+  width: 100%;
+  height: auto;
+  max-height: 200px;
+  overflow-x: hidden;
+}
+.ui-select-multiple.ui-select-bootstrap {
+  height: auto;
+  padding: .3em;
+}
+.ui-select-multiple.ui-select-bootstrap input.ui-select-search {
+  background-color: transparent !important;
+  /* To prevent double background when disabled */
+  border: none;
+  outline: none;
+  height: 1.666666em;
+}
+.ui-select-multiple.ui-select-bootstrap .ui-select-match .close {
+  font-size: 1.6em;
+  line-height: 0.75;
+}
+.ui-select-bootstrap .ui-select-choices-row > a {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: 400;
+  line-height: 1.42857143;
+  color: #333;
+  white-space: nowrap;
+}
+.ui-select-bootstrap .ui-select-choices-row > a:hover,
+.ui-select-bootstrap .ui-select-choices-row > a:focus {
+  text-decoration: none;
+  color: #262626;
+  background-color: #f5f5f5;
+}
+.ui-select-bootstrap .ui-select-choices-row.active > a {
+  color: #fff;
+  text-decoration: none;
+  outline: 0;
+  background-color: #428bca;
+}
+/* fix hide/show angular animation */
+.ui-select-match.ng-hide-add,
+.ui-select-search.ng-hide-add {
+  display: none !important;
+}
+/* Mark invalid Bootstrap */
+.ui-select-bootstrap.ng-dirty.ng-invalid > button.btn.ui-select-match {
+  border-color: #D44950;
+}
 .commit-list-buttons-top {
   margin-bottom: 20px;
 }
@@ -6505,7 +6636,7 @@ table.comments tr td {
   border-right: 1px solid #DDDDDD;
 }
 table.comments tr td.lineNr {
-  font-family: SourceCodePro;
+  font-family: DroidSansMono;
 }
 table.comments tr td:last-child {
   border: none;
@@ -6517,7 +6648,7 @@ table.comments tr td .panel {
   margin: 5px;
 }
 table.comments pre {
-  font-family: SourceCodePro;
+  font-family: DroidSansMono;
   background: none;
   padding: 0;
   margin: 0;
@@ -6621,7 +6752,7 @@ table.blame tr.highlight td {
 }
 .table-wrapper .div-table .div-table-cell:not(.lineComment),
 .table-wrapper .div-table .div-table-cell:not(button) {
-  font-family: SourceCodePro;
+  font-family: DroidSansMono;
 }
 .table-wrapper .div-table .div-table-cell.lineNr {
   min-width: 30px;
@@ -6631,7 +6762,7 @@ table.blame tr.highlight td {
   border: none;
 }
 .table-wrapper .div-table .div-table-cell pre {
-  font-family: SourceCodePro;
+  font-family: DroidSansMono;
   background: 0;
   padding: 0;
   margin: 0;
@@ -6672,255 +6803,6 @@ commit-header .accordion-toggle:hover {
   padding: 28px 20px 20px 60px;
 }
 #diff-view .collapse-expand-label {
-  cursor: pointer;
-}
-div.dc-chart {
-  float: left;
-}
-.dc-chart rect.bar {
-  stroke: none;
-  cursor: pointer;
-}
-.dc-chart rect.bar:hover {
-  fill-opacity: .5;
-}
-.dc-chart rect.stack1 {
-  stroke: none;
-  fill: red;
-}
-.dc-chart rect.stack2 {
-  stroke: none;
-  fill: green;
-}
-.dc-chart rect.deselected {
-  stroke: none;
-  fill: #ccc;
-}
-.dc-chart .pie-slice {
-  fill: white;
-  font-size: 12px;
-  cursor: pointer;
-}
-.dc-chart .pie-slice.external {
-  fill: black;
-}
-.dc-chart .pie-slice :hover {
-  fill-opacity: .8;
-}
-.dc-chart .pie-slice.highlight {
-  fill-opacity: .8;
-}
-.dc-chart .selected path {
-  stroke-width: 3;
-  stroke: #ccc;
-  fill-opacity: 1;
-}
-.dc-chart .deselected path {
-  stroke: none;
-  fill-opacity: .5;
-  fill: #ccc;
-}
-.dc-chart .axis path,
-.axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
-.dc-chart .axis text {
-  font: 10px sans-serif;
-}
-.dc-chart .grid-line {
-  fill: none;
-  stroke: #ccc;
-  opacity: .5;
-  shape-rendering: crispEdges;
-}
-.dc-chart .grid-line line {
-  fill: none;
-  stroke: #ccc;
-  opacity: .5;
-  shape-rendering: crispEdges;
-}
-.dc-chart .brush rect.background {
-  z-index: -999;
-}
-.dc-chart .brush rect.extent {
-  fill: steelblue;
-  fill-opacity: .125;
-}
-.dc-chart .brush .resize path {
-  fill: #eee;
-  stroke: #666;
-}
-.dc-chart path.line {
-  fill: none;
-  stroke-width: 1.5px;
-}
-.dc-chart circle.dot {
-  stroke: none;
-}
-.dc-chart g.dc-tooltip path {
-  fill: none;
-  stroke: grey;
-  stroke-opacity: .8;
-}
-.dc-chart path.area {
-  fill-opacity: .3;
-  stroke: none;
-}
-.dc-chart .node {
-  font-size: 0.7em;
-  cursor: pointer;
-}
-.dc-chart .node :hover {
-  fill-opacity: .8;
-}
-.dc-chart .selected circle {
-  stroke-width: 3;
-  stroke: #ccc;
-  fill-opacity: 1;
-}
-.dc-chart .deselected circle {
-  stroke: none;
-  fill-opacity: .5;
-  fill: #ccc;
-}
-.dc-chart .bubble {
-  stroke: none;
-  fill-opacity: 0.6;
-}
-.dc-data-count {
-  float: right;
-  margin-top: 15px;
-  margin-right: 15px;
-}
-.dc-data-count .filter-count {
-  color: #3182bd;
-  font-weight: bold;
-}
-.dc-data-count .total-count {
-  color: #3182bd;
-  font-weight: bold;
-}
-.dc-chart g.state {
-  cursor: pointer;
-}
-.dc-chart g.state :hover {
-  fill-opacity: .8;
-}
-.dc-chart g.state path {
-  stroke: white;
-}
-.dc-chart g.deselected path {
-  fill: grey;
-}
-.dc-chart g.deselected text {
-  display: none;
-}
-.dc-chart g.county path {
-  stroke: white;
-  fill: none;
-}
-.dc-chart g.debug rect {
-  fill: blue;
-  fill-opacity: .2;
-}
-.dc-chart g.row rect {
-  fill-opacity: 0.8;
-  cursor: pointer;
-}
-.dc-chart g.row rect:hover {
-  fill-opacity: 0.6;
-}
-.dc-chart g.row text {
-  fill: white;
-  font-size: 12px;
-  cursor: pointer;
-}
-.dc-legend {
-  font-size: 11px;
-}
-.dc-legend-item {
-  cursor: pointer;
-}
-.dc-chart g.axis text {
-  /* Makes it so the user can't accidentally click and select text that is meant as a label only */
-  -webkit-user-select: none;
-  /* Chrome/Safari */
-  -moz-user-select: none;
-  /* Firefox */
-  -ms-user-select: none;
-  /* IE10 */
-  -o-user-select: none;
-  user-select: none;
-  pointer-events: none;
-}
-.dc-chart path.highlight {
-  stroke-width: 3;
-  fill-opacity: 1;
-  stroke-opacity: 1;
-}
-.dc-chart .highlight {
-  fill-opacity: 1;
-  stroke-opacity: 1;
-}
-.dc-chart .fadeout {
-  fill-opacity: 0.2;
-  stroke-opacity: 0.2;
-}
-.dc-chart path.dc-symbol,
-g.dc-legend-item.fadeout {
-  fill-opacity: 0.5;
-  stroke-opacity: 0.5;
-}
-.dc-hard .number-display {
-  float: none;
-}
-.dc-chart .box text {
-  font: 10px sans-serif;
-  -webkit-user-select: none;
-  /* Chrome/Safari */
-  -moz-user-select: none;
-  /* Firefox */
-  -ms-user-select: none;
-  /* IE10 */
-  -o-user-select: none;
-  user-select: none;
-  pointer-events: none;
-}
-.dc-chart .box line,
-.dc-chart .box circle {
-  fill: #fff;
-  stroke: #000;
-  stroke-width: 1.5px;
-}
-.dc-chart .box rect {
-  stroke: #000;
-  stroke-width: 1.5px;
-}
-.dc-chart .box .center {
-  stroke-dasharray: 3,3;
-}
-.dc-chart .box .outlier {
-  fill: none;
-  stroke: #ccc;
-}
-.dc-chart .box.deselected .box {
-  fill: #ccc;
-}
-.dc-chart .box.deselected {
-  opacity: .5;
-}
-.dc-chart .symbol {
-  stroke: none;
-}
-.dc-chart .heatmap .box-group.deselected rect {
-  stroke: none;
-  fill-opacity: .5;
-  fill: #ccc;
-}
-.dc-chart .heatmap g.axis text {
-  pointer-events: all;
   cursor: pointer;
 }
 /*
@@ -7351,33 +7233,6 @@ Monokai style - ported by Luigi Maselli - http://grigio.org
 .monokai .xml .css,
 .monokai .xml .hljs-cdata {
   opacity: 0.5;
-}
-#table-data-group label {
-  margin: 0;
-}
-#repo-data-table-container {
-  height: 330px;
-  overflow-y: auto;
-}
-#repo-data-table-container #repo-data-table .dc-table-row,
-#repo-data-table-container #repo-data-table th {
-  cursor: pointer;
-}
-#selectBranchesRow {
-  padding: 10px 0;
-}
-#repo-access-chart svg,
-#repo-owner-chart svg {
-  border: 1px solid #ddd;
-}
-#timeWindowFilter #timeChartFixedSettings {
-  display: none;
-}
-#path-filter .form-group {
-  width: 100%;
-}
-#path-filter .form-group #path-filter-input {
-  width: 70%;
 }
 body {
   padding-top: 70px;

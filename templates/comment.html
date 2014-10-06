@@ -9,7 +9,7 @@
                     <button ng-if="comment.shouldShowEditButton()" type="button" class="btn btn-default edit" ng-click="comment.edit()">
                         <span class="glyphicon glyphicon-pencil"></span>
                     </button>
-                    <button ng-if="comment.id" type="button" class="btn btn-default remove" ng-click="removeComment(line, comment)">
+                    <button ng-if="comment.id" type="button" class="btn btn-default remove" ng-click="delete()">
                         <span class="glyphicon glyphicon-remove-circle"></span>
                     </button>
                 </div>
@@ -33,7 +33,7 @@
     <div ng-if="comment.mode !== 'edit'" ng-bind-html="comment.preview_html"></div>
     <textarea ng-if="comment.mode === 'edit'" class="form-control" ng-model="comment.edit_text"></textarea>
 
-    <button ng-if="comment.mode !== 'show'" type="button" id="cancelComment" class="btn btn-default btn-sm" ng-click="cancelCreateComment()">Cancel</button>
+    <button ng-if="comment.mode !== 'show'" type="button" id="cancelComment" class="btn btn-default btn-sm" ng-click="cancel()">Cancel</button>
     <button ng-if="comment.mode === 'edit' && comment.edit_text" type="button" id="previewComment" class="btn btn-default btn-sm" ng-click="comment.preview()">Preview</button>
     <button ng-if="comment.mode === 'preview'" type="button" id="continueEditComment" class="btn btn-default btn-sm" ng-click="comment.mode = 'edit'">Edit</button>
     <button ng-if="comment.mode !== 'show' && comment.edit_text" type="button" id="submitLineComment" class="btn btn-primary btn-sm" ng-click="comment.createComment()">Create</button>
