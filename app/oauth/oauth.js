@@ -18,8 +18,7 @@
           if (!resp.data.error) {
             /*jshint camelcase:false*/
             localStorageService.set('accessToken', resp.data.access_token);
-            var redirectUri = $window.location.origin.indexOf('localhost') ? $window.location.origin : $window.location.origin + $window.location.pathname;
-            $window.location.href = redirectUri;
+            $window.location.href = options.github.rootUrl;
           }
         });
     }]);
