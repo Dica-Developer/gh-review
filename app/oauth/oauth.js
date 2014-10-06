@@ -18,7 +18,8 @@
           if (!resp.data.error) {
             /*jshint camelcase:false*/
             localStorageService.set('accessToken', resp.data.access_token);
-            $window.location.href = $window.location.origin;
+            var redirectUri = $window.location.origin.indexOf('localhost') ? $window.location.origin : $window.location.origin + $window.location.pathname;
+            $window.location.href = redirectUri;
           }
         });
     }]);
