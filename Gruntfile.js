@@ -15,7 +15,7 @@ module.exports = function (grunt) {
     distOptions: {
       clientId: '833c028df47be8e881d9',
       apiScope: 'user, repo',
-      redirectUri: 'http://dica-developer.github.io/gh-review/',
+      redirectUri: 'http://dica-developer.github.io/gh-review/oauth',
       accessTokenUrl: 'http://gh-review.herokuapp.com/login/oauth/access_token'
     },
     devOptions: {
