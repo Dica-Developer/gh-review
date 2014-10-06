@@ -196,7 +196,7 @@ module.exports = function (grunt) {
             expand: true,
             cwd: '<%= config.app %>',
             dest: '<%= config.dist %>',
-            src: ['js/worker/*', 'img/**/*', 'templates/**/*', 'fonts/**/*', '*.html', 'oauth/*.html']
+            src: ['js/worker/*', 'images/**/*', 'templates/**/*', 'fonts/**/*', '*.html', 'oauth/*.html']
           },
           {
             expand: true,
