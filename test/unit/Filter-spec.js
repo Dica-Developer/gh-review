@@ -163,6 +163,14 @@ describe('#Filter', function () {
       filter.setState('approved');
       expect(filter.options.meta.customFilter.state).toBe('approved');
     });
+
+    it('setExcludeOwnCommits should set customFilter.excludeOwnCommits to given value', function () {
+      expect(filter.options.meta.customFilter.excludeOwnCommits).not.toBeDefined();
+      filter.setExcludeOwnCommits(true);
+      expect(filter.options.meta.customFilter.excludeOwnCommits).toBe(true);
+      filter.setExcludeOwnCommits(false);
+      expect(filter.options.meta.customFilter.excludeOwnCommits).toBe(false);
+    });
   });
 
   describe('getter', function () {
@@ -219,7 +227,7 @@ describe('#Filter', function () {
       expect(filter.getSinceDateISO()).toBeNull();
     });
 
-    it('getState should returncorrect preview state', function () {
+    it('getState should return correct preview state', function () {
       filter.options.meta.customFilter.state = 'testState';
       expect(filter.getState()).toBe('testState');
     });
@@ -230,6 +238,18 @@ describe('#Filter', function () {
       filter.addAuthor('testAuthor');
       filter.addAuthor('testAuthor3');
       expect(filter.getAuthors()).toEqual(['Me', 'You', 'testAuthor', 'testAuthor1', 'testAuthor', 'testAuthor3']);
+    });
+
+    it('getPath should return correct path', function () {
+      filter.options.path = '/test/path';
+      expect(filter.getPath()).toBe('/test/path');
+    });
+
+    it('getExcludeOwnCommits should return correct value', function () {
+      filter.options.meta.customFilter.excludeOwnCommits = true;
+      expect(filter.getExcludeOwnCommits()).toBe(true);
+      filter.options.meta.customFilter.excludeOwnCommits = false;
+      expect(filter.getExcludeOwnCommits()).toBe(false);
     });
   });
 
