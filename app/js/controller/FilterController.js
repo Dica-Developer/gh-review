@@ -8,9 +8,9 @@
       '$stateParams',
       '$timeout',
       '_',
-      'getAllRepos',
+      'repoCollector',
       'filterProvider',
-      function ($scope, $q, $stateParams, $timeout, _, getAllRepos, filterProvider) {
+      function ($scope, $q, $stateParams, $timeout, _, repoCollector, filterProvider) {
         var filter = null,
           branchList = null,
           contributorList = null,
@@ -36,13 +36,13 @@
 
         function handleNewFilter() {
           $scope.fetchingRepos = true;
-          getAllRepos()
+          repoCollector.getAll()
             .then(setRepos)
             .then(setScopeVariables);
         }
 
         function handleExistingFilter() {
-          $q.all([filter.getBranchList(), filter.getContributorList(), getAllRepos(), filter.getTree()])
+          $q.all([filter.getBranchList(), filter.getContributorList(), repoCollector.getAll(), filter.getTree()])
             .then(function (results) {
               branchList = results[0];
               contributorList = results[1];
