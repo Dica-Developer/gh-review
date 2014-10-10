@@ -242,40 +242,6 @@
     }
   ]);
 
-  services.factory('getAllRepos', ['$q', '$interval', 'githubUserData', 'localStorageService',
-    function ($q, $interval, githubUserData, localStorageService) {
-      var repositoriesCache = [];
-      $interval(function clearRepoCache() {
-        repositoriesCache = [];
-      }, 1800000); //1800000 = 1/2 hour
-
-      return function () {
-        var defer = $q.defer();
-        if (repositoriesCache.length > 0) {
-          defer.resolve(repositoriesCache);
-        } else {
-          var getReposWorker = new Worker('js/worker/getAllReposAndBranches.js');
-          var accessToken = localStorageService.get('accessToken');
-          getReposWorker.onmessage = function (event) {
-            repositoriesCache = event.data.repos;
-            defer.resolve(event.data.repos);
-            getReposWorker.terminate();
-          };
-
-          githubUserData.get()
-            .then(function (userData) {
-              getReposWorker.postMessage({
-                type: 'getAllRepos',
-                user: userData.login,
-                accessToken: accessToken
-              });
-            });
-        }
-        return defer.promise;
-      };
-    }
-  ]);
-
   services.factory('commentProviderService', ['commentProvider',
     function (commentProvider) {
       return commentProvider;
