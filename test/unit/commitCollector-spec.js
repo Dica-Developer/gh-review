@@ -2,10 +2,7 @@
 describe('commitCollector', function () {
   'use strict';
 
-  var commitCollector, github, $rootScope, $interval,
-    githubCallMessageObject = {
-
-    };
+  var commitCollector, github, $rootScope, $interval;
 
   beforeEach(angular.mock.module('GHReview'));
 
@@ -168,7 +165,6 @@ describe('commitCollector', function () {
       sha: 'master',
       author: 'TestAuthor'
     });
-    console.log(commitCollector.get.cache);
     expect(commitCollector.get.cache).toBeDefined();
     expect(commitCollector.get.cache['TestUser-TestRepo-master-TestAuthor']).toBeDefined();
   });
