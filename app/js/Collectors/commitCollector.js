@@ -23,9 +23,11 @@
         defer = q();
 
       var pagination = function (result) {
-        tmpResult = tmpResult.concat(result);
         github.getNextPage(result, function (err, paginationResult) {
           if (!err) {
+            tmpResult = tmpResult.concat(paginationResult);
+            /* istanbul ignore if */
+            //no need to test this twice
             if (github.hasNextPage(paginationResult)) {
               defer.notify(tmpResult);
               pagination(paginationResult);
@@ -44,6 +46,7 @@
         function (err, result) {
           if (!err) {
             if (github.hasNextPage(result)) {
+              tmpResult = result;
               pagination(result);
             } else {
               defer.resolve(result);
