@@ -172,7 +172,7 @@
       Filter.prototype.getSinceDateISO = function () {
         var sinceDate = null;
         if (!_.isUndefined(this.options.since) && _.size(this.options.since) === 2) {
-          sinceDate = moment().subtract(this.options.since.pattern, this.options.since.amount).toISOString();
+          sinceDate = moment().subtract(this.options.since.pattern, this.options.since.amount).startOf('day').toISOString();
         }
         return sinceDate;
       };
