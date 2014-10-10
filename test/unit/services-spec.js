@@ -590,6 +590,8 @@ describe('#Services', function () {
 });
 
 describe('.isCommentNotApprovalComment', function () {
+  'use strict';
+
   var commentCollector, isCommentNotApprovalComment;
 
   beforeEach(inject(function ($injector) {
@@ -620,6 +622,8 @@ describe('.isCommentNotApprovalComment', function () {
 });
 
 describe('.isCommentApprovalCommentFromUser', function () {
+  'use strict';
+
   var commentCollector, isCommentApprovalCommentFromUser;
 
   beforeEach(inject(function ($injector) {
