@@ -1,9 +1,9 @@
 (function (angular) {
   'use strict';
 
-  var chunkModule = angular.module('GHReview');
+  var app = angular.module('GHReview');
 
-  chunkModule.service('contributorCollector', ['$q', '$interval', 'github', '_', function ($q, $interval, github, _) {
+  app.service('contributorCollector', ['$q', '$interval', 'github', '_', function ($q, $interval, github, _) {
     var q = $q.defer;
 
     function ContributorCollector() {
