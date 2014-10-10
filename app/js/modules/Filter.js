@@ -11,11 +11,12 @@
     'github',
     'commentCollector',
     'localStorageService',
-    'getBranchesForRepo',
-    'getCommits',
     'githubUserData',
-    'getTreeData',
-    function ($q, $location, _, moment, github, commentCollector, localStorageService, getBranchesForRepo, getCommits, githubUserData, getTreeData) {
+    'branchCollector',
+    'contributorCollector',
+    'commitCollector',
+    'treeCollector',
+    function ($q, $location, _, moment, github, commentCollector, localStorageService, githubUserData, branchCollector, contributorCollector, commitCollector, treeCollector) {
 
       var filterHolder = {},
         generateUUID = function () {
@@ -29,9 +30,6 @@
 
 
       function Filter(filterId) {
-        this.branchList = [];
-        this.contributorList = {};
-        this.tree = [];
         this.options = {
           repo: null,
           user: null,
@@ -55,7 +53,6 @@
       Filter.prototype.maxResults = 20;
       Filter.prototype.commitList = [];
       Filter.prototype.currentPage = 1;
-      Filter.prototype.tmpCommits = [];
 
       Filter.prototype.init = function () {
         if (!_.isNull(this.options.meta.id)) {
@@ -175,7 +172,7 @@
       Filter.prototype.getSinceDateISO = function () {
         var sinceDate = null;
         if (!_.isUndefined(this.options.since) && _.size(this.options.since) === 2) {
-          sinceDate = moment().subtract(this.options.since.pattern, this.options.since.amount).toISOString();
+          sinceDate = moment().subtract(this.options.since.pattern, this.options.since.amount).startOf('day').toISOString();
         }
         return sinceDate;
       };
@@ -250,57 +247,15 @@
       };
 
       Filter.prototype.getContributorList = function () {
-        var defer = $q.defer(),
-          repo = this.getRepo(),
-          _this = this;
-        if (!_.isUndefined(this.contributorList[repo])) {
-          defer.resolve(this.contributorList[repo]);
-        } else {
-          github.repos.getContributors(
-            {
-              user: this.getOwner(),
-              repo: this.getRepo()
-            },
-            function (err, res) {
-              if (!err) {
-                _this.contributorList[repo] = res;
-                defer.resolve(res);
-              } else {
-                defer.reject();
-              }
-            }
-          );
-        }
-        return defer.promise;
+        return contributorCollector.get(this.getOwner(), this.getRepo());
       };
 
       Filter.prototype.getBranchList = function () {
-        var defer = $q.defer(),
-          repoFullName = this.getOwner() + '/' + this.getRepo();
-        if (!_.isUndefined(this.branchList[repoFullName])) {
-          defer.resolve(this.branchList[repoFullName]);
-        } else {
-          getBranchesForRepo(repoFullName)
-            .then(function (branches) {
-              this.branchList[repoFullName] = branches;
-              defer.resolve(branches);
-            }.bind(this));
-        }
-        return defer.promise;
+        return branchCollector.get(this.getOwner(), this.getRepo());
       };
 
       Filter.prototype.getTree = function(){
-        var defer = $q.defer();
-        if(this.tree.length > 0){
-          defer.resolve(this.tree);
-        } else {
-          getTreeData(this.getOwner(), this.getRepo(), this.getBranch())
-            .then(function(result){
-              this.tree = result;
-              defer.resolve(this.tree);
-            }.bind(this));
-        }
-        return defer.promise;
+        return treeCollector.get(this.getOwner(), this.getRepo(), this.getBranch());
       };
 
       Filter.prototype.getCurrentPage = function(){
@@ -361,7 +316,7 @@
         this.maxResults = maxResults || this.maxResults;
         var getCommitsRefer = $q.defer(),
           _this = this;
-        getCommits(this.prepareGithubApiCallOptions())
+        commitCollector.get(this.prepareGithubApiCallOptions())
           .then(
           function (commitList) {
             _this._processCustomFilter(commitList)

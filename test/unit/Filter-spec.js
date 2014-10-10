@@ -163,6 +163,14 @@ describe('#Filter', function () {
       filter.setState('approved');
       expect(filter.options.meta.customFilter.state).toBe('approved');
     });
+
+    it('setExcludeOwnCommits should set customFilter.excludeOwnCommits to given value', function () {
+      expect(filter.options.meta.customFilter.excludeOwnCommits).not.toBeDefined();
+      filter.setExcludeOwnCommits(true);
+      expect(filter.options.meta.customFilter.excludeOwnCommits).toBe(true);
+      filter.setExcludeOwnCommits(false);
+      expect(filter.options.meta.customFilter.excludeOwnCommits).toBe(false);
+    });
   });
 
   describe('getter', function () {
@@ -210,7 +218,7 @@ describe('#Filter', function () {
 
     it('getSinceDateISO should return current since date in ISO string', function () {
       var is = filter.getSinceDateISO();
-      var expected = moment().subtract(filterOptions.since.pattern, filterOptions.since.amount).toISOString();
+      var expected = moment().subtract(filterOptions.since.pattern, filterOptions.since.amount).startOf('day').toISOString();
       expect(moment(is).isSame(expected, 'seconds')).toBeTruthy();
     });
 
@@ -219,7 +227,7 @@ describe('#Filter', function () {
       expect(filter.getSinceDateISO()).toBeNull();
     });
 
-    it('getState should returncorrect preview state', function () {
+    it('getState should return correct preview state', function () {
       filter.options.meta.customFilter.state = 'testState';
       expect(filter.getState()).toBe('testState');
     });
@@ -230,6 +238,18 @@ describe('#Filter', function () {
       filter.addAuthor('testAuthor');
       filter.addAuthor('testAuthor3');
       expect(filter.getAuthors()).toEqual(['Me', 'You', 'testAuthor', 'testAuthor1', 'testAuthor', 'testAuthor3']);
+    });
+
+    it('getPath should return correct path', function () {
+      filter.options.path = '/test/path';
+      expect(filter.getPath()).toBe('/test/path');
+    });
+
+    it('getExcludeOwnCommits should return correct value', function () {
+      filter.options.meta.customFilter.excludeOwnCommits = true;
+      expect(filter.getExcludeOwnCommits()).toBe(true);
+      filter.options.meta.customFilter.excludeOwnCommits = false;
+      expect(filter.getExcludeOwnCommits()).toBe(false);
     });
   });
 
@@ -277,13 +297,14 @@ describe('#Filter', function () {
   });
 
   describe('core functions', function () {
-    var filter, $q, github, $rootScope;
+    var filter, $q, github, $rootScope, contributorCollector;
     beforeEach(inject(function ($injector) {
       window.localStorage.setItem('ghreview.filter-filterId', JSON.stringify(filterOptions));
       window.localStorage.setItem('ls.accessToken', 'abc');
 
       $q = $injector.get('$q');
       github = $injector.get('github');
+      contributorCollector = $injector.get('contributorCollector');
       $rootScope = $injector.get('$rootScope');
       var filterProvider = $injector.get('filterProvider');
       filter = filterProvider.get('filterId');
@@ -354,13 +375,17 @@ describe('#Filter', function () {
 
     it('#Filter.getContributorList should call github.repos.getContributors with correct values', function () {
       var githubSpy = spyOn(github.repos, 'getContributors');
+      contributorCollector.get.cache = {};
+
       filter.getContributorList();
       expect(githubSpy).toHaveBeenCalled();
-      expect(githubSpy.calls.argsFor(0)[0]).toEqual({ user: 'Dica-Developer', repo: 'gh-review' });
+      expect(githubSpy.calls.argsFor(0)[0]).toEqual({ user: 'Dica-Developer', repo: 'gh-review', 'per_page': 100 });
     });
 
     it('#Filter.getContributorList should promise.resolve if response', function (done) {
       spyOn(github.repos, 'getContributors');
+      contributorCollector.get.cache = {};
+
       filter.getContributorList()
         .then(function (data) {
           expect(data).toBeDefined();
@@ -369,13 +394,15 @@ describe('#Filter', function () {
         });
       var callback = github.repos.getContributors.calls.argsFor(0)[1];
       callback(null, {
-        result: 'testResult'
+        result: 'testResult',
+        meta: {}
       });
       $rootScope.$apply();
     });
 
     it('#Filter.getContributorList should promise.reject if response error', function (done) {
       spyOn(github.repos, 'getContributors');
+      contributorCollector.get.cache = {};
       filter.getContributorList()
         .then(null, function () {
           done();

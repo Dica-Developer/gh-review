@@ -562,53 +562,6 @@ describe('#Services', function () {
     });
   });
 
-  describe('.getTreeData', function () {
-    var getTreeData, github, $rootScope;
-
-    beforeEach(inject(function ($injector) {
-      getTreeData = $injector.get('getTreeData');
-      github = $injector.get('github');
-      $rootScope = $injector.get('$rootScope');
-    }));
-
-    it('Should call github.search.code', function () {
-      spyOn(github.gitdata, 'getTree');
-      getTreeData({});
-      expect(github.gitdata.getTree).toHaveBeenCalled();
-    });
-
-    it('Should return promise and resolve if data exist', function (done) {
-      spyOn(github.gitdata, 'getTree');
-      getTreeData({})
-        .then(function (data) {
-          expect(data).toBeDefined();
-          done();
-        });
-      var callback = github.gitdata.getTree.calls.argsFor(0)[1];
-      callback(null, {
-        tree: [1,2,3,4]
-      });
-      expect(github.gitdata.getTree).toHaveBeenCalled();
-      $rootScope.$apply();
-    });
-
-    it('Should return promise and reject if error exist', function (done) {
-      spyOn(github.gitdata, 'getTree');
-      getTreeData({})
-        .then(null, function (error) {
-          expect(error).toBeDefined();
-          expect(error.name).toBe('Error');
-          done();
-        });
-      var callback = github.gitdata.getTree.calls.argsFor(0)[1];
-      callback({
-        name: 'Error'
-      }, null);
-      expect(github.gitdata.getTree).toHaveBeenCalled();
-      $rootScope.$apply();
-    });
-  });
-
   describe('.commentProviderService', function () {
     var commentProviderService, commentProvider;
 
@@ -637,6 +590,8 @@ describe('#Services', function () {
 });
 
 describe('.isCommentNotApprovalComment', function () {
+  'use strict';
+
   var commentCollector, isCommentNotApprovalComment;
 
   beforeEach(inject(function ($injector) {
@@ -667,6 +622,8 @@ describe('.isCommentNotApprovalComment', function () {
 });
 
 describe('.isCommentApprovalCommentFromUser', function () {
+  'use strict';
+
   var commentCollector, isCommentApprovalCommentFromUser;
 
   beforeEach(inject(function ($injector) {
