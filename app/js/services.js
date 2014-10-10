@@ -1,5 +1,4 @@
 (function (angular) {
-//TODO options
   'use strict';
 
   /* Services */
@@ -272,90 +271,6 @@
               });
             });
         }
-        return defer.promise;
-      };
-    }
-  ]);
-
-  services.factory('getBranchesForRepo', ['$q', '$interval', 'localStorageService',
-    function ($q, $interval, localStorageService) {
-      var branchesCache = {};
-      $interval(function updateBranchesCache() {
-        Object.keys(branchesCache).forEach(function (repoFullName) {
-          getBranchesForRepo(repoFullName);
-        });
-        branchesCache = {};
-      }, 600000); //600000 = 10min
-
-      function getBranchesForRepo(repoFullName) {
-        var defer = $q.defer(),
-          getReposWorker = new Worker('js/worker/getAllReposAndBranches.js'),
-          accessToken = localStorageService.get('accessToken');
-        getReposWorker.onmessage = function (event) {
-          branchesCache[repoFullName] = event.data.branches;
-          defer.resolve(event.data.branches);
-          getReposWorker.terminate();
-        };
-
-        getReposWorker.postMessage({
-          type: 'getBranchesForRepo',
-          accessToken: accessToken,
-          repo: repoFullName
-        });
-        return defer.promise;
-      }
-
-      return function (repoFullName) {
-        if (branchesCache[repoFullName]) {
-          return $q.when(branchesCache[repoFullName]);
-        } else {
-          return getBranchesForRepo(repoFullName);
-        }
-      };
-    }
-  ]);
-
-  services.factory('getCommits', ['$q', '$interval', 'localStorageService',
-    function ($q, $interval, localStorageService) {
-      var getCommitsWorker = new Worker('js/worker/commits.js');
-      return function getCommits(options) {
-        var defer = $q.defer(),
-          accessToken = localStorageService.get('accessToken');
-        getCommitsWorker.onmessage = function (event) {
-          if (event.data.type === 'progress') {
-            defer.notify(event.data.commits);
-          } else if (event.data.type === 'done') {
-            defer.resolve(event.data.commits);
-          }
-        };
-
-        getCommitsWorker.postMessage({
-          type: 'getCommits',
-          accessToken: accessToken,
-          msg: options
-        });
-        return defer.promise;
-      };
-    }
-  ]);
-
-  services.factory('getTreeData', ['$q', 'github',
-    function ($q, github) {
-      return function (user, repo, sha) {
-        var defer = $q.defer();
-
-        github.gitdata.getTree({
-          user: user,
-          repo: repo,
-          sha: sha,
-          recursive: true
-        }, function (error, treeData) {
-          if (error) {
-            defer.reject(error);
-          } else {
-            defer.resolve(treeData.tree);
-          }
-        });
         return defer.promise;
       };
     }
