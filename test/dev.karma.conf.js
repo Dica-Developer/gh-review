@@ -18,9 +18,10 @@ module.exports = function (config) {
       'app/bower_components/angular-highlightjs/angular-highlightjs.min.js',
       'app/bower_components/angular-hotkeys/build/hotkeys.min.js',
       'app/bower_components/underscore.string/dist/underscore.string.min.js',
+      'app/js/*.js',
       'app/js/**/*.js',
       'test/unit/**/*-spec.js',
-      'app/templates/*.html',
+      'app/templates/*.html'
     ],
     exclude: [
       'app/js/worker/*.*'
