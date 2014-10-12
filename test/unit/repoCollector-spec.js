@@ -127,7 +127,6 @@ describe('repoCollector', function () {
     });
 
     repoCollector.getAll();
-    console.log(repoCollector.getAll.cache);
     expect(repoCollector.getAll.cache).toBeDefined();
     expect(Object.keys(repoCollector.getAll.cache).length).toBe(1);
     var cacheExpireTime = 60 * 60 * 1000; //60min
