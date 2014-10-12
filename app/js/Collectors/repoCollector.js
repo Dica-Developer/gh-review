@@ -10,7 +10,7 @@
       this.getAll = _.memoize(function () {
         var _this = this;
         $interval(function () {
-          _this.get.cache = {};
+          _this.getAll.cache = {};
         }, (60 * 60 * 1000)); //60min
         return _this.getAllReposFromGithub();
       });
@@ -62,7 +62,7 @@
       $q.all(deferList)
         .then(function () {
           defer.resolve(repoList);
-        });
+        }, defer.reject);
       return defer.promise;
     };
 
