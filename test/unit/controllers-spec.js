@@ -174,43 +174,6 @@ describe('#Controller', function () {
 
   });
 
-  xdescribe('FilterController', function () {
-    var FilterController, $scope, $controller, Filter, spy = {};
-
-    beforeEach(inject(function ($injector) {
-      Filter = $injector.get('Filter');
-      spy.getAllReposAndBranches = $injector.get('getAllReposAndBranches');
-      $controller = $injector.get('$controller');
-      var $rootScope = $injector.get('$rootScope');
-      $scope = $rootScope.$new();
-    }));
-
-    afterEach(function () {
-      localStorage.clear();
-    });
-
-    it('Should be defined', function () {
-      FilterController = $controller('FilterController', {
-        $scope: $scope,
-        commitsApproved: {}
-      });
-      expect(FilterController).toBeDefined();
-    });
-
-    it('Should call getAllReposAndBranches', function () {
-      spyOn(spy, 'getAllReposAndBranches').and.returnValue({
-        then: function () {
-        }
-      });
-      FilterController = $controller('FilterController', {
-        $scope: $scope,
-        getAllReposAndBranches: spy.getAllReposAndBranches
-      });
-      expect(spy.getAllReposAndBranches).toHaveBeenCalled();
-    });
-
-  });
-
   describe('ModuleFilterController', function () {
     var $q, ModuleFilterController, $scope, $controller, github, spy = {};
 
