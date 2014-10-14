@@ -121,7 +121,9 @@ describe('#Services', function () {
       githubUserData.get()
         .then(function () {
           expect(github.user.get.call.length).toBe(1);
+          done();
         });
+      $rootScope.$apply();
     });
 
   });
