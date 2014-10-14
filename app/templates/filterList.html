@@ -32,11 +32,7 @@
                     <span ng-hide="!filter.getState()"><strong>Review State: </strong>{{ filter.getState() }}</span>
                     <div class="pull-right">
                         <span ng-show="filterEvents[filter.getId()].commits.length > 0" class="label label-info">
-                            <ng-pluralize count="filterEvents[filter.getId()].commits.length"
-                                          when="{
-                                                    'one': '1 new commit',
-                                                    'other': '{} new commits'}
-                                                    ">
+                            <ng-pluralize count="filterEvents[filter.getId()].commits.length" when="{'one': '1 new commit','other': '{} new commits'}">
                             </ng-pluralize>
                         </span>
                         &nbsp;
