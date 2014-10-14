@@ -4,6 +4,9 @@
   angular.module('GHReview')
     .controller('FilterListController', ['$scope', '$state', '_', 'filter', 'events',
       function ($scope, $state, _, filter, events) {
+        if (filter.getAll().length === 0) {
+          $state.go('addFilter');
+        }
         $scope.groupingOptions = [
           {
             value: 'repo',
@@ -67,6 +70,7 @@
             'filterId': filterId
           });
         };
+
         $scope.$watch('selectedGrouping', updateFilterList);
         updateFilterList();
       }
