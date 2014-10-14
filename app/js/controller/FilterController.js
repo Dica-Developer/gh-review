@@ -49,8 +49,13 @@
               repoList = results[2];
               repoTree = results[3];
               return $q.when();
+            }, function(e) {
+              handleError(e);
+              return $q.reject();
             })
-            .then(setScopeVariables);
+            .then(function() {
+              setScopeVariables();
+            });
         }
 
         function setCurrentPage(newValue) {
@@ -177,11 +182,16 @@
           return $q.when();
         }
 
+        function handleError(error) {
+          error = error || {};
+          $scope.error = JSON.stringify(error);
+        }
+
         function getCommitList() {
           $scope.fetchingCommits = true;
           $scope.commits = [];
           filter.getCommits()
-            .then(setCommits, null, setCommits);
+            .then(setCommits, handleError, setCommits);
         }
 
         function setContributorList(contributorList) {

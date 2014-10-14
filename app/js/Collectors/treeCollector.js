@@ -34,7 +34,7 @@
               defer.resolve(tmpResult);
             }
           } else {
-            defer.reject();
+            defer.reject(err);
           }
         });
       };
@@ -54,7 +54,7 @@
               defer.resolve(result.tree);
             }
           } else {
-            defer.reject();
+            defer.reject(err);
           }
         });
       return defer.promise;
