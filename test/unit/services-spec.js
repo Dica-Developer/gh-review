@@ -106,6 +106,24 @@ describe('#Services', function () {
       $rootScope.$apply();
     });
 
+    it('Should take cached userData instead calling github if userData already fetched', function (done) {
+      spyOn(github.user, 'get');
+
+      githubUserData.get()
+        .then(function () {
+          expect(github.user.get).toHaveBeenCalled();
+        });
+
+      var getCallback = github.user.get.calls.argsFor(0)[1];
+      getCallback(null, {});
+      $rootScope.$apply();
+
+      githubUserData.get()
+        .then(function () {
+          expect(github.user.get.call.length).toBe(1);
+        });
+    });
+
   });
 
   describe('.commits', function () {
