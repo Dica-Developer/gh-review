@@ -183,7 +183,7 @@
         }
 
         function handleError(error) {
-          error = error || {};
+          error = error || 'Every software has bugs.';
           $scope.error = JSON.stringify(error);
         }
 
