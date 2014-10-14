@@ -296,22 +296,18 @@
     function ($q, github, authenticated, githubUserData, commentCollector) {
       return function (commentId, sha, user, repo) {
         var defer = $q.defer();
-        if (authenticated.get()) {
-          github.repos.deleteCommitComment({
-            user: user,
-            repo: repo,
-            id: commentId
-          }, function (error) {
-            if (!error) {
-              commentCollector.removeApprovalComment(sha);
-              defer.resolve();
-            } else {
-              defer.reject(error);
-            }
-          });
-        } else {
-          defer.reject(new Error('Not authenticated'));
-        }
+        github.repos.deleteCommitComment({
+          user: user,
+          repo: repo,
+          id: commentId
+        }, function (error) {
+          if (!error) {
+            commentCollector.removeApprovalComment(sha);
+            defer.resolve();
+          } else {
+            defer.reject(error);
+          }
+        });
         return defer.promise;
       };
     }
