@@ -1,4 +1,4 @@
-/*global _, inject, moment, Github*/
+/*global _, inject, moment*/
 beforeEach(angular.mock.module('GHReview'));
 
 describe('#Filter', function () {
