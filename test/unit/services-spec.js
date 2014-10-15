@@ -683,7 +683,7 @@ describe('#Services', function () {
     });
   });
 
-  describe('.approveCommit', function(){
+  describe('.approveCommit', function () {
     var $q, $rootScope, approveCommit, commentCollector, githubUserData, github;
 
     beforeEach(inject(function ($injector) {
@@ -695,14 +695,14 @@ describe('#Services', function () {
       github = $injector.get('github');
     }));
 
-    it('Should resolve', function(done){
+    it('Should resolve', function (done) {
 
       spyOn(githubUserData, 'get').and.returnValue($q.when({login: 'TestAuthor'}));
       spyOn(commentCollector, 'addApprovalComment');
       spyOn(github.repos, 'createCommitComment');
 
       approveCommit('sha', 'user', 'repo')
-        .then(function(){
+        .then(function () {
           expect(githubUserData.get).toHaveBeenCalled();
           expect(commentCollector.addApprovalComment).toHaveBeenCalledWith('sha', 'commentId');
           done();
@@ -717,14 +717,14 @@ describe('#Services', function () {
       $rootScope.$apply();
     });
 
-    it('Should reject if github throws error', function(done){
+    it('Should reject if github throws error', function (done) {
 
       spyOn(githubUserData, 'get').and.returnValue($q.when({login: 'TestAuthor'}));
       spyOn(commentCollector, 'addApprovalComment');
       spyOn(github.repos, 'createCommitComment');
 
       approveCommit('sha', 'user', 'repo')
-        .then(null, function(){
+        .then(null, function () {
           expect(githubUserData.get).toHaveBeenCalled();
           expect(commentCollector.addApprovalComment).not.toHaveBeenCalled();
           done();
@@ -741,7 +741,7 @@ describe('#Services', function () {
 
   });
 
-  describe('.unapproveCommit', function(){
+  describe('.unapproveCommit', function () {
     var $q, $rootScope, unapproveCommit, commentCollector, github;
 
     beforeEach(inject(function ($injector) {
@@ -752,13 +752,13 @@ describe('#Services', function () {
       github = $injector.get('github');
     }));
 
-    it('Should resolve', function(done){
+    it('Should resolve', function (done) {
 
       spyOn(commentCollector, 'removeApprovalComment');
       spyOn(github.repos, 'deleteCommitComment');
 
       unapproveCommit('commentId', 'sha', 'user', 'repo')
-        .then(function(){
+        .then(function () {
           expect(commentCollector.removeApprovalComment).toHaveBeenCalledWith('sha');
           done();
         });
@@ -772,13 +772,13 @@ describe('#Services', function () {
       $rootScope.$apply();
     });
 
-    it('Should reject if github throws error', function(done){
+    it('Should reject if github throws error', function (done) {
 
       spyOn(commentCollector, 'removeApprovalComment');
       spyOn(github.repos, 'deleteCommitComment');
 
       unapproveCommit('commitId', 'sha', 'user', 'repo')
-        .then(null, function(){
+        .then(null, function () {
           expect(commentCollector.removeApprovalComment).not.toHaveBeenCalled();
           done();
         });
