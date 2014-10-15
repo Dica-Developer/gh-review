@@ -200,7 +200,7 @@
           $scope.fetchingCommits = true;
           $scope.commits = [];
           filter.getCommits()
-            .then(controller.setCommits, null, controller.setCommits);
+            .then(controller.setCommits, controller.handleError, controller.setCommits);
         };
 
         controller.setContributorList = function(contributorList) {
