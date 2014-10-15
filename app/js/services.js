@@ -76,7 +76,7 @@
           });
           return defer.promise;
         },
-        byPath: function (options) {
+        byPath: /*istanbul ignore next*/ function (options) {
           var defer = $q.defer();
           var commitsPerFileWorker = new Worker('js/worker/commitsOfFile.js');
           commitsPerFileWorker.onmessage = function (event) {
