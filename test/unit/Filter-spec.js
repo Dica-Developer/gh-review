@@ -37,8 +37,11 @@ describe('#Filter', function () {
       }
     ]));
 
-    it('Should call localStorageService if filterId is provided', inject(['filterProvider', 'localStorageService',
-      function (filterProvider, localStorageService) {
+    it('Should call localStorageService if filterId is provided', inject(['filterProvider', 'localStorageService', 'branchCollector', 'contributorCollector', 'treeCollector',
+      function (filterProvider, localStorageService, branchCollector, contributorCollector, treeCollector) {
+        spyOn(branchCollector, 'get');
+        spyOn(contributorCollector, 'get');
+        spyOn(treeCollector, 'get');
         spyOn(localStorageService, 'get');
         filterProvider.get('filterId');
         expect(localStorageService.get).toHaveBeenCalledWith('filter-filterId');

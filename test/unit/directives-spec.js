@@ -32,8 +32,10 @@ describe('#Directives', function () {
 
   describe('menu', function () {
     var $q, lSS, gh;
-    beforeEach(inject(['$q', 'localStorageService', 'github',
-      function (_$q_, localStorageService, github) {
+    beforeEach(inject(['$q', 'localStorageService', 'github', 'commentCollector',
+      function (_$q_, localStorageService, github, commentCollector) {
+        spyOn(commentCollector, 'init');
+        spyOn(commentCollector, 'announceRepositories');
         $q = _$q_;
         lSS = localStorageService;
         gh = github;
