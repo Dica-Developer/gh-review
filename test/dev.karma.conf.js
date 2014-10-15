@@ -20,6 +20,7 @@ module.exports = function (config) {
       'app/bower_components/underscore.string/dist/underscore.string.min.js',
       'app/js/app.js',
       'app/js/**/*.js',
+      'test/helper/commitMockModule.js',
       'test/unit/**/*-spec.js',
       'app/templates/*.html'
     ],
