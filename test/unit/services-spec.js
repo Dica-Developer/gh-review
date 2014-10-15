@@ -362,12 +362,10 @@ describe('#Services', function () {
   });
 
   describe('.getAllAvailableRepos', function () {
-    var getAllAvailableRepos, authenticated,
-      githubUserData, github, $rootScope;
+    var getAllAvailableRepos, githubUserData, github, $rootScope;
 
     beforeEach(inject(function ($injector) {
       getAllAvailableRepos = $injector.get('getAllAvailableRepos');
-      authenticated = $injector.get('authenticated');
       githubUserData = $injector.get('githubUserData');
       github = $injector.get('github');
       $rootScope = $injector.get('$rootScope');
@@ -378,14 +376,7 @@ describe('#Services', function () {
       expect(getAllAvailableRepos).toBeDefined();
     });
 
-    it('Should call authenticated.get', function () {
-      spyOn(authenticated, 'get');
-      getAllAvailableRepos();
-      expect(authenticated.get).toHaveBeenCalled();
-    });
-
     it('Should call github.repos.getAll', function () {
-      spyOn(authenticated, 'get').and.returnValue(true);
       spyOn(github.repos, 'getAll');
       getAllAvailableRepos();
       $rootScope.$apply();
@@ -393,7 +384,6 @@ describe('#Services', function () {
     });
 
     it('Should return promise and resolve if data exist', function (done) {
-      spyOn(authenticated, 'get').and.returnValue(true);
       spyOn(github.repos, 'getAll');
       getAllAvailableRepos()
         .then(function (data) {
@@ -409,7 +399,6 @@ describe('#Services', function () {
     });
 
     it('Should return promise and reject if error exist', function (done) {
-      spyOn(authenticated, 'get').and.returnValue(true);
       spyOn(github.repos, 'getAll');
       getAllAvailableRepos()
         .then(null, function (data) {
@@ -424,17 +413,6 @@ describe('#Services', function () {
       getAllAvailableReposCallback({
         name: 'Error'
       }, null);
-      $rootScope.$apply();
-    });
-
-    it('Should return promise and reject user is not authenticated yet', function (done) {
-      spyOn(authenticated, 'get').and.returnValue(false);
-      getAllAvailableRepos()
-        .then(null, function (data) {
-          expect(data).toBeDefined();
-          expect(data instanceof Error).toBeTruthy();
-          done();
-        });
       $rootScope.$apply();
     });
   });
