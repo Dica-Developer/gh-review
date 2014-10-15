@@ -181,8 +181,15 @@
         }
 
         function handleError(error) {
-          error = error || 'Every software has bugs.';
-          $scope.error = JSON.stringify(error);
+          if (error) {
+            error = JSON.stringify(error);
+            $scope.error = error;
+            $scope.showError = true;
+            $scope.showDefaultError = false;
+          } else {
+            $scope.showError = false;
+            $scope.showDefaultError = true;
+          }
         }
 
         function getCommitList() {
