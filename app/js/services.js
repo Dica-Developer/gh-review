@@ -159,17 +159,13 @@
   /**
    * @deprecated should handled by worker as well and triggered from another place then menu directive
    */
-  services.factory('collectComments', ['commentCollector', 'authenticated', 'localStorageService', 'filter',
-    function (commentCollector, authenticated, localStorageService, filter) {
+  services.factory('collectComments', ['commentCollector', 'localStorageService', 'filter',
+    function (commentCollector, localStorageService, filter) {
       return function () {
-        var retVal = false;
-        if (authenticated.get()) {
-          var accessToken = localStorageService.get('accessToken');
-          commentCollector.init(accessToken);
-          commentCollector.announceRepositories(filter.getAll());
-          retVal = true;
-        }
-        return retVal;
+        var accessToken = localStorageService.get('accessToken');
+        commentCollector.init(accessToken);
+        commentCollector.announceRepositories(filter.getAll());
+        return true;
       };
     }
   ]);
