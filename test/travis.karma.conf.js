@@ -23,7 +23,7 @@ module.exports = function (config) {
       'app/js/**/*.js',
       'test/helper/commitMockModule.js',
       'test/unit/**/*-spec.js',
-      'app/templates/*.html',
+      'app/templates/*.html'
     ],
     exclude: [
       'app/js/worker/*.*'
