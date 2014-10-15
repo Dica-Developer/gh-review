@@ -80,15 +80,15 @@ describe('#Directives', function () {
       $scope.commit = {
         committer: {
           name: 'TestName',
-          avatar: 'AvatarLink',
+          avatar: 'https://avatars2.githubusercontent.com/u/1409907?v=2&s=200',
           committerLink: 'committerLink'
         }
       };
       $scope.$digest();
       expect(element.find('a').attr('title')).toBe('TestName');
       expect(element.find('a').attr('href')).toBe('committerLink');
-      expect(element.find('img').attr('ng-src')).toBe('AvatarLink');
-      expect(element.find('img').attr('src')).toBe('AvatarLink');
+      expect(element.find('img').attr('ng-src')).toBe('https://avatars2.githubusercontent.com/u/1409907?v=2&s=200');
+      expect(element.find('img').attr('src')).toBe('https://avatars2.githubusercontent.com/u/1409907?v=2&s=200');
       expect(element.find('img').attr('height')).toBe('32px');
     });
 
@@ -97,14 +97,14 @@ describe('#Directives', function () {
       $scope.commit = {
         committer: {
           name: 'TestName',
-          avatar: 'AvatarLink'
+          avatar: 'https://avatars2.githubusercontent.com/u/1409907?v=2&s=200'
         }
       };
       $scope.$digest();
       expect(element.find('a').attr('title')).toBe('TestName');
       expect(element.find('a').attr('href')).toBe('#');
-      expect(element.find('img').attr('ng-src')).toBe('AvatarLink');
-      expect(element.find('img').attr('src')).toBe('AvatarLink');
+      expect(element.find('img').attr('ng-src')).toBe('https://avatars2.githubusercontent.com/u/1409907?v=2&s=200');
+      expect(element.find('img').attr('src')).toBe('https://avatars2.githubusercontent.com/u/1409907?v=2&s=200');
       expect(element.find('img').attr('height')).toBe('32px');
     });
   });
