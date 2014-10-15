@@ -146,12 +146,12 @@ angular.module('commitMockModule', [])
         'author': {
           'name': 'Martin Schaaf',
           'email': 'mschaaf@datameer.com',
-          'date': '2014-02-14T16:41:16Z'
+          'date': '2013-10-15T16:41:16Z'
         },
         'committer': {
           'name': 'Martin Schaaf',
           'email': 'mschaaf@datameer.com',
-          'date': '2014-02-14T16:41:16Z'
+          'date': '2013-10-15T16:41:16Z'
         },
         'message': '* center spinner in screen',
         'tree': {
