@@ -1,5 +1,6 @@
 <div class="row">
     <div class="col-xs-12">
+        <div class="well well-lg" ng-if="filter.options.meta.isNew">Do find commits you want to review try to select a repository and a branch. After selecting them you will have more criterias to dive in the commits.</div>
         <div class="panel panel-default">
             <div class="panel-heading">
                 <form class="form-inline" role="form">
@@ -86,5 +87,7 @@
                 </div>
             </div>
         </div>
+        <div class="alert alert-danger" role="alert" ng-if="showError">{{error}}</div>
+        <div class="alert alert-danger" role="alert" ng-if="showDefaultError">You found a potential bug in gh-review. Please help on making gh-review better and report it by following <a class="alert-link" href="https://github.com/Dica-Developer/gh-review/issues/new">this link</a>.</div>
     </div>
 </div>
