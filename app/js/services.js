@@ -22,10 +22,11 @@
   var github = false;
   services.factory('github', ['GitHub', 'localStorageService',
     function (GitHub, localStorageService) {
-      if (!github) {
+      var accessToken = localStorageService.get('accessToken');
+      if (!github && accessToken !== null) {
         var message = {
           type: 'oauth',
-          token: localStorageService.get('accessToken')
+          token: accessToken
         };
         github = new GitHub({});
         github.authenticate(message);
