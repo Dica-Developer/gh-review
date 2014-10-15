@@ -284,8 +284,6 @@
                 defer.reject(error);
               }
             });
-          }).catch(function (error) {
-            defer.reject(error);
           });
         return defer.promise;
       };
