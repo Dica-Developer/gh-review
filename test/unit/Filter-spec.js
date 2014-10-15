@@ -1,6 +1,6 @@
 /*global _, inject, moment*/
-beforeEach(angular.mock.module('GHReview'));
 
+beforeEach(angular.mock.module('GHReview'));
 describe('#Filter', function () {
   'use strict';
 
@@ -425,5 +425,104 @@ describe('#Filter', function () {
       expect(filter.isSaved()).toBe(false);
       expect(initSpy).toHaveBeenCalled();
     });
+  });
+
+  describe('Filter._processCustomFilter', function(){
+    var filter, commits, $rootScope, commentCollector, githubUserData, $q;
+
+    beforeEach(angular.mock.module('commitMockModule'));
+
+    beforeEach(inject(function($injector){
+      $rootScope = $injector.get('$rootScope');
+      $q = $injector.get('$q');
+      commits = $injector.get('commits');
+      commentCollector = $injector.get('commentCollector');
+      githubUserData = $injector.get('githubUserData');
+      var filterProvider = $injector.get('filterProvider');
+      filter = filterProvider.getNew();
+    }));
+
+    it('Should set commitList to given commits if no filtering is needed', function(done){
+      spyOn(filter, '_needsPostFiltering').and.returnValue(false);
+      filter._processCustomFilter(commits)
+        .then(function(){
+          expect(filter.commitList).toBe(commits);
+          done();
+        });
+
+      $rootScope.$apply();
+    });
+
+    it('Should set commitList to commits only for one author', function(done){
+      spyOn(githubUserData, 'get').and.returnValue($q.when({login: 'AnotherUser'}));
+      spyOn(commentCollector, 'getCommitApproved').and.returnValue($q.when({}));
+      filter.options.meta.customFilter.authors = ['sebfroh'];
+      filter._processCustomFilter(commits)
+        .then(function(){
+          expect(filter.commitList.length).toBe(1);
+          expect(filter.commitList[0].author.login).toBe('sebfroh');
+          done();
+        });
+
+      $rootScope.$apply();
+    });
+
+    it('Should exclude user commits from commit list', function(done){
+      spyOn(githubUserData, 'get').and.returnValue($q.when({login: 'sebfroh'}));
+      spyOn(commentCollector, 'getCommitApproved').and.returnValue($q.when({}));
+      filter.options.meta.customFilter.excludeOwnCommits = true;
+      filter._processCustomFilter(commits)
+        .then(function(){
+          expect(filter.commitList.length).toBe(2);
+          expect(filter.commitList[0].author.login).toBe('JayGray');
+          expect(filter.commitList[1].author.login).toBe('mschaaf');
+          done();
+        });
+
+      $rootScope.$apply();
+    });
+
+    it('Should set commitList to approved commits only', function(done){
+      spyOn(githubUserData, 'get').and.returnValue($q.when({login: 'sebfroh'}));
+      spyOn(commentCollector, 'getCommitApproved').and.returnValue($q.when({'7e3cc043458366a4205621bc2c006bafd6f6c4db': true}));
+      filter.options.meta.customFilter.state = 'approved';
+      filter._processCustomFilter(commits)
+        .then(function(){
+          expect(filter.commitList.length).toBe(1);
+          expect(filter.commitList[0].author.login).toBe('sebfroh');
+          done();
+        });
+
+      $rootScope.$apply();
+    });
+
+    it('Should set commitList to reviewed commits only', function(done){
+      spyOn(githubUserData, 'get').and.returnValue($q.when({login: 'sebfroh'}));
+      spyOn(commentCollector, 'getCommitApproved').and.returnValue($q.when({'7e3cc043458366a4205621bc2c006bafd6f6c4db': true}));
+      filter.options.meta.customFilter.state = 'reviewed';
+      filter._processCustomFilter(commits)
+        .then(function(){
+          expect(filter.commitList.length).toBe(1);
+          expect(filter.commitList[0].author.login).toBe('mschaaf');
+          done();
+        });
+
+      $rootScope.$apply();
+    });
+
+    it('Should set commitList to uncommented commits only', function(done){
+      spyOn(githubUserData, 'get').and.returnValue($q.when({login: 'sebfroh'}));
+      spyOn(commentCollector, 'getCommitApproved').and.returnValue($q.when({'7e3cc043458366a4205621bc2c006bafd6f6c4db': true}));
+      filter.options.meta.customFilter.state = 'unseen';
+      filter._processCustomFilter(commits)
+        .then(function(){
+          expect(filter.commitList.length).toBe(1);
+          expect(filter.commitList[0].author.login).toBe('JayGray');
+          done();
+        });
+
+      $rootScope.$apply();
+    });
+
   });
 });
