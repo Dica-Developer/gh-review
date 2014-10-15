@@ -34,31 +34,18 @@ describe('#commentProvider', function () {
   });
 
   describe('.getCommentsForCommit', function () {
-    var github, authenticated, $rootScope, commentCollector, Comment, $q;
+    var github, $rootScope, commentCollector, Comment, $q;
 
     beforeEach(inject(function ($injector) {
       $rootScope = $injector.get('$rootScope');
       github = $injector.get('github');
-      authenticated = $injector.get('authenticated');
       commentCollector = $injector.get('commentCollector');
       Comment = $injector.get('Comment');
       spyOn(github.repos, 'getCommitComments');
       $q = $injector.get('$q');
     }));
 
-    it('Should reject if not authenticated', function (done) {
-      spyOn(authenticated, 'get').and.returnValue(false);
-      commentProvider.getCommentsForCommit(githubOptions)
-        .then(null, function (reason) {
-          expect(reason).toBeDefined();
-          expect(reason.message).toBe('Not authenticated');
-          done();
-        });
-      $rootScope.$apply();
-    });
-
     it('Should reject if github.repos.getCommitComments returns error', function (done) {
-      spyOn(authenticated, 'get').and.returnValue(true);
       commentProvider.getCommentsForCommit(githubOptions)
         .then(null, function (reason) {
           expect(reason).toEqual({
@@ -74,7 +61,6 @@ describe('#commentProvider', function () {
     });
 
     it('Should return one approver', function (done) {
-      spyOn(authenticated, 'get').and.returnValue(true);
       var defer = $q.defer();
       defer.resolve({
         '123': true
@@ -95,7 +81,6 @@ describe('#commentProvider', function () {
     });
 
     it('Should return no approver', function (done) {
-      spyOn(authenticated, 'get').and.returnValue(true);
       var defer = $q.defer();
       defer.resolve({
         '123': false
@@ -115,7 +100,6 @@ describe('#commentProvider', function () {
     });
 
     it('Should return one line comment if comment.line not null', function (done) {
-      spyOn(authenticated, 'get').and.returnValue(true);
       var defer = $q.defer();
       defer.resolve({
         '123': true
@@ -143,7 +127,6 @@ describe('#commentProvider', function () {
     });
 
     it('Should return one line comment if comment.position not null', function (done) {
-      spyOn(authenticated, 'get').and.returnValue(true);
       var defer = $q.defer();
       defer.resolve({
         '123': true
@@ -171,7 +154,6 @@ describe('#commentProvider', function () {
     });
 
     it('Should return commit comment if comment.line and comment.position is null', function (done) {
-      spyOn(authenticated, 'get').and.returnValue(true);
       var defer = $q.defer();
       defer.resolve({
         '123': true
