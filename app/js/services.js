@@ -180,21 +180,17 @@
     }
   ]);
 
-  services.factory('getAllAvailableRepos', ['$q', 'authenticated', 'githubUserData', 'github',
-    function ($q, authenticated, githubUserData, github) {
+  services.factory('getAllAvailableRepos', ['$q', 'github',
+    function ($q, github) {
       return function () {
         var defer = $q.defer();
-        if (authenticated.get()) {
-          github.repos.getAll({}, function (error, res) {
-            if (error) {
-              defer.reject(error);
-            } else {
-              defer.resolve(res);
-            }
-          });
-        } else {
-          defer.reject(new Error('Not authenticated yet'));
-        }
+        github.repos.getAll({}, function (error, res) {
+          if (error) {
+            defer.reject(error);
+          } else {
+            defer.resolve(res);
+          }
+        });
         return defer.promise;
       };
     }
