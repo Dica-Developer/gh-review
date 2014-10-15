@@ -218,10 +218,10 @@
     }
   ]);
 
-  services.factory('getFileContent', ['$q', '_', 'github',
-    function ($q, _, github) {
+  services.factory('getFileContent', ['$q', 'github',
+    function ($q, github) {
       return function (options) {
-        if (_.isUndefined(options.ref) || _.isNull(options.ref)) {
+        if (angular.isUndefined(options.ref) || options.ref === null) {
           delete options.ref;
         } else {
           delete options.sha;
@@ -254,8 +254,8 @@
     }
   ]);
 
-  services.factory('approveCommit', ['$q', '_', 'github', 'options', 'authenticated', 'githubUserData', 'commentCollector',
-    function ($q, _, github, options, authenticated, githubUserData, commentCollector) {
+  services.factory('approveCommit', ['$q', 'github', 'options', 'githubUserData', 'commentCollector',
+    function ($q, github, options, githubUserData, commentCollector) {
       return function (sha, user, repo) {
         var defer = $q.defer();
 
@@ -290,8 +290,8 @@
     }
   ]);
 
-  services.factory('unapproveCommit', ['$q', 'github', 'authenticated', 'githubUserData', 'commentCollector',
-    function ($q, github, authenticated, githubUserData, commentCollector) {
+  services.factory('unapproveCommit', ['$q', 'github', 'commentCollector',
+    function ($q, github, commentCollector) {
       return function (commentId, sha, user, repo) {
         var defer = $q.defer();
         github.repos.deleteCommitComment({
