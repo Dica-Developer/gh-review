@@ -53,9 +53,7 @@
               handleError(e);
               return $q.reject();
             })
-            .then(function() {
-              setScopeVariables();
-            });
+            .then(setScopeVariables);
         }
 
         function setCurrentPage(newValue) {
