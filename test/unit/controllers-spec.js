@@ -1,4 +1,4 @@
-/*global inject, xdescribe*/
+/*global inject*/
 describe('#Controller', function () {
   'use strict';
 
