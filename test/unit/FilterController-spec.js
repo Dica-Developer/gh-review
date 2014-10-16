@@ -304,6 +304,21 @@ describe('#Controller', function () {
           expect(controller.setScopeVariables).toHaveBeenCalled();
         });
 
+        it('controller.handleError check for handling supplied error', function () {
+          controller.handleError({message:'This is a error.'});
+
+          expect($scope.error).toBe(JSON.stringify({message:'This is a error.'}));
+          expect($scope.showError).toBe(true);
+          expect($scope.showDefaultError).toBe(false);
+        });
+
+        it('controller.handleError check for handling none supplied error', function () {
+          controller.handleError();
+
+          expect($scope.error).toBeUndefined();
+          expect($scope.showError).toBe(false);
+          expect($scope.showDefaultError).toBe(true);
+        });
       });
 
       describe('Watcher', function () {
