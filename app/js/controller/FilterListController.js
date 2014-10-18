@@ -2,8 +2,8 @@
   'use strict';
 
   angular.module('GHReview')
-    .controller('FilterListController', ['$scope', '$state', '_', 'filter', 'events',
-      function ($scope, $state, _, filter, events) {
+    .controller('FilterListController', ['$scope', '$state', '$modal', '_', 'filter', 'events',
+      function ($scope, $state, $modal, _, filter/*, events*/) {
         if (filter.getAll().length === 0) {
           $state.go('addFilter');
         }
@@ -51,7 +51,7 @@
 
         var updateFilterList = function () {
           $scope.filterList = getGroupedAndSortedFilter();
-          $scope.filterEvents = events.getAll();
+//          $scope.filterEvents = events.getAll();
         };
 
         $scope.removeFilter = function (filterId, event) {
@@ -59,7 +59,7 @@
             event.preventDefault();
           }
           filter.remove(filterId);
-          updateFilterList();
+//          updateFilterList();
         };
         $scope.editFilter = function (filterId, event) {
           if (void 0 !== event) {
