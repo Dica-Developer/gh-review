@@ -1,0 +1,23 @@
+<div class="modal-header">
+    <h3 class="modal-title">Notification settings for filter</h3>
+</div>
+<div class="modal-body">
+    <form role="form">
+        <h5>Notify about branch changes in repo {{filter.getOwner() +'/'+ filter.getRepo()}}</h5>
+        <div class="btn-group">
+            <label class="btn btn-primary" ng-model="filter.options.meta.notifications.branch.create" btn-checkbox>Create</label>
+            <label class="btn btn-primary" ng-model="filter.options.meta.notifications.branch.delete" btn-checkbox>Delete</label>
+        </div>
+        <h5>introduced by:</h5>
+        <ui-select id="filterContributor" multiple ng-model="scope.selectedContributor" class="input-sm" style="width: 300px;">
+            <ui-select-match placeholder="Any...">{{$item.login}}</ui-select-match>
+            <ui-select-choices repeat="author in contributorList | filter:$select.search">
+                <img height="36px" class="media-object pull-left" ng-src="{{author.avatar_url}}" />&nbsp;<div ng-bind-html="author.login| highlight: $select.search"></div>
+            </ui-select-choices>
+        </ui-select>
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="ok()">OK</button>
+    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+</div>

@@ -64,6 +64,16 @@
           this.options.meta.id = generateUUID();
           this.options.meta.isNew = true;
         }
+
+        if (!this.options.meta.notifications) {
+          this.options.meta.notifications = {
+            branch: {
+              'create': false,
+              'delete': false,
+              'authors': []
+            }
+          };
+        }
       };
 
       Filter.prototype.save = function () {
@@ -219,6 +229,10 @@
 
       Filter.prototype.isSaved = function () {
         return this.options.meta.isSaved;
+      };
+
+      Filter.prototype.hasNotificationSettings = function () {
+        return this.options.meta.notifications.branch.create || this.options.meta.notifications.branch.delete;
       };
 
       Filter.prototype.reset = function () {

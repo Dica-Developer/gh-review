@@ -71,6 +71,26 @@
           });
         };
 
+        $scope.showNotificationOptions = function(filter, event){
+          if (void 0 !== event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+          }
+
+          $modal.open({
+            templateUrl: 'templates/notification-options-modal.html',
+            controller: 'filterNotificationOptionsModalController',
+            resolve: {
+              filter: function () {
+                return filter;
+              },
+              contributorList: function(){
+                return filter.getContributorList();
+              }
+            }
+          });
+        };
+
         $scope.$watch('selectedGrouping', updateFilterList);
         updateFilterList();
       }
