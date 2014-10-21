@@ -22,7 +22,8 @@
             blobSha: blobSha,
             additions: file.additions,
             deletions: file.deletions,
-            changes: file.changes
+            changes: file.changes,
+            status: file.status
           };
           if (fileIndex === (filesLength - 1)) {
             defer.resolve({
