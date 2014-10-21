@@ -11,7 +11,8 @@
       'repoCollector',
       'filterProvider',
       function ($scope, $q, $stateParams, $timeout, _, repoCollector, filterProvider) {
-        var filter = null,
+        var orgFilter = null,
+          filter = null,
           branchList = null,
           contributorList = null,
           repoList = null,
@@ -21,7 +22,8 @@
         controller.isExistingFilter = function() {
           var defer = $q.defer();
           if (!angular.isUndefined($stateParams.filterId)) { //We are in the edit state
-            filter = filterProvider.get($stateParams.filterId);
+            orgFilter = filterProvider.get($stateParams.filterId);
+            filter = filterProvider.getCloneOf(orgFilter);
             defer.resolve();
           } else {
             filter = filterProvider.getNew();

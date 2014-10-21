@@ -67,20 +67,29 @@
       };
 
       Filter.prototype.save = function () {
-        if (!_.isUndefined(this.options.meta.isNew)) {
-          delete this.options.meta.isNew;
+        if (this.options.meta.isClone) {
+          var originalfilter = filterHolder[this.options.meta.idOriginal];
+          originalfilter.options = _.cloneDeep(this.options);
+          originalfilter.options.meta.id = originalfilter.options.meta.idOriginal;
+          delete originalfilter.options.meta.idOriginal;
+          delete originalfilter.options.meta.isClone;
+          originalfilter.save();
+        } else {
+          if (!_.isUndefined(this.options.meta.isNew)) {
+            delete this.options.meta.isNew;
+          }
+          this.options.meta.isSaved = true;
+          var filterIdsString = localStorageService.get('filter');
+          var filterIds = [];
+          if (!_.isNull(filterIdsString)) {
+            filterIds = filterIdsString.split(',');
+          }
+          if (!_.contains(filterIds, this.options.meta.id)) {
+            filterIds.push(this.options.meta.id);
+            localStorageService.set('filter', filterIds.join(','));
+          }
+          localStorageService.set('filter-' + this.options.meta.id, JSON.stringify(this.options));
         }
-        this.options.meta.isSaved = true;
-        var filterIdsString = localStorageService.get('filter');
-        var filterIds = [];
-        if (!_.isNull(filterIdsString)) {
-          filterIds = filterIdsString.split(',');
-        }
-        if (!_.contains(filterIds, this.options.meta.id)) {
-          filterIds.push(this.options.meta.id);
-          localStorageService.set('filter', filterIds.join(','));
-        }
-        localStorageService.set('filter-' + this.options.meta.id, JSON.stringify(this.options));
       };
 
       Filter.prototype.set = function (key, value) {
@@ -439,6 +448,18 @@
           var newFilter = new Filter();
           filterHolder[newFilter.getId()] = newFilter;
           return newFilter;
+        },
+        getCloneOf: function(filter){
+          if(filter instanceof Filter){
+            var clonedFilter = new Filter();
+            clonedFilter.options = _.cloneDeep(filter.options);
+            clonedFilter.options.meta.idOriginal = clonedFilter.options.meta.id;
+            clonedFilter.options.meta.id = clonedFilter.options.meta.id + '_clone';
+            clonedFilter.options.meta.isClone = true;
+            return clonedFilter;
+          } else {
+            console.error('No Filter');
+          }
         }
       };
     }
