@@ -378,8 +378,17 @@ module.exports = function (grunt) {
     'coveralls'
   ]);
 
+  grunt.registerTask('setNewVersion', function () {
+    var packageJson = grunt.file.readJSON('package.json');
+    var version = packageJson.version.split('.');
+    version[2] = parseInt(version[2], 10) + 1;
+    packageJson.version = version[0] + '.' + version[1] + '.' + version[2];
+    grunt.file.write('package.json', JSON.stringify(packageJson, null, 2));
+  });
+
   grunt.registerTask('deploy', [
     'karma:travis',
+    'setNewVersion',
     'dist',
     'checkoutWebsite',
     'cleanDeploy',
