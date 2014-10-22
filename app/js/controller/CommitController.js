@@ -27,6 +27,10 @@
             /*jshint camelcase:false*/
             return comment.mode === 'edit' || _.isUndefined(comment.body_html);
           });
+          _.remove($scope.comments.commitComments, function (comment) {
+            /*jshint camelcase:false*/
+            return comment.mode === 'edit' || _.isUndefined(comment.body_html);
+          });
         };
 
         $scope.commitHeaderStatus = {
@@ -59,6 +63,7 @@
         };
 
         $scope.addCommitComment = function () {
+          removeCommentFromScope();
           $scope.comments.commitComments.push(new Comment({
             mode: 'edit',
             position: null,
