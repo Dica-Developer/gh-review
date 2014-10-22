@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('GHReview')
-    .service('events', ['$interval', '_', 'eventCollector', 'filter', function($interval, _, eventCollector, filter){
+    .service('events', ['$interval', '_', 'eventCollector', 'filter', 'notificationsCollector', 'githubUserData', function($interval, _, eventCollector, filter, notificationsCollector, githubUserData) {
 
       var events = {},
         previousResult = null;
@@ -33,6 +33,10 @@
           getEventsFromCollector(filter.getOwner(), filter.getRepo())
             .then(splitEventsByType);
         }, eventCollector.pollInterval);
+      });
+
+      notificationsCollector.getNotificationsFromGithub(githubUserData.login).then(function (notifications) {
+        events.NotificationsEvent = notifications;
       });
 
       return {
@@ -104,6 +108,9 @@
         },
         WatchEvent: function(){
           return events.WatchEvent || null;
+        },
+        NotificationsEvent: function(){
+          return events.NotificationsEvent || null;
         }
       };
     }]);

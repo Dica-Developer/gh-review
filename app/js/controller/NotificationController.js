@@ -57,7 +57,7 @@
             var repoFullName = filter.getOwner() + '/' + filter.getRepo();
             var newPullRequestReviewComments = _.filter(newValue, {'repo': {'name': repoFullName}});
             if (filter.options.meta.notifications.branch.create && newPullRequestReviewComments.length > 0) {
-              new Notification(newPullRequestReviewComments.length + 'new pull request comment(s) in ' + repoFullName);
+              new Notification(newPullRequestReviewComments.length + ' new pull request comment(s) in ' + repoFullName);
             }
           });
         }
@@ -126,13 +126,47 @@
                   return event.actor.login;
                 }));
                 new Notification(uniqActors.length + ' contributor pushed to ' + repoFullName, {
-                  /*jshint camelcase:false*/
                   icon: '/images/icon-social-github-128.png',
                   body: 'Actors are "' + uniqActors.join(' ,') +'"'
                 });
               }
             }
           });
+        }
+      }, true);
+
+      $scope.$watch(events.NotificationsEvent, function (newValue, oldValue) {
+        if (newValue && newValue !== oldValue) {
+          var typeCounts = {};
+          newValue.forEach(function (githubNotification) {
+            var key = githubNotification.subject.type;
+            var value = typeCounts[key];
+            if (value) {
+              value++;
+            } else {
+              value = 1;
+            }
+            typeCounts[key] = value;
+          });
+          var message = '';
+          var notificationCount = 0;
+          _.map(typeCounts, function (value, key) {
+            notificationCount = notificationCount + value;
+            message = message + value + ' notification(s) of type ' + key + '\n';
+          });
+          var notification = new Notification('You have '+ notificationCount +' new notification(s)!', {
+            icon: '/images/inbox.png',
+            body: message
+          });
+          notification.onshow = function () {
+            setTimeout(function() {
+              notification.close();
+            }, 10000);
+          };
+          notification.onclick = function () {
+            notification.close();
+            window.open('https://github.com/notifications');
+          };
         }
       }, true);
     }]);
