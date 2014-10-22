@@ -7,17 +7,17 @@
     var q = $q.defer;
 
     function EventCollector() {
+      var _this = this;
       this.pollInterval = 60 * 1000;
       this.etags = {};
       this.get = _.memoize(function (owner, repo) {
-        var _this = this;
-        $interval(function(){
-          _this.get.cache = {};
-        }, _this.pollInterval);
         return _this.getEventsFromGithub(owner, repo);
-      }, function(owner, repo){
+      }, function (owner, repo) {
         return owner +'-'+ repo;
       });
+      this.cacheInvalidationTimer = $interval(function () {
+        _this.get.cache = {};
+      }, _this.pollInterval);
     }
 
     EventCollector.prototype.getEventsFromGithub = function (owner, repo) {
@@ -44,6 +44,10 @@
 
             if(result.meta && result.meta['x-poll-interval']){
               _this.pollInterval = parseInt(result.meta['x-poll-interval'], 10) * 1000;
+              $interval.cancel(_this.cacheInvalidationTimer);
+              _this.cacheInvalidationTimer = $interval(function () {
+                _this.get.cache = {};
+              }, _this.pollInterval);
             }
 
             defer.resolve(result);

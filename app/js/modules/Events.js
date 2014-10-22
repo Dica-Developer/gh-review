@@ -28,16 +28,18 @@
         }
       };
 
-      filter.getAll().forEach(function(filter){
-        $interval(function(){
+      filter.getAll().forEach(function (filter) {
+        $interval(function () {
           getEventsFromCollector(filter.getOwner(), filter.getRepo())
             .then(splitEventsByType);
         }, eventCollector.pollInterval);
       });
 
-      notificationsCollector.getNotificationsFromGithub(githubUserData.login).then(function (notifications) {
-        events.NotificationsEvent = notifications;
-      });
+      $interval(function () {
+        notificationsCollector.getNotificationsFromGithub(githubUserData.login).then(function (notifications) {
+          events.NotificationsEvent = notifications;
+        });
+      }, eventCollector.pollInterval);
 
       return {
         CommitCommentEvent: function(){
