@@ -101,7 +101,7 @@
             }
           })
           .state('filterModuleFile', {
-            url: '/{user}/{repo}/blob/{sha}/*path?ref',
+            url: '/{user}/{repo}/blob/{sha}/{path:.*}',
             templateUrl: 'templates/file.html',
             controller: 'FileController',
             onEnter: ['$state', 'authenticated', checkIfAuthenticated],
