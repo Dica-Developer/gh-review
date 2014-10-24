@@ -514,50 +514,6 @@ describe('#Services', function () {
       expect(github.repos.getContent).toHaveBeenCalled();
       $rootScope.$apply();
     });
-
-    it('Should delete property ref not sha from options if null', function (done) {
-      spyOn(github.repos, 'getContent');
-      getFileContent({
-        ref: null,
-        sha: 'bla'
-      })
-        .then(function (data) {
-          expect(data).toBeDefined();
-          done();
-        });
-      var callback = github.repos.getContent.calls.argsFor(0)[1];
-      var callOptions = github.repos.getContent.calls.argsFor(0)[0];
-      callback(null, {
-        data: {
-          bla: 'bla'
-        }
-      });
-      expect(callOptions.ref).not.toBeDefined();
-      expect(callOptions.sha).toBeDefined();
-      $rootScope.$apply();
-    });
-
-    it('Should not delete property ref but sha from options if not null', function (done) {
-      spyOn(github.repos, 'getContent');
-      getFileContent({
-        ref: 'not null',
-        sha: 'delete me'
-      })
-        .then(function (data) {
-          expect(data).toBeDefined();
-          done();
-        });
-      var callback = github.repos.getContent.calls.argsFor(0)[1];
-      var callOptions = github.repos.getContent.calls.argsFor(0)[0];
-      callback(null, {
-        data: {
-          bla: 'bla'
-        }
-      });
-      expect(callOptions.ref).toBeDefined();
-      expect(callOptions.sha).not.toBeDefined();
-      $rootScope.$apply();
-    });
   });
 
   describe('.commentProviderService', function () {
