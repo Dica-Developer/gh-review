@@ -1,11 +1,5 @@
 <div class="row animate-hide" ng-hide="progress >= 100">
-    <div class="col-sm-12">
-        <p>{{progressMessage}}</p>
-        <progressbar class="progress-striped active" value="progress" type="{{progressType}}"></progressbar>
-    </div>
-</div>
-<div class="btn-group-xs pull-right">
-    <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#extraOptions">More</button>
+    <progressbar value="progress" type="{{progressType}}" style="position: absolute; height: 3px; top: 52px; width: 100%;"></progressbar>
 </div>
 <div id="extraOptions" class="collapse out">
     <div class="panel panel-default">

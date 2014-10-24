@@ -247,20 +247,17 @@
             function () {
               $scope.splicedFileContent = splicedFileContent;
               //Todo done message
-              $scope.progressMessage = 'Done';
-              $scope.progressType = 'success';
+              $scope.statusMessage = '';
               $scope.progress = '100';
             },
             //Error
             function () {
               //Todo error message
-              $scope.progressMessage = 'Error';
-              $scope.progressType = 'danger';
+              $scope.statusMessage = 'Error';
             },
             //Progress
             function (progressObject) {
-              $scope.progressMessage = 'Fetching ' + progressObject.alreadyFetched + ' of ' + commitLength + ' commits.';
-              $scope.progressType = 'warning';
+              $scope.statusMessage = 'Fetching ' + progressObject.alreadyFetched + ' of ' + commitLength + ' commits.';
               $scope.progress = progressObject.progress;
             });
 
