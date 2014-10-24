@@ -27,8 +27,16 @@
         $scope.showComments = false;
 
         $scope.languages = [{
+          display: 'Unknown',
+          value: 'unknown',
+          hljs: ''
+        }, {
           display: 'JavaScript',
           value: 'js',
+          hljs: 'javascript'
+        }, {
+          display: 'JavaScript',
+          value: 'json',
           hljs: 'javascript'
         }, {
           display: 'Java',
@@ -51,7 +59,11 @@
         var languageIndex = _.findIndex($scope.languages, {
           value: fileExtension
         });
-        $scope.suggestedLanguage = $scope.languages[languageIndex];
+        if (languageIndex > -1) {
+          $scope.suggestedLanguage = $scope.languages[languageIndex];
+        } else {
+          $scope.suggestedLanguage = $scope.languages[0];
+        }
 
         $scope.themes = [{
           display: 'Github',
