@@ -214,11 +214,6 @@
   services.factory('getFileContent', ['$q', 'github',
     function ($q, github) {
       return function (options) {
-        if (angular.isUndefined(options.ref) || options.ref === null) {
-          delete options.ref;
-        } else {
-          delete options.sha;
-        }
         var defer = $q.defer();
         options.headers = {
           'accept': 'application/vnd.github.v3.raw'
