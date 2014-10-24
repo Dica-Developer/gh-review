@@ -2,18 +2,19 @@
     <div class="col-xs-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                Grouped by:
-                <div class="pull-right col-xs-4">
-                    <form class="form-horizontal" role="form">
-                        <div class="form-group">
-                            <label for="selectGroup" class="col-xs-4 control-label" id="selectGroupLabel">Group by: </label>
-                            <div class="col-xs-8">
-                                <select id="selectGroup" class="col-xs-8 form-control input-sm" ng-model="selectedGrouping"
-                                        ng-options="opt as opt.label for opt in groupingOptions" ></select>
-                            </div>
-                        </div>
-                    </form>
+                <div class="btn-group-xs">
+                    <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#extraOptions">More</button>
                 </div>
+            </div>
+            <div class="panel-body collapse out" id="extraOptions">
+                <form class="form-inline" role="form">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <label class="input-sm">Group by</label>
+                            <select id="selectGroup" class="form-control input-sm" ng-model="selectedGrouping" ng-options="opt as opt.label for opt in groupingOptions"></select>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

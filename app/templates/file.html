@@ -1,24 +1,26 @@
 <div class="row animate-hide" ng-hide="progress >= 100">
     <progressbar value="progress" type="{{progressType}}" style="position: absolute; height: 3px; top: 52px; width: 100%;"></progressbar>
 </div>
-<div id="extraOptions" class="collapse out">
+<div>
     <div class="panel panel-default">
-        <div class="panel-body">
+        <div class="panel-heading">
+            <div class="btn-group-xs">
+                <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#extraOptions">More</button>
+            </div>
+        </div>
+        <div class="panel-body collapse out" id="extraOptions">
             <div class="form-group">
-                <div class="input-group">
-                    <span class="input-group-addon">Highlight theme</span>
-                    <select id="highlightTheme" class="form-control input-sm" ng-options="theme.display for theme in themes" ng-model="highlightTheme"></select>
-                </div>
-                <br>
-                <div class="input-group">
-                    <span class="input-group-addon">Language</span>
-                    <select id="suggestedLanguage" class="form-control input-sm" ng-options="language.display for language in languages" ng-model="suggestedLanguage"></select>
-                </div>
-                <br>
-                <div class="input-group">
-                    <span class="input-group-addon">Show comments</span>
-                    <input type="checkbox" id="showComments" class="form-control input-sm" ng-model="showComments"></input>
-                </div>
+                <label>Highlight theme</label>
+                <select id="highlightTheme" class="form-control" ng-options="theme.display for theme in themes" ng-model="highlightTheme"></select>
+            </div>
+            <div class="form-group">
+                <label>Language</label>
+                <select id="suggestedLanguage" class="form-control" ng-options="language.display for language in languages" ng-model="suggestedLanguage"></select>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" id="showComments" class="form-control" ng-model="showComments"></input> Show comments
+                </label>
             </div>
         </div>
     </div>
@@ -52,4 +54,3 @@
         <!--<div class="uncomplete-diff-warning" ng-if="showUncompleteDiffWarning">Diff is very big! Diff is not complete!</div>-->
     </div>
 </div>
-
