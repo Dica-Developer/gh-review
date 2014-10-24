@@ -11,7 +11,10 @@
           }
         }
 
-        $urlRouterProvider.otherwise('/');
+        $urlRouterProvider.otherwise(function ($injector, $location) {
+          console.warn('Url "' + $location.$$url +'" not found.');
+          return '/';
+        });
         // Now set up the states
         $stateProvider
           .state('index', {
