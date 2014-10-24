@@ -226,7 +226,7 @@
           user: $stateParams.user,
           repo: $stateParams.repo,
           path: $stateParams.path,
-          sha: $stateParams.ref
+          sha: $stateParams.sha
         };
         commits.byPath(msg)
           .then(startAnnotateLines)
