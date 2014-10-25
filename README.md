@@ -16,6 +16,21 @@ After installing [node.js](http://nodejs.org/ "Node.js"), you have to run the fo
     npm install
     bower install
 
+## Development ##
+
+To start development run the following command in the gh-review folder:
+
+    grunt dev
+
+It starts the application and opens the start page in a browser. Every change change you made to the application will be automatically incorporated in the test system.
+Changes that did not pass the jshint stage will not be applied.
+
+## Testing ##
+
+To run tests automatically for every change during development run the following command:
+
+    grunt test
+
 ## Build ##
 
 To build a distribution run the following commands corresponding to your operating system:
@@ -33,4 +48,4 @@ http://jsfiddle.net/V5BHc/
 ## License ##
 
 GitHub Review - Source code review Tool.
-Copyright (C) 2013  Dica-Developer
+Copyright (C) 2014  Dica-Developer
