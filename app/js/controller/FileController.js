@@ -27,13 +27,9 @@
         $scope.showComments = false;
 
         $scope.languages = [{
-          display: 'HTML',
-          value: 'htm',
-          hljs: 'html'
-        }, {
-          display: 'HTML',
-          value: 'html',
-          hljs: 'html'
+          display: 'Unknown',
+          value: 'unknown',
+          hljs: ''
         }, {
           display: 'CSS',
           value: 'css',
@@ -42,10 +38,6 @@
           display: 'Less',
           value: 'less',
           hljs: 'less'
-        }, {
-          display: 'Unknown',
-          value: 'unknown',
-          hljs: ''
         }, {
           display: 'JavaScript',
           value: 'js',
@@ -62,6 +54,10 @@
           display: 'XML',
           value: 'xml',
           hljs: 'xml'
+        }, {
+          display: 'HTML',
+          value: 'htm',
+          hljs: 'html'
         }, {
           display: 'HTML',
           value: 'html',
