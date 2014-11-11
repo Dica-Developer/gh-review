@@ -282,7 +282,7 @@ describe('#Controller', function () {
         '$scope': $scope,
         '$window': $windowSpy
       });
-      expect($windowSpy.location.href).toBe('https://github.com/login/oauth/authorize?client_id=5082108e53d762d90c00&redirect_uri=http://localhost:9000/oauth&scope=user, repo');
+      expect($windowSpy.location.href).toBe('https://github.com/login/oauth/authorize?client_id=5082108e53d762d90c00&redirect_uri=http://localhost:9000/oauth/&scope=user, repo');
     }));
   });
 

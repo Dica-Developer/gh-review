@@ -15,14 +15,14 @@ module.exports = function (grunt) {
     distOptions: {
       clientId: '833c028df47be8e881d9',
       apiScope: 'user, repo',
-      redirectUri: 'http://dica-developer.github.io/gh-review/oauth',
-      accessTokenUrl: 'http://gh-review.herokuapp.com/login/oauth/access_token',
-      rootUrl: 'http://dica-developer.github.io/gh-review'
+      redirectUri: 'https://dica-developer.github.io/gh-review/oauth/',
+      accessTokenUrl: 'https://gh-review.herokuapp.com/login/oauth/access_token',
+      rootUrl: 'https://dica-developer.github.io/gh-review'
     },
     devOptions: {
       clientId: '5082108e53d762d90c00',
       apiScope: 'user, repo',
-      redirectUri: 'http://localhost:9000/oauth',
+      redirectUri: 'http://localhost:9000/oauth/',
       accessTokenUrl: 'http://gh-review.herokuapp.com/bemdsvdsynggmvweibduvjcbgf',
       rootUrl: 'http://localhost:9000'
     }
