@@ -1,18 +1,33 @@
 <div class="row animate-hide" ng-hide="progress >= 100">
-    <div class="col-sm-12">
-        <p>{{progressMessage}}</p>
-        <progressbar class="progress-striped active" value="progress" type="{{progressType}}"></progressbar>
-    </div>
+    <progressbar class="navbarProgressbar" value="progress" type="{{progressType}}"></progressbar>
 </div>
-
-<div class="form-group">
-    <select id="highlightTheme" class="form-control input-sm" ng-options="theme.display for theme in themes" ng-model="highlightTheme" ></select>
-    <select id="suggestedLanguage" class="form-control input-sm" ng-options="language.display for language in languages" ng-model="suggestedLanguage" ></select>
-    <input type="checkbox" id="showComments" class="form-control input-sm" ng-model="showComments"></input> Show comments
+<div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="btn-group-xs">
+                <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#extraOptions">More</button>
+            </div>
+        </div>
+        <div class="panel-body collapse out" id="extraOptions">
+            <div class="form-group">
+                <label>Highlight theme</label>
+                <select id="highlightTheme" class="form-control" ng-options="theme.display for theme in themes" ng-model="highlightTheme"></select>
+            </div>
+            <div class="form-group">
+                <label>Language</label>
+                <select id="suggestedLanguage" class="form-control" ng-options="language.display for language in languages" ng-model="suggestedLanguage"></select>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" id="showComments" class="form-control" ng-model="showComments"></input> Show comments
+                </label>
+            </div>
+        </div>
+    </div>
 </div>
 <div class="row">
     <div class="col-sm-12">
-        <!--<div class="uncomplete-diff-warning" ng-if="showUncompleteDiffWarning">Diff is very big! Diff is not complete!</div>-->
+        <div class="uncomplete-diff-warning" ng-if="showUncompleteDiffWarning">Diff is very big! Diff is not complete!</div>
         <div class="table-wrapper">
             <div class="div-table" ng-class="highlightTheme.value">
                 <div ng-repeat="line in splicedFileContent" ng-model="line">
@@ -36,7 +51,6 @@
                 </div>
             </div>
         </div>
-        <!--<div class="uncomplete-diff-warning" ng-if="showUncompleteDiffWarning">Diff is very big! Diff is not complete!</div>-->
+        <div class="uncomplete-diff-warning" ng-if="showUncompleteDiffWarning">Diff is very big! Diff is not complete!</div>
     </div>
 </div>
-

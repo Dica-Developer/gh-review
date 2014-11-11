@@ -7810,3 +7810,9 @@ body .row.review-overview {
 #reviewList .stats {
   margin-right: 10px;
 }
+.navbarProgressbar {
+  position: absolute;
+  height: 3px;
+  top: 52px;
+  width: 100%;
+}
