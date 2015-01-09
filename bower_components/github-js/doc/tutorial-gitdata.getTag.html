@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Documentation tutorialgitdata.getTag</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	
+	<link type="text/css" rel="stylesheet" href="styles/site.readable.css">
+	
+</head>
+
+<body>
+<div class="container-fluid">
+	<div class="navbar navbar-fixed-top ">
+		<div class="navbar-inner">
+			<a class="brand" href="index.html">Documentation</a>
+			<ul class="nav">
+				
+				<li class="dropdown">
+					<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li>
+							<a href="authorization.html">authorization</a>
+						</li>
+						
+						<li>
+							<a href="events.html">events</a>
+						</li>
+						
+						<li>
+							<a href="gists.html">gists</a>
+						</li>
+						
+						<li>
+							<a href="gitdata.html">gitdata</a>
+						</li>
+						
+						<li>
+							<a href="issues.html">issues</a>
+						</li>
+						
+						<li>
+							<a href="markdown.html">markdown</a>
+						</li>
+						
+						<li>
+							<a href="orgs.html">orgs</a>
+						</li>
+						
+						<li>
+							<a href="pullRequests.html">pullRequests</a>
+						</li>
+						
+						<li>
+							<a href="repos.html">repos</a>
+						</li>
+						
+						<li>
+							<a href="search.html">search</a>
+						</li>
+						
+						<li>
+							<a href="statuses.html">statuses</a>
+						</li>
+						
+						<li>
+							<a href="user.html">user</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+				<li class="dropdown">
+					<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li>
+							<a href="Client.html">Client</a>
+						</li>
+						
+						<li>
+							<a href="HttpError.html">HttpError</a>
+						</li>
+						
+						<li>
+							<a href="Util.html">Util</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+				<li class="dropdown">
+					<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li>
+							<a href="tutorial-authorization.create.html">authorization.create</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-authorization.delete.html">authorization.delete</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-authorization.get.html">authorization.get</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-authorization.getAll.html">authorization.getAll</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-authorization.update.html">authorization.update</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-events.get.html">events.get</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-events.getFromOrg.html">events.getFromOrg</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-events.getFromRepo.html">events.getFromRepo</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-events.getFromRepoIssues.html">events.getFromRepoIssues</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-events.getFromRepoNetwork.html">events.getFromRepoNetwork</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-events.getFromUser.html">events.getFromUser</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-events.getFromUserOrg.html">events.getFromUserOrg</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-events.getFromUserPublic.html">events.getFromUserPublic</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-events.getReceived.html">events.getReceived</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-events.getReceivedPublic.html">events.getReceivedPublic</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-gists.checkStar.html">gists.checkStar</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-gists.create.html">gists.create</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-gists.createComment.html">gists.createComment</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-gists.delete.html">gists.delete</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-gists.deleteComment.html">gists.deleteComment</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-gists.deleteStar.html">gists.deleteStar</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-gists.edit.html">gists.edit</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-gists.editComment.html">gists.editComment</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-gists.fork.html">gists.fork</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-gists.get.html">gists.get</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-gists.getAll.html">gists.getAll</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-gists.getComment.html">gists.getComment</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-gists.getComments.html">gists.getComments</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-gists.getFromUser.html">gists.getFromUser</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-gists.public.html">gists.public</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-gists.star.html">gists.star</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-gists.starred.html">gists.starred</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-gitdata.createBlob.html">gitdata.createBlob</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-gitdata.createCommit.html">gitdata.createCommit</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-gitdata.createReference.html">gitdata.createReference</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-gitdata.createTag.html">gitdata.createTag</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-gitdata.createTree.html">gitdata.createTree</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-gitdata.deleteReference.html">gitdata.deleteReference</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-gitdata.getAllReferences.html">gitdata.getAllReferences</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-gitdata.getBlob.html">gitdata.getBlob</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-gitdata.getCommit.html">gitdata.getCommit</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-gitdata.getReference.html">gitdata.getReference</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-gitdata.getTag.html">gitdata.getTag</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-gitdata.getTree.html">gitdata.getTree</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-gitdata.updateReference.html">gitdata.updateReference</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-issues.create.html">issues.create</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-issues.createComment.html">issues.createComment</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-issues.createLabel.html">issues.createLabel</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-issues.createMilestone.html">issues.createMilestone</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-issues.deleteComment.html">issues.deleteComment</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-issues.deleteLabel.html">issues.deleteLabel</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-issues.deleteMilestone.html">issues.deleteMilestone</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-issues.edit.html">issues.edit</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-issues.editComment.html">issues.editComment</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-issues.getAll.html">issues.getAll</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-issues.getAllMilestones.html">issues.getAllMilestones</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-issues.getComment.html">issues.getComment</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-issues.getComments.html">issues.getComments</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-issues.getEvent.html">issues.getEvent</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-issues.getEvents.html">issues.getEvents</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-issues.getLabel.html">issues.getLabel</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-issues.getLabels.html">issues.getLabels</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-issues.getMilestone.html">issues.getMilestone</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-issues.getRepoEvents.html">issues.getRepoEvents</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-issues.getRepoIssue.html">issues.getRepoIssue</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-issues.repoComments.html">issues.repoComments</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-issues.repoIssues.html">issues.repoIssues</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-issues.updateLabel.html">issues.updateLabel</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-issues.updateMilestone.html">issues.updateMilestone</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-markdown.render.html">markdown.render</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-orgs.addTeamMember.html">orgs.addTeamMember</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-orgs.addTeamRepo.html">orgs.addTeamRepo</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-orgs.concealMembership.html">orgs.concealMembership</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-orgs.createTeam.html">orgs.createTeam</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-orgs.deleteTeam.html">orgs.deleteTeam</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-orgs.deleteTeamMember.html">orgs.deleteTeamMember</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-orgs.deleteTeamRepo.html">orgs.deleteTeamRepo</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-orgs.get.html">orgs.get</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-orgs.getFromUser.html">orgs.getFromUser</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-orgs.getMember.html">orgs.getMember</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-orgs.getMembers.html">orgs.getMembers</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-orgs.getPublicMember.html">orgs.getPublicMember</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-orgs.getPublicMembers.html">orgs.getPublicMembers</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-orgs.getTeam.html">orgs.getTeam</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-orgs.getTeamMember.html">orgs.getTeamMember</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-orgs.getTeamMembers.html">orgs.getTeamMembers</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-orgs.getTeamRepo.html">orgs.getTeamRepo</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-orgs.getTeamRepos.html">orgs.getTeamRepos</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-orgs.getTeams.html">orgs.getTeams</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-orgs.publicizeMembership.html">orgs.publicizeMembership</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-orgs.removeMember.html">orgs.removeMember</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-orgs.update.html">orgs.update</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-orgs.updateTeam.html">orgs.updateTeam</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-pullRequests.create.html">pullRequests.create</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-pullRequests.createComment.html">pullRequests.createComment</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-pullRequests.createCommentReply.html">pullRequests.createCommentReply</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-pullRequests.createFromIssue.html">pullRequests.createFromIssue</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-pullRequests.deleteComment.html">pullRequests.deleteComment</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-pullRequests.get.html">pullRequests.get</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-pullRequests.getAll.html">pullRequests.getAll</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-pullRequests.getComment.html">pullRequests.getComment</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-pullRequests.getComments.html">pullRequests.getComments</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-pullRequests.getCommits.html">pullRequests.getCommits</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-pullRequests.getFiles.html">pullRequests.getFiles</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-pullRequests.getMerged.html">pullRequests.getMerged</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-pullRequests.merge.html">pullRequests.merge</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-pullRequests.update.html">pullRequests.update</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-pullRequests.updateComment.html">pullRequests.updateComment</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.addCollaborator.html">repos.addCollaborator</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.compareCommits.html">repos.compareCommits</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.create.html">repos.create</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.createCommitComment.html">repos.createCommitComment</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.createFromOrg.html">repos.createFromOrg</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.createHook.html">repos.createHook</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.createKey.html">repos.createKey</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.delete.html">repos.delete</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.deleteCommitComment.html">repos.deleteCommitComment</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.deleteDownload.html">repos.deleteDownload</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.deleteHook.html">repos.deleteHook</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.deleteKey.html">repos.deleteKey</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.fork.html">repos.fork</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.get.html">repos.get</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.getAll.html">repos.getAll</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.getAllCommitComments.html">repos.getAllCommitComments</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.getArchiveLink.html">repos.getArchiveLink</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.getBranch.html">repos.getBranch</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.getBranches.html">repos.getBranches</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.getCollaborator.html">repos.getCollaborator</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.getCollaborators.html">repos.getCollaborators</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.getCommit.html">repos.getCommit</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.getCommitComment.html">repos.getCommitComment</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.getCommitComments.html">repos.getCommitComments</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.getCommits.html">repos.getCommits</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.getContent.html">repos.getContent</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.getContributors.html">repos.getContributors</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.getDownload.html">repos.getDownload</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.getDownloads.html">repos.getDownloads</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.getForks.html">repos.getForks</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.getFromOrg.html">repos.getFromOrg</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.getFromUser.html">repos.getFromUser</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.getHook.html">repos.getHook</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.getHooks.html">repos.getHooks</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.getKey.html">repos.getKey</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.getKeys.html">repos.getKeys</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.getLanguages.html">repos.getLanguages</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.getReadme.html">repos.getReadme</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.getStargazers.html">repos.getStargazers</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.getStarred.html">repos.getStarred</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.getStarredFromUser.html">repos.getStarredFromUser</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.getStarring.html">repos.getStarring</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.getTags.html">repos.getTags</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.getTeams.html">repos.getTeams</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.getWatched.html">repos.getWatched</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.getWatchedFromUser.html">repos.getWatchedFromUser</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.getWatchers.html">repos.getWatchers</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.getWatching.html">repos.getWatching</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.merge.html">repos.merge</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.removeCollaborator.html">repos.removeCollaborator</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.star.html">repos.star</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.testHook.html">repos.testHook</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.unStar.html">repos.unStar</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.unWatch.html">repos.unWatch</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.update.html">repos.update</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.updateCommitComment.html">repos.updateCommitComment</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.updateHook.html">repos.updateHook</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.updateKey.html">repos.updateKey</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-repos.watch.html">repos.watch</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-search.code.html">search.code</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-search.issues.html">search.issues</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-search.repos.html">search.repos</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-search.users.html">search.users</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-statuses.create.html">statuses.create</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-statuses.get.html">statuses.get</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-user.addEmails.html">user.addEmails</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-user.createKey.html">user.createKey</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-user.deleteEmails.html">user.deleteEmails</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-user.deleteKey.html">user.deleteKey</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-user.followUser.html">user.followUser</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-user.get.html">user.get</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-user.getEmails.html">user.getEmails</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-user.getFollowUser.html">user.getFollowUser</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-user.getFollowers.html">user.getFollowers</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-user.getFollowing.html">user.getFollowing</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-user.getFollowingFromUser.html">user.getFollowingFromUser</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-user.getFrom.html">user.getFrom</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-user.getKey.html">user.getKey</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-user.getKeys.html">user.getKeys</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-user.getOrgs.html">user.getOrgs</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-user.unFollowUser.html">user.unFollowUser</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-user.update.html">user.update</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-user.updateKey.html">user.updateKey</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+			</ul>
+		</div>
+	</div>
+
+	<div class="row-fluid">
+
+		
+			<div class="span12">
+				
+				<div id="main">
+					<section>
+    
+<header>
+    
+
+    <h2>gitdata.getTag</h2>
+</header>  
+
+<article>
+    <h3>gitdata.getTag</h3>
+</article>
+
+</section>  
+
+				</div>
+
+				<div class="clearfix"></div>
+				<footer>
+					
+					
+		<span class="jsdoc-message">
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a>
+		on Wed Mar 19 2014 00:16:47 GMT+0100 (CET) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		</span>
+				</footer>
+			</div>
+
+			
+			<br clear="both">
+		</div>
+
+	</div>
+	<script src="scripts/sunlight.js"></script>
+	<script src="scripts/sunlight.javascript.js"></script>
+	<script src="scripts/sunlight-plugin.doclinks.js"></script>
+	<script src="scripts/sunlight-plugin.linenumbers.js"></script>
+	<script src="scripts/sunlight-plugin.menu.js"></script>
+	<script src="scripts/jquery.min.js"></script>
+	<script src="scripts/jquery.scrollTo.js"></script>
+	<script src="scripts/jquery.localScroll.js"></script>
+	<script src="scripts/bootstrap-dropdown.js"></script>
+	<script src="scripts/toc.js"></script>
+
+
+	<script>  Sunlight.highlightAll({lineNumbers:true,  showMenu: true, enableDoclinks :true}); </script>
+
+	<script>
+		$( function () {
+			$( "#toc" ).toc( {
+				selectors   : "h1,h2,h3,h4",
+				showAndHide : false,
+				scrollTo    : 60
+			} );
+			$( "#toc>ul" ).addClass( "nav nav-pills nav-stacked" );
+			$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+
+		} );
+	</script>
+
+	
+	<script>
+		$( function () {
+			$('#main').localScroll({
+				offset: { top: 56 } //offset by the height of your header (give or take a few px, see what works for you)
+			});
+			$( "dt h4.name" ).each( function () {
+				var $this = $( this );
+				var icon = $( "<i/>" ).addClass( "icon-plus-sign" ).addClass( "pull-right" ).addClass( "icon-white" );
+				var dt = $this.parents( "dt" );
+				var children = dt.next( "dd" );
+
+				$this.append( icon ).css( {cursor : "pointer"} );
+				$this.addClass( "member-collapsed" ).addClass( "member" );
+
+				children.hide();
+				$this.toggle( function () {
+					icon.addClass( "icon-minus-sign" ).removeClass( "icon-plus-sign" ).removeClass( "icon-white" );
+					$this.addClass( "member-open" ).removeClass( "member-collapsed" );
+					children.slideDown();
+				}, function () {
+					icon.addClass( "icon-plus-sign" ).removeClass( "icon-minus-sign" ).addClass( "icon-white" );
+					$this.addClass( "member-collapsed" ).removeClass( "member-open" );
+					children.slideUp();
+				} );
+			} );
+		} );
+	</script>
+	
+
+</body>
+</html>

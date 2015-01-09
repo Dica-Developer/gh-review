@@ -1,0 +1,49 @@
+{
+  "name": "github-js",
+  "version": "0.1.0",
+  "description": "NodeJS wrapper for the GitHub API",
+  "author": "Jörg Weber",
+  "contributors": [
+    {
+      "name": "Mike de Boer",
+      "email": "info@mikedeboer.nl"
+    },
+    {
+      "name": "Fabian Jakobs",
+      "email": "fabian@c9.io"
+    }
+  ],
+  "homepage": "",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/JayGray/node-github.git"
+  },
+  "engine": {
+    "node": ">=0.4.0"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-uglify": "^0.6.0",
+    "grunt-jsdoc": "^0.5.7",
+    "grunt-karma": "^0.9.0",
+    "grunt-karma-coveralls": "^2.5.2",
+    "karma": "^0.12.23",
+    "karma-coverage": "^0.2.6",
+    "karma-firefox-launcher": "^0.1.3",
+    "karma-jasmine": "^0.2.2",
+    "karma-story-reporter": "^0.2.2",
+    "load-grunt-tasks": "^0.6.0",
+    "time-grunt": "^1.0.0"
+  },
+  "main": ".",
+  "scripts": {
+    "test": "grunt travis"
+  },
+  "licenses": [
+    {
+      "type": "The MIT License",
+      "url": "http://www.opensource.org/licenses/mit-license.php"
+    }
+  ]
+}

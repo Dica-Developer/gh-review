@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: api/gists.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: api/gists.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/*global define*/
+define(function(){
+    'use strict';
+
+    /**
+     * @exports gists
+     * @memberof Client
+     */
+    var gists = {
+        gists: {}
+    };
+    var handler = function(afterRequest){
+        return function(msg, block, callback) {
+                var self = this;
+                this.client.httpSend(msg, block, function(err, res) {
+                    if (err) {
+                        return self.sendError(err, null, msg, callback);
+                    }
+
+                    var ret;
+                    if (typeof res.headers !== 'undefined' && typeof res.headers['content-type'] !== 'undefined' && res.headers['content-type'].indexOf('text/html') > -1) {
+                        ret = {
+                            data: res.data
+                        };
+                    } else {
+                        try {
+                            ret = res.data && JSON.parse(res.data);
+                        } catch (ex) {
+                            if (callback) {
+                                callback(new Error(ex), res);
+                            }
+                            return;
+                        }
+                    }
+                    ret = afterRequest(ret, res);
+                    if (callback){
+                        callback(null, ret);
+                    }
+                });
+            };
+    };
+
+    var getAllAfterRequest = function(ret, res){
+            ret = ret || {};
+            ret.meta = ret.meta || {};
+            ['x-ratelimit-limit', 'x-ratelimit-remaining', 'x-oauth-scopes', 'link', 'location', 'last-modified', 'etag', 'status'].forEach(function(header) {
+                if (res.headers[header]) {
+                    ret.meta[header] = res.headers[header];
+                }
+            });
+            return ret;
+        };
+    /**
+     *  @function
+     *  @param {Object} msg Object that contains the parameters and their values to be sent to the server.
+     *  @param {Object} [msg.headers] Key/ value pair of request headers to pass along with the HTTP request. Valid headers are: If-Modified-Since, If-None-Match, Cookie, User-Agent
+     *  @param {Number} [msg.page] Page number of the results to fetch. Validation rule: ` ^[0-9]+$ `.
+     *  @param {Number} [msg.per_page] A custom page size up to 100. Default is 30. Validation rule: ` ^[0-9]+$ `.
+     *  @param {Date} [msg.since] Optional string of a timestamp in ISO 8601 format: YYYY-MM-DDTHH:MM:SSZ 
+     *  @param {Function} callback function to call when the request is finished with an error as first argument and result data as second argument.
+     **/
+    gists.gists.getAll = handler(getAllAfterRequest);
+    var getFromUserAfterRequest = function(ret, res){
+            ret = ret || {};
+            ret.meta = ret.meta || {};
+            ['x-ratelimit-limit', 'x-ratelimit-remaining', 'x-oauth-scopes', 'link', 'location', 'last-modified', 'etag', 'status'].forEach(function(header) {
+                if (res.headers[header]) {
+                    ret.meta[header] = res.headers[header];
+                }
+            });
+            return ret;
+        };
+    /**
+     *  @function
+     *  @param {Object} msg Object that contains the parameters and their values to be sent to the server.
+     *  @param {Object} [msg.headers] Key/ value pair of request headers to pass along with the HTTP request. Valid headers are: If-Modified-Since, If-None-Match, Cookie, User-Agent
+     *  @param {String} msg.user 
+     *  @param {Number} [msg.page] Page number of the results to fetch. Validation rule: ` ^[0-9]+$ `.
+     *  @param {Number} [msg.per_page] A custom page size up to 100. Default is 30. Validation rule: ` ^[0-9]+$ `.
+     *  @param {Date} [msg.since] Optional string of a timestamp in ISO 8601 format: YYYY-MM-DDTHH:MM:SSZ 
+     *  @param {Function} callback function to call when the request is finished with an error as first argument and result data as second argument.
+     **/
+    gists.gists.getFromUser = handler(getFromUserAfterRequest);
+    var createAfterRequest = function(ret, res){
+            ret = ret || {};
+            ret.meta = ret.meta || {};
+            ['x-ratelimit-limit', 'x-ratelimit-remaining', 'x-oauth-scopes', 'link', 'location', 'last-modified', 'etag', 'status'].forEach(function(header) {
+                if (res.headers[header]) {
+                    ret.meta[header] = res.headers[header];
+                }
+            });
+            return ret;
+        };
+    /**
+     *  @function
+     *  @param {Object} msg Object that contains the parameters and their values to be sent to the server.
+     *  @param {Object} [msg.headers] Key/ value pair of request headers to pass along with the HTTP request. Valid headers are: If-Modified-Since, If-None-Match, Cookie, User-Agent
+     *  @param {String} [msg.description] 
+     *  @param {Boolean} msg.public 
+     *  @param {Json} msg.files Files that make up this gist. The key of which should be a required string filename and the value another required hash with parameters: 'content' 
+     *  @param {Function} callback function to call when the request is finished with an error as first argument and result data as second argument.
+     **/
+    gists.gists.create = handler(createAfterRequest);
+    var editAfterRequest = function(ret, res){
+            ret = ret || {};
+            ret.meta = ret.meta || {};
+            ['x-ratelimit-limit', 'x-ratelimit-remaining', 'x-oauth-scopes', 'link', 'location', 'last-modified', 'etag', 'status'].forEach(function(header) {
+                if (res.headers[header]) {
+                    ret.meta[header] = res.headers[header];
+                }
+            });
+            return ret;
+        };
+    /**
+     *  @function
+     *  @param {Object} msg Object that contains the parameters and their values to be sent to the server.
+     *  @param {Object} [msg.headers] Key/ value pair of request headers to pass along with the HTTP request. Valid headers are: If-Modified-Since, If-None-Match, Cookie, User-Agent
+     *  @param {String} msg.id 
+     *  @param {String} [msg.description] 
+     *  @param {Json} msg.files Files that make up this gist. The key of which should be a required string filename and the value another required hash with parameters: 'content' 
+     *  @param {Function} callback function to call when the request is finished with an error as first argument and result data as second argument.
+     **/
+    gists.gists.edit = handler(editAfterRequest);
+    var publicAfterRequest = function(ret, res){
+            ret = ret || {};
+            ret.meta = ret.meta || {};
+            ['x-ratelimit-limit', 'x-ratelimit-remaining', 'x-oauth-scopes', 'link', 'location', 'last-modified', 'etag', 'status'].forEach(function(header) {
+                if (res.headers[header]) {
+                    ret.meta[header] = res.headers[header];
+                }
+            });
+            return ret;
+        };
+    /**
+     *  @function
+     *  @param {Object} msg Object that contains the parameters and their values to be sent to the server.
+     *  @param {Object} [msg.headers] Key/ value pair of request headers to pass along with the HTTP request. Valid headers are: If-Modified-Since, If-None-Match, Cookie, User-Agent
+     *  @param {Date} [msg.since] Optional string of a timestamp in ISO 8601 format: YYYY-MM-DDTHH:MM:SSZ 
+     *  @param {Function} callback function to call when the request is finished with an error as first argument and result data as second argument.
+     **/
+    gists.gists.public = handler(publicAfterRequest);
+    var starredAfterRequest = function(ret, res){
+            ret = ret || {};
+            ret.meta = ret.meta || {};
+            ['x-ratelimit-limit', 'x-ratelimit-remaining', 'x-oauth-scopes', 'link', 'location', 'last-modified', 'etag', 'status'].forEach(function(header) {
+                if (res.headers[header]) {
+                    ret.meta[header] = res.headers[header];
+                }
+            });
+            return ret;
+        };
+    /**
+     *  @function
+     *  @param {Object} msg Object that contains the parameters and their values to be sent to the server.
+     *  @param {Object} [msg.headers] Key/ value pair of request headers to pass along with the HTTP request. Valid headers are: If-Modified-Since, If-None-Match, Cookie, User-Agent
+     *  @param {Date} [msg.since] Optional string of a timestamp in ISO 8601 format: YYYY-MM-DDTHH:MM:SSZ 
+     *  @param {Function} callback function to call when the request is finished with an error as first argument and result data as second argument.
+     **/
+    gists.gists.starred = handler(starredAfterRequest);
+    var getAfterRequest = function(ret, res){
+            ret = ret || {};
+            ret.meta = ret.meta || {};
+            ['x-ratelimit-limit', 'x-ratelimit-remaining', 'x-oauth-scopes', 'link', 'location', 'last-modified', 'etag', 'status'].forEach(function(header) {
+                if (res.headers[header]) {
+                    ret.meta[header] = res.headers[header];
+                }
+            });
+            return ret;
+        };
+    /**
+     *  @function
+     *  @param {Object} msg Object that contains the parameters and their values to be sent to the server.
+     *  @param {Object} [msg.headers] Key/ value pair of request headers to pass along with the HTTP request. Valid headers are: If-Modified-Since, If-None-Match, Cookie, User-Agent
+     *  @param {String} msg.id 
+     *  @param {Function} callback function to call when the request is finished with an error as first argument and result data as second argument.
+     **/
+    gists.gists.get = handler(getAfterRequest);
+    var starAfterRequest = function(ret, res){
+            ret = ret || {};
+            ret.meta = ret.meta || {};
+            ['x-ratelimit-limit', 'x-ratelimit-remaining', 'x-oauth-scopes', 'link', 'location', 'last-modified', 'etag', 'status'].forEach(function(header) {
+                if (res.headers[header]) {
+                    ret.meta[header] = res.headers[header];
+                }
+            });
+            return ret;
+        };
+    /**
+     *  @function
+     *  @param {Object} msg Object that contains the parameters and their values to be sent to the server.
+     *  @param {Object} [msg.headers] Key/ value pair of request headers to pass along with the HTTP request. Valid headers are: If-Modified-Since, If-None-Match, Cookie, User-Agent
+     *  @param {String} msg.id 
+     *  @param {Function} callback function to call when the request is finished with an error as first argument and result data as second argument.
+     **/
+    gists.gists.star = handler(starAfterRequest);
+    var deleteStarAfterRequest = function(ret, res){
+            ret = ret || {};
+            ret.meta = ret.meta || {};
+            ['x-ratelimit-limit', 'x-ratelimit-remaining', 'x-oauth-scopes', 'link', 'location', 'last-modified', 'etag', 'status'].forEach(function(header) {
+                if (res.headers[header]) {
+                    ret.meta[header] = res.headers[header];
+                }
+            });
+            return ret;
+        };
+    /**
+     *  @function
+     *  @param {Object} msg Object that contains the parameters and their values to be sent to the server.
+     *  @param {Object} [msg.headers] Key/ value pair of request headers to pass along with the HTTP request. Valid headers are: If-Modified-Since, If-None-Match, Cookie, User-Agent
+     *  @param {String} msg.id 
+     *  @param {Function} callback function to call when the request is finished with an error as first argument and result data as second argument.
+     **/
+    gists.gists.deleteStar = handler(deleteStarAfterRequest);
+    var checkStarAfterRequest = function(ret, res){
+            ret = ret || {};
+            ret.meta = ret.meta || {};
+            ['x-ratelimit-limit', 'x-ratelimit-remaining', 'x-oauth-scopes', 'link', 'location', 'last-modified', 'etag', 'status'].forEach(function(header) {
+                if (res.headers[header]) {
+                    ret.meta[header] = res.headers[header];
+                }
+            });
+            return ret;
+        };
+    /**
+     *  @function
+     *  @param {Object} msg Object that contains the parameters and their values to be sent to the server.
+     *  @param {Object} [msg.headers] Key/ value pair of request headers to pass along with the HTTP request. Valid headers are: If-Modified-Since, If-None-Match, Cookie, User-Agent
+     *  @param {String} msg.id 
+     *  @param {Function} callback function to call when the request is finished with an error as first argument and result data as second argument.
+     **/
+    gists.gists.checkStar = handler(checkStarAfterRequest);
+    var forkAfterRequest = function(ret, res){
+            ret = ret || {};
+            ret.meta = ret.meta || {};
+            ['x-ratelimit-limit', 'x-ratelimit-remaining', 'x-oauth-scopes', 'link', 'location', 'last-modified', 'etag', 'status'].forEach(function(header) {
+                if (res.headers[header]) {
+                    ret.meta[header] = res.headers[header];
+                }
+            });
+            return ret;
+        };
+    /**
+     *  @function
+     *  @param {Object} msg Object that contains the parameters and their values to be sent to the server.
+     *  @param {Object} [msg.headers] Key/ value pair of request headers to pass along with the HTTP request. Valid headers are: If-Modified-Since, If-None-Match, Cookie, User-Agent
+     *  @param {String} msg.id 
+     *  @param {Function} callback function to call when the request is finished with an error as first argument and result data as second argument.
+     **/
+    gists.gists.fork = handler(forkAfterRequest);
+    var deleteAfterRequest = function(ret, res){
+            ret = ret || {};
+            ret.meta = ret.meta || {};
+            ['x-ratelimit-limit', 'x-ratelimit-remaining', 'x-oauth-scopes', 'link', 'location', 'last-modified', 'etag', 'status'].forEach(function(header) {
+                if (res.headers[header]) {
+                    ret.meta[header] = res.headers[header];
+                }
+            });
+            return ret;
+        };
+    /**
+     *  @function
+     *  @param {Object} msg Object that contains the parameters and their values to be sent to the server.
+     *  @param {Object} [msg.headers] Key/ value pair of request headers to pass along with the HTTP request. Valid headers are: If-Modified-Since, If-None-Match, Cookie, User-Agent
+     *  @param {String} msg.id 
+     *  @param {Function} callback function to call when the request is finished with an error as first argument and result data as second argument.
+     **/
+    gists.gists.delete = handler(deleteAfterRequest);
+    var getCommentsAfterRequest = function(ret, res){
+            ret = ret || {};
+            ret.meta = ret.meta || {};
+            ['x-ratelimit-limit', 'x-ratelimit-remaining', 'x-oauth-scopes', 'link', 'location', 'last-modified', 'etag', 'status'].forEach(function(header) {
+                if (res.headers[header]) {
+                    ret.meta[header] = res.headers[header];
+                }
+            });
+            return ret;
+        };
+    /**
+     *  @function
+     *  @param {Object} msg Object that contains the parameters and their values to be sent to the server.
+     *  @param {Object} [msg.headers] Key/ value pair of request headers to pass along with the HTTP request. Valid headers are: If-Modified-Since, If-None-Match, Cookie, User-Agent
+     *  @param {String} msg.gist_id 
+     *  @param {Function} callback function to call when the request is finished with an error as first argument and result data as second argument.
+     **/
+    gists.gists.getComments = handler(getCommentsAfterRequest);
+    var getCommentAfterRequest = function(ret, res){
+            ret = ret || {};
+            ret.meta = ret.meta || {};
+            ['x-ratelimit-limit', 'x-ratelimit-remaining', 'x-oauth-scopes', 'link', 'location', 'last-modified', 'etag', 'status'].forEach(function(header) {
+                if (res.headers[header]) {
+                    ret.meta[header] = res.headers[header];
+                }
+            });
+            return ret;
+        };
+    /**
+     *  @function
+     *  @param {Object} msg Object that contains the parameters and their values to be sent to the server.
+     *  @param {Object} [msg.headers] Key/ value pair of request headers to pass along with the HTTP request. Valid headers are: If-Modified-Since, If-None-Match, Cookie, User-Agent
+     *  @param {String} msg.gist_id 
+     *  @param {String} msg.id 
+     *  @param {Function} callback function to call when the request is finished with an error as first argument and result data as second argument.
+     **/
+    gists.gists.getComment = handler(getCommentAfterRequest);
+    var createCommentAfterRequest = function(ret, res){
+            ret = ret || {};
+            ret.meta = ret.meta || {};
+            ['x-ratelimit-limit', 'x-ratelimit-remaining', 'x-oauth-scopes', 'link', 'location', 'last-modified', 'etag', 'status'].forEach(function(header) {
+                if (res.headers[header]) {
+                    ret.meta[header] = res.headers[header];
+                }
+            });
+            return ret;
+        };
+    /**
+     *  @function
+     *  @param {Object} msg Object that contains the parameters and their values to be sent to the server.
+     *  @param {Object} [msg.headers] Key/ value pair of request headers to pass along with the HTTP request. Valid headers are: If-Modified-Since, If-None-Match, Cookie, User-Agent
+     *  @param {String} msg.gist_id 
+     *  @param {String} msg.body 
+     *  @param {Function} callback function to call when the request is finished with an error as first argument and result data as second argument.
+     **/
+    gists.gists.createComment = handler(createCommentAfterRequest);
+    var editCommentAfterRequest = function(ret, res){
+            ret = ret || {};
+            ret.meta = ret.meta || {};
+            ['x-ratelimit-limit', 'x-ratelimit-remaining', 'x-oauth-scopes', 'link', 'location', 'last-modified', 'etag', 'status'].forEach(function(header) {
+                if (res.headers[header]) {
+                    ret.meta[header] = res.headers[header];
+                }
+            });
+            return ret;
+        };
+    /**
+     *  @function
+     *  @param {Object} msg Object that contains the parameters and their values to be sent to the server.
+     *  @param {Object} [msg.headers] Key/ value pair of request headers to pass along with the HTTP request. Valid headers are: If-Modified-Since, If-None-Match, Cookie, User-Agent
+     *  @param {String} msg.gist_id 
+     *  @param {String} msg.id 
+     *  @param {String} msg.body 
+     *  @param {Function} callback function to call when the request is finished with an error as first argument and result data as second argument.
+     **/
+    gists.gists.editComment = handler(editCommentAfterRequest);
+    var deleteCommentAfterRequest = function(ret, res){
+            ret = ret || {};
+            ret.meta = ret.meta || {};
+            ['x-ratelimit-limit', 'x-ratelimit-remaining', 'x-oauth-scopes', 'link', 'location', 'last-modified', 'etag', 'status'].forEach(function(header) {
+                if (res.headers[header]) {
+                    ret.meta[header] = res.headers[header];
+                }
+            });
+            return ret;
+        };
+    /**
+     *  @function
+     *  @param {Object} msg Object that contains the parameters and their values to be sent to the server.
+     *  @param {Object} [msg.headers] Key/ value pair of request headers to pass along with the HTTP request. Valid headers are: If-Modified-Since, If-None-Match, Cookie, User-Agent
+     *  @param {String} msg.gist_id 
+     *  @param {String} msg.id 
+     *  @param {Function} callback function to call when the request is finished with an error as first argument and result data as second argument.
+     **/
+    gists.gists.deleteComment = handler(deleteCommentAfterRequest);
+
+    return gists;
+});
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="authorization.html">authorization</a></li><li><a href="events.html">events</a></li><li><a href="gists.html">gists</a></li><li><a href="gitdata.html">gitdata</a></li><li><a href="issues.html">issues</a></li><li><a href="markdown.html">markdown</a></li><li><a href="orgs.html">orgs</a></li><li><a href="pullRequests.html">pullRequests</a></li><li><a href="repos.html">repos</a></li><li><a href="search.html">search</a></li><li><a href="statuses.html">statuses</a></li><li><a href="user.html">user</a></li></ul><h3>Classes</h3><ul><li><a href="Client.html">Client</a></li><li><a href="HttpError.html">HttpError</a></li><li><a href="Util.html">Util</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Sun Mar 16 2014 22:12:03 GMT+0100 (CET)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

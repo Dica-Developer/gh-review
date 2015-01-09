@@ -1,0 +1,13 @@
+{
+  "name": "github-js",
+  "homepage": "https://github.com/Dica-Developer/github-js",
+  "_release": "a82b77c7cf",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "a82b77c7cf379c53e6c3aa36f4b055ddec02a16c"
+  },
+  "_source": "https://github.com/Dica-Developer/github-js.git",
+  "_target": "*",
+  "_originalSource": "https://github.com/Dica-Developer/github-js.git"
+}

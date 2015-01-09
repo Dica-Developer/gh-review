@@ -1,0 +1,31 @@
+{
+  "name": "dcjs",
+  "main": [
+    "dc.js",
+    "dc.css"
+  ],
+  "ignore": [
+    ".gitignore",
+    ".travis.yml",
+    "build.xml",
+    "globals.js",
+    "index.js",
+    "make",
+    "package.json",
+    "test",
+    "src"
+  ],
+  "dependencies": {
+    "d3": "3.x",
+    "crossfilter": "1.x"
+  },
+  "homepage": "https://github.com/dc-js/dc.js",
+  "_release": "289591d83c",
+  "_resolution": {
+    "type": "commit",
+    "commit": "289591d83c89c351440c11f10f1bafd964dcdafa"
+  },
+  "_source": "https://github.com/dc-js/dc.js.git",
+  "_target": "289591d83c89c351440c11f10f1bafd964dcdafa",
+  "_originalSource": "https://github.com/dc-js/dc.js.git"
+}

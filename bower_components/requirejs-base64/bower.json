@@ -1,0 +1,11 @@
+{
+  "name": "requirejs-base64",
+  "version": "1.0.0",
+  "ignore": [
+  ],
+  "main": "./base64.js",
+  "dependencies": {
+  },
+  "resolutions": {
+  }
+}

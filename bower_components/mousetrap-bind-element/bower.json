@@ -1,0 +1,21 @@
+{
+  "name": "mousetrap-bind-element",
+  "version": "1.0.0",
+  "description": "A plugin for the Moustrap library to add a method for binding actions to a specific DOMElement",
+  "main": "mousetrap-bind-element.js",
+  "dependencies": {
+    "mousetrap": "~1.4.5"
+  },
+  "author": "Stephen Golub",
+  "keywords": [
+    "keyboard",
+    "shortcuts",
+    "events",
+    "elements"
+  ],
+  "gitHead": "6a73315fce091bb385b3115bd4835569acfbdfa7",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nickburns2006/mousetrap-bind-element"
+  }
+}
