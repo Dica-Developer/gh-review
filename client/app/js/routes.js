@@ -32,18 +32,6 @@
             templateUrl: 'templates/welcome.html',
             controller: 'WelcomeController'
           })
-          .state('addFilter', {
-            url: '/filter/add',
-            templateUrl: 'templates/filter.html',
-            controller: 'FilterController',
-            onEnter: ['$state', 'authenticated', checkIfAuthenticated]
-          })
-          .state('editFilter', {
-            url: '/filter/edit/{filterId}',
-            templateUrl: 'templates/filter.html',
-            controller: 'FilterController',
-            onEnter: ['$state', 'authenticated', checkIfAuthenticated]
-          })
           .state('modules', {
             url: '/filter/modules',
             templateUrl: 'templates/moduleFilter.html',
@@ -55,15 +43,6 @@
                   return getAllAvailableRepos();
                 }
               ]
-            }
-          })
-          .state('commitsByFilter', {
-            url: '/filter/{filterId}/commits',
-            templateUrl: 'templates/filter.html',
-            controller: 'FilterController',
-            onEnter: ['$state', 'authenticated', checkIfAuthenticated],
-            resolve: {
-              commitsApproved: 'getCommitApproved'
             }
           })
           .state('commitBySha', {
