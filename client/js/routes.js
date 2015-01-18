@@ -32,12 +32,6 @@
             templateUrl: 'templates/welcome.html',
             controller: 'WelcomeController'
           })
-          .state('whoami', {
-            url: '/whoami',
-            templateUrl: 'templates/whoami.html',
-            controller: 'WhoAmIController',
-            onEnter: ['$state', 'authenticated', checkIfAuthenticated]
-          })
           .state('listFilter', {
             url: '/filter/list',
             templateUrl: 'templates/filterList.html',
