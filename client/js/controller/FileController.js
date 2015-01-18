@@ -172,7 +172,7 @@
                 });
                 if (file && _.has(file, 'patch')) {
                   commitHistory.unshift(commitWithDiff.sha);
-                  var intLines = _.str.lines(file.patch);
+                  var intLines = file.patch.split(/\r?\n/);
                   var lineNumberInPatch = 0;
                   _.each(intLines, function (line) {
                     if (chunk.isMatchingChunkHeading(line)) {
