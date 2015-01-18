@@ -29,6 +29,8 @@
     "xit": true,
     "spyOn": true,
     "jasmine": true,
-    "angular": true
+    "angular": true,
+    "module": true,
+    "inject": true
   }
 }
