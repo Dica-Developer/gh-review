@@ -1,0 +1,105 @@
+<div class="row">
+    <div class="col-sm-12">
+        <ol class="breadcrumb">
+            <li><a ui-sref="listFilter()">filter</a></li>
+            <li>commit</li>
+            <li>{{commit.sha}}</li>
+        </ol>
+    </div>
+</div>
+
+<div class="row" ng-cloak>
+    <div class="col-sm-12">
+       <commit-header commit="commit"></commit-header>
+    </div>
+</div>
+
+<div class="row" ng-cloak>
+    <div class="col-sm-12">
+        <small> Showing <strong> {{files.length}} changed {{files.length === 1 ? 'file' : 'files'}}</strong> with <strong>{{commit.additions}} additions</strong> and <strong>{{commit.deletions}} deletions</strong></small>
+    </div>
+</div>
+
+<div class="row" id="diff-view" ng-cloak>
+    <div class="col-sm-12">
+
+        <div ng-repeat="file in files" class="panel panel-default">
+            <div class="panel-heading" ng-init="file.isClosed = ($index >= 5 || file.status === 'removed' || file.changes === 0)">
+                File: <a ui-sref="filterModuleFile({user: commit.owner, repo: commit.repository, sha: commit.sha, path: file.name, ref: file.blobSha})">{{file.name}}</a>
+                <div class="pull-right">
+                    <span class="label label-primary">
+                        <span class="glyphicon glyphicon-status"></span>{{file.status}}
+                    </span>
+                    <span class="label label-success" ng-if="file.additions > 0">
+                        <span class="glyphicon glyphicon-plus"></span> {{file.additions}}
+                    </span>
+                    <span class="label label-danger" ng-if="file.deletions > 0">
+                        <span class="glyphicon glyphicon-minus"></span> {{file.deletions}}
+                    </span>
+                    <span class="label label-info">
+                        <span class="glyphicon glyphicon-transfer"></span> {{file.changes}}
+                    </span>
+                    <span class="label label-primary" ng-if="file.commentCount">
+                        <span class="glyphicon glyphicon-comment" ></span> {{file.commentCount}}
+                    </span>
+                    <span class="label label-default collapse-expand-label" ng-click="file.isClosed = file.isClosed ? false : true" ng-if="file.changes > 0">
+                        <span class="glyphicon glyphicon" ng-class="{'glyphicon-save': file.isClosed, 'glyphicon-open': !file.isClosed}"></span> {{file.isClosed ? 'Expand&nbsp;&nbsp;': 'Collapse'}}
+                    </span>
+                </div>
+            </div>
+            <div class="table-wrapper" ng-if="!file.isClosed">
+                <div class="div-table">
+                    <div ng-repeat="line in file.lines.lines" ng-model="line">
+                        <div class="div-table-row" ng-class="line.format" ng-dblclick="addComment(line)">
+                            <div class="div-table-cell"></div>
+                            <div class="div-table-cell lineNr">{{line.lineNrLeft}}</div>
+                            <div class="div-table-cell lineNr">{{line.lineNrRight}}</div>
+                            <div class="div-table-cell">
+                                <pre>{{line.text}}</pre>
+                            </div>
+                        </div>
+                        <div class="comments-wrapper" ng-if="line.comments.length > 0">
+                            <div class="comments div-table-row" ng-repeat="comment in line.comments">
+                                <div class="div-table-cell"></div>
+                                <div class="div-table-cell lineNr"></div>
+                                <div class="div-table-cell lineNr"></div>
+                                <div class="lineComment panel panel-default" content="comment" data-mode="comment.mode" data-cancel="cancelCreateComment()" data-delete="removeComment(line, comment)" comment></div>
+                            </div>
+                            <div class="comments div-table-row">
+                                <div class="div-table-cell"></div>
+                                <div class="div-table-cell lineNr"></div>
+                                <div class="div-table-cell lineNr"></div>
+                                <button type="button" class="btn btn-info btn-sm" ng-click="addComment(line)">Add comment</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" ng-if="comments.commitComments.length > 0" ng-cloak>
+    <div class="col-sm-12">
+        <table class="table-responsive table table-condensed commit-comments">
+            <tr ng-repeat="comment in comments.commitComments" ng-if="isCommentNotApprovalComment(comment.id)" >
+                <td class="comment-holder" >
+                    <div class="lineComment panel panel-default" content="comment" data-cancel="cancelCreateComment()"  comment></div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="row" ng-cloak>
+    <div class="col-sm-12">
+
+        <div class="pull-left">
+            <button type="button" class="btn btn-info" ng-click="addCommitComment()">Add Comment</button>
+        </div>
+        <div class="pull-right">
+            <button ng-if="!loggedInUserIsApprover" type="button" class="btn btn-success" ng-click="approveCommit()">Approve Commit</button>
+            <button ng-if="loggedInUserIsApprover" type="button" class="btn btn-danger" ng-click="unapproveCommit()">Unapprove Commit</button>
+        </div>
+    </div>
+</div>

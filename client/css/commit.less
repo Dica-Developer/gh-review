@@ -1,0 +1,43 @@
+//commit view
+commit-header {
+  .panel-title {
+    font-size: 14px;
+  }
+  .accordion-toggle {
+    cursor: pointer;
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}
+
+.commit-loader {
+  position: absolute;
+  background:  #ffffff url("../images/octocat-spinner-32.gif") no-repeat 16px center;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  .commit-loader-message {
+    font-size: 16px;
+    padding: 28px 20px 20px 60px;
+  }
+}
+
+#diff-view {
+  .collapse-expand-label {
+    cursor: pointer;
+  }
+}
+
+.pull-right {
+  span:first-child {
+    display: inline-block;
+  }
+  span:nth-last-child(2) {
+    display: inline-block;
+  }
+  span:last-child {
+    display: inline-block;
+  }
+}

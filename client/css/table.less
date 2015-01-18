@@ -1,0 +1,205 @@
+.table-row-variant(added; @state-success-bg;);
+.table-row-variant(deleted; @state-danger-bg;);
+.table-row-variant(chunk-header; @state-info-bg;);
+
+table {
+  &.commit-comments {
+    border: none;
+
+    tr {
+      td {
+        border-top: none;
+      }
+    }
+  }
+  &.comments {
+    tr {
+      td {
+        padding: 0;
+        border: none;
+        border-right: 1px solid #DDDDDD;
+        &.lineNr {
+          font-family: DroidSansMono;
+        }
+        &:last-child {
+          border: none;
+        }
+        &.comment-holder {
+          white-space: normal !important;
+        }
+        .panel {
+          margin: 5px;
+        }
+      }
+    }
+    pre {
+      font-family: DroidSansMono;
+      background: none;
+      padding: 0;
+      margin: 0;
+      border: none;
+      border-radius: 0;
+      white-space: pre;
+    }
+  }
+
+  &.blame {
+    tr {
+      &.highlight {
+        td {
+          background-color: #f5f5f5;
+        }
+      }
+    }
+  }
+}
+
+.table-responsive {
+  width: 100%;
+  margin-bottom: 15px;
+  overflow-y: hidden;
+  overflow-x: scroll;
+  border: 1px solid @table-border-color;
+
+  // Tighten up spacing and give a background color
+  > .table {
+    margin-bottom: 0;
+    background-color: #fff;
+
+    // Ensure the content doesn't wrap
+    > thead,
+    > tbody,
+    > tfoot {
+      > tr {
+        > th,
+        > td {
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+
+  // Special overrides for the bordered tables
+  > .table-bordered {
+    border: 0;
+
+    // Nuke the appropriate borders so that the parent can handle them
+    > thead,
+    > tbody,
+    > tfoot {
+      > tr {
+        > th:first-child,
+        > td:first-child {
+          border-left: 0;
+        }
+        > th:last-child,
+        > td:last-child {
+          border-right: 0;
+        }
+      }
+      > tr:last-child {
+        > th,
+        > td {
+          border-bottom: 0;
+        }
+      }
+    }
+  }
+}
+
+.table-wrapper {
+  /*overflow-y: scroll;*/
+
+  .div-table {
+    display: table;
+    width: 100%;
+    border: 1px solid @gray-lighter;
+    border-radius: 3px;
+
+    .comments-wrapper {
+      border-style: solid;
+      border-color: #ddd;
+      border-width: 1px 0;
+      box-shadow: inset 0px 0px 10px 0px #ddd;
+      padding: 10px 0;
+    }
+
+    .div-table-row {
+      display: table-row;
+      width: 100%;
+      clear: both;
+      &.added {
+        &:hover {
+          .div-table-cell {
+            background-color: @gray-lighter;
+          }
+        }
+        .div-table-cell {
+          background-color: @state-success-bg;
+        }
+      }
+      &.deleted {
+        &:hover {
+          .div-table-cell {
+            background-color: @gray-lighter;
+          }
+        }
+        .div-table-cell {
+          background-color: @state-danger-bg;
+        }
+      }
+      &.chunk-header {
+        &:hover {
+          .div-table-cell {
+            background-color: @state-info-bg;
+          }
+        }
+        .div-table-cell {
+          background-color: @state-info-bg;
+        }
+      }
+    }
+    .div-table-cell {
+      display: table-cell;
+      width: auto;
+      border-right: 1px solid @gray-lighter;
+      padding: 0 3px;
+      &:not(.lineComment),  &:not(button){
+        font-family: DroidSansMono;
+      }
+      &.lineNr {
+        min-width: 30px;
+      }
+
+      &:last-child {
+        width: 100%;
+        border: none;
+      }
+
+      pre {
+        font-family: DroidSansMono;
+        background: 0;
+        padding: 0;
+        margin: 0;
+        border: 0;
+        border-radius: 0;
+        white-space: pre;
+      }
+    }
+    .comments {
+      .div-table-cell {
+        border: none;
+      }
+      .lineComment {
+        box-shadow: 0px 0px 20px 0px #ddd;
+        max-width: @container-desktop;
+        min-width: @container-desktop;
+
+        textarea {
+          margin-bottom: 10px;
+        }
+      }
+    }
+
+  }
+}
