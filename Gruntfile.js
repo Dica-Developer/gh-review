@@ -101,20 +101,29 @@ module.exports = function (grunt) {
       }
     },
     watch: {
-      options: {
-        nospawn: true
+      injectJS: {
+        files: ['{.tmp,<%= config.app %>}/{app,components}/**/*.js',
+          '!{.tmp,<%= config.app %>}/app/app.js',
+          '!{.tmp,<%= config.app %>}/app/js/worker/**/*.js',
+          '!{.tmp,<%= config.app %>}/{app,components}/**/*.spec.js',
+          '!{.tmp,<%= config.app %>}/{app,components}/**/*.mock.js'],
+        tasks: ['injector:scripts']
       },
-      dev: {
+      gruntfile: {
+        files: ['Gruntfile.js']
+      },
+      livereload: {
         files: [
-          '<%= config.app %>/css/*',
-          '<%= config.app %>/js/**/*',
-          '<%= config.app %>/worker/**/*',
-          '<%= config.app %>/*.html',
-          '<%= config.app %>/templates/**/*',
-          '<%= config.app %>/oauth/**/*',
-          '!<%= config.app %>/bower_components/*'
+          '{.tmp,<%= config.app %>}/{app,components}/**/*.css',
+          '{.tmp,<%= config.app %>}/{app,components}/**/*.html',
+          '{.tmp,<%= config.app %>}/{app,components}/**/*.js',
+          '!{.tmp,<%= config.app %>}{app,components}/**/*.spec.js',
+          '!{.tmp,<%= config.app %>}/{app,components}/**/*.mock.js',
+          '<%= config.app %>/assets/images/{,*//*}*.{png,jpg,jpeg,gif,webp,svg}'
         ],
-        tasks: ['devWatch']
+        options: {
+          livereload: true
+        }
       }
     },
     clean: {
@@ -160,9 +169,9 @@ module.exports = function (grunt) {
         },
         files: {
           '<%= config.app %>/index.html': [
-            ['{.tmp,<%= config.app %>}/{app,components,js}/**/*.js',
-              '!{.tmp,<%= config.app %>}/js/app.js',
-              '!{.tmp,<%= config.app %>}/js/worker/**/*.js',
+            ['{.tmp,<%= config.app %>}/{app,components}/**/*.js',
+              '!{.tmp,<%= config.app %>}/app/app.js',
+              '!{.tmp,<%= config.app %>}/app/js/worker/**/*.js',
               '!{.tmp,<%= config.app %>}/{app,components}/**/*.spec.js',
               '!{.tmp,<%= config.app %>}/{app,components}/**/*.mock.js']
           ]
@@ -173,7 +182,7 @@ module.exports = function (grunt) {
       options: {
         jshintrc: '.jshintrc'
       },
-      files: '<%= config.app %>/js/{,*/}*.js'
+      files: '<%= config.app %>/{app,components,js}/**/*.js'
     },
     less: {
       dev: {
@@ -385,7 +394,7 @@ module.exports = function (grunt) {
     'copy:dev',
     'less:dev',
     'connect:dev',
-    'watch:dev'
+    'watch'
   ]);
 
   grunt.registerTask('e2e', function(platform){
