@@ -145,6 +145,30 @@ module.exports = function (grunt) {
         ignorePath: '<%= config.app %>/'
       }
     },
+    injector: {
+      options: {},
+      // Inject application script files into index.html (doesn't include bower)
+      scripts: {
+        options: {
+          transform: function (filePath) {
+            filePath = filePath.replace('/client/', '');
+            filePath = filePath.replace('/.tmp/', '');
+            return '<script src="' + filePath + '"></script>';
+          },
+          starttag: '<!-- injector:js -->',
+          endtag: '<!-- endinjector -->'
+        },
+        files: {
+          '<%= config.app %>/index.html': [
+            ['{.tmp,<%= config.app %>}/{app,components,js}/**/*.js',
+              '!{.tmp,<%= config.app %>}/js/app.js',
+              '!{.tmp,<%= config.app %>}/js/worker/**/*.js',
+              '!{.tmp,<%= config.app %>}/{app,components}/**/*.spec.js',
+              '!{.tmp,<%= config.app %>}/{app,components}/**/*.mock.js']
+          ]
+        }
+      }
+    },
     jshint: {
       options: {
         jshintrc: '.jshintrc'
