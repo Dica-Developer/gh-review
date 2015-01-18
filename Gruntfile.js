@@ -7,7 +7,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-karma-coveralls');
 
   var config = {
-    app: 'app',
+    app: 'client',
     dev: 'dev',
     dist: 'dist',
     test: 'test',
@@ -227,12 +227,12 @@ module.exports = function (grunt) {
     },
     useminPrepare: {
       app: {
-        src: 'app/index.html'
+        src: '<%= config.app %>/index.html'
       },
       oauth: {
-        src: 'app/oauth/index.html',
+        src: '<%= config.app %>/oauth/index.html',
         options: {
-          root: 'app/oauth',
+          root: '<%= config.app %>/oauth',
           dest: 'dist/oauth'
         }
       }
@@ -269,7 +269,7 @@ module.exports = function (grunt) {
     var processedTmpl = grunt.template.process(tmpl, {
       data: options
     });
-    grunt.file.write('app/js/options.js', processedTmpl);
+    grunt.file.write('client/js/options.js', processedTmpl);
   });
 
   grunt.registerTask('checkoutWebsite', function () {
