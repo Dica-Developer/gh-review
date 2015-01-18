@@ -293,7 +293,7 @@
         var repo = this.getRepo();
         var owner = this.getOwner();
         var url = 'https://api.github.com/repos/';
-        if (owner && !_.str.isBlank(owner)) {
+        if (owner && !(/^\s*$/).test(owner)) {
           url += owner + '/';
         }
         url += repo + '/comments';

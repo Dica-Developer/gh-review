@@ -10,7 +10,7 @@
         var files = [];
         var filesLength = 0;
         var addFile = function (file, fileIndex) {
-          var lines = _.str.lines(file.patch);
+          var lines = file.patch.split(/\r?\n/);
           /*jshint camelcase: false*/
           var start = file.blob_url.indexOf('blob/') + 'blob/'.length;
           var shaAndPath = file.blob_url.substr(start);

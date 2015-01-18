@@ -17,7 +17,7 @@
           filePathSplit = filePath.split('.'),
           fileExtension = _.last(filePathSplit),
           colors = {},
-          fileContentSplit = _.str.lines(fileContent),
+          fileContentSplit = fileContent.split(/\r?\n/),
           splicedFileContent = [],
           commitLength = 0,
           alreadyUsedColors = [],
