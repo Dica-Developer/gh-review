@@ -37,24 +37,6 @@
               ]
             }
           })
-          .state('commitBySha', {
-            url: '/{user}/{repo}/commit/{sha}',
-            templateUrl: 'templates/commit.html',
-            controller: 'CommitController',
-            onEnter: ['$state', 'authenticated', checkIfAuthenticated],
-            resolve: {
-              commitsAndComments: ['$q', '$stateParams', 'commentProviderService', 'commitProviderService',
-                function ($q, $stateParams, commentProviderService, commitProviderService) {
-                  return $q.all([commitProviderService.getPreparedCommit($stateParams), commentProviderService.getCommentsForCommit($stateParams)]);
-                }
-              ],
-              loggedInUser: ['$q', 'githubUserData',
-                function ($q, githubUserData) {
-                  return $q.all(githubUserData.get());
-                }
-              ]
-            }
-          })
           .state('filterModuleFile', {
             url: '/{user}/{repo}/blob/{sha}/{path:.*}',
             templateUrl: 'templates/file.html',
