@@ -255,23 +255,23 @@
         commits.byPath(msg)
           .then(startAnnotateLines)
           .then(
-            //Success
-            function () {
-              $scope.splicedFileContent = splicedFileContent;
-              //Todo done message
-              $scope.statusMessage = '';
-              $scope.progress = '100';
-            },
-            //Error
-            function () {
-              //Todo error message
-              $scope.statusMessage = 'Error';
-            },
-            //Progress
-            function (progressObject) {
-              $scope.statusMessage = 'Fetching ' + progressObject.alreadyFetched + ' of ' + commitLength + ' commits.';
-              $scope.progress = progressObject.progress;
-            });
+          //Success
+          function () {
+            $scope.splicedFileContent = splicedFileContent;
+            //Todo done message
+            $scope.statusMessage = '';
+            $scope.progress = '100';
+          },
+          //Error
+          function () {
+            //Todo error message
+            $scope.statusMessage = 'Error';
+          },
+          //Progress
+          function (progressObject) {
+            $scope.statusMessage = 'Fetching ' + progressObject.alreadyFetched + ' of ' + commitLength + ' commits.';
+            $scope.progress = progressObject.progress;
+          });
 
       }
     ]);

@@ -36,27 +36,6 @@
                 }
               ]
             }
-          })
-          .state('filterModuleFile', {
-            url: '/{user}/{repo}/blob/{sha}/{path:.*}',
-            templateUrl: 'templates/file.html',
-            controller: 'FileController',
-            onEnter: ['$state', 'authenticated', checkIfAuthenticated],
-            resolve: {
-              /**
-               *
-               * @param $stateParams
-               * @param $stateParams.user
-               * @param $stateParams.repo
-               * @param $stateParams.name
-               * @returns {$q}
-               */
-              fileContent: ['$stateParams', 'getFileContent',
-                function ($stateParams, getFileContent) {
-                  return getFileContent($stateParams);
-                }
-              ]
-            }
           });
       }
     ]);

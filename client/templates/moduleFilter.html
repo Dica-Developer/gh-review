@@ -21,7 +21,7 @@
 <div class="row">
     <div class="col-md-12">
         <ul id="commitList" class="list-group">
-            <a ng-repeat="item in result" ui-sref="filterModuleFile({user: item.repository.owner.login, repo: item.repository.name, sha: 'master', path: item.path})" class="list-group-item">
+            <a ng-repeat="item in result" ui-sref="file({user: item.repository.owner.login, repo: item.repository.name, sha: 'master', path: item.path})" class="list-group-item">
                 {{item.path}}
             </a>
 

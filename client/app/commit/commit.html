@@ -25,7 +25,7 @@
 
         <div ng-repeat="file in files" class="panel panel-default">
             <div class="panel-heading" ng-init="file.isClosed = ($index >= 5 || file.status === 'removed' || file.changes === 0)">
-                File: <a ui-sref="filterModuleFile({user: commit.owner, repo: commit.repository, sha: commit.sha, path: file.name, ref: file.blobSha})">{{file.name}}</a>
+                File: <a ui-sref="file({user: commit.owner, repo: commit.repository, sha: commit.sha, path: file.name, ref: file.blobSha})">{{file.name}}</a>
                 <div class="pull-right">
                     <span class="label label-primary">
                         <span class="glyphicon glyphicon-status"></span>{{file.status}}
