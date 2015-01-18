@@ -10,9 +10,12 @@
     'ngSanitize',
     'ngAnimate',
     'hljs'
-  ]).config(['localStorageServiceProvider',
-    function (localStorageServiceProvider) {
+  ]).config(['localStorageServiceProvider', '$urlRouterProvider',
+    function (localStorageServiceProvider, $urlRouterProvider) {
       localStorageServiceProvider.setPrefix('ghreview');
+
+      $urlRouterProvider
+        .otherwise('/');
     }
   ]);
 }(angular));

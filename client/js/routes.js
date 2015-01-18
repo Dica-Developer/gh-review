@@ -2,8 +2,8 @@
   'use strict';
 
   angular.module('GHReview')
-    .config(['$stateProvider', '$urlRouterProvider',
-      function ($stateProvider, $urlRouterProvider) {
+    .config(['$stateProvider',
+      function ($stateProvider) {
 
         function checkIfAuthenticated($state, authenticated){
           if(!authenticated.get()){
@@ -11,10 +11,6 @@
           }
         }
 
-        $urlRouterProvider.otherwise(function ($injector, $location) {
-          console.warn('Url "' + $location.$$url +'" not found.');
-          return '/';
-        });
         // Now set up the states
         $stateProvider
           .state('index', {
