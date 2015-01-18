@@ -18,11 +18,6 @@
             templateUrl: 'templates/welcome.html',
             controller: 'RootController',
             onEnter: ['$state', 'authenticated', checkIfAuthenticated]
-          })
-          .state('welcome', {
-            url: '/welcome',
-            templateUrl: 'templates/welcome.html',
-            controller: 'WelcomeController'
           });
       }
     ]);

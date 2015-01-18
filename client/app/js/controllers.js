@@ -14,11 +14,5 @@
           $state.go('addFilter');
         }
       }
-    ])
-
-    .controller('WelcomeController', [
-      /* istanbul ignore next */
-      function () {
-      }
     ]);
 }(angular));
