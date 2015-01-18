@@ -139,6 +139,12 @@ module.exports = function (grunt) {
         ]
       }
     },
+    wiredep: {
+      target: {
+        src: '<%= config.app %>/index.html',
+        ignorePath: '<%= config.app %>/'
+      }
+    },
     jshint: {
       options: {
         jshintrc: '.jshintrc'
