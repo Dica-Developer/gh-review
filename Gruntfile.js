@@ -104,7 +104,7 @@ module.exports = function (grunt) {
       injectJS: {
         files: ['{.tmp,<%= config.app %>}/{app,components}/**/*.js',
           '!{.tmp,<%= config.app %>}/app/app.js',
-          '!{.tmp,<%= config.app %>}/app/js/worker/**/*.js',
+          '!{.tmp,<%= config.app %>}/worker/**/*.js',
           '!{.tmp,<%= config.app %>}/{app,components}/**/*.spec.js',
           '!{.tmp,<%= config.app %>}/{app,components}/**/*.mock.js'],
         tasks: ['injector:scripts']
@@ -171,7 +171,7 @@ module.exports = function (grunt) {
           '<%= config.app %>/index.html': [
             ['{.tmp,<%= config.app %>}/{app,components}/**/*.js',
               '!{.tmp,<%= config.app %>}/app/app.js',
-              '!{.tmp,<%= config.app %>}/app/js/worker/**/*.js',
+              '!{.tmp,<%= config.app %>}/worker/**/*.js',
               '!{.tmp,<%= config.app %>}/{app,components}/**/*.spec.js',
               '!{.tmp,<%= config.app %>}/{app,components}/**/*.mock.js']
           ]
@@ -235,7 +235,7 @@ module.exports = function (grunt) {
             expand: true,
             cwd: '<%= config.app %>',
             dest: '<%= config.dist %>',
-            src: ['js/worker/*', 'images/**/*', 'templates/**/*', 'fonts/**/*', '*.html', 'oauth/*.html']
+            src: ['worker/*', 'images/**/*', 'templates/**/*', 'fonts/**/*', '*.html', 'oauth/*.html']
           },
           {
             expand: true,
@@ -357,11 +357,11 @@ module.exports = function (grunt) {
   grunt.registerTask('postProcess', function () {
     var done = this.async();
     var fs = require('fs');
-    var collectorJs = fs.readFileSync('dist/js/worker/collector.js', {
+    var collectorJs = fs.readFileSync('dist/worker/collector.js', {
       encoding: 'UTF8'
     });
     collectorJs = collectorJs.replace('../../bower_components/lodash/dist/lodash.min.js', '../lodash.min.js');
-    fs.writeFileSync('dist/js/worker/collector.js', collectorJs, {
+    fs.writeFileSync('dist/worker/collector.js', collectorJs, {
       encoding: 'UTF8'
     });
     done();

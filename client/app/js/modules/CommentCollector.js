@@ -14,7 +14,7 @@
         var approveComments = void 0;
         var fetchedUrls = [];
         var init = function (accessToken) {
-          worker = new Worker('app/js/worker/collector.js');
+          worker = new Worker('worker/collector.js');
           worker.onmessage = function (event) {
             if ('commentsCollected' === event.data.type) {
               comments = event.data.commentsForRepo;

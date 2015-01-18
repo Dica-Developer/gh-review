@@ -22,7 +22,7 @@ module.exports = function (config) {
       'test/helper/commitMockModule.js'
     ],
     exclude: [
-      'client/app/js/worker/*.*'
+      'client/worker/*.*'
     ],
 
     reporters: ['dots', 'coverage'],

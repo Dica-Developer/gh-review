@@ -79,7 +79,7 @@
         },
         byPath: /*istanbul ignore next*/ function (options) {
           var defer = $q.defer();
-          var commitsPerFileWorker = new Worker('js/worker/commitsOfFile.js');
+          var commitsPerFileWorker = new Worker('worker/commitsOfFile.js');
           commitsPerFileWorker.onmessage = function (event) {
             if ('commits' === event.data.type) {
               commitsPerFileWorker.terminate();
