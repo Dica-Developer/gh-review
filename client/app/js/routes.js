@@ -23,19 +23,6 @@
             url: '/welcome',
             templateUrl: 'templates/welcome.html',
             controller: 'WelcomeController'
-          })
-          .state('modules', {
-            url: '/filter/modules',
-            templateUrl: 'templates/moduleFilter.html',
-            controller: 'ModuleFilterController',
-            onEnter: ['$state', 'authenticated', checkIfAuthenticated],
-            resolve: {
-              allRepos: ['getAllAvailableRepos',
-                function (getAllAvailableRepos) {
-                  return getAllAvailableRepos();
-                }
-              ]
-            }
           });
       }
     ]);
