@@ -32,12 +32,6 @@
             templateUrl: 'templates/welcome.html',
             controller: 'WelcomeController'
           })
-          .state('listFilter', {
-            url: '/filter/list',
-            templateUrl: 'templates/filterList.html',
-            controller: 'FilterListController',
-            onEnter: ['$state', 'authenticated', checkIfAuthenticated]
-          })
           .state('addFilter', {
             url: '/filter/add',
             templateUrl: 'templates/filter.html',
