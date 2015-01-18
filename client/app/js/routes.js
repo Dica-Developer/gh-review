@@ -19,14 +19,6 @@
             controller: 'RootController',
             onEnter: ['$state', 'authenticated', checkIfAuthenticated]
           })
-          .state('login', {
-            url: '/login',
-            controller: 'LoginController'
-          })
-          .state('logout', {
-            url: '/logout',
-            controller: 'LogoutController'
-          })
           .state('welcome', {
             url: '/welcome',
             templateUrl: 'templates/welcome.html',
