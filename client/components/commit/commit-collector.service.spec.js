@@ -1,5 +1,5 @@
 /*global inject*/
-describe('commitCollector', function () {
+describe('Service: commitCollector', function () {
   'use strict';
 
   var commitCollector, github, $rootScope, $interval;
