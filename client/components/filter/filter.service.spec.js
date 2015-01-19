@@ -1,7 +1,6 @@
 /*global _, inject, moment*/
 
-beforeEach(angular.mock.module('GHReview'));
-describe('#Filter', function () {
+describe('Service: Filter', function () {
   'use strict';
 
   var filterOptions = {
@@ -21,6 +20,8 @@ describe('#Filter', function () {
       isSaved: true
     }
   };
+
+  beforeEach(module('GHReview'));
 
   it('Should be defined', inject(['filterProvider',
     function (filterProvider) {
