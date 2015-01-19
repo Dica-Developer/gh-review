@@ -9,7 +9,8 @@
         return {
           restrict: 'E',
           templateUrl: function () {
-            return shouldBeCollabsible ? 'templates/commitHeaderCollabsible.html' : 'templates/commitHeader.html';
+            var tmpBasePath = 'app/directives/commit-header/';
+            return shouldBeCollabsible ? tmpBasePath + 'commit-header-collabsible.html' : tmpBasePath + 'commit-header.html';
           },
           link: function ($scope, element, attr) {
             $scope.$watch(attr.commit, function (value) {
