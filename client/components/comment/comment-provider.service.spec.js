@@ -1,6 +1,8 @@
-/*global inject, _*/
-describe('#commentProvider', function () {
+describe('Service: CommentProvider', function () {
   'use strict';
+
+  beforeEach(module('GHReview'));
+
 
   var commentProvider;
   var githubOptions = {
@@ -19,7 +21,6 @@ describe('#commentProvider', function () {
     'position': null
   };
 
-  beforeEach(angular.mock.module('GHReview'));
 
   beforeEach(inject(function ($injector) {
     commentProvider = $injector.get('commentProvider');
@@ -177,6 +178,6 @@ describe('#commentProvider', function () {
       callback(null, [comment]);
       $rootScope.$apply();
     });
-
   });
+
 });

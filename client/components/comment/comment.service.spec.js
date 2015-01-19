@@ -27,7 +27,7 @@ describe('Service: Comment', function () {
       }
     };
 
-  beforeEach(angular.mock.module('GHReview'));
+  beforeEach(module('GHReview'));
 
   beforeEach(inject(function ($injector) {
     localStorage.setItem('ghreview.accessToken', '44046cd4b4b85afebfe3ccaec13fd8c08cc80aad');
