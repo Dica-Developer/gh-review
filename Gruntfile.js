@@ -104,6 +104,7 @@ module.exports = function (grunt) {
       injectJS: {
         files: ['{.tmp,<%= config.app %>}/{app,components}/**/*.js',
           '!{.tmp,<%= config.app %>}/app/app.js',
+          '!{.tmp,<%= config.app %>}/app/options.js',
           '!{.tmp,<%= config.app %>}/worker/**/*.js',
           '!{.tmp,<%= config.app %>}/{app,components}/**/*.spec.js',
           '!{.tmp,<%= config.app %>}/{app,components}/**/*.mock.js'],
@@ -171,6 +172,7 @@ module.exports = function (grunt) {
           '<%= config.app %>/index.html': [
             ['{.tmp,<%= config.app %>}/{app,components}/**/*.js',
               '!{.tmp,<%= config.app %>}/app/app.js',
+              '!{.tmp,<%= config.app %>}/app/options.js',
               '!{.tmp,<%= config.app %>}/worker/**/*.js',
               '!{.tmp,<%= config.app %>}/{app,components}/**/*.spec.js',
               '!{.tmp,<%= config.app %>}/{app,components}/**/*.mock.js']
@@ -302,7 +304,7 @@ module.exports = function (grunt) {
     var processedTmpl = grunt.template.process(tmpl, {
       data: options
     });
-    grunt.file.write('client/js/options.js', processedTmpl);
+    grunt.file.write('client/app/options.js', processedTmpl);
   });
 
   grunt.registerTask('checkoutWebsite', function () {
