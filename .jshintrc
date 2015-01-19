@@ -16,7 +16,7 @@
   "strict": true,
   "trailing": true,
   "smarttabs": true,
-  "devel": true,
+  "devel": false,
   "browser": true,
   "jasmine": true,
   "globals" : {
