@@ -18,17 +18,10 @@
   "smarttabs": true,
   "devel": true,
   "browser": true,
+  "jasmine": true,
   "globals" : {
     "require": true,
     "define": true,
-    "describe": true,
-    "beforeEach": true,
-    "afterEach": true,
-    "expect": true,
-    "it": true,
-    "xit": true,
-    "spyOn": true,
-    "jasmine": true,
     "angular": true,
     "module": true,
     "inject": true
