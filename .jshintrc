@@ -24,6 +24,7 @@
     "define": true,
     "angular": true,
     "module": true,
-    "inject": true
+    "inject": true,
+    "moment": true
   }
 }
