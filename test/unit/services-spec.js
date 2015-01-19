@@ -236,19 +236,6 @@ describe('#Services', function () {
     });
   });
 
-  describe('.commentProviderService', function () {
-    var commentProviderService, commentProvider;
-
-    beforeEach(inject(function ($injector) {
-      commentProviderService = $injector.get('commentProviderService');
-      commentProvider = $injector.get('commentProvider');
-    }));
-
-    it('Should return commentProvider', function () {
-      expect(commentProviderService).toEqual(commentProvider);
-    });
-  });
-
   describe('.commitProviderService', function () {
     var commitProviderService, commitProvider;
 
