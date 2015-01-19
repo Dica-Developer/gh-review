@@ -5,6 +5,7 @@
     .controller('CommitController', [
       '$scope',
       '$stateParams',
+      '$log',
       '_',
       'commitsAndComments',
       'Comment',
@@ -14,7 +15,7 @@
       'isCommentNotApprovalComment',
       'isCommentApprovalCommentFromUser',
       'events',
-      function ($scope, $stateParams, _, commitsAndComments, Comment, approveCommit, unapproveCommit, loggedInUser, isCommentNotApprovalComment, isCommentApprovalCommentFromUser, events) {
+      function ($scope, $stateParams, $log, _, commitsAndComments, Comment, approveCommit, unapproveCommit, loggedInUser, isCommentNotApprovalComment, isCommentApprovalCommentFromUser, events) {
         var commit = commitsAndComments[0].commitInfos ? commitsAndComments[0] : commitsAndComments[1],
           comments = commitsAndComments[0].commitInfos ? commitsAndComments[1] : commitsAndComments[0],
           lineWithNewComment = [],
@@ -98,9 +99,9 @@
         $scope.approveCommit = function () {
           approveCommit($stateParams.sha, $stateParams.user, $stateParams.repo).then(function () {
             $scope.loggedInUserIsApprover = true;
-            console.log('ok');
+            $log.log('ok');
           }).fail(function (error) {
-            console.log('to bad: ' + error);
+            $log.log('to bad: ' + error);
           });
         };
 
@@ -110,9 +111,9 @@
               unapproveCommit(comment.id, $stateParams.sha, $stateParams.user, $stateParams.repo).then(function () {
                 // TODO for unapproval before the next refresh the comment made needs to be added to the list of comments on approve
                 $scope.loggedInUserIsApprover = false;
-                console.log('ok');
+                $log.log('ok');
               }).fail(function (error) {
-                console.log('to bad: ' + error);
+                $log.log('to bad: ' + error);
               });
             }
           });

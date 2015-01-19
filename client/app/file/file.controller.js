@@ -4,6 +4,7 @@
     .controller('FileController', [
       '$scope',
       '$q',
+      '$log',
       '$stateParams',
       '_',
       'moment',
@@ -11,7 +12,7 @@
       'commits',
       'Chunk',
       'commentProvider',
-      function ($scope, $q, $stateParams, _, moment, fileContent, commits, Chunk, commentProvider) {
+      function ($scope, $q, $log, $stateParams, _, moment, fileContent, commits, Chunk, commentProvider) {
 
         var filePath = $stateParams.path,
           filePathSplit = filePath.split('.'),
@@ -126,7 +127,7 @@
               }
             }, function(err){
               //TODO
-              console.log(err);
+              $log.log(err);
             });
         }
 

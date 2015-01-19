@@ -6,6 +6,7 @@
   services.factory('filterProvider', [
     '$q',
     '$location',
+    '$log',
     '_',
     'moment',
     'github',
@@ -16,7 +17,7 @@
     'contributorCollector',
     'commitCollector',
     'treeCollector',
-    function ($q, $location, _, moment, github, commentCollector, localStorageService, githubUserData, branchCollector, contributorCollector, commitCollector, treeCollector) {
+    function ($q, $location, $log, _, moment, github, commentCollector, localStorageService, githubUserData, branchCollector, contributorCollector, commitCollector, treeCollector) {
 
       var filterHolder = {},
         generateUUID = function () {
@@ -458,7 +459,7 @@
             clonedFilter.options.meta.isClone = true;
             return clonedFilter;
           } else {
-            console.error('No Filter');
+            $log.error('No Filter');
           }
         }
       };

@@ -1,8 +1,8 @@
 (function (angular) {
   'use strict';
   angular.module('GHReview')
-    .factory('Comment', ['$q', '$rootScope', 'github', '_',
-      function ($q, $rootScope, github, _) {
+    .factory('Comment', ['$q', '$rootScope', '$log', 'github', '_',
+      function ($q, $rootScope, $log, github, _) {
 
         function Comment(options) {
           if (!options.mode) {
@@ -37,7 +37,7 @@
               _.extend(this, result);
               $rootScope.$apply();
             } else {
-              console.log(error);
+              $log.log(error);
             }
           }.bind(this);
 
@@ -59,9 +59,9 @@
         Comment.prototype.remove = function () {
           var githubCallback = function (error) {
             if (!error) {
-              console.log('Comment succesfully removed.');
+              $log.log('Comment succesfully removed.');
             } else {
-              console.log(error);
+              $log.log(error);
             }
           }.bind(this);
 

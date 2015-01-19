@@ -2,8 +2,8 @@
   'use strict';
 
   angular.module('GHReview')
-    .controller('FilterListController', ['$scope', '$state', '_', 'filter', 'events',
-      function ($scope, $state, _, filter, events) {
+    .controller('FilterListController', ['$scope', '$state', '$log', '_', 'filter', 'events',
+      function ($scope, $state, $log, _, filter, events) {
         if (filter.getAll().length === 0) {
           $state.go('addFilter');
         }
@@ -38,7 +38,7 @@
               groupValue = filter.getOwner();
               break;
             default:
-              console.error('Value for filter group unknown: ' + $scope.selectedGrouping.value);
+              $log.error('Value for filter group unknown: ' + $scope.selectedGrouping.value);
               groupValue = filter.getRepo();
               break;
             }
