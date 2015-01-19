@@ -47,41 +47,50 @@
 
 <!-- build:js app/app.js -->
 <script src="app/app.js"></script>
+<script src="app/options.js"></script>
     <!-- injector:js -->
     <script src="app/auth/auth.js"></script>
     <script src="app/auth/login.controller.js"></script>
     <script src="app/auth/logout.controller.js"></script>
     <script src="app/commit/commit.controller.js"></script>
     <script src="app/commit/commit.js"></script>
+    <script src="app/directives/avatar/avatar.directive.js"></script>
+    <script src="app/directives/comment/comment.directive.js"></script>
+    <script src="app/directives/commit-header/commit-header.directive.js"></script>
+    <script src="app/directives/commit-list/commit-list.controller.js"></script>
+    <script src="app/directives/commit-list/commit-list.directive.js"></script>
+    <script src="app/directives/commit-message-teaser/commit-message-teaser.directive.js"></script>
+    <script src="app/directives/formatted-date/formatted-date.directive.js"></script>
+    <script src="app/directives/menu/menu.controller.js"></script>
+    <script src="app/directives/menu/menu.directive.js"></script>
     <script src="app/file/file.controller.js"></script>
     <script src="app/file/file.js"></script>
     <script src="app/filter-list/filter-list.controller.js"></script>
     <script src="app/filter-list/filter-list.js"></script>
     <script src="app/filter/filter.controller.js"></script>
     <script src="app/filter/filter.js"></script>
-    <script src="app/js/Collectors/branchCollector.js"></script>
-    <script src="app/js/Collectors/commitCollector.js"></script>
-    <script src="app/js/Collectors/contributorCollector.js"></script>
-    <script src="app/js/Collectors/repoCollector.js"></script>
-    <script src="app/js/Collectors/treeCollector.js"></script>
-    <script src="app/js/controllers.js"></script>
-    <script src="app/js/directives.js"></script>
-    <script src="app/js/directives/CommitList.js"></script>
-    <script src="app/js/modules/CommitProvider.js"></script>
-    <script src="app/js/modules/Events.js"></script>
-    <script src="app/js/options.js"></script>
     <script src="app/js/services.js"></script>
     <script src="app/module/module.controller.js"></script>
     <script src="app/module/module.js"></script>
+    <script src="app/root/root.controller.js"></script>
     <script src="app/welcome/welcome.controller.js"></script>
     <script src="app/welcome/welcome.js"></script>
     <script src="app/whoami/whoami.controller.js"></script>
     <script src="app/whoami/whoami.js"></script>
     <script src="components/auth/auth.service.js"></script>
+    <script src="components/branch/branch-collector.service.js"></script>
     <script src="components/chunk/chunk.factory.js"></script>
+    <script src="components/comment/comment-collect.services.js"></script>
     <script src="components/comment/comment-collector.service.js"></script>
     <script src="components/comment/comment-provider.service.js"></script>
     <script src="components/comment/comment.service.js"></script>
+    <script src="components/commit/commit-approve.service.js"></script>
+    <script src="components/commit/commit-collector.service.js"></script>
+    <script src="components/commit/commit-provider.service.js"></script>
+    <script src="components/commit/commit-unapprove.service.js"></script>
+    <script src="components/contributor/contributor-collector.service.js"></script>
+    <script src="components/events/events.service.js"></script>
+    <script src="components/filter/filter-provider.service.js"></script>
     <script src="components/filter/filter.service.js"></script>
     <script src="components/github/github-commits.service.js"></script>
     <script src="components/github/github-file.service.js"></script>
@@ -89,8 +98,11 @@
     <script src="components/github/github-repos.service.js"></script>
     <script src="components/github/github-userdata.service.js"></script>
     <script src="components/github/github.service.js"></script>
+    <script src="components/human-readable-date/human-readable-date.service.js"></script>
     <script src="components/lodash/lodash.constant.js"></script>
     <script src="components/moment/moment.constant.js"></script>
+    <script src="components/repo/repo-collector.service.js"></script>
+    <script src="components/tree/tree-collector.service.js"></script>
     <!-- endinjector -->
 <!-- endbuild -->
 </body>
