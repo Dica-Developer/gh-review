@@ -5,20 +5,6 @@
 
   var services = angular.module('GHReview');
 
-  services.factory('authenticated', ['localStorageService',
-    function (localStorageService) {
-      return {
-        get: function () {
-          return localStorageService.get('accessToken') !== null;
-        },
-        set: function (value) {
-          /*jshint camelcase:false*/
-          localStorageService.set('accessToken', value.access_token);
-        }
-      };
-    }
-  ]);
-
   services.factory('filter', ['_', 'localStorageService', 'filterProvider',
     function (_, localStorageService, filterProvider) {
 
