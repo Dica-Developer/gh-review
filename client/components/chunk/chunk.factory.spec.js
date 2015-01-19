@@ -14,7 +14,7 @@ describe('#Chunk', function () {
   var deletedLine = [lines[2]];
   var addedLine = [lines[3]];
 
-  beforeEach(angular.mock.module('GHReview'));
+  beforeEach(module('GHReview'));
 
   beforeEach(inject(function ($injector) {
     Chunk = $injector.get('Chunk');
