@@ -113,22 +113,5 @@
           setSortedCommits();
         });
       }
-    ])
-    .directive('ghreviewCommitList', [
-      /*istanbul ignore next*/
-      //nothing to test with unit tests
-      function () {
-        return {
-          restrict: 'E',
-          templateUrl: 'templates/commitList.html',
-          scope: {
-            'commits': '=commitList',
-            'filter': '='
-          },
-          controller: 'commitListDirectiveController',
-          link: function () {
-          }
-        };
-      }
     ]);
 }(angular));
