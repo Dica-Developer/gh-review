@@ -1,8 +1,6 @@
 (function (angular) {
   'use strict';
 
-  var github;
-
   angular.module('GHReview')
     .factory('authenticated', ['localStorageService',
       function (localStorageService) {

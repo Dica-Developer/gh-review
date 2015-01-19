@@ -4,26 +4,27 @@ describe('Service: CommentProvider', function () {
   beforeEach(module('GHReview'));
 
 
-  var commentProvider;
-  var githubOptions = {
-    user: 'testUser',
-    repo: 'testRepo',
-    sha: 'testSha'
-  };
-
-  var comment = {
-    'commit_id': '123',
-    'id': '456',
-    'user': {
-      'login': 'testUser'
+  var commentProvider,
+    githubOptions = {
+      user: 'testUser',
+      repo: 'testRepo',
+      sha: 'testSha'
     },
-    'line': null,
-    'position': null
-  };
+    comment = {
+      'commit_id': '123',
+      'id': '456',
+      'user': {
+        'login': 'testUser'
+      },
+      'line': null,
+      'position': null
+    },
+    _;
 
 
   beforeEach(inject(function ($injector) {
     commentProvider = $injector.get('commentProvider');
+    _ = $injector.get('_');
   }));
 
   it('Should be defined', function () {

@@ -1,5 +1,3 @@
-/*global _, inject, moment*/
-
 describe('Service: filter', function () {
   'use strict';
 

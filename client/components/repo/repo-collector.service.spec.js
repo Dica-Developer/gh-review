@@ -59,6 +59,7 @@ describe('Service: repoCollector', function () {
         .then(function (result) {
           expect(result).toBeDefined();
           expect(result.length).toBe(3);
+          /*jshint camelcase:false*/
           expect(github.repos.getFromOrg).toHaveBeenCalledWith({
             org: 'TestOrganization',
             per_page: 100
@@ -95,6 +96,7 @@ describe('Service: repoCollector', function () {
           expect(result).toBeDefined();
           expect(result.length).toBe(6);
           expect(result).toEqual([1, 2, 3, 4, 5, 6]);
+          /*jshint camelcase:false*/
           expect(github.repos.getAll).toHaveBeenCalledWith({per_page: 100}, jasmine.any(Function));
           done();
         });

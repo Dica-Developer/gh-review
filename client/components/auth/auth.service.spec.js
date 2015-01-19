@@ -1,4 +1,3 @@
-/*global Github*/
 describe('Service: authenticated', function () {
   'use strict';
 
