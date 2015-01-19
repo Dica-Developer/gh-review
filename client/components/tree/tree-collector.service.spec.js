@@ -1,10 +1,10 @@
 /*global inject*/
-describe('treeCollector', function () {
+describe('Service: treeCollector', function () {
   'use strict';
 
   var treeCollector, github, $rootScope, $interval;
 
-  beforeEach(angular.mock.module('GHReview'));
+  beforeEach(module('GHReview'));
 
   beforeEach(inject(function ($injector) {
     treeCollector = $injector.get('treeCollector');
