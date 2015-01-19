@@ -41,20 +41,6 @@
     }
   ]);
 
-  /**
-   * @deprecated should handled by worker as well and triggered from another place then menu directive
-   */
-  services.factory('collectComments', ['commentCollector', 'localStorageService', 'filter',
-    function (commentCollector, localStorageService, filter) {
-      return function () {
-        var accessToken = localStorageService.get('accessToken');
-        commentCollector.init(accessToken);
-        commentCollector.announceRepositories(filter.getAll());
-        return true;
-      };
-    }
-  ]);
-
   services.factory('getCommitApproved', ['commentCollector',
     function (commentCollector) {
       return commentCollector.getCommitApproved();
