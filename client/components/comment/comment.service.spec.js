@@ -1,32 +1,31 @@
-/*global inject*/
-describe('#Comment', function () {
+describe('Service: Comment', function () {
   'use strict';
 
   /*jshint camelcase:false*/
   var Comment,
     commentData = {
-    mode: 'test',
-    body_html: '<p>Line comment test</p>',
-    preview_html: '<p>Line comment test preview</p>',
-    body: 'Line comment test body',
-    body_text: 'Line comment test body',
-    edit_text: 'Line comment test body edit',
-    content: 'Line comment test content',
-    sha: 'sad87cv087wfadvb098h',
-    commit_id: '9dc35ebda672c3a0443d0af3fa54fda0372cdcd2',
-    created_at: '2014-06-05T14:19:31Z',
-    html_url: 'https://github.com/Dica-Developer/gh-review/commit/9dc35ebda672c3a0443d0af3fa54fda0372cdcd2#commitcomment-6569207',
-    id: 6569207,
-    line: 39,
-    path: 'app/templates/_filter.html',
-    position: 6,
-    updated_at: '2014-06-05T14:19:31Z',
-    url: 'https://api.github.com/repos/Dica-Developer/gh-review/comments/6569207',
-    editInformations: {
-      repo: 'gh-review',
-      user: 'Dica-Developer'
-    }
-  };
+      mode: 'test',
+      body_html: '<p>Line comment test</p>',
+      preview_html: '<p>Line comment test preview</p>',
+      body: 'Line comment test body',
+      body_text: 'Line comment test body',
+      edit_text: 'Line comment test body edit',
+      content: 'Line comment test content',
+      sha: 'sad87cv087wfadvb098h',
+      commit_id: '9dc35ebda672c3a0443d0af3fa54fda0372cdcd2',
+      created_at: '2014-06-05T14:19:31Z',
+      html_url: 'https://github.com/Dica-Developer/gh-review/commit/9dc35ebda672c3a0443d0af3fa54fda0372cdcd2#commitcomment-6569207',
+      id: 6569207,
+      line: 39,
+      path: 'app/templates/_filter.html',
+      position: 6,
+      updated_at: '2014-06-05T14:19:31Z',
+      url: 'https://api.github.com/repos/Dica-Developer/gh-review/comments/6569207',
+      editInformations: {
+        repo: 'gh-review',
+        user: 'Dica-Developer'
+      }
+    };
 
   beforeEach(angular.mock.module('GHReview'));
 
