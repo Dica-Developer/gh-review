@@ -1,5 +1,4 @@
-/*global inject*/
-describe('contributorCollector', function () {
+describe('Service: contributorCollector', function () {
   'use strict';
 
   var contributorCollector, github, $rootScope, $interval;
