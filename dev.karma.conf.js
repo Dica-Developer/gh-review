@@ -30,7 +30,7 @@ module.exports = function (config) {
 
     reporters: ['dots', 'coverage'],
     preprocessors: {
-      '**/*.js': ['coverage'],
+      '**/*.js': 'coverage',
       '**/*.html': 'html2js'
     },
     ngHtml2JsPreprocessor: {
