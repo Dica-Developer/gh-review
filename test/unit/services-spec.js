@@ -175,54 +175,6 @@ describe('#Services', function () {
     });
   });
 
-  describe('.humanReadableDate', function () {
-    var humanReadableDate, date;
-
-    beforeEach(inject(function ($injector) {
-      humanReadableDate = $injector.get('humanReadableDate');
-      date = new Date(new Date().getFullYear() - 35, 11, 10).getTime();
-    }));
-
-    it('Should be defined', function () {
-      expect(humanReadableDate).toBeDefined();
-      expect(humanReadableDate.fromNow).toBeDefined();
-      expect(humanReadableDate.format).toBeDefined();
-      expect(humanReadableDate.customFormat).toBeDefined();
-    });
-
-    it('Should humanReadableDate.fromNow should return an "ago" string', function () {
-      expect(humanReadableDate.fromNow(date)).toBe('35 years ago');
-    });
-
-    it('Should humanReadableDate.fromNow should return null if no date is given', function () {
-      expect(humanReadableDate.fromNow()).toBeNull();
-    });
-
-    it('Should humanReadableDate.format should return a string', function () {
-      expect(humanReadableDate.format(date)).toBe('Mon, Dec 10 1979 12:00 AM');
-    });
-
-    it('Should humanReadableDate.format should return null if no date is given', function () {
-      expect(humanReadableDate.format()).toBeNull();
-    });
-
-    it('Should humanReadableDate.customFormat should return a date in default format if pattern is null', function () {
-      expect(humanReadableDate.customFormat(date, null)).toContain('1979-12-10T00:00:00');
-    });
-
-    it('Should humanReadableDate.customFormat should return only the year if pattern is "YYYY"', function () {
-      expect(humanReadableDate.customFormat(date, 'YYYY')).toBe('1979');
-    });
-
-    it('Should humanReadableDate.customFormat should return only "1979 jub jub 00" if pattern is "YYYY jub jub ss"', function () {
-      expect(humanReadableDate.customFormat(date, 'YYYY jub jub ss')).toBe('1979 jub jub 00');
-    });
-
-    it('Should humanReadableDate.customFormat should return null if no date is given', function () {
-      expect(humanReadableDate.customFormat()).toBeNull();
-    });
-  });
-
   describe('.getCommitApproved', function () {
     var getCommitApproved, commentCollector;
 
