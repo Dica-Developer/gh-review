@@ -19,6 +19,7 @@ module.exports = function (config) {
       'client/bower_components/angular-hotkeys/build/hotkeys.js',
       'client/app/app.js',
       'client/app/**/*.js',
+      'client/components/**/*.js',
       'test/helper/commitMockModule.js'
     ],
     exclude: [
