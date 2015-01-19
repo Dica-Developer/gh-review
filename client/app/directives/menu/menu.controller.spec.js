@@ -1,13 +1,12 @@
 /*global inject*/
-describe('#Controller', function () {
+describe('Controller: MenuDirectiveController', function () {
   'use strict';
 
-  beforeEach(angular.mock.module('GHReview'));
-  beforeEach(angular.mock.module('templates'));
+  beforeEach(module('GHReview'));
 
   describe('MenuDirectiveController', function () {
 
-    describe('$scope.name', function(){
+    describe('$scope.name', function () {
 
       var $rootScope, $scope, controller, $q;
 
@@ -19,12 +18,15 @@ describe('#Controller', function () {
         var $controller = $injector.get('$controller');
         controller = $controller('menuDirectiveController', {
           '$scope': $scope,
-          'authenticated': {get: function(){
-            return true;
-          }},
-          'collectComments': function(){},
+          'authenticated': {
+            get: function () {
+              return true;
+            }
+          },
+          'collectComments': function () {
+          },
           'githubUserData': {
-            get: function(){
+            get: function () {
               var defer = $q.defer();
               defer.resolve({name: 'TestUser'});
               return defer.promise;
@@ -33,14 +35,14 @@ describe('#Controller', function () {
         });
       }));
 
-      it('Should call "githubUserData.get" and set $scope.name to returned value', function(){
+      it('Should call "githubUserData.get" and set $scope.name to returned value', function () {
         $rootScope.$digest();
         expect($scope.name).toBe('TestUser');
       });
 
     });
 
-    describe('Key bindings', function(){
+    describe('Key bindings', function () {
       var $rootScope, $scope, controller, stateSpy, hotkeys, fakeEvent;
 
       beforeEach(inject(function ($injector) {
@@ -56,12 +58,15 @@ describe('#Controller', function () {
           '$scope': $scope,
           '$state': $state,
           'hotkeys': hotkeys,
-          'authenticated': {get: function(){
-            return true;
-          }},
-          'collectComments': function(){},
+          'authenticated': {
+            get: function () {
+              return true;
+            }
+          },
+          'collectComments': function () {
+          },
           'githubUserData': {
-            get: function(){
+            get: function () {
               var defer = $q.defer();
               defer.resolve({name: 'TestUser'});
               return defer.promise;
@@ -78,7 +83,7 @@ describe('#Controller', function () {
         };
       }));
 
-      it('Should bind "g f" combo and call state.go("listFilter")', function(){
+      it('Should bind "g f" combo and call state.go("listFilter")', function () {
         var combo = hotkeys.get('g f');
         var comboCallback = combo.callback;
         comboCallback(fakeEvent);
@@ -90,7 +95,7 @@ describe('#Controller', function () {
         expect(fakeEvent.preventDefault).toHaveBeenCalled();
       });
 
-      it('Should bind "g m" combo and call state.go("modules")', function(){
+      it('Should bind "g m" combo and call state.go("modules")', function () {
         var combo = hotkeys.get('g m');
         var comboCallback = combo.callback;
         comboCallback(fakeEvent);
@@ -102,7 +107,7 @@ describe('#Controller', function () {
         expect(fakeEvent.preventDefault).toHaveBeenCalled();
       });
 
-      it('Should bind "g w" combo and call state.go("whoami")', function(){
+      it('Should bind "g w" combo and call state.go("whoami")', function () {
         var combo = hotkeys.get('g w');
         var comboCallback = combo.callback;
         comboCallback(fakeEvent);
@@ -114,7 +119,7 @@ describe('#Controller', function () {
         expect(fakeEvent.preventDefault).toHaveBeenCalled();
       });
 
-      it('Should bind ": q" combo and call state.go("logout")', function(){
+      it('Should bind ": q" combo and call state.go("logout")', function () {
         var combo = hotkeys.get(': q');
         var comboCallback = combo.callback;
         comboCallback(fakeEvent);
