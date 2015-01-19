@@ -1,5 +1,5 @@
 /*global inject*/
-describe('#Chunk', function () {
+describe('Factory: Chunk', function () {
   'use strict';
 
   var Chunk;
