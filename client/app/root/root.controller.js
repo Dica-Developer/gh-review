@@ -1,8 +1,7 @@
 (function (angular) {
   'use strict';
 
-  /* Controllers */
-
+  //FIXME seems to be obsolete
   angular.module('GHReview')
     .controller('RootController', [
       '$state',
