@@ -1,10 +1,10 @@
 /*global inject*/
-describe('branchCollector', function () {
+describe('Service: branchCollector', function () {
   'use strict';
 
   var branchCollector, github, $rootScope, $interval;
 
-  beforeEach(angular.mock.module('GHReview'));
+  beforeEach(module('GHReview'));
 
   beforeEach(inject(function ($injector) {
     branchCollector = $injector.get('branchCollector');
@@ -24,7 +24,9 @@ describe('branchCollector', function () {
     branchCollector.get.cache = {};
 
     expect(github.repos.getBranches).toHaveBeenCalled();
+    /*jshint camelcase:false*/
     expect(github.repos.getBranches).toHaveBeenCalledWith({ repo : 'TestRepo', user : 'TestUser', per_page : 100 }, jasmine.any(Function));
+    /*jshint camelcase:true*/
   });
 
   it('Should be rejected if github throws error', function(done){
