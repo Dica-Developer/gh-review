@@ -1,10 +1,10 @@
 /*global inject*/
-describe('repoCollector', function () {
+describe('Service: repoCollector', function () {
   'use strict';
 
   var repoCollector, github, $rootScope, $interval, $q;
 
-  beforeEach(angular.mock.module('GHReview'));
+  beforeEach(module('GHReview'));
 
   beforeEach(inject(function ($injector) {
     repoCollector = $injector.get('repoCollector');
@@ -18,13 +18,13 @@ describe('repoCollector', function () {
     expect(repoCollector).toBeDefined();
   });
 
-  describe('repoCollector.getOrganizationsForUser', function(){
+  describe('repoCollector.getOrganizationsForUser', function () {
 
-    it('should call github.user.getOrgs and resolve', function(done){
+    it('should call github.user.getOrgs and resolve', function (done) {
       spyOn(github.user, 'getOrgs');
 
       repoCollector.getOrganizationsForUser()
-        .then(function(result){
+        .then(function (result) {
           expect(result).toBeDefined();
           expect(result.length).toBe(3);
           expect(github.user.getOrgs).toHaveBeenCalledWith({'per_page': 100}, jasmine.any(Function));
@@ -32,15 +32,15 @@ describe('repoCollector', function () {
         });
 
       var callback = github.user.getOrgs.calls.argsFor(0)[1];
-      callback(null, [1,2,3]);
+      callback(null, [1, 2, 3]);
       $rootScope.$apply();
     });
 
-    it('should call github.user.getOrgs and reject if github throws error', function(done){
+    it('should call github.user.getOrgs and reject if github throws error', function (done) {
       spyOn(github.user, 'getOrgs');
 
       repoCollector.getOrganizationsForUser()
-        .then(null, function(){
+        .then(null, function () {
           done();
         });
 
@@ -50,29 +50,32 @@ describe('repoCollector', function () {
     });
   });
 
-  describe('repoCollector.getReposFromOrganizations', function(){
+  describe('repoCollector.getReposFromOrganizations', function () {
 
-    it('should call github.repos.getFromOrg and resolve', function(done){
+    it('should call github.repos.getFromOrg and resolve', function (done) {
       spyOn(github.repos, 'getFromOrg');
 
       repoCollector.getReposFromOrganizations([{login: 'TestOrganization'}])
-        .then(function(result){
+        .then(function (result) {
           expect(result).toBeDefined();
           expect(result.length).toBe(3);
-          expect(github.repos.getFromOrg).toHaveBeenCalledWith({ org : 'TestOrganization', per_page : 100 }, jasmine.any(Function));
+          expect(github.repos.getFromOrg).toHaveBeenCalledWith({
+            org: 'TestOrganization',
+            per_page: 100
+          }, jasmine.any(Function));
           done();
         });
 
       var callback = github.repos.getFromOrg.calls.argsFor(0)[1];
-      callback(null, [1,2,3]);
+      callback(null, [1, 2, 3]);
       $rootScope.$apply();
     });
 
-    it('should call github.repos.getFromOrg and reject if github throws error', function(done){
+    it('should call github.repos.getFromOrg and reject if github throws error', function (done) {
       spyOn(github.repos, 'getFromOrg');
 
       repoCollector.getReposFromOrganizations([{login: 'TestOrganization'}])
-        .then(null, function(){
+        .then(null, function () {
           done();
         });
 
@@ -82,30 +85,30 @@ describe('repoCollector', function () {
     });
   });
 
-  describe('repoCollector.getReposFromUser', function(){
+  describe('repoCollector.getReposFromUser', function () {
 
-    it('should call github.repos.getAll and resolve', function(done){
+    it('should call github.repos.getAll and resolve', function (done) {
       spyOn(github.repos, 'getAll');
 
-      repoCollector.getReposFromUser([1,2,3])
-        .then(function(result){
+      repoCollector.getReposFromUser([1, 2, 3])
+        .then(function (result) {
           expect(result).toBeDefined();
           expect(result.length).toBe(6);
-          expect(result).toEqual([1,2,3,4,5,6]);
-          expect(github.repos.getAll).toHaveBeenCalledWith({ per_page : 100 }, jasmine.any(Function));
+          expect(result).toEqual([1, 2, 3, 4, 5, 6]);
+          expect(github.repos.getAll).toHaveBeenCalledWith({per_page: 100}, jasmine.any(Function));
           done();
         });
 
       var callback = github.repos.getAll.calls.argsFor(0)[1];
-      callback(null, [4,5,6]);
+      callback(null, [4, 5, 6]);
       $rootScope.$apply();
     });
 
-    it('should call github.repos.getAll and reject if github throws error', function(done){
+    it('should call github.repos.getAll and reject if github throws error', function (done) {
       spyOn(github.repos, 'getAll');
 
-      repoCollector.getReposFromUser([1,2,3])
-        .then(null, function(){
+      repoCollector.getReposFromUser([1, 2, 3])
+        .then(null, function () {
           done();
         });
 
@@ -115,15 +118,15 @@ describe('repoCollector', function () {
     });
   });
 
-  it('Should invalidate cache after a given time', function(){
-    spyOn(repoCollector, 'getOrganizationsForUser').and.callFake(function(){
+  it('Should invalidate cache after a given time', function () {
+    spyOn(repoCollector, 'getOrganizationsForUser').and.callFake(function () {
       return $q.when([{login: 'TestOrganization'}]);
     });
-    spyOn(repoCollector, 'getReposFromOrganizations').and.callFake(function(){
-      return $q.when([1,2,3]);
+    spyOn(repoCollector, 'getReposFromOrganizations').and.callFake(function () {
+      return $q.when([1, 2, 3]);
     });
-    spyOn(repoCollector, 'getReposFromUser').and.callFake(function(){
-      return $q.when([1,2,3]);
+    spyOn(repoCollector, 'getReposFromUser').and.callFake(function () {
+      return $q.when([1, 2, 3]);
     });
 
     repoCollector.getAll();
