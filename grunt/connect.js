@@ -1,13 +1,21 @@
 (function () {
   'use strict';
   module.exports = {
-    server: {
+    dev: {
       options: {
         livereload: 35729,
         hostname: 'localhost',
         port: 9000,
         open: true,
-        base: '<%= config.app %>'
+        base: ['<%= config.tmp %>', '<%= config.app %>']
+      }
+    },
+    dist: {
+      options: {
+        hostname: 'localhost',
+        port: 9000,
+        open: true,
+        base: '<%= config.dist %>'
       }
     }
   };

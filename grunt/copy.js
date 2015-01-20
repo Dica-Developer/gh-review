@@ -1,4 +1,4 @@
-(function(){
+(function () {
   'use strict';
   module.exports = {
     'deploy': {
@@ -27,33 +27,27 @@
         }
       ]
     },
-    'dist': {
-      'files': [
-        {
-          'expand': true,
-          'cwd': '<%= config.app %>',
-          'dest': '<%= config.dist %>',
-          'src': ['worker/*', 'images/**/*', 'templates/**/*', 'fonts/**/*', '*.html', 'oauth/*.html']
-        },
-        {
-          'expand': true,
-          'cwd': '<%= config.app %>/bower_components/bootstrap/dist/fonts',
-          'dest': '<%= config.dist %>/fonts',
-          'src': '*'
-        },
-        {
-          'expand': true,
-          'cwd': '<%= config.app %>/bower_components/lodash/dist',
-          'dest': '<%= config.dist %>/js',
-          'src': 'lodash.min.js'
-        },
-        {
-          'expand': true,
-          'cwd': 'worker',
-          'dest': '<%= config.dist %>/worker',
-          'src': '*'
-        }
-      ]
+    dist: {
+      files: [{
+        expand: true,
+        dot: true,
+        cwd: '<%= config.app %>',
+        dest: '<%= config.dist %>',
+        src: [
+          '*.{ico,png,txt}',
+          '.htaccess',
+          'assets/images/{,*/}*.{webp}',
+          'assets/fonts/**/*',
+          'worker/**/*',
+          'oauth/**/*',
+          'index.html'
+        ]
+      }, {
+        expand: true,
+        cwd: '.tmp/images',
+        dest: '<%= config.dist %>/assets/images',
+        src: ['generated/*']
+      }]
     }
   };
 }());

@@ -24,10 +24,17 @@ module.exports = function (grunt) {
     injector: require('./grunt/injector'),
     jshint: require('./grunt/jshint'),
     less: require('./grunt/less'),
+    autoprefixer: require('./grunt/autoprefixer'),
     copy: require('./grunt/copy'),
     useminPrepare: require('./grunt/usemin').prepare,
     usemin: require('./grunt/usemin').min,
+    imagemin: require('./grunt/imagemin'),
+    cdnify: require('./grunt/cdnify'),
     karma: require('./grunt/karma'),
+    concurrent: require('./grunt/concurrent'),
+    ngtemplates: require('./grunt/ngtemplates'),
+    ngAnnotate: require('./grunt/ngAnnotate'),
+    rev: require('./grunt/rev'),
     coveralls: require('./grunt/coveralls')
   });
 

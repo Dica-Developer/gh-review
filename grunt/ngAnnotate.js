@@ -3,11 +3,10 @@
   module.exports = {
     dist: {
       files: [{
-        dot: true,
-        src: [
-          '.tmp',
-          '<%= config.dist %>/*'
-        ]
+        expand: true,
+        cwd: '.tmp/concat',
+        src: '*/**.js',
+        dest: '.tmp/concat'
       }]
     }
   };
