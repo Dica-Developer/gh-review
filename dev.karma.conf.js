@@ -28,7 +28,7 @@ module.exports = function (config) {
       'client/worker/*.*'
     ],
 
-    reporters: ['dots', 'coverage'],
+    reporters: ['mocha', 'coverage'],
     preprocessors: {
       '**/*.js': 'coverage',
       '**/*.html': 'html2js'
@@ -41,7 +41,8 @@ module.exports = function (config) {
       dir: 'test/coverage/'
     },
 
-    autoWatch: true,
+    autoWatch: false,
+    singleRun: true,
 
     LogLevel: config.LOG_DEBUG,
 
