@@ -52,54 +52,6 @@ module.exports = function (grunt) {
         }
       }
     },
-    protractor: {
-      saucelabs: {
-        options: {
-          configFile: '<%= config.test %>/e2e/travis.conf.js'
-        },
-        startPage: {
-          options: {
-            args: {
-              suite: 'startWithToken',
-              sauceUser: process.env.SAUCE_USERNAME,
-              sauceKey: process.env.SAUCE_ACCESS_KEY
-            }
-          }
-        },
-        reviewModules: {
-          options: {
-            args: {
-              suite: 'reviewModules',
-              sauceUser: process.env.SAUCE_USERNAME,
-              sauceKey: process.env.SAUCE_ACCESS_KEY
-            }
-          }
-        }
-      },
-      local: {
-        options: {
-          configFile: '<%= config.test %>/e2e/conf.js',
-          keepAlive: false,
-          noColor: false,
-          args: {
-          }
-        },
-        startPage: {
-          options: {
-            args: {
-              suite: 'startWithToken'
-            }
-          }
-        },
-        reviewModules: {
-          options: {
-            args: {
-              suite: 'reviewModules'
-            }
-          }
-        }
-      }
-    },
     watch: {
       injectJS: {
         files: ['{.tmp,<%= config.app %>}/{app,components}/**/*.js',
@@ -415,7 +367,6 @@ module.exports = function (grunt) {
   grunt.registerTask('travis', [
     'processTmpl:dev',
     'karma:travis',
-//    'e2e:saucelabs',
     'coveralls'
   ]);
 
