@@ -38,6 +38,22 @@ module.exports = function (grunt) {
     coveralls: require('./grunt/coveralls')
   });
 
+  grunt.registerTask('serve', function (target) {
+    if (target === 'dist') {
+      return grunt.task.run(['build', 'connect:dist', 'server-keepalive']);
+    }
+
+    grunt.task.run([
+      'jshint',
+      'processTmpl:dev',
+      'injector:scripts',
+      'injector:less',
+      'less:dev',
+      'connect:dev',
+      'watch'
+    ]);
+  });
+
   grunt.registerTask('processTmpl', function (target) {
     var options = config.build.dist;
     var tmpl = grunt.file.read('grunt/options.tmpl');
