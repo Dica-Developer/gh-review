@@ -3,5 +3,6 @@
 .tmp
 /node_modules
 /client/bower_components
+*.css
 /test/coverage
 /dist
