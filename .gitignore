@@ -4,5 +4,4 @@
 /node_modules
 /client/bower_components
 /test/coverage
-/dev
 /dist
