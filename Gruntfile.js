@@ -12,20 +12,7 @@ module.exports = function (grunt) {
     dist: 'dist',
     test: 'test',
     coverage: 'test/coverage',
-    distOptions: {
-      clientId: '833c028df47be8e881d9',
-      apiScope: 'user, repo',
-      redirectUri: 'https://dica-developer.github.io/gh-review/oauth/',
-      accessTokenUrl: 'https://gh-review.herokuapp.com/login/oauth/access_token',
-      rootUrl: 'https://dica-developer.github.io/gh-review'
-    },
-    devOptions: {
-      clientId: '5082108e53d762d90c00',
-      apiScope: 'user, repo',
-      redirectUri: 'http://localhost:9000/oauth/',
-      accessTokenUrl: 'http://gh-review.herokuapp.com/bemdsvdsynggmvweibduvjcbgf',
-      rootUrl: 'http://localhost:9000'
-    }
+    build: grunt.file.readJSON('build.json')
   };
 
   grunt.initConfig({
@@ -246,11 +233,11 @@ module.exports = function (grunt) {
   });
 
   grunt.registerTask('processTmpl', function (target) {
-    var options = config.distOptions;
-    var tmpl = grunt.file.read('build-templates/options.tmpl');
+    var options = config.build.dist;
+    var tmpl = grunt.file.read('grunt/options.tmpl');
     var pkg = grunt.file.readJSON('package.json');
     if ('dev' === target) {
-      options = config.devOptions;
+      options = config.build.dev;
     }
     options.version = pkg.version;
     var processedTmpl = grunt.template.process(tmpl, {
