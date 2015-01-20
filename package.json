@@ -16,8 +16,7 @@
     "node": ">=0.8.0"
   },
   "scripts": {
-    "test": "grunt travis",
-    "install": "node node_modules/protractor/bin/webdriver-manager update"
+    "test": "grunt travis"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
@@ -33,7 +32,6 @@
     "grunt-karma": "^0.9.0",
     "grunt-karma-coveralls": "^2.5.2",
     "grunt-ngdocs": "^0.2.3",
-    "grunt-protractor-runner": "^1.1.4",
     "grunt-usemin": "^2.4.0",
     "grunt-wiredep": "^2.0.0",
     "karma": "^0.12.23",
@@ -45,7 +43,6 @@
     "karma-phantomjs-launcher": "^0.1.4",
     "karma-story-reporter": "^0.2.2",
     "load-grunt-tasks": "^0.6.0",
-    "protractor": "^1.2.0",
     "time-grunt": "^1.0.0"
   }
 }
