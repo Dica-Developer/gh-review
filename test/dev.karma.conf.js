@@ -1,6 +1,6 @@
 module.exports = function (config) {
   config.set({
-    basePath: '',
+    basePath: '..',
     frameworks: ['jasmine'],
     files: [
       'client/bower_components/moment/moment.js',
