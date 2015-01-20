@@ -150,15 +150,6 @@ module.exports = function (grunt) {
     'copy:dev'
   ]);
 
-  grunt.registerTask('dev', [
-    'clean:dev',
-    'jshint',
-    'processTmpl:dev',
-    'copy:dev',
-    'less:dev',
-    'connect:dev',
-    'watch'
-  ]);
 
   grunt.registerTask('test', [
     'karma:dev'
