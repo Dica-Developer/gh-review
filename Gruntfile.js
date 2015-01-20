@@ -7,8 +7,8 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-karma-coveralls');
 
   var config = {
+    temp: '.tmp',
     app: 'client',
-    dev: 'dev',
     dist: 'dist',
     test: 'test',
     coverage: 'test/coverage',
