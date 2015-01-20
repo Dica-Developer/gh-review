@@ -154,8 +154,8 @@ module.exports = function (grunt) {
     'copy:dev'
   ]);
 
-
   grunt.registerTask('test', [
+    'jshint',
     'karma:dev'
   ]);
 
