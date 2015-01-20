@@ -10,6 +10,16 @@
         '!{.tmp,<%= config.app %>}/{app,components}/**/*.mock.js'],
       tasks: ['injector:scripts']
     },
+    injectLess: {
+      files: [
+        '<%= config.app%>/{app,components}/**/*.less'],
+      tasks: ['injector:less']
+    },
+    less: {
+      files: [
+        '<%= config.app %>/{app,components}/**/*.less'],
+      tasks: ['less:dev']
+    },
     gruntfile: {
       files: ['Gruntfile.js']
     },
