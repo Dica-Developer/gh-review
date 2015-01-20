@@ -38,6 +38,10 @@ module.exports = function (grunt) {
     coveralls: require('./grunt/coveralls')
   });
 
+  grunt.registerTask('server-keepalive', 'Keep grunt running', function() {
+    this.async();
+  });
+
   grunt.registerTask('serve', function (target) {
     if (target === 'dist') {
       return grunt.task.run(['build', 'connect:dist', 'server-keepalive']);
