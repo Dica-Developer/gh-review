@@ -338,15 +338,6 @@ module.exports = function (grunt) {
     'watch'
   ]);
 
-  grunt.registerTask('e2e', function(platform){
-    grunt.task.run([
-      'dist:dev',
-      'connect:e2e',
-      'protractor:' + platform + ':startPage',
-      'protractor:'+ platform +':reviewModules'
-    ]);
-  });
-
   grunt.registerTask('test', [
     'karma:dev'
   ]);
