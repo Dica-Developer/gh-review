@@ -7,15 +7,6 @@
 @import (less) "../bower_components/angular-hotkeys/build/hotkeys.css";
 @import (less) "../bower_components/angular-ui-select/dist/select.css";
 
-@import "commit-list";
-@import "pygments";
-@import "table";
-@import "commit";
-@import "hljs-github-theme";
-@import "hljs-solarized-dark-theme";
-@import "hljs-solarized-light-theme";
-@import "hljs-monokai-theme";
-
 body {
   padding-top: 70px;
   .branchButton {
@@ -195,3 +186,20 @@ body {
   top: 52px;
   width: 100%;
 }
+
+// injector
+@import 'commit/commit.less';
+@import 'directives/commit-list/commit-list.less';
+@import 'file/file.less';
+@import 'file/hljs-github-theme.less';
+@import 'file/hljs-monokai-theme.less';
+@import 'file/hljs-solarized-dark-theme.less';
+@import 'file/hljs-solarized-light-theme.less';
+@import 'file/pygments.less';
+@import 'filter-list/filter-list.less';
+@import 'filter/filter.less';
+@import 'module/module.less';
+@import 'table.less';
+@import 'welcome/welcome.less';
+@import 'whoami/whoami.less';
+// endinjector
