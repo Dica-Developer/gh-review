@@ -1,6 +1,6 @@
 {
   "name": "GH-Review",
-  "version": "0.6.6",
+  "version": "0.6.8",
   "author": "Dica-Developer",
   "repository": [
     {
@@ -27,7 +27,7 @@
     "grunt-contrib-copy": "^0.5.0",
     "grunt-contrib-jshint": "^0.10.0",
     "grunt-contrib-less": "^0.11.4",
-    "grunt-contrib-uglify": "^0.5.1",
+    "grunt-contrib-uglify": "0.7.0",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-karma": "^0.9.0",
     "grunt-karma-coveralls": "^2.5.2",
@@ -41,6 +41,7 @@
     "karma-ng-html2js-preprocessor": "^0.1.0",
     "karma-phantomjs-launcher": "^0.1.4",
     "karma-story-reporter": "^0.2.2",
+    "less-plugin-clean-css": "^1.4.0",
     "load-grunt-tasks": "^0.6.0",
     "protractor": "^1.2.0",
     "time-grunt": "^1.0.0"

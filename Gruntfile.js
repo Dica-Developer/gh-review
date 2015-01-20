@@ -1,10 +1,15 @@
 /* global module*/
-module.exports = function (grunt) {
+module.exports = function(grunt) {
   'use strict';
 
   require('time-grunt')(grunt);
   require('load-grunt-tasks')(grunt);
   grunt.loadNpmTasks('grunt-karma-coveralls');
+
+  var LessPlugin = require('less-plugin-clean-css');
+  var lessPlugin = new LessPlugin({
+    advanced: true
+  });
 
   var config = {
     app: 'app',
@@ -30,6 +35,15 @@ module.exports = function (grunt) {
 
   grunt.initConfig({
     config: config,
+    uglify: {
+      generated: {
+        options: {
+          mangle: true,
+          compress: true,
+          sourceMap: true
+        }
+      }
+    },
     connect: {
       options: {
         livereload: 35729,
@@ -81,8 +95,7 @@ module.exports = function (grunt) {
           configFile: '<%= config.test %>/e2e/conf.js',
           keepAlive: false,
           noColor: false,
-          args: {
-          }
+          args: {}
         },
         startPage: {
           options: {
@@ -119,24 +132,20 @@ module.exports = function (grunt) {
     },
     clean: {
       dist: {
-        files: [
-          {
-            dot: true,
-            src: [
-              '<%= config.dist %>/*'
-            ]
-          }
-        ]
+        files: [{
+          dot: true,
+          src: [
+            '<%= config.dist %>/*'
+          ]
+        }]
       },
       dev: {
-        files: [
-          {
-            dot: true,
-            src: [
-              '<%= config.dev %>/*'
-            ]
-          }
-        ]
+        files: [{
+          dot: true,
+          src: [
+            '<%= config.dev %>/*'
+          ]
+        }]
       }
     },
     jshint: {
@@ -147,16 +156,17 @@ module.exports = function (grunt) {
     },
     less: {
       dev: {
-        options: {
-          yuicompress: true
-        },
+        options: {},
         files: {
           '<%= config.dev %>/css/main.css': '<%= config.app %>/css/main.less'
         }
       },
       dist: {
         options: {
-          yuicompress: true
+          sourceMap: true,
+          sourceMapFilename: '<%= config.dist %>/css/main.css.map',
+          sourceMapURL: '/css/main.css.map',
+          plugins: [lessPlugin]
         },
         files: {
           '<%= config.dist %>/css/main.css': '<%= config.app %>/css/main.less'
@@ -165,58 +175,48 @@ module.exports = function (grunt) {
     },
     copy: {
       deploy: {
-        files: [
-          {
-            expand: true,
-            cwd: './dist',
-            dest: '/tmp/gh-review.pages',
-            src: '**'
-          }
-        ]
+        files: [{
+          expand: true,
+          cwd: './dist',
+          dest: '/tmp/gh-review.pages',
+          src: '**'
+        }]
       },
       dev: {
-        files: [
-          {
-            expand: true,
-            cwd: '<%= config.app %>',
-            dest: '<%= config.dev %>',
-            src: '**'
-          },
-          {
-            expand: true,
-            cwd: '<%= config.app %>/bower_components/bootstrap/dist/fonts',
-            dest: '<%= config.dev %>/fonts',
-            src: '*'
-          }
-        ]
+        files: [{
+          expand: true,
+          cwd: '<%= config.app %>',
+          dest: '<%= config.dev %>',
+          src: '**'
+        }, {
+          expand: true,
+          cwd: '<%= config.app %>/bower_components/bootstrap/dist/fonts',
+          dest: '<%= config.dev %>/fonts',
+          src: '*'
+        }]
       },
       dist: {
-        files: [
-          {
-            expand: true,
-            cwd: '<%= config.app %>',
-            dest: '<%= config.dist %>',
-            src: ['js/worker/*', 'images/**/*', 'templates/**/*', 'fonts/**/*', '*.html', 'oauth/*.html']
-          },
-          {
-            expand: true,
-            cwd: '<%= config.app %>/bower_components/bootstrap/dist/fonts',
-            dest: '<%= config.dist %>/fonts',
-            src: '*'
-          },
-          {
-            expand: true,
-            cwd: '<%= config.app %>/bower_components/lodash/dist',
-            dest: '<%= config.dist %>/js',
-            src: 'lodash.min.js'
-          },
-          {
-            expand: true,
-            cwd: 'worker',
-            dest: '<%= config.dist %>/worker',
-            src: '*'
-          }
-        ]
+        files: [{
+          expand: true,
+          cwd: '<%= config.app %>',
+          dest: '<%= config.dist %>',
+          src: ['js/worker/*', 'images/**/*', 'templates/**/*', 'fonts/**/*', '*.html', 'oauth/*.html']
+        }, {
+          expand: true,
+          cwd: '<%= config.app %>/bower_components/bootstrap/dist/fonts',
+          dest: '<%= config.dist %>/fonts',
+          src: '*'
+        }, {
+          expand: true,
+          cwd: '<%= config.app %>/bower_components/lodash/dist',
+          dest: '<%= config.dist %>/js',
+          src: 'lodash.min.js'
+        }, {
+          expand: true,
+          cwd: 'worker',
+          dest: '<%= config.dist %>/worker',
+          src: '*'
+        }]
       }
     },
     useminPrepare: {
@@ -252,7 +252,7 @@ module.exports = function (grunt) {
     }
   });
 
-  grunt.registerTask('processTmpl', function (target) {
+  grunt.registerTask('processTmpl', function(target) {
     var options = config.distOptions;
     var tmpl = grunt.file.read('build-templates/options.tmpl');
     var pkg = grunt.file.readJSON('package.json');
@@ -266,11 +266,11 @@ module.exports = function (grunt) {
     grunt.file.write('app/js/options.js', processedTmpl);
   });
 
-  grunt.registerTask('checkoutWebsite', function () {
+  grunt.registerTask('checkoutWebsite', function() {
     var done = this.async();
     var childProcess = require('child_process');
     var exec = childProcess.exec;
-    exec('rm -fr /tmp/gh-review.pages/ 2> /dev/null && git clone --reference ./ -b gh-pages git@github.com:Dica-Developer/gh-review.git /tmp/gh-review.pages', function (error, stdout, stderr) {
+    exec('rm -fr /tmp/gh-review.pages/ 2> /dev/null && git clone --reference ./ -b gh-pages git@github.com:Dica-Developer/gh-review.git /tmp/gh-review.pages', function(error, stdout, stderr) {
       var result = true;
       if (stdout) {
         grunt.log.write(stdout);
@@ -286,20 +286,20 @@ module.exports = function (grunt) {
     });
   });
 
-  grunt.registerTask('cleanDeploy', function () {
+  grunt.registerTask('cleanDeploy', function() {
     var done = this.async();
     var childProcess = require('child_process');
     var exec = childProcess.exec;
-    exec('rm -r /tmp/gh-review.pages/*', function () {
+    exec('rm -r /tmp/gh-review.pages/*', function() {
       done(true);
     });
   });
 
-  grunt.registerTask('commitAndPush', function () {
+  grunt.registerTask('commitAndPush', function() {
     var done = this.async();
     var childProcess = require('child_process');
     var exec = childProcess.exec;
-    exec('cd /tmp/gh-review.pages && git add --all . && git commit -m "* deploy release" && git push', function (error, stdout, stderr) {
+    exec('cd /tmp/gh-review.pages && git add --all . && git commit -m "* deploy release" && git push', function(error, stdout, stderr) {
       var result = true;
       if (stdout) {
         grunt.log.write(stdout);
@@ -315,7 +315,7 @@ module.exports = function (grunt) {
     });
   });
 
-  grunt.registerTask('postProcess', function () {
+  grunt.registerTask('postProcess', function() {
     var done = this.async();
     var fs = require('fs');
     var collectorJs = fs.readFileSync('dist/js/worker/collector.js', {
@@ -328,7 +328,7 @@ module.exports = function (grunt) {
     done();
   });
 
-  grunt.registerTask('dist', function(template){
+  grunt.registerTask('dist', function(template) {
     grunt.task.run([
       'clean:dist',
       'less:dist',
@@ -358,12 +358,12 @@ module.exports = function (grunt) {
     'watch:dev'
   ]);
 
-  grunt.registerTask('e2e', function(platform){
+  grunt.registerTask('e2e', function(platform) {
     grunt.task.run([
       'dist:dev',
       'connect:e2e',
       'protractor:' + platform + ':startPage',
-      'protractor:'+ platform +':reviewModules'
+      'protractor:' + platform + ':reviewModules'
     ]);
   });
 
@@ -374,11 +374,11 @@ module.exports = function (grunt) {
   grunt.registerTask('travis', [
     'processTmpl:dev',
     'karma:travis',
-//    'e2e:saucelabs',
+    //    'e2e:saucelabs',
     'coveralls'
   ]);
 
-  grunt.registerTask('setNewVersion', function () {
+  grunt.registerTask('setNewVersion', function() {
     var packageJson = grunt.file.readJSON('package.json');
     var version = packageJson.version.split('.');
     version[2] = parseInt(version[2], 10) + 1;
