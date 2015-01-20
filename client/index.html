@@ -3,7 +3,9 @@
 <head>
     <title>GH-Review</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" media="all" href="css/main.css"/>
+    <!-- build:css({.tmp, client}) app/app.css -->
+        <link rel="stylesheet" href="app/app.css">
+    <!-- endbuild -->
 </head>
 <body>
 <div id="topMenu">
@@ -24,7 +26,7 @@
 </div>
 <div id="main" class="container-fluid" ui-view></div>
 
-<!-- build:js app/vendor.js -->
+<!-- build:js({client,node_modules}) app/vendor.js -->
     <!-- bower:js -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/angular/angular.js"></script>
@@ -45,7 +47,7 @@
     <script src="bower_components/github-js/dist/github.js"></script>
 <!-- endbuild -->
 
-<!-- build:js app/app.js -->
+<!-- build:js({.tmp,client}) app/app.js -->
 <script src="app/app.js"></script>
 <script src="app/options.js"></script>
     <!-- injector:js -->
