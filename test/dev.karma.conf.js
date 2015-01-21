@@ -1,4 +1,6 @@
 module.exports = function (config) {
+  'use strict';
+
   config.set({
     basePath: '..',
     frameworks: ['jasmine'],
@@ -30,7 +32,7 @@ module.exports = function (config) {
 
     reporters: ['mocha', 'coverage'],
     preprocessors: {
-      '**/*.js': 'coverage',
+      'client/!(bower_components)/**/!(*.spec).js': 'coverage',
       '**/*.html': 'html2js'
     },
     ngHtml2JsPreprocessor: {
