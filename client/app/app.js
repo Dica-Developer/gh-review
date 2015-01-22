@@ -15,7 +15,18 @@
       localStorageServiceProvider.setPrefix('ghreview');
 
       $urlRouterProvider
-        .otherwise('/');
+        .otherwise('/')
+        .rule(function ($injector, $location) {
+          var auth = $injector.get('authenticated'),
+            authenticated = auth.get(),
+            path = $location.path();
+
+          if ((path === '/' || path === '/login' || path === '/welcome') || authenticated) {
+            return $location.abbsUrl;
+          } else {
+            return $location.replace().path('/welcome');
+          }
+        });
     }
   ]);
 }(angular));
