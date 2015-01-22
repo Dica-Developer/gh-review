@@ -8,11 +8,11 @@
       $scope.menu = [
         {
           'title': 'Commits',
-          'sref': 'listFilter'
+          'link': 'listFilter'
         },
         {
           'title': 'Modules',
-          'sref': 'modules'
+          'link': 'modules'
         }
       ];
       $scope.submenu = [
