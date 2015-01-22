@@ -1,3 +1,6 @@
-<ul class="list-group">
-    <li class="list-group-item" ng-repeat="(key, value) in userData"> {{key}}: {{ value }} </li>
-</ul>
+<div ng-include="'components/menu/menu.html'"></div>
+<div id="main" class="container-fluid">
+    <ul class="list-group">
+        <li class="list-group-item" ng-repeat="(key, value) in userData"> {{key}}: {{ value }}</li>
+    </ul>
+</div>
