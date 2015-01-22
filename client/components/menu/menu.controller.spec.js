@@ -5,7 +5,7 @@ describe('Controller: MenuDirectiveController', function () {
   beforeEach(module('GHReview'));
   beforeEach(module('app/welcome/welcome.html'));
 
-  describe('MenuDirectiveController', function () {
+  describe('MenuController', function () {
 
     describe('$scope.name', function () {
 
@@ -17,7 +17,7 @@ describe('Controller: MenuDirectiveController', function () {
         $q = $injector.get('$q');
 
         var $controller = $injector.get('$controller');
-        controller = $controller('menuDirectiveController', {
+        controller = $controller('MenuController', {
           '$scope': $scope,
           'authenticated': {
             get: function () {
@@ -55,7 +55,7 @@ describe('Controller: MenuDirectiveController', function () {
         hotkeys = $injector.get('hotkeys');
 
         var $controller = $injector.get('$controller');
-        controller = $controller('menuDirectiveController', {
+        controller = $controller('MenuController', {
           '$scope': $scope,
           '$state': $state,
           'hotkeys': hotkeys,
