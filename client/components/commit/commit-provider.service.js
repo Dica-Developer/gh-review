@@ -10,14 +10,14 @@
         var files = [];
         var filesLength = 0;
         var addFile = function (file, fileIndex) {
-          var lines = file.patch.split(/\r?\n/);
+          var lines = file.patch ? file.patch.split(/\r?\n/) : null;
           /*jshint camelcase: false*/
           var start = file.blob_url.indexOf('blob/') + 'blob/'.length;
           var shaAndPath = file.blob_url.substr(start);
           var end = shaAndPath.indexOf('/');
           var blobSha = shaAndPath.substr(0, end);
           files[fileIndex] = {
-            lines: new Chunk(lines, file.filename),
+            lines: lines ? new Chunk(lines, file.filename) : null,
             name: file.filename,
             blobSha: blobSha,
             additions: file.additions,
