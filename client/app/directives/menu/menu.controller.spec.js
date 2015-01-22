@@ -3,6 +3,7 @@ describe('Controller: MenuDirectiveController', function () {
   'use strict';
 
   beforeEach(module('GHReview'));
+  beforeEach(module('app/welcome/welcome.html'));
 
   describe('MenuDirectiveController', function () {
 

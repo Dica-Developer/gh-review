@@ -5,6 +5,7 @@ describe('Directive: commit-list', function () {
   beforeEach(angular.mock.module('GHReview'));
   beforeEach(angular.mock.module('commitMockModule'));
   beforeEach(angular.mock.module('app/directives/commit-list/commit-list.html'));
+  beforeEach(module('app/welcome/welcome.html'));
 
   var $rootScope, $scope, $controller, $q, $location, commits, commentCollector, filter;
 

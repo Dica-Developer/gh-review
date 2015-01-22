@@ -3,6 +3,7 @@ describe('Directive: menu', function () {
 
   beforeEach(module('GHReview'));
   beforeEach(module('app/directives/menu/menu.html'));
+  beforeEach(module('app/welcome/welcome.html'));
 
   var $compile, $rootScope, $q;
 
