@@ -71,15 +71,4 @@ module.exports = function(grunt) {
     grunt.file.write('.tmp/options.js', processedTmpl);
   });
 
-  grunt.registerTask('test', [
-    'jshint',
-    'karma:dev'
-  ]);
-
-  grunt.registerTask('travis', [
-    'processTmpl:dev',
-    'karma:travis',
-    'coveralls'
-  ]);
-
 };

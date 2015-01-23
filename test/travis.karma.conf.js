@@ -24,6 +24,7 @@ module.exports = function (config) {
       'client/app/**/*.html',
       'client/components/**/*.js',
       'client/components/**/*.html',
+      '.tmp/options.js',
       'test/helper/commitMockModule.js',
       'test/helper/bind-polyfill.js'
     ],
