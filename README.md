@@ -24,7 +24,7 @@ After installing [node.js](http://nodejs.org/ "Node.js"), you have to run the fo
 
 To start development run the following command in the gh-review folder:
 
-    grunt dev
+    grunt serve
 
 It starts the application and opens the start page in a browser. Every change change you made to the application will be automatically incorporated in the test system.
 Changes that did not pass the jshint stage will not be applied.
@@ -39,11 +39,15 @@ To run tests automatically for every change during development run the following
 
 To build a distribution run the following commands corresponding to your operating system:
 
-    grunt dist
+    grunt build
 
 The app can then be found under:
 
     ./dist/
+    
+or run a server with the dist build:
+
+    grunt serve:dist
 
 ## Color ranges ##
 
