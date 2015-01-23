@@ -54,13 +54,5 @@
     "less-plugin-clean-css": "^1.4.0",
     "load-grunt-tasks": "^2.0.0",
     "time-grunt": "^1.0.0"
-  },
-  "dependencies": {
-    "grunt-complexity": "^0.3.0",
-    "grunt-contrib-compress": "^0.13.0",
-    "grunt-contrib-jasmine": "^0.8.2",
-    "karma-coffee-preprocessor": "^0.2.1",
-    "karma-firefox-launcher": "^0.1.4",
-    "requirejs": "^2.1.15"
   }
 }
