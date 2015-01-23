@@ -6,7 +6,7 @@
         dot: true,
         src: [
           '.tmp',
-          '<%= config.dist %>/*'
+          '<%= config.dist %>'
         ]
       }]
     }

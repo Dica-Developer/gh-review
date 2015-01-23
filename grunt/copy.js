@@ -5,8 +5,8 @@
       'files': [
         {
           'expand': true,
-          'cwd': './dist',
-          'dest': '/tmp/gh-review.pages',
+          'cwd': '<%= config.dist %>',
+          'dest': '<%= config.temp %>/gh-review.pages',
           'src': '**'
         }
       ]
