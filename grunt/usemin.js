@@ -2,17 +2,10 @@
   'use strict';
   module.exports = {
     'prepare': {
-      html: ['<%= config.app %>/index.html'],
+      html: ['<%= config.app %>/index.html', '<%= config.app %>/oauth/index.html'],
       options: {
         dest: '<%= config.dist %>'
-      }/*,
-       'oauth': {
-       'src': '<%= config.app %>/oauth/index.html',
-       'options': {
-       'root': '<%= config.app %>/oauth',
-       'dest': 'dist/oauth'
-       }
-       }*/
+      }
     },
     'min': {
       html: ['<%= config.dist %>/{,*/}*.html'],
