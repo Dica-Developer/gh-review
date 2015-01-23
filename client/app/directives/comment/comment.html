@@ -49,15 +49,11 @@
     <textarea ng-if="comment.mode === 'edit'" class="form-control" ng-model="comment.edit_text"></textarea>
 
     <button ng-if="comment.mode !== 'show'" type="button" id="cancelComment" class="btn btn-default btn-sm"
-            ng-click="cancel()">Cancel
-    </button>
+            ng-click="cancel()">Cancel</button>
     <button ng-if="comment.mode === 'edit' && comment.edit_text" type="button" id="previewComment"
-            class="btn btn-default btn-sm" ng-click="comment.preview()">Preview
-    </button>
+            class="btn btn-default btn-sm" ng-click="comment.preview()">Preview</button>
     <button ng-if="comment.mode === 'preview'" type="button" id="continueEditComment" class="btn btn-default btn-sm"
-            ng-click="comment.mode = 'edit'">Edit
-    </button>
+            ng-click="comment.mode = 'edit'">Edit</button>
     <button ng-if="comment.mode !== 'show' && comment.edit_text" type="button" id="submitLineComment"
-            class="btn btn-primary btn-sm" ng-click="comment.createComment()">Create
-    </button>
+            class="btn btn-primary btn-sm" ng-click="comment.createComment()">Create</button>
 </div>
