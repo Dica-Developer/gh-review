@@ -4,7 +4,7 @@
     dist: [
       'less:dist',
       'imagemin'/*,
-      'svgmin'*/
+       'svgmin'*/
     ]
   };
 }());

@@ -1,4 +1,4 @@
-(function(){
+(function () {
   'use strict';
   module.exports = {
     options: {},
@@ -26,7 +26,7 @@
     },
     less: {
       options: {
-        transform: function(filePath) {
+        transform: function (filePath) {
           filePath = filePath.replace('/client/app/', '');
           filePath = filePath.replace('/client/components/', '');
           return '@import \'' + filePath + '\';';

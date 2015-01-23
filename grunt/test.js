@@ -1,15 +1,14 @@
-
-(function(){
+(function () {
   'use strict';
 
-  module.exports = function(grunt){
-    grunt.registerTask('test', function(target){
+  module.exports = function (grunt) {
+    grunt.registerTask('test', function (target) {
       var tasklist = ['jshint', 'processTmpl:dev'];
 
-      if('travis' === target){
+      if ('travis' === target) {
         tasklist.push('karma:travis');
         tasklist.push('coveralls');
-      } else{
+      } else {
         tasklist.push('karma:dev');
       }
       grunt.task.run(tasklist);

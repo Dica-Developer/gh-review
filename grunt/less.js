@@ -1,4 +1,4 @@
-(function(){
+(function () {
   'use strict';
   module.exports = {
     options: {
@@ -10,7 +10,7 @@
     },
     dist: {
       files: {
-        '<%= config.temp %>/app/app.css' : '<%= config.app %>/app/app.less'
+        '<%= config.temp %>/app/app.css': '<%= config.app %>/app/app.less'
       }
     },
     'dev': {

@@ -22,7 +22,7 @@
             [/(assets\/images\/.*?\.(?:gif|jpeg|jpg|png|webp|svg))/gm, 'Update the JS to reference our revved images']
           ],
           html: [
-            [/(oauth.*?\.(?:js))/gm, 'Update the HTML to reference oauth', null, function(path){
+            [/(oauth.*?\.(?:js))/gm, 'Update the HTML to reference oauth', null, function (path) {
               return path.replace('oauth/', '');
             }]
           ],

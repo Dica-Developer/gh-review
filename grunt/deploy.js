@@ -20,7 +20,7 @@
     grunt.registerTask('checkoutWebsite', function () {
       var done = this.async();
 
-      exec('git clone --reference ./ --branch gh-pages git@github.com:Dica-Developer/gh-review.git ' + pagesPath, function(error){
+      exec('git clone --reference ./ --branch gh-pages git@github.com:Dica-Developer/gh-review.git ' + pagesPath, function (error) {
         if (error !== null) {
           grunt.log.error('rm error: ' + error);
           done(false);
@@ -44,7 +44,7 @@
 
     grunt.registerTask('commitAndPush', function () {
       var done = this.async();
-      exec('cd '+ pagesPath +' && git add --all . && git commit -m "* deploy release" && git push', function (error, stdout, stderr) {
+      exec('cd ' + pagesPath + ' && git add --all . && git commit -m "* deploy release" && git push', function (error, stdout, stderr) {
         var result = true;
         if (stdout) {
           grunt.log.writeln(stdout);
