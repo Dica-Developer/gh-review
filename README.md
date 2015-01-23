@@ -1,5 +1,5 @@
 [![Stories in Ready](https://badge.waffle.io/dica-developer/gh-review.png?label=ready&title=Ready)](https://waffle.io/dica-developer/gh-review)
-[![Build Status](https://travis-ci.org/Dica-Developer/gh-review.png?branch=master)](https://travis-ci.org/Dica-Developer/gh-review)  [![Coverage Status](https://coveralls.io/repos/Dica-Developer/gh-review/badge.png?branch=master)](https://coveralls.io/r/Dica-Developer/gh-review?branch=master)
+[![Build Status](http://img.shields.io/travis/Dica-Developer/gh-review.svg?style=flat-square&label=Travis%20CI)](https://travis-ci.org/Dica-Developer/gh-review)  [![Coverage Status](https://coveralls.io/repos/Dica-Developer/gh-review/badge.png?branch=master)](https://coveralls.io/r/Dica-Developer/gh-review?branch=master)
 - - -
 # GitHub Review #
 
