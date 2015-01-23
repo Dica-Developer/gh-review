@@ -81,7 +81,7 @@
 
         $scope.removeComment = function (line, commentToRemove) {
           commentToRemove.remove();
-          if(line){
+          if (line) {
             _.remove(line.comments, function (comment) {
               return comment.id === commentToRemove.id;
             });

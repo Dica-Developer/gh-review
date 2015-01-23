@@ -5,12 +5,14 @@ describe('Controller: RootController', function () {
 
   describe('RootController', function () {
 
-    it('Should go to state "listFilter" if at least one filter is defined', inject(function($injector){
+    it('Should go to state "listFilter" if at least one filter is defined', inject(function ($injector) {
       var state = $injector.get('$state');
       var stateSpy = spyOn(state, 'go');
-      var filterSpy = {getAll: function(){
-        return [1,2];
-      }};
+      var filterSpy = {
+        getAll: function () {
+          return [1, 2];
+        }
+      };
       var $rootScope = $injector.get('$rootScope');
       var $scope = $rootScope.$new();
       var $controller = $injector.get('$controller');
@@ -21,12 +23,14 @@ describe('Controller: RootController', function () {
       expect(stateSpy).toHaveBeenCalledWith('listFilter');
     }));
 
-    it('Should go to state "addFilter" if no filter is defined', inject(function($injector){
+    it('Should go to state "addFilter" if no filter is defined', inject(function ($injector) {
       var state = $injector.get('$state');
       var stateSpy = spyOn(state, 'go');
-      var filterSpy = {getAll: function(){
-        return [];
-      }};
+      var filterSpy = {
+        getAll: function () {
+          return [];
+        }
+      };
       var $rootScope = $injector.get('$rootScope');
       var $scope = $rootScope.$new();
       var $controller = $injector.get('$controller');

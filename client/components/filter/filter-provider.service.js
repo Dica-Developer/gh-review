@@ -264,21 +264,21 @@
         return branchCollector.get(this.getOwner(), this.getRepo());
       };
 
-      Filter.prototype.getTree = function(){
+      Filter.prototype.getTree = function () {
         return treeCollector.get(this.getOwner(), this.getRepo(), this.getBranch());
       };
 
-      Filter.prototype.getCurrentPage = function(){
+      Filter.prototype.getCurrentPage = function () {
         return this.currentPage;
       };
 
-      Filter.prototype.setCurrentPage = function(page){
+      Filter.prototype.setCurrentPage = function (page) {
         this.currentPage = page;
         $location.search('page', this.currentPage);
       };
 
-      Filter.prototype.getPage = function(){
-        if($location.search().page && $location.search().page !== this.currentPage){
+      Filter.prototype.getPage = function () {
+        if ($location.search().page && $location.search().page !== this.currentPage) {
           this.setCurrentPage($location.search().page);
         }
         var start = (this.currentPage * this.maxResults) - this.maxResults;
@@ -286,7 +286,7 @@
         return this.commitList.slice(start, end);
       };
 
-      Filter.prototype.getTotalCommitsLength = function(){
+      Filter.prototype.getTotalCommitsLength = function () {
         return this.commitList.length;
       };
 
@@ -330,7 +330,7 @@
           .then(
           function (commitList) {
             _this._processCustomFilter(commitList)
-              .then(function(){
+              .then(function () {
                 getCommitsRefer.resolve(_this.getPage());
               });
           },
@@ -339,7 +339,7 @@
           },
           function (uncompleteCommitList) {
             _this._processCustomFilter(uncompleteCommitList)
-              .then(function(){
+              .then(function () {
                 getCommitsRefer.notify(_this.getPage());
               });
           }
@@ -359,7 +359,7 @@
           var authors = customFilter.authors;
           var excludeOwnCommits = customFilter.excludeOwnCommits;
           githubUserData.get()
-            .then(function(result){
+            .then(function (result) {
               var userData = result;
               commentCollector.getCommitApproved()
                 .then(function (commitApproved) {
@@ -401,7 +401,7 @@
                       }
                     }
 
-                    if(excludeOwnCommits && author === userData.login){
+                    if (excludeOwnCommits && author === userData.login) {
                       selectCommit = false;
                     }
 
@@ -450,8 +450,8 @@
           filterHolder[newFilter.getId()] = newFilter;
           return newFilter;
         },
-        getCloneOf: function(filter){
-          if(filter instanceof Filter){
+        getCloneOf: function (filter) {
+          if (filter instanceof Filter) {
             var clonedFilter = new Filter();
             clonedFilter.options = _.cloneDeep(filter.options);
             clonedFilter.options.meta.idOriginal = clonedFilter.options.meta.id;

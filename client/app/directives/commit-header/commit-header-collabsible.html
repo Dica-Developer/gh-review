@@ -1,6 +1,6 @@
 <accordion>
     <accordion-group is-open="commitHeaderStatus.open">
-        <accordion-heading >
+        <accordion-heading>
             <div class="media">
                 <avatar commit="commit.committer"></avatar>
                 <!--TODO remove inline style-->
@@ -15,7 +15,8 @@
                 </div>
             </div>
             <commit-message-teaser message="commit.message"></commit-message-teaser>
-            <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': commitHeaderStatus.open, 'glyphicon-chevron-right': !commitHeaderStatus.open}"></i>
+            <i class="pull-right glyphicon"
+               ng-class="{'glyphicon-chevron-down': commitHeaderStatus.open, 'glyphicon-chevron-right': !commitHeaderStatus.open}"></i>
         </accordion-heading>
         <pre ng-if="commitHeaderStatus.open">{{commit.message}}</pre>
     </accordion-group>

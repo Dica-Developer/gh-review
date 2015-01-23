@@ -17,21 +17,26 @@ describe('Service: treeCollector', function () {
     expect(treeCollector).toBeDefined();
   });
 
-  it('Should call github.getTree with correct arguments if ".get" is called', function(){
+  it('Should call github.getTree with correct arguments if ".get" is called', function () {
     spyOn(github.gitdata, 'getTree');
 
     treeCollector.get('TestUser', 'TestRepo', 'master');
     treeCollector.get.cache = {};
 
     expect(github.gitdata.getTree).toHaveBeenCalled();
-    expect(github.gitdata.getTree).toHaveBeenCalledWith({ user : 'TestUser', repo : 'TestRepo', sha : 'master', recursive : true }, jasmine.any(Function));
+    expect(github.gitdata.getTree).toHaveBeenCalledWith({
+      user: 'TestUser',
+      repo: 'TestRepo',
+      sha: 'master',
+      recursive: true
+    }, jasmine.any(Function));
   });
 
-  it('Should be rejected if github throws error', function(done){
+  it('Should be rejected if github throws error', function (done) {
     spyOn(github.gitdata, 'getTree');
 
     treeCollector.get('TestUser', 'TestRepo', 'master')
-      .then(null, function(){
+      .then(null, function () {
         treeCollector.get.cache = {};
         done();
       });
@@ -41,11 +46,11 @@ describe('Service: treeCollector', function () {
     $rootScope.$apply();
   });
 
-  it('Should be resolved with result', function(done){
+  it('Should be resolved with result', function (done) {
     spyOn(github.gitdata, 'getTree');
 
     treeCollector.get('TestUser', 'TestRepo', 'master')
-      .then(function(result){
+      .then(function (result) {
         expect(result.length).toBeGreaterThan(0);
         treeCollector.get.cache = {};
         done();
@@ -60,7 +65,7 @@ describe('Service: treeCollector', function () {
     $rootScope.$apply();
   });
 
-  it('Should call github.hasNextPage to check if pagination is needed', function(done){
+  it('Should call github.hasNextPage to check if pagination is needed', function (done) {
     var result = {
       tree: [1, 2, 3],
       meta: {}
@@ -69,7 +74,7 @@ describe('Service: treeCollector', function () {
     spyOn(github.gitdata, 'getTree');
     spyOn(github, 'hasNextPage').and.returnValue(false);
     treeCollector.get('TestUser', 'TestRepo', 'master')
-      .then(function(){
+      .then(function () {
         expect(github.hasNextPage).toHaveBeenCalledWith(result);
         treeCollector.get.cache = {};
         done();
@@ -79,7 +84,7 @@ describe('Service: treeCollector', function () {
     $rootScope.$apply();
   });
 
-  it('Should call github.getNextPage if github result is paginated and return concatenated result', function(done){
+  it('Should call github.getNextPage if github result is paginated and return concatenated result', function (done) {
     var githubResult = {
       tree: [1, 2, 3],
       meta: {}
@@ -89,7 +94,7 @@ describe('Service: treeCollector', function () {
     spyOn(github, 'hasNextPage').and.returnValue(true);
     spyOn(github, 'getNextPage');
     treeCollector.get('TestUser', 'TestRepo', 'master')
-      .then(function(result){
+      .then(function (result) {
         expect(github.getNextPage).toHaveBeenCalledWith(githubResult, jasmine.any(Function));
         expect(result.length).toBe(6);
         expect(result).toEqual([1, 2, 3, 4, 5, 6]);
@@ -112,12 +117,12 @@ describe('Service: treeCollector', function () {
     $rootScope.$apply();
   });
 
-  it('Should reject if github.getNextPage throws error', function(done){
+  it('Should reject if github.getNextPage throws error', function (done) {
     spyOn(github.gitdata, 'getTree');
     spyOn(github, 'hasNextPage').and.returnValue(true);
     spyOn(github, 'getNextPage');
     treeCollector.get('TestUser', 'TestRepo', 'master')
-      .then(null, function(){
+      .then(null, function () {
         treeCollector.get.cache = {};
         done();
       });
@@ -137,14 +142,14 @@ describe('Service: treeCollector', function () {
     $rootScope.$apply();
   });
 
-  it('Should add a well named cache object', function(){
+  it('Should add a well named cache object', function () {
     spyOn(github.gitdata, 'getTree');
     treeCollector.get('TestUser', 'TestRepo', 'master');
     expect(treeCollector.get.cache).toBeDefined();
     expect(treeCollector.get.cache['TestUser-TestRepo-master']).toBeDefined();
   });
 
-  it('Should invalidate cache after a given time', function(){
+  it('Should invalidate cache after a given time', function () {
     spyOn(github.gitdata, 'getTree');
     treeCollector.get('TestUser', 'TestRepo', 'master');
     expect(treeCollector.get.cache).toBeDefined();

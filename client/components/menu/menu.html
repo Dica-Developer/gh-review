@@ -13,7 +13,7 @@
         <div collapse="isCollapsed" class="navbar-collapse collapse" id="navbar-main">
             <ul class="nav navbar-nav">
                 <li ng-repeat="item in menu" ui-sref-active="active" ng-show="isAuthenticated()">
-                    <a ui-sref="{{item.link}}" >{{item.title}}</a>
+                    <a ui-sref="{{item.link}}">{{item.title}}</a>
                 </li>
             </ul>
 
@@ -32,7 +32,7 @@
                     <ul id="userMenuDropdown" class="dropdown-menu">
                         <li ng-repeat="item in submenu" ng-switch="item.linkType">
                             <a ng-switch-when="href" href="{{item.link}}">{{item.title}}</a>
-                            <a ng-switch-default ui-sref="{{item.link}}" >{{item.title}}</a>
+                            <a ng-switch-default ui-sref="{{item.link}}">{{item.title}}</a>
                         </li>
                     </ul>
                 </li>

@@ -29,7 +29,13 @@ describe('Service: commitCollector', function () {
     commitCollector.get.cache = {};
 
     expect(github.repos.getCommits).toHaveBeenCalled();
-    expect(github.repos.getCommits).toHaveBeenCalledWith({ user: 'TestUser', repo: 'TestRepo', sha: 'master', author: 'TestAuthor', 'per_page': 100 }, jasmine.any(Function));
+    expect(github.repos.getCommits).toHaveBeenCalledWith({
+      user: 'TestUser',
+      repo: 'TestRepo',
+      sha: 'master',
+      author: 'TestAuthor',
+      'per_page': 100
+    }, jasmine.any(Function));
   });
 
   it('Should be rejected if github throws error', function (done) {
@@ -123,7 +129,7 @@ describe('Service: commitCollector', function () {
     github.hasNextPage.and.returnValue(false);
 
     var getNextPageCallback = github.getNextPage.calls.argsFor(0)[1];
-    var result1 =  [4, 5, 6];
+    var result1 = [4, 5, 6];
     result1.meta = {};
     getNextPageCallback(null, result1);
     $rootScope.$apply();

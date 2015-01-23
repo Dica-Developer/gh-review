@@ -4,7 +4,7 @@
     <title>GH-Review</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- build:css({.tmp, client}) app/app.css -->
-        <link rel="stylesheet" href="app/app.css">
+    <link rel="stylesheet" href="app/app.css">
     <!-- endbuild -->
 </head>
 <body>
@@ -13,85 +13,85 @@
 <div ui-view></div>
 
 <!-- build:js({client,node_modules}) app/vendor.js -->
-    <!-- bower:js -->
-    <script src="bower_components/jquery/dist/jquery.js"></script>
-    <script src="bower_components/angular/angular.js"></script>
-    <script src="bower_components/angular-route/angular-route.js"></script>
-    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
-    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-    <script src="bower_components/angular-local-storage/angular-local-storage.js"></script>
-    <script src="bower_components/moment/moment.js"></script>
-    <script src="bower_components/lodash/dist/lodash.compat.js"></script>
-    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-    <script src="bower_components/angular-animate/angular-animate.js"></script>
-    <script src="bower_components/highlightjs/highlight.pack.js"></script>
-    <script src="bower_components/angular-highlightjs/angular-highlightjs.js"></script>
-    <script src="bower_components/angular-hotkeys/build/hotkeys.min.js"></script>
-    <script src="bower_components/angular-ui-select/dist/select.js"></script>
-    <!-- endbower -->
-    <script src="bower_components/github-js/dist/github.js"></script>
+<!-- bower:js -->
+<script src="bower_components/jquery/dist/jquery.js"></script>
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-route/angular-route.js"></script>
+<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+<script src="bower_components/angular-local-storage/angular-local-storage.js"></script>
+<script src="bower_components/moment/moment.js"></script>
+<script src="bower_components/lodash/dist/lodash.compat.js"></script>
+<script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+<script src="bower_components/angular-animate/angular-animate.js"></script>
+<script src="bower_components/highlightjs/highlight.pack.js"></script>
+<script src="bower_components/angular-highlightjs/angular-highlightjs.js"></script>
+<script src="bower_components/angular-hotkeys/build/hotkeys.min.js"></script>
+<script src="bower_components/angular-ui-select/dist/select.js"></script>
+<!-- endbower -->
+<script src="bower_components/github-js/dist/github.js"></script>
 <!-- endbuild -->
 
 <!-- build:js({.tmp,client}) app/app.js -->
 <script src="app/app.js"></script>
 <script src="../.tmp/options.js"></script>
-    <!-- injector:js -->
-    <script src="app/auth/auth.js"></script>
-    <script src="app/auth/login.controller.js"></script>
-    <script src="app/auth/logout.controller.js"></script>
-    <script src="app/commit/commit.controller.js"></script>
-    <script src="app/commit/commit.js"></script>
-    <script src="app/directives/avatar/avatar.directive.js"></script>
-    <script src="app/directives/comment/comment.directive.js"></script>
-    <script src="app/directives/commit-header/commit-header.directive.js"></script>
-    <script src="app/directives/commit-list/commit-list.controller.js"></script>
-    <script src="app/directives/commit-list/commit-list.directive.js"></script>
-    <script src="app/directives/commit-message-teaser/commit-message-teaser.directive.js"></script>
-    <script src="app/directives/formatted-date/formatted-date.directive.js"></script>
-    <script src="app/file/file.controller.js"></script>
-    <script src="app/file/file.js"></script>
-    <script src="app/filter-list/filter-list.controller.js"></script>
-    <script src="app/filter-list/filter-list.js"></script>
-    <script src="app/filter/filter.controller.js"></script>
-    <script src="app/filter/filter.js"></script>
-    <script src="app/js/services.js"></script>
-    <script src="app/module/module.controller.js"></script>
-    <script src="app/module/module.js"></script>
-    <script src="app/root/root.controller.js"></script>
-    <script src="app/root/root.js"></script>
-    <script src="app/welcome/welcome.controller.js"></script>
-    <script src="app/welcome/welcome.js"></script>
-    <script src="app/whoami/whoami.controller.js"></script>
-    <script src="app/whoami/whoami.js"></script>
-    <script src="components/auth/auth.service.js"></script>
-    <script src="components/branch/branch-collector.service.js"></script>
-    <script src="components/chunk/chunk.factory.js"></script>
-    <script src="components/comment/comment-collect.services.js"></script>
-    <script src="components/comment/comment-collector.service.js"></script>
-    <script src="components/comment/comment-provider.service.js"></script>
-    <script src="components/comment/comment.service.js"></script>
-    <script src="components/commit/commit-approve.service.js"></script>
-    <script src="components/commit/commit-collector.service.js"></script>
-    <script src="components/commit/commit-provider.service.js"></script>
-    <script src="components/commit/commit-unapprove.service.js"></script>
-    <script src="components/contributor/contributor-collector.service.js"></script>
-    <script src="components/events/events.service.js"></script>
-    <script src="components/filter/filter-provider.service.js"></script>
-    <script src="components/filter/filter.service.js"></script>
-    <script src="components/github/github-commits.service.js"></script>
-    <script src="components/github/github-file.service.js"></script>
-    <script src="components/github/github-freesearch.service.js"></script>
-    <script src="components/github/github-repos.service.js"></script>
-    <script src="components/github/github-userdata.service.js"></script>
-    <script src="components/github/github.service.js"></script>
-    <script src="components/human-readable-date/human-readable-date.service.js"></script>
-    <script src="components/lodash/lodash.constant.js"></script>
-    <script src="components/menu/menu.controller.js"></script>
-    <script src="components/moment/moment.constant.js"></script>
-    <script src="components/repo/repo-collector.service.js"></script>
-    <script src="components/tree/tree-collector.service.js"></script>
-    <!-- endinjector -->
+<!-- injector:js -->
+<script src="app/auth/auth.js"></script>
+<script src="app/auth/login.controller.js"></script>
+<script src="app/auth/logout.controller.js"></script>
+<script src="app/commit/commit.controller.js"></script>
+<script src="app/commit/commit.js"></script>
+<script src="app/directives/avatar/avatar.directive.js"></script>
+<script src="app/directives/comment/comment.directive.js"></script>
+<script src="app/directives/commit-header/commit-header.directive.js"></script>
+<script src="app/directives/commit-list/commit-list.controller.js"></script>
+<script src="app/directives/commit-list/commit-list.directive.js"></script>
+<script src="app/directives/commit-message-teaser/commit-message-teaser.directive.js"></script>
+<script src="app/directives/formatted-date/formatted-date.directive.js"></script>
+<script src="app/file/file.controller.js"></script>
+<script src="app/file/file.js"></script>
+<script src="app/filter-list/filter-list.controller.js"></script>
+<script src="app/filter-list/filter-list.js"></script>
+<script src="app/filter/filter.controller.js"></script>
+<script src="app/filter/filter.js"></script>
+<script src="app/js/services.js"></script>
+<script src="app/module/module.controller.js"></script>
+<script src="app/module/module.js"></script>
+<script src="app/root/root.controller.js"></script>
+<script src="app/root/root.js"></script>
+<script src="app/welcome/welcome.controller.js"></script>
+<script src="app/welcome/welcome.js"></script>
+<script src="app/whoami/whoami.controller.js"></script>
+<script src="app/whoami/whoami.js"></script>
+<script src="components/auth/auth.service.js"></script>
+<script src="components/branch/branch-collector.service.js"></script>
+<script src="components/chunk/chunk.factory.js"></script>
+<script src="components/comment/comment-collect.services.js"></script>
+<script src="components/comment/comment-collector.service.js"></script>
+<script src="components/comment/comment-provider.service.js"></script>
+<script src="components/comment/comment.service.js"></script>
+<script src="components/commit/commit-approve.service.js"></script>
+<script src="components/commit/commit-collector.service.js"></script>
+<script src="components/commit/commit-provider.service.js"></script>
+<script src="components/commit/commit-unapprove.service.js"></script>
+<script src="components/contributor/contributor-collector.service.js"></script>
+<script src="components/events/events.service.js"></script>
+<script src="components/filter/filter-provider.service.js"></script>
+<script src="components/filter/filter.service.js"></script>
+<script src="components/github/github-commits.service.js"></script>
+<script src="components/github/github-file.service.js"></script>
+<script src="components/github/github-freesearch.service.js"></script>
+<script src="components/github/github-repos.service.js"></script>
+<script src="components/github/github-userdata.service.js"></script>
+<script src="components/github/github.service.js"></script>
+<script src="components/human-readable-date/human-readable-date.service.js"></script>
+<script src="components/lodash/lodash.constant.js"></script>
+<script src="components/menu/menu.controller.js"></script>
+<script src="components/moment/moment.constant.js"></script>
+<script src="components/repo/repo-collector.service.js"></script>
+<script src="components/tree/tree-collector.service.js"></script>
+<!-- endinjector -->
 <!-- endbuild -->
 </body>
 </html>

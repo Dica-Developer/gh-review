@@ -23,7 +23,11 @@ describe('Service: contributorCollector', function () {
     contributorCollector.get.cache = {};
 
     expect(github.repos.getContributors).toHaveBeenCalled();
-    expect(github.repos.getContributors).toHaveBeenCalledWith({ user: 'TestUser', repo: 'TestRepo', 'per_page': 100 }, jasmine.any(Function));
+    expect(github.repos.getContributors).toHaveBeenCalledWith({
+      user: 'TestUser',
+      repo: 'TestRepo',
+      'per_page': 100
+    }, jasmine.any(Function));
   });
 
   it('Should be rejected if github throws error', function (done) {
@@ -97,7 +101,7 @@ describe('Service: contributorCollector', function () {
     github.hasNextPage.and.returnValue(false);
 
     var getNextPageCallback = github.getNextPage.calls.argsFor(0)[1];
-    var result1 =  [4, 5, 6];
+    var result1 = [4, 5, 6];
     result1.meta = {};
     getNextPageCallback(null, result1);
     $rootScope.$apply();

@@ -383,7 +383,7 @@ describe('Service: filterProvider', function () {
 
       filter.getContributorList();
       expect(githubSpy).toHaveBeenCalled();
-      expect(githubSpy.calls.argsFor(0)[0]).toEqual({ user: 'Dica-Developer', repo: 'gh-review', 'per_page': 100 });
+      expect(githubSpy.calls.argsFor(0)[0]).toEqual({user: 'Dica-Developer', repo: 'gh-review', 'per_page': 100});
     });
 
     it('#Filter.getContributorList should promise.resolve if response', function (done) {
@@ -431,12 +431,12 @@ describe('Service: filterProvider', function () {
     });
   });
 
-  describe('Filter._processCustomFilter', function(){
+  describe('Filter._processCustomFilter', function () {
     var filter, commits, $rootScope, commentCollector, githubUserData, $q;
 
     beforeEach(angular.mock.module('commitMockModule'));
 
-    beforeEach(inject(function($injector){
+    beforeEach(inject(function ($injector) {
       $rootScope = $injector.get('$rootScope');
       $q = $injector.get('$q');
       commits = $injector.get('commits');
@@ -446,10 +446,10 @@ describe('Service: filterProvider', function () {
       filter = filterProvider.getNew();
     }));
 
-    it('Should set commitList to given commits if no filtering is needed', function(done){
+    it('Should set commitList to given commits if no filtering is needed', function (done) {
       spyOn(filter, '_needsPostFiltering').and.returnValue(false);
       filter._processCustomFilter(commits)
-        .then(function(){
+        .then(function () {
           expect(filter.commitList).toBe(commits);
           done();
         });
@@ -457,12 +457,12 @@ describe('Service: filterProvider', function () {
       $rootScope.$apply();
     });
 
-    it('Should set commitList to commits only for one author', function(done){
+    it('Should set commitList to commits only for one author', function (done) {
       spyOn(githubUserData, 'get').and.returnValue($q.when({login: 'AnotherUser'}));
       spyOn(commentCollector, 'getCommitApproved').and.returnValue($q.when({}));
       filter.options.meta.customFilter.authors = ['sebfroh'];
       filter._processCustomFilter(commits)
-        .then(function(){
+        .then(function () {
           expect(filter.commitList.length).toBe(1);
           expect(filter.commitList[0].author.login).toBe('sebfroh');
           done();
@@ -471,12 +471,12 @@ describe('Service: filterProvider', function () {
       $rootScope.$apply();
     });
 
-    it('Should exclude user commits from commit list', function(done){
+    it('Should exclude user commits from commit list', function (done) {
       spyOn(githubUserData, 'get').and.returnValue($q.when({login: 'sebfroh'}));
       spyOn(commentCollector, 'getCommitApproved').and.returnValue($q.when({}));
       filter.options.meta.customFilter.excludeOwnCommits = true;
       filter._processCustomFilter(commits)
-        .then(function(){
+        .then(function () {
           expect(filter.commitList.length).toBe(2);
           expect(filter.commitList[0].author.login).toBe('JayGray');
           expect(filter.commitList[1].author.login).toBe('mschaaf');
@@ -486,12 +486,12 @@ describe('Service: filterProvider', function () {
       $rootScope.$apply();
     });
 
-    it('Should set commitList to approved commits only', function(done){
+    it('Should set commitList to approved commits only', function (done) {
       spyOn(githubUserData, 'get').and.returnValue($q.when({login: 'sebfroh'}));
       spyOn(commentCollector, 'getCommitApproved').and.returnValue($q.when({'7e3cc043458366a4205621bc2c006bafd6f6c4db': true}));
       filter.options.meta.customFilter.state = 'approved';
       filter._processCustomFilter(commits)
-        .then(function(){
+        .then(function () {
           expect(filter.commitList.length).toBe(1);
           expect(filter.commitList[0].author.login).toBe('sebfroh');
           done();
@@ -500,12 +500,12 @@ describe('Service: filterProvider', function () {
       $rootScope.$apply();
     });
 
-    it('Should set commitList to reviewed commits only', function(done){
+    it('Should set commitList to reviewed commits only', function (done) {
       spyOn(githubUserData, 'get').and.returnValue($q.when({login: 'sebfroh'}));
       spyOn(commentCollector, 'getCommitApproved').and.returnValue($q.when({'7e3cc043458366a4205621bc2c006bafd6f6c4db': true}));
       filter.options.meta.customFilter.state = 'reviewed';
       filter._processCustomFilter(commits)
-        .then(function(){
+        .then(function () {
           expect(filter.commitList.length).toBe(1);
           expect(filter.commitList[0].author.login).toBe('mschaaf');
           done();
@@ -514,12 +514,12 @@ describe('Service: filterProvider', function () {
       $rootScope.$apply();
     });
 
-    it('Should set commitList to uncommented commits only', function(done){
+    it('Should set commitList to uncommented commits only', function (done) {
       spyOn(githubUserData, 'get').and.returnValue($q.when({login: 'sebfroh'}));
       spyOn(commentCollector, 'getCommitApproved').and.returnValue($q.when({'7e3cc043458366a4205621bc2c006bafd6f6c4db': true}));
       filter.options.meta.customFilter.state = 'unseen';
       filter._processCustomFilter(commits)
-        .then(function(){
+        .then(function () {
           expect(filter.commitList.length).toBe(1);
           expect(filter.commitList[0].author.login).toBe('JayGray');
           done();

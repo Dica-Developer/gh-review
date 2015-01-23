@@ -19,7 +19,7 @@
           repoTree = null,
           controller = this;
 
-        controller.isExistingFilter = function() {
+        controller.isExistingFilter = function () {
           var defer = $q.defer();
           if (!angular.isUndefined($stateParams.filterId)) { //We are in the edit state
             orgFilter = filterProvider.get($stateParams.filterId);
@@ -37,14 +37,14 @@
           return defer.promise;
         };
 
-        controller.handleNewFilter = function() {
+        controller.handleNewFilter = function () {
           $scope.fetchingRepos = true;
           repoCollector.getAll()
             .then(controller.setRepos)
             .then(controller.setScopeVariables);
         };
 
-        controller.handleExistingFilter = function() {
+        controller.handleExistingFilter = function () {
           /*istanbul ignore next*/
           var setResults = function (results) {
             branchList = results[0];
@@ -55,19 +55,19 @@
           };
 
           $q.all([filter.getBranchList(), filter.getContributorList(), repoCollector.getAll(), filter.getTree()])
-            .then(setResults, function(e) {
+            .then(setResults, function (e) {
               controller.handleError(e);
               return $q.reject();
             })
             .then(controller.setScopeVariables);
         };
 
-        controller.setCurrentPage = function(newValue) {
+        controller.setCurrentPage = function (newValue) {
           filter.setCurrentPage(newValue);
           controller.setCommits(filter.getPage());
         };
 
-        controller.setScopeVariables = function() {
+        controller.setScopeVariables = function () {
           var repoSetInFilter = filter.getRepo();
           var branchSetInFilter = filter.getBranch();
           var contributorSetInFilter = filter.getAuthors();
@@ -165,13 +165,13 @@
           $scope.$watch('currentPage', controller.setCurrentPage);
         };
 
-        controller.setRepos = function(repos) {
+        controller.setRepos = function (repos) {
           repoList = repos;
           $scope.fetchingRepos = false;
           $q.when();
         };
 
-        controller.setBranchSelection = function(branches) {
+        controller.setBranchSelection = function (branches) {
           $scope.fetchingBranches = false;
           $scope.branches = branches;
           $scope.branchSelection = _.pluck(branches, 'name');
@@ -179,14 +179,14 @@
           $scope.selectedBranch = $scope.branchSelection[_.indexOf($scope.branchSelection, $scope.selectedRepo.default_branch)];
         };
 
-        controller.setCommits = function(commits) {
+        controller.setCommits = function (commits) {
           $scope.commits = commits;
           $scope.commitsLength = filter.getTotalCommitsLength();
           $scope.fetchingCommits = false;
           return $q.when();
         };
 
-        controller.handleError = function(error) {
+        controller.handleError = function (error) {
           if (error) {
             error = JSON.stringify(error);
             $scope.error = error;
@@ -198,24 +198,24 @@
           }
         };
 
-        controller.getCommitList = function() {
+        controller.getCommitList = function () {
           $scope.fetchingCommits = true;
           $scope.commits = [];
           filter.getCommits()
             .then(controller.setCommits, controller.handleError, controller.setCommits);
         };
 
-        controller.setContributorList = function(contributorList) {
+        controller.setContributorList = function (contributorList) {
           $scope.contributorList = contributorList;
           return $q.when();
         };
 
-        controller.getContributorList = function() {
+        controller.getContributorList = function () {
           return filter.getContributorList()
             .then(controller.setContributorList);
         };
 
-        controller.checkIfSettingAreUpdated = function(newValue, oldValue) {
+        controller.checkIfSettingAreUpdated = function (newValue, oldValue) {
           var shouldCheck = (typeof newValue !== 'undefined' && newValue !== null && (newValue !== oldValue));
 
           //We allow null as review state which leads in non filtered results

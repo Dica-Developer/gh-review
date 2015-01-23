@@ -34,7 +34,7 @@ describe('Service: Comment', function () {
     Comment = $injector.get('Comment');
   }));
 
-  afterEach(function(){
+  afterEach(function () {
     localStorage.clear();
   });
 

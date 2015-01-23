@@ -116,16 +116,16 @@
         function getCommentForCommit(propertiesNeededForCommitView) {
           commentProvider.getCommentsForCommitWithoutApprovers(propertiesNeededForCommitView)
             .then(function (res) {
-              if(res && res.lineComments.length > 0){
-                res.lineComments.forEach(function(comment){
+              if (res && res.lineComments.length > 0) {
+                res.lineComments.forEach(function (comment) {
                   /*jshint camelcase:false*/
-                  if(!$scope.comments[comment.line +'-'+ comment.commit_id]) {
-                    $scope.comments[comment.line +'-'+ comment.commit_id] = [];
+                  if (!$scope.comments[comment.line + '-' + comment.commit_id]) {
+                    $scope.comments[comment.line + '-' + comment.commit_id] = [];
                   }
-                  $scope.comments[comment.line +'-'+ comment.commit_id].push(comment);
+                  $scope.comments[comment.line + '-' + comment.commit_id].push(comment);
                 });
               }
-            }, function(err){
+            }, function (err) {
               //TODO
               $log.log(err);
             });
