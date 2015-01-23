@@ -4,6 +4,8 @@
   module.exports = function(grunt){
     grunt.registerTask('build', [
       'clean',
+      'processTmpl:dev',
+      'test:dev',
       'processTmpl:dist',
       'injector:less',
       'concurrent:dist',
