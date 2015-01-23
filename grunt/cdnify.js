@@ -3,7 +3,7 @@
 
   module.exports = {
     dist: {
-      html: ['<%= config.dist %>/*.html']
+      html: ['<%= config.dist %>/index.html', '<%= config.dist %>/oauth/index.html']
     }
   };
 
