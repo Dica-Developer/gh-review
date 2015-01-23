@@ -4,6 +4,8 @@ module.exports = function(grunt) {
 
   require('time-grunt')(grunt);
   require('load-grunt-tasks')(grunt);
+  require('./grunt/build')(grunt);
+  grunt.loadTasks('./grunt');
   grunt.loadNpmTasks('grunt-karma-coveralls');
 
   var config = {
