@@ -6,264 +6,70 @@ module.exports = function(grunt) {
   require('load-grunt-tasks')(grunt);
   grunt.loadNpmTasks('grunt-karma-coveralls');
 
-  var LessPlugin = require('less-plugin-clean-css');
-  var lessPlugin = new LessPlugin({
-    advanced: true
-  });
-
   var config = {
-    app: 'app',
-    dev: 'dev',
+    temp: '.tmp',
+    app: 'client',
     dist: 'dist',
     test: 'test',
     coverage: 'test/coverage',
-    distOptions: {
-      clientId: '833c028df47be8e881d9',
-      apiScope: 'user, repo',
-      redirectUri: 'https://dica-developer.github.io/gh-review/oauth/',
-      accessTokenUrl: 'https://gh-review.herokuapp.com/login/oauth/access_token',
-      rootUrl: 'https://dica-developer.github.io/gh-review'
-    },
-    devOptions: {
-      clientId: '5082108e53d762d90c00',
-      apiScope: 'user, repo',
-      redirectUri: 'http://localhost:9000/oauth/',
-      accessTokenUrl: 'http://gh-review.herokuapp.com/bemdsvdsynggmvweibduvjcbgf',
-      rootUrl: 'http://localhost:9000'
-    }
+    build: grunt.file.readJSON('build.json')
   };
 
   grunt.initConfig({
     config: config,
-    uglify: {
-      generated: {
-        options: {
-          mangle: true,
-          compress: true,
-          sourceMap: true
-        }
-      }
-    },
-    connect: {
-      options: {
-        livereload: 35729,
-        // Change this to '0.0.0.0' to access the server from outside
-        hostname: 'localhost'
-      },
-      dev: {
-        options: {
-          port: 9000,
-          open: true,
-          base: '<%= config.dev %>',
-          livereload: false
-        }
-      },
-      e2e: {
-        options: {
-          port: 9001,
-          base: '<%= config.dist %>',
-          livereload: false
-        }
-      }
-    },
-    protractor: {
-      saucelabs: {
-        options: {
-          configFile: '<%= config.test %>/e2e/travis.conf.js'
-        },
-        startPage: {
-          options: {
-            args: {
-              suite: 'startWithToken',
-              sauceUser: process.env.SAUCE_USERNAME,
-              sauceKey: process.env.SAUCE_ACCESS_KEY
-            }
-          }
-        },
-        reviewModules: {
-          options: {
-            args: {
-              suite: 'reviewModules',
-              sauceUser: process.env.SAUCE_USERNAME,
-              sauceKey: process.env.SAUCE_ACCESS_KEY
-            }
-          }
-        }
-      },
-      local: {
-        options: {
-          configFile: '<%= config.test %>/e2e/conf.js',
-          keepAlive: false,
-          noColor: false,
-          args: {}
-        },
-        startPage: {
-          options: {
-            args: {
-              suite: 'startWithToken'
-            }
-          }
-        },
-        reviewModules: {
-          options: {
-            args: {
-              suite: 'reviewModules'
-            }
-          }
-        }
-      }
-    },
-    watch: {
-      options: {
-        nospawn: true
-      },
-      dev: {
-        files: [
-          '<%= config.app %>/css/*',
-          '<%= config.app %>/js/**/*',
-          '<%= config.app %>/worker/**/*',
-          '<%= config.app %>/*.html',
-          '<%= config.app %>/templates/**/*',
-          '<%= config.app %>/oauth/**/*',
-          '!<%= config.app %>/bower_components/*'
-        ],
-        tasks: ['devWatch']
-      }
-    },
-    clean: {
-      dist: {
-        files: [{
-          dot: true,
-          src: [
-            '<%= config.dist %>/*'
-          ]
-        }]
-      },
-      dev: {
-        files: [{
-          dot: true,
-          src: [
-            '<%= config.dev %>/*'
-          ]
-        }]
-      }
-    },
-    jshint: {
-      options: {
-        jshintrc: '.jshintrc'
-      },
-      files: '<%= config.app %>/js/{,*/}*.js'
-    },
-    less: {
-      dev: {
-        options: {},
-        files: {
-          '<%= config.dev %>/css/main.css': '<%= config.app %>/css/main.less'
-        }
-      },
-      dist: {
-        options: {
-          sourceMap: true,
-          sourceMapFilename: '<%= config.dist %>/css/main.css.map',
-          sourceMapURL: '/css/main.css.map',
-          plugins: [lessPlugin]
-        },
-        files: {
-          '<%= config.dist %>/css/main.css': '<%= config.app %>/css/main.less'
-        }
-      }
-    },
-    copy: {
-      deploy: {
-        files: [{
-          expand: true,
-          cwd: './dist',
-          dest: '/tmp/gh-review.pages',
-          src: '**'
-        }]
-      },
-      dev: {
-        files: [{
-          expand: true,
-          cwd: '<%= config.app %>',
-          dest: '<%= config.dev %>',
-          src: '**'
-        }, {
-          expand: true,
-          cwd: '<%= config.app %>/bower_components/bootstrap/dist/fonts',
-          dest: '<%= config.dev %>/fonts',
-          src: '*'
-        }]
-      },
-      dist: {
-        files: [{
-          expand: true,
-          cwd: '<%= config.app %>',
-          dest: '<%= config.dist %>',
-          src: ['js/worker/*', 'images/**/*', 'templates/**/*', 'fonts/**/*', '*.html', 'oauth/*.html']
-        }, {
-          expand: true,
-          cwd: '<%= config.app %>/bower_components/bootstrap/dist/fonts',
-          dest: '<%= config.dist %>/fonts',
-          src: '*'
-        }, {
-          expand: true,
-          cwd: '<%= config.app %>/bower_components/lodash/dist',
-          dest: '<%= config.dist %>/js',
-          src: 'lodash.min.js'
-        }, {
-          expand: true,
-          cwd: 'worker',
-          dest: '<%= config.dist %>/worker',
-          src: '*'
-        }]
-      }
-    },
-    useminPrepare: {
-      app: {
-        src: 'app/index.html'
-      },
-      oauth: {
-        src: 'app/oauth/index.html',
-        options: {
-          root: 'app/oauth',
-          dest: 'dist/oauth'
-        }
-      }
-    },
-    'usemin': {
-      html: ['dist/oauth/index.html', 'dist/index.html']
-    },
-    karma: {
-      dev: {
-        configFile: '<%= config.test %>/dev.karma.conf.js'
-      },
-      travis: {
-        configFile: '<%= config.test %>/travis.karma.conf.js'
-      }
-    },
-    coveralls: {
-      options: {
-        debug: false,
-        /*jshint camelcase:false*/
-        coverage_dir: 'test/coverage',
-        force: false
-      }
-    }
+    connect: require('./grunt/connect'),
+    watch: require('./grunt/watch'),
+    clean: require('./grunt/clean'),
+    wiredep: require('./grunt/wiredep'),
+    injector: require('./grunt/injector'),
+    jshint: require('./grunt/jshint'),
+    less: require('./grunt/less'),
+    autoprefixer: require('./grunt/autoprefixer'),
+    copy: require('./grunt/copy'),
+    useminPrepare: require('./grunt/usemin').prepare,
+    usemin: require('./grunt/usemin').min,
+    imagemin: require('./grunt/imagemin'),
+    cdnify: require('./grunt/cdnify'),
+    karma: require('./grunt/karma'),
+    concurrent: require('./grunt/concurrent'),
+    ngtemplates: require('./grunt/ngtemplates'),
+    ngAnnotate: require('./grunt/ngAnnotate'),
+    rev: require('./grunt/rev'),
+    coveralls: require('./grunt/coveralls')
   });
 
-  grunt.registerTask('processTmpl', function(target) {
-    var options = config.distOptions;
-    var tmpl = grunt.file.read('build-templates/options.tmpl');
+  grunt.registerTask('server-keepalive', 'Keep grunt running', function() {
+    this.async();
+  });
+
+  grunt.registerTask('serve', function (target) {
+    if (target === 'dist') {
+      return grunt.task.run(['build', 'connect:dist', 'server-keepalive']);
+    }
+
+    grunt.task.run([
+      'jshint',
+      'processTmpl:dev',
+      'injector:scripts',
+      'injector:less',
+      'less:dev',
+      'connect:dev',
+      'watch'
+    ]);
+  });
+
+  grunt.registerTask('processTmpl', function (target) {
+    var options = config.build.dist;
+    var tmpl = grunt.file.read('grunt/options.tmpl');
     var pkg = grunt.file.readJSON('package.json');
     if ('dev' === target) {
-      options = config.devOptions;
+      options = config.build.dev;
     }
     options.version = pkg.version;
     var processedTmpl = grunt.template.process(tmpl, {
       data: options
     });
-    grunt.file.write('app/js/options.js', processedTmpl);
+    grunt.file.write('client/app/options.js', processedTmpl);
   });
 
   grunt.registerTask('checkoutWebsite', function() {
@@ -318,11 +124,11 @@ module.exports = function(grunt) {
   grunt.registerTask('postProcess', function() {
     var done = this.async();
     var fs = require('fs');
-    var collectorJs = fs.readFileSync('dist/js/worker/collector.js', {
+    var collectorJs = fs.readFileSync('dist/worker/collector.js', {
       encoding: 'UTF8'
     });
     collectorJs = collectorJs.replace('../../bower_components/lodash/dist/lodash.min.js', '../lodash.min.js');
-    fs.writeFileSync('dist/js/worker/collector.js', collectorJs, {
+    fs.writeFileSync('dist/worker/collector.js', collectorJs, {
       encoding: 'UTF8'
     });
     done();
@@ -348,33 +154,14 @@ module.exports = function(grunt) {
     'copy:dev'
   ]);
 
-  grunt.registerTask('dev', [
-    'clean:dev',
-    'jshint',
-    'processTmpl:dev',
-    'copy:dev',
-    'less:dev',
-    'connect:dev',
-    'watch:dev'
-  ]);
-
-  grunt.registerTask('e2e', function(platform) {
-    grunt.task.run([
-      'dist:dev',
-      'connect:e2e',
-      'protractor:' + platform + ':startPage',
-      'protractor:' + platform + ':reviewModules'
-    ]);
-  });
-
   grunt.registerTask('test', [
+    'jshint',
     'karma:dev'
   ]);
 
   grunt.registerTask('travis', [
     'processTmpl:dev',
     'karma:travis',
-    //    'e2e:saucelabs',
     'coveralls'
   ]);
 
@@ -394,5 +181,24 @@ module.exports = function(grunt) {
     'cleanDeploy',
     'copy:deploy',
     'commitAndPush'
+  ]);
+
+  grunt.registerTask('build', [
+    'clean:dist',
+    'injector:less',
+    'concurrent:dist',
+    'injector',
+    'wiredep',
+    'useminPrepare',
+    'autoprefixer',
+    'ngtemplates',
+    'concat',
+    'ngAnnotate',
+    'copy:dist',
+    'cdnify',
+    'cssmin',
+    'uglify',
+    'rev',
+    'usemin'
   ]);
 };

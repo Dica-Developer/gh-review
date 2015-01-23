@@ -1,0 +1,33 @@
+<div ng-include="'components/menu/menu.html'"></div>
+<div id="main" class="container-fluid" >
+    <div id="search" class="row review-overview">
+        <div class="col-lg-12">
+            <div class="input-group">
+                <input ng-model="searchString" name="searchString" type="search" id="searchValue"
+                       class="form-control" placeholder="review modules repo:Dica-Developer/gh-review">
+
+                <div class="input-group-btn">
+                    <button ng-click="doSearch()" id="searchButton" type="button" class="btn btn-default">Search</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <ul id="commitList" class="list-group">
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <ul id="commitList" class="list-group">
+                <a ng-repeat="item in result" ui-sref="file({user: item.repository.owner.login, repo: item.repository.name, sha: 'master', path: item.path})" class="list-group-item">
+                    {{item.path}}
+                </a>
+
+            </ul>
+        </div>
+    </div>
+</div>

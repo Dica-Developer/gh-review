@@ -1,0 +1,208 @@
+@font-face {
+  font-family: DroidSansMono;
+  src: url('../assets/fonts/DroidSansMono.ttf');
+}
+
+@import 'bootstrap/less/bootstrap.less';
+
+@icon-font-path: '../assets/fonts/';
+
+@import (less) "../bower_components/angular-hotkeys/build/hotkeys.css";
+@import (less) "../bower_components/angular-ui-select/dist/select.css";
+
+body {
+  padding-top: 70px;
+  .branchButton {
+    border-radius: 0;
+    border-right-width: 0;
+  }
+  .row {
+    &.review-overview {
+      margin-bottom: 15px;
+    }
+  }
+}
+
+#topMenu {
+  .top-menu-avatar {
+    height: 50px;
+  }
+}
+
+#main {
+  padding: 15px;
+
+  .height50 {
+    height: 50px;
+  }
+  .datePickerCon {
+    width: 200px;
+  }
+  .filterSince {
+    select {
+      height: 10px;
+    }
+    .input-group-addon {
+      width: auto;
+    }
+  }
+}
+
+.pager {
+  li {
+    > span {
+      cursor: pointer;
+      color: @link-color;
+      &:hover {
+        color: @link-hover-color;
+      }
+    }
+  }
+}
+
+@-webkit-keyframes spinner {
+  0% {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@-moz-keyframes spinner {
+  0% {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@-o-keyframes spinner {
+  0% {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spinner {
+  0% {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+.spinner:not(:required) {
+  -webkit-animation: spinner 1500ms infinite linear;
+  -moz-animation: spinner 1500ms infinite linear;
+  -ms-animation: spinner 1500ms infinite linear;
+  -o-animation: spinner 1500ms infinite linear;
+  animation: spinner 1500ms infinite linear;
+  -webkit-border-radius: 0.5em;
+  -moz-border-radius: 0.5em;
+  -ms-border-radius: 0.5em;
+  -o-border-radius: 0.5em;
+  border-radius: 0.5em;
+  -webkit-box-shadow: white -1em 0em 0 0, white 1em 0em 0 0;
+  -moz-box-shadow: white -1em 0em 0 0, white 1em 0em 0 0;
+  box-shadow: white -1em 0em 0 0, white 1em 0em 0 0;
+  display: inline-block;
+  font-size: 3em;
+  width: 1em;
+  height: 1em;
+  margin: 1.5em;
+  overflow: hidden;
+  text-indent: 100%;
+}
+
+.spinnerContainer {
+  position: fixed;
+}
+
+.uncomplete-diff-warning {
+  .alert;
+  .alert-warning;
+  margin-bottom: 0px;
+}
+
+.display-none {
+  display: none;
+}
+
+.commitMarker {
+  min-width: 7px;
+  width: 7px;
+}
+
+// ----------------
+// filter list item
+// ----------------
+#reviewList {
+  .stats {
+    margin-right: 10px;
+  }
+}
+
+.navbarProgressbar {
+  position: absolute;
+  height: 3px;
+  top: 52px;
+  width: 100%;
+}
+
+// injector
+@import 'commit/commit.less';
+@import 'directives/commit-list/commit-list.less';
+@import 'file/file.less';
+@import 'file/hljs-github-theme.less';
+@import 'file/hljs-monokai-theme.less';
+@import 'file/hljs-solarized-dark-theme.less';
+@import 'file/hljs-solarized-light-theme.less';
+@import 'file/pygments.less';
+@import 'filter-list/filter-list.less';
+@import 'filter/filter.less';
+@import 'module/module.less';
+@import 'table.less';
+@import 'welcome/welcome.less';
+@import 'whoami/whoami.less';
+// endinjector

@@ -1,42 +1,43 @@
 module.exports = function (config) {
+  'use strict';
+
   config.set({
-    basePath: '../',
+    basePath: '..',
     frameworks: ['jasmine'],
     files: [
-      'test/helper/shim-polyfill.js',
-      'app/bower_components/moment/moment.js',
-      'app/bower_components/lodash/dist/lodash.js',
-      'app/bower_components/highlightjs/highlight.pack.js',
-      'app/bower_components/github-js/dist/github.js',
-      'app/bower_components/angular/angular.js',
-      'app/bower_components/angular-mocks/angular-mocks.js',
-      'app/bower_components/angular-ui-router/release/angular-ui-router.js',
-      'app/bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
-      'app/bower_components/angular-ui-select/dist/select.js',
-      'app/bower_components/angular-animate/angular-animate.js',
-      'app/bower_components/angular-sanitize/angular-sanitize.js',
-      'app/bower_components/angular-local-storage/angular-local-storage.js',
-      'app/bower_components/angular-highlightjs/angular-highlightjs.js',
-      'app/bower_components/angular-hotkeys/build/hotkeys.js',
-      'app/bower_components/underscore.string/lib/underscore.string.js',
-      'app/js/app.js',
-      'app/js/**/*.js',
+      'client/bower_components/moment/moment.js',
+      'client/bower_components/lodash/dist/lodash.js',
+      'client/bower_components/highlightjs/highlight.pack.js',
+      'client/bower_components/github-js/dist/github.js',
+      'client/bower_components/angular/angular.js',
+      'client/bower_components/angular-mocks/angular-mocks.js',
+      'client/bower_components/angular-ui-router/release/angular-ui-router.js',
+      'client/bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
+      'client/bower_components/angular-ui-select/dist/select.js',
+      'client/bower_components/angular-animate/angular-animate.js',
+      'client/bower_components/angular-sanitize/angular-sanitize.js',
+      'client/bower_components/angular-local-storage/angular-local-storage.js',
+      'client/bower_components/angular-highlightjs/angular-highlightjs.js',
+      'client/bower_components/angular-hotkeys/build/hotkeys.js',
+      'client/app/app.js',
+      'client/app/**/*.js',
+      'client/app/**/*.html',
+      'client/components/**/*.js',
+      'client/components/**/*.html',
       'test/helper/commitMockModule.js',
-      'test/unit/**/*-spec.js',
-      'app/templates/*.html'
+      'test/helper/bind-polyfill.js'
     ],
     exclude: [
-      'app/js/worker/*.*'
+      'client/worker/*.*'
     ],
 
-    reporters: ['story', 'coverage'],
+    reporters: ['mocha', 'coverage'],
     preprocessors: {
-      'app/js/**/*.js': ['coverage'],
-      'app/templates/*.html': ['ng-html2js']
+      'client/!(bower_components)/**/!(*.spec).js': 'coverage',
+      '**/*.html': 'html2js'
     },
     ngHtml2JsPreprocessor: {
-      stripPrefix: 'app/',
-      moduleName: 'templates'
+      stripPrefix: 'client/'
     },
     coverageReporter: {
       type: 'lcov',
@@ -46,7 +47,7 @@ module.exports = function (config) {
     autoWatch: false,
     singleRun: true,
 
-    LogLevel: config.LOG_INFO,
+    LogLevel: config.LOG_DEBUG,
 
     browsers: ['PhantomJS']
   });
