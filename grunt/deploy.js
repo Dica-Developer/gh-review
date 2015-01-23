@@ -61,9 +61,6 @@
     });
 
     grunt.registerTask('deploy', [
-      'jshint',
-      'karma:dev',
-      'processTmpl:dist',
       'build',
       'setNewVersion',
       'checkoutWebsite',
