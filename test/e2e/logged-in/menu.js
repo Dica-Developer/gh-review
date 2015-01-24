@@ -2,10 +2,13 @@
   'use strict';
 
   module.exports = {
-    'Menu entries': function (browser) {
+    'beforeEach': function(browser){
       browser
         .url('http://localhost:9000')
-        .login()
+        .login();
+    },
+    'Menu entries': function (browser) {
+      browser
         .assert.elementPresent('#menu-commits')
         .assert.containsText('#menu-commits', 'Commits')
         .assert.elementPresent('#menu-modules')
@@ -29,8 +32,6 @@
     },
     'Menu entry "Modules"': function (browser) {
       browser
-        .url('http://localhost:9000')
-        .login()
         .click('#menu-modules')
         .waitForElementVisible('#searchValue', 5000)
         .assert.urlContains('#/filter/modules')
@@ -38,40 +39,30 @@
     },
     'Menu entry "Who Am I"': function (browser) {
       browser
-        .url('http://localhost:9000')
-        .login()
         .subMenu('whoami')
         .assert.urlContains('#/whoami')
         .end();
     },
     'Menu entry "I found a bug"': function (browser) {
       browser
-        .url('http://localhost:9000')
-        .login()
         .subMenu('bug')
         .assert.urlContains('https://github.com/Dica-Developer/gh-review/issues')
         .end();
     },
     'Menu entry "I need more"': function (browser) {
       browser
-        .url('http://localhost:9000')
-        .login()
         .subMenu('more')
         .assert.urlContains('https://github.com/Dica-Developer/gh-review')
         .end();
     },
     'Menu entry "How to use"': function (browser) {
       browser
-        .url('http://localhost:9000')
-        .login()
         .subMenu('howto')
         .assert.urlContains('https://github.com/Dica-Developer/gh-review/wiki')
         .end();
     },
     'Menu entry "Logout"': function (browser) {
       browser
-        .url('http://localhost:9000')
-        .login()
         .subMenu('logout')
         .assert.urlContains('#/welcome')
         .assert.elementPresent('#loginLogoutContainer')
