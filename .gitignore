@@ -5,4 +5,5 @@
 /client/bower_components
 *.css
 /test/coverage
+/test/report
 /dist
