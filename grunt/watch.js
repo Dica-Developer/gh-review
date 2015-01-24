@@ -15,6 +15,13 @@
         '<%= config.app%>/{app,components}/**/*.less'],
       tasks: ['injector:less']
     },
+    jsTest: {
+      files: [
+        '<%= config.app %>/{app,components}/**/*.spec.js',
+        '<%= config.app %>/{app,components}/**/*.mock.js'
+      ],
+      tasks: ['karma']
+    },
     less: {
       files: [
         '<%= config.app %>/{app,components}/**/*.less'],
