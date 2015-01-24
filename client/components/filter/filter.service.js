@@ -2,25 +2,53 @@
   'use strict';
 
 
-  angular.module('GHReview').factory('filter', ['_', 'localStorageService', 'filterProvider',
-    function (_, localStorageService, filterProvider) {
+  angular.module('GHReview').service('filter', ['$log', '_', 'localStorageService', 'Filter',
+    function ($log, _, localStorageService, Filter) {
 
-      var getAll = function () {
-        var filter = [];
-        var filterIds = localStorageService.get('filter');
+      var filterCache = {},
+        fastClone = function(objectToClone){
+          return JSON.parse(JSON.stringify((objectToClone)));
+        };
+
+      this.getAll = function () {
+        var self = this,
+          filter = [],
+          filterIds = localStorageService.get('filter');
         if (filterIds !== null) {
           filterIds.split(',').forEach(function (id) {
-            filter.push(filterProvider.get(id));
+            filter.push(self.getById(id));
           });
         }
         return filter;
       };
 
-      var getById = function (filterId) {
-        return filterProvider.get(filterId);
+      this.getById = function (filterId) {
+        if (!filterCache[filterId]) {
+          filterCache[filterId] = new Filter(filterId);
+        }
+        return filterCache[filterId];
       };
 
-      var remove = function (filterId) {
+      this.getNew = function(){
+        var newFilter = new Filter();
+        filterCache[newFilter.getId()] = newFilter;
+        return newFilter;
+      };
+
+      this.getCloneOf = function(filter){
+        if (filter instanceof Filter) {
+          var clonedFilter = new Filter();
+          clonedFilter.options = fastClone(filter.options);
+          clonedFilter.options.meta.originalId = filter.options.meta.id;
+          clonedFilter.options.meta.id = clonedFilter.options.meta.id + '_clone';
+          clonedFilter.options.meta.isClone = true;
+          return clonedFilter;
+        } else {
+          $log.error('No Filter');
+        }
+      };
+
+      this.remove = function (filterId) {
         localStorageService.remove('filter-' + filterId);
         var filterList = localStorageService.get('filter').split(',');
         _.remove(filterList, function (value) {
@@ -28,14 +56,6 @@
         });
         localStorageService.set('filter', filterList.join(','));
       };
-
-      return {
-        getAll: getAll,
-        getById: getById,
-        remove: remove
-      };
-
     }
   ]);
-
 }(angular));

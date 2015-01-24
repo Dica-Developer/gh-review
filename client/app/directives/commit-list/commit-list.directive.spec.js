@@ -2,9 +2,9 @@
 describe('Directive: commit-list', function () {
   'use strict';
 
-  beforeEach(angular.mock.module('GHReview'));
-  beforeEach(angular.mock.module('commitMockModule'));
-  beforeEach(angular.mock.module('app/directives/commit-list/commit-list.html'));
+  beforeEach(module('GHReview'));
+  beforeEach(module('commitMockModule'));
+  beforeEach(module('app/directives/commit-list/commit-list.html'));
   beforeEach(module('app/welcome/welcome.html'));
 
   var $rootScope, $scope, $controller, $q, $location, commits, commentCollector, filter;
@@ -18,8 +18,8 @@ describe('Directive: commit-list', function () {
     commits = $injector.get('commits');
     commentCollector = $injector.get('commentCollector');
 
-    var filterProvider = $injector.get('filterProvider');
-    filter = filterProvider.getNew();
+    var filterService = $injector.get('filter');
+    filter = filterService.getNew();
   }));
 
   it('Should call commentCollector.getCommitApproved on init', function () {

@@ -3,24 +3,21 @@
 
 
   var services = angular.module('GHReview');
-  services.factory('filterProvider', [
-    '$q',
-    '$location',
-    '$log',
-    '_',
-    'moment',
-    'github',
-    'commentCollector',
-    'localStorageService',
-    'githubUserData',
-    'branchCollector',
-    'contributorCollector',
-    'commitCollector',
-    'treeCollector',
-    function ($q, $location, $log, _, moment, github, commentCollector, localStorageService, githubUserData, branchCollector, contributorCollector, commitCollector, treeCollector) {
+  services.factory('Filter', ['$injector', function ($injector) {
 
-      var filterHolder = {},
-        generateUUID = function () {
+    var $q = $injector.get('$q'),
+      $location = $injector.get('$location'),
+      _ = $injector.get('_'),
+      moment = $injector.get('moment'),
+      commentCollector = $injector.get('commentCollector'),
+      localStorageService = $injector.get('localStorageService'),
+      githubUserData = $injector.get('githubUserData'),
+      branchCollector = $injector.get('branchCollector'),
+      contributorCollector = $injector.get('contributorCollector'),
+      commitCollector = $injector.get('commitCollector'),
+      treeCollector = $injector.get('treeCollector');
+
+      var generateUUID = function () {
           var d = new Date().getTime();
           return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
             var r = (d + Math.random() * 16) % 16 | 0;
@@ -69,28 +66,25 @@
 
       Filter.prototype.save = function () {
         if (this.options.meta.isClone) {
-          var originalfilter = filterHolder[this.options.meta.idOriginal];
-          originalfilter.options = _.cloneDeep(this.options);
-          originalfilter.options.meta.id = originalfilter.options.meta.idOriginal;
-          delete originalfilter.options.meta.idOriginal;
-          delete originalfilter.options.meta.isClone;
-          originalfilter.save();
-        } else {
-          if (!_.isUndefined(this.options.meta.isNew)) {
-            delete this.options.meta.isNew;
-          }
-          this.options.meta.isSaved = true;
-          var filterIdsString = localStorageService.get('filter');
-          var filterIds = [];
-          if (!_.isNull(filterIdsString)) {
-            filterIds = filterIdsString.split(',');
-          }
-          if (!_.contains(filterIds, this.options.meta.id)) {
-            filterIds.push(this.options.meta.id);
-            localStorageService.set('filter', filterIds.join(','));
-          }
-          localStorageService.set('filter-' + this.options.meta.id, JSON.stringify(this.options));
+          this.options.meta.id = this.options.meta.originalId;
+          delete this.options.meta.originalId;
+          delete this.options.meta.isClone;
         }
+
+        if (!_.isUndefined(this.options.meta.isNew)) {
+          delete this.options.meta.isNew;
+        }
+        this.options.meta.isSaved = true;
+        var filterIdsString = localStorageService.get('filter');
+        var filterIds = [];
+        if (!_.isNull(filterIdsString)) {
+          filterIds = filterIdsString.split(',');
+        }
+        if (!_.contains(filterIds, this.options.meta.id)) {
+          filterIds.push(this.options.meta.id);
+          localStorageService.set('filter', filterIds.join(','));
+        }
+        localStorageService.set('filter-' + this.options.meta.id, JSON.stringify(this.options));
       };
 
       Filter.prototype.set = function (key, value) {
@@ -438,31 +432,7 @@
         return defer.promise;
       };
 
-      return {
-        get: function (id) {
-          if (!filterHolder[id]) {
-            filterHolder[id] = new Filter(id);
-          }
-          return filterHolder[id];
-        },
-        getNew: function () {
-          var newFilter = new Filter();
-          filterHolder[newFilter.getId()] = newFilter;
-          return newFilter;
-        },
-        getCloneOf: function (filter) {
-          if (filter instanceof Filter) {
-            var clonedFilter = new Filter();
-            clonedFilter.options = _.cloneDeep(filter.options);
-            clonedFilter.options.meta.idOriginal = clonedFilter.options.meta.id;
-            clonedFilter.options.meta.id = clonedFilter.options.meta.id + '_clone';
-            clonedFilter.options.meta.isClone = true;
-            return clonedFilter;
-          } else {
-            $log.error('No Filter');
-          }
-        }
-      };
+      return Filter;
     }
   ]);
 }(angular));

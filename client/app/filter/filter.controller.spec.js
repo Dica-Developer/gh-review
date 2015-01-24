@@ -1,7 +1,7 @@
 describe('Controller: FilterController', function () {
   'use strict';
 
-  beforeEach(angular.mock.module('GHReview'));
+  beforeEach(module('GHReview'));
 
   describe('With new filter', function () {
     var $rootScope, $scope, $q, _$injector;
@@ -18,28 +18,28 @@ describe('Controller: FilterController', function () {
     });
 
     it('Should call filterProvider.getNew if no filter id is given', function () {
-      var filterProvider = _$injector.get('filterProvider');
+      var filter = _$injector.get('filter');
 
-      spyOn(filterProvider, 'getNew').and.callThrough();
+      spyOn(filter, 'getNew').and.callThrough();
 
       var $controller = _$injector.get('$controller');
       $controller('FilterController', {
         '$scope': $scope,
-        filterProvider: filterProvider
+        filter: filter
       });
 
-      expect(filterProvider.getNew).toHaveBeenCalled();
+      expect(filter.getNew).toHaveBeenCalled();
     });
 
     it('Should set filter since to "2 weeks"', function () {
-      var filterProvider = _$injector.get('filterProvider');
-      var mockedFilter = filterProvider.getNew();
-      spyOn(filterProvider, 'getNew').and.returnValue(mockedFilter);
+      var filter = _$injector.get('filter');
+      var mockedFilter = filter.getNew();
+      spyOn(filter, 'getNew').and.returnValue(mockedFilter);
 
       var $controller = _$injector.get('$controller');
       $controller('FilterController', {
         '$scope': $scope,
-        filterProvider: filterProvider
+        filter: filter
       });
 
       expect(mockedFilter.getSince()).toEqual({pattern: 'weeks', amount: 2});
@@ -63,19 +63,19 @@ describe('Controller: FilterController', function () {
 
     it('Should set $scope variables and "$scope.fetchingRepos" to true', function () {
       var repoCollector = _$injector.get('repoCollector');
-      var filterProvider = _$injector.get('filterProvider');
-      var mockedFilter = filterProvider.getNew();
+      var filter = _$injector.get('filter');
+      var mockedFilter = filter.getNew();
 
       spyOn(repoCollector, 'getAll').and.returnValue($q.when([
         {name: 'TestRepo'}
       ]));
-      spyOn(filterProvider, 'getNew').and.returnValue(mockedFilter);
+      spyOn(filter, 'getNew').and.returnValue(mockedFilter);
 
       var $controller = _$injector.get('$controller');
       $controller('FilterController', {
         '$scope': $scope,
         repoCollector: repoCollector,
-        filterProvider: filterProvider
+        filter: filter
       });
 
       $rootScope.$apply();
@@ -103,19 +103,19 @@ describe('Controller: FilterController', function () {
       var mockedFilter, controller;
       beforeEach(function () {
         var repoCollector = _$injector.get('repoCollector');
-        var filterProvider = _$injector.get('filterProvider');
-        mockedFilter = filterProvider.getNew();
+        var filter = _$injector.get('filter');
+        mockedFilter = filter.getNew();
 
         spyOn(repoCollector, 'getAll').and.returnValue($q.when([
           {name: 'TestRepo'}
         ]));
-        spyOn(filterProvider, 'getNew').and.returnValue(mockedFilter);
+        spyOn(filter, 'getNew').and.returnValue(mockedFilter);
 
         var $controller = _$injector.get('$controller');
         controller = $controller('FilterController', {
           '$scope': $scope,
           repoCollector: repoCollector,
-          filterProvider: filterProvider
+          filter: filter
         });
       });
 
@@ -189,23 +189,23 @@ describe('Controller: FilterController', function () {
     });
 
     describe('Controller functions', function () {
-      var filterProvider, repoCollector, mockedFilter, controller, stateParams = {};
+      var filter, repoCollector, mockedFilter, controller, stateParams = {};
       beforeEach(function () {
         repoCollector = _$injector.get('repoCollector');
-        filterProvider = _$injector.get('filterProvider');
-        mockedFilter = filterProvider.getNew();
+        filter = _$injector.get('filter');
+        mockedFilter = filter.getNew();
 
         spyOn(repoCollector, 'getAll').and.returnValue($q.when([
           {name: 'TestRepo'}
         ]));
-        spyOn(filterProvider, 'getNew').and.returnValue(mockedFilter);
-        spyOn(filterProvider, 'get').and.returnValue(mockedFilter);
+        spyOn(filter, 'getNew').and.returnValue(mockedFilter);
+        spyOn(filter, 'getById').and.returnValue(mockedFilter);
 
         var $controller = _$injector.get('$controller');
         controller = $controller('FilterController', {
           '$scope': $scope,
           repoCollector: repoCollector,
-          filterProvider: filterProvider,
+          filter: filter,
           $stateParams: stateParams
         });
       });
@@ -213,7 +213,7 @@ describe('Controller: FilterController', function () {
       it('controller.isExistingFilter should reject if stateParams has no filter id', function (done) {
         controller.isExistingFilter()
           .then(null, function () {
-            expect(filterProvider.getNew).toHaveBeenCalled();
+            expect(filter.getNew).toHaveBeenCalled();
             done();
           });
 
@@ -221,10 +221,10 @@ describe('Controller: FilterController', function () {
       });
 
       it('controller.isExistingFilter should resolve if stateParams has filter id', function (done) {
-        stateParams.filterId = 'filterId';
+        stateParams.filterId = 'existing-filter';
         controller.isExistingFilter()
           .then(function () {
-            expect(filterProvider.get).toHaveBeenCalledWith('filterId');
+            expect(filter.getById).toHaveBeenCalledWith('existing-filter');
             delete stateParams.filterId;
             done();
           });
@@ -324,19 +324,20 @@ describe('Controller: FilterController', function () {
 
       beforeEach(function () {
         var repoCollector = _$injector.get('repoCollector');
-        var filterProvider = _$injector.get('filterProvider');
-        var mockedFilter = filterProvider.getNew();
+        var filter = _$injector.get('filter');
+        var mockedFilter = filter.getNew();
 
         spyOn(repoCollector, 'getAll').and.returnValue($q.when([
           {name: 'TestRepo'}
         ]));
-        spyOn(filterProvider, 'getNew').and.returnValue(mockedFilter);
+
+        spyOn(filter, 'getNew').and.returnValue(mockedFilter);
 
         var $controller = _$injector.get('$controller');
         controller = $controller('FilterController', {
           '$scope': $scope,
           repoCollector: repoCollector,
-          filterProvider: filterProvider
+          filter: filter
         });
 
         spyOn(controller, 'checkIfSettingAreUpdated').and.callThrough();

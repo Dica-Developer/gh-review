@@ -1,6 +1,6 @@
 /*global _, inject, moment*/
 
-describe('Service: filterProvider', function () {
+describe('Factory: Filter', function () {
   'use strict';
 
   var filterOptions = {
@@ -16,62 +16,61 @@ describe('Service: filterProvider', function () {
       'customFilter': {
         'state': 'approved'
       },
-      'id': 'filterId',
+      'id': 'existing-filter',
       isSaved: true
     }
-  };
+  },
+    Filter, localStorageService, branchCollector, contributorCollector, treeCollector, commentCollector;
 
   beforeEach(module('GHReview'));
+  beforeEach(module('commitMockModule'));
 
-  it('Should be defined', inject(['filterProvider',
-    function (filterProvider) {
-      expect(filterProvider).toBeDefined();
-    }
-  ]));
+  beforeEach(inject(function($injector){
+    Filter = $injector.get('Filter');
+    localStorageService = $injector.get('localStorageService');
+    branchCollector = $injector.get('branchCollector');
+    contributorCollector = $injector.get('contributorCollector');
+    treeCollector = $injector.get('treeCollector');
+    commentCollector = $injector.get('commentCollector');
+    window.localStorage.setItem('ghreview.filter-existing-filter', JSON.stringify(filterOptions));
+  }));
+
+  afterEach(function(){
+    window.localStorage.removeItem('ghreview.filter-existing-filter');
+  });
+
+  it('Should be defined', function () {
+    expect(Filter).toBeDefined();
+  });
 
   describe('#Filter.init', function () {
 
-    it('Should set new id if not provided', inject(['filterProvider',
-      function (filterProvider) {
-        var filter = filterProvider.getNew();
+    it('Should set new id if not provided', function () {
+        var filter = new Filter();
         expect(filter.options.id).not.toBeNull();
-      }
-    ]));
+    });
 
-    it('Should call localStorageService if filterId is provided', inject(['filterProvider', 'localStorageService', 'branchCollector', 'contributorCollector', 'treeCollector',
-      function (filterProvider, localStorageService, branchCollector, contributorCollector, treeCollector) {
+    it('Should call localStorageService if filterId is provided', function () {
         spyOn(branchCollector, 'get');
         spyOn(contributorCollector, 'get');
         spyOn(treeCollector, 'get');
         spyOn(localStorageService, 'get');
-        filterProvider.get('filterId');
+        new Filter('filterId');
         expect(localStorageService.get).toHaveBeenCalledWith('filter-filterId');
-      }
-    ]));
+    });
 
-    it('Should set options to what localStorageService returns', inject(['filterProvider',
-      function (filterProvider) {
-        window.localStorage.setItem('ghreview.filter-filterId', JSON.stringify(filterOptions));
-        var filter = filterProvider.get('filterId');
+    it('Should set options to what localStorageService returns', function () {
+        var filter = new Filter('existing-filter');
         _.each(filterOptions, function (value, key) {
           expect(filter.options[key]).toEqual(value);
         });
-        window.localStorage.removeItem('ghreview.filter-filterId');
-      }
-    ]));
-
+    });
   });
 
   describe('setter', function () {
     var filter;
-    beforeEach(inject(['filterProvider',
-      function (filterProvider) {
-        window.localStorage.setItem('ghreview.filter-filterId', JSON.stringify(filterOptions));
-        filter = filterProvider.get('filterId');
-      }
-    ]));
-    afterEach(function () {
-      window.localStorage.removeItem('ghreview.filter-filterId');
+    beforeEach(function () {
+      filter = new Filter('existing-filter');
     });
 
     it('.set should set given value to given key', function () {
@@ -179,15 +178,8 @@ describe('Service: filterProvider', function () {
 
   describe('getter', function () {
     var filter;
-    beforeEach(inject(['filterProvider',
-      function (filterProvider) {
-        window.localStorage.setItem('ghreview.filter-filterId', JSON.stringify(filterOptions));
-        filter = filterProvider.get('filterId');
-      }
-    ]));
-
-    afterEach(function () {
-      window.localStorage.removeItem('ghreview.filter-filterId');
+    beforeEach(function () {
+      filter = new Filter('existing-filter');
     });
 
     it('getId should return current id', function () {
@@ -258,65 +250,51 @@ describe('Service: filterProvider', function () {
   });
 
   describe('#Filter.save', function () {
-    var filter, lSS;
-    beforeEach(inject(['filterProvider', 'localStorageService',
-      function (filterProvider, localStorageService) {
-        window.localStorage.setItem('ghreview.filter-filterId', JSON.stringify(filterOptions));
-        filter = filterProvider.get('filterId');
-        lSS = localStorageService;
-      }
-    ]));
-
-    afterEach(function () {
-      window.localStorage.removeItem('ghreview.filter-filterId');
+    var filter;
+    beforeEach(function () {
+        filter = new Filter('existing-filter');
     });
 
     it('Should call localStorageService to filterId to id array', function () {
-      spyOn(lSS, 'get').and.returnValue('filter1,filter2');
-      spyOn(lSS, 'set');
+      spyOn(localStorageService, 'get').and.returnValue('filter1,filter2');
+      spyOn(localStorageService, 'set');
       filter.save();
-      expect(lSS.set.calls.argsFor(0)).toEqual(['filter', 'filter1,filter2,filterId']);
+      expect(localStorageService.set.calls.argsFor(0)).toEqual(['filter', 'filter1,filter2,existing-filter']);
     });
 
     it('Should call localStorageService.set  to add filter to localStorage', function () {
-      spyOn(lSS, 'get').and.returnValue('filter1,filter2');
-      spyOn(lSS, 'set');
+      spyOn(localStorageService, 'get').and.returnValue('filter1,filter2');
+      spyOn(localStorageService, 'set');
       filter.save();
-      expect(lSS.set.calls.argsFor(1)).toEqual(['filter-filterId', JSON.stringify(filter.options)]);
+      expect(localStorageService.set.calls.argsFor(1)).toEqual(['filter-existing-filter', JSON.stringify(filter.options)]);
     });
 
     it('Should call localStorageService.set to add filter to localStorage even it is the first filter', function () {
-      spyOn(lSS, 'get').and.returnValue(null);
-      spyOn(lSS, 'set');
+      spyOn(localStorageService, 'get').and.returnValue(null);
+      spyOn(localStorageService, 'set');
       filter.save();
-      expect(lSS.set.calls.argsFor(1)).toEqual(['filter-filterId', JSON.stringify(filter.options)]);
+      expect(localStorageService.set.calls.argsFor(1)).toEqual(['filter-existing-filter', JSON.stringify(filter.options)]);
     });
 
     it('Should call localStorageService.get to get current filter list', function () {
-      spyOn(lSS, 'get').and.returnValue('filter1,filter2');
-      spyOn(lSS, 'set');
+      spyOn(localStorageService, 'get').and.returnValue('filter1,filter2');
+      spyOn(localStorageService, 'set');
       filter.save();
-      expect(lSS.get).toHaveBeenCalledWith('filter');
+      expect(localStorageService.get).toHaveBeenCalledWith('filter');
     });
   });
 
   describe('core functions', function () {
-    var filter, $q, github, $rootScope, contributorCollector;
+    var filter, $q, github, $rootScope;
     beforeEach(inject(function ($injector) {
-      window.localStorage.setItem('ghreview.filter-filterId', JSON.stringify(filterOptions));
       window.localStorage.setItem('ls.accessToken', 'abc');
-
       $q = $injector.get('$q');
       github = $injector.get('github');
-      contributorCollector = $injector.get('contributorCollector');
       $rootScope = $injector.get('$rootScope');
-      var filterProvider = $injector.get('filterProvider');
-      filter = filterProvider.get('filterId');
-
+      filter = new Filter('existing-filter');
     }));
 
     afterEach(function () {
-      window.localStorage.removeItem('ghreview.filter-filterId');
       window.localStorage.removeItem('ls.accessToken');
     });
 
@@ -432,18 +410,14 @@ describe('Service: filterProvider', function () {
   });
 
   describe('Filter._processCustomFilter', function () {
-    var filter, commits, $rootScope, commentCollector, githubUserData, $q;
-
-    beforeEach(angular.mock.module('commitMockModule'));
+    var filter, commits, $rootScope, githubUserData, $q;
 
     beforeEach(inject(function ($injector) {
       $rootScope = $injector.get('$rootScope');
       $q = $injector.get('$q');
       commits = $injector.get('commits');
-      commentCollector = $injector.get('commentCollector');
       githubUserData = $injector.get('githubUserData');
-      var filterProvider = $injector.get('filterProvider');
-      filter = filterProvider.getNew();
+      filter = new Filter();
     }));
 
     it('Should set commitList to given commits if no filtering is needed', function (done) {

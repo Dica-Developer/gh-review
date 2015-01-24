@@ -9,10 +9,10 @@
       '$timeout',
       '_',
       'repoCollector',
-      'filterProvider',
-      function ($scope, $q, $stateParams, $timeout, _, repoCollector, filterProvider) {
+      'filter',
+      function ($scope, $q, $stateParams, $timeout, _, repoCollector, filter) {
         var orgFilter = null,
-          filter = null,
+          _filter = null,
           branchList = null,
           contributorList = null,
           repoList = null,
@@ -22,13 +22,13 @@
         controller.isExistingFilter = function () {
           var defer = $q.defer();
           if (!angular.isUndefined($stateParams.filterId)) { //We are in the edit state
-            orgFilter = filterProvider.get($stateParams.filterId);
-            filter = filterProvider.getCloneOf(orgFilter);
+            orgFilter = filter.getById($stateParams.filterId);
+            _filter = filter.getCloneOf(orgFilter);
             defer.resolve();
           } else {
-            filter = filterProvider.getNew();
+            _filter = filter.getNew();
             //Set initial to new Filter to reduce commit size
-            filter.setSince({
+            _filter.setSince({
               pattern: 'weeks',
               amount: 2
             });
@@ -54,7 +54,7 @@
             return $q.when();
           };
 
-          $q.all([filter.getBranchList(), filter.getContributorList(), repoCollector.getAll(), filter.getTree()])
+          $q.all([_filter.getBranchList(), _filter.getContributorList(), repoCollector.getAll(), _filter.getTree()])
             .then(setResults, function (e) {
               controller.handleError(e);
               return $q.reject();
@@ -63,29 +63,29 @@
         };
 
         controller.setCurrentPage = function (newValue) {
-          filter.setCurrentPage(newValue);
-          controller.setCommits(filter.getPage());
+          _filter.setCurrentPage(newValue);
+          controller.setCommits(_filter.getPage());
         };
 
         controller.setScopeVariables = function () {
-          var repoSetInFilter = filter.getRepo();
-          var branchSetInFilter = filter.getBranch();
-          var contributorSetInFilter = filter.getAuthors();
-          var sinceSetInFilter = filter.getSince();
+          var repoSetInFilter = _filter.getRepo();
+          var branchSetInFilter = _filter.getBranch();
+          var contributorSetInFilter = _filter.getAuthors();
+          var sinceSetInFilter = _filter.getSince();
 
           $scope.scope = $scope;
-          $scope.currentPage = filter.getCurrentPage();
-          $scope.excludeOwnCommits = filter.getExcludeOwnCommits();
-          $scope.filterPath = filter.getPath();
+          $scope.currentPage = _filter.getCurrentPage();
+          $scope.excludeOwnCommits = _filter.getExcludeOwnCommits();
+          $scope.filterPath = _filter.getPath();
           $scope.showAdvanced = false;
-          $scope.filter = filter;
+          $scope.filter = _filter;
           $scope.allRepos = repoList;
           $scope.branches = branchList;
           $scope.contributorList = contributorList;
           $scope.repoTree = repoTree;
           $scope.availableFilterSincePattern = ['days', 'weeks', 'years'];
           $scope.availableFilterReviewStates = ['unseen', 'reviewed', 'approved'];
-          $scope.filterReviewState = $scope.availableFilterReviewStates[$scope.availableFilterReviewStates.indexOf(filter.getState())] || null;
+          $scope.filterReviewState = $scope.availableFilterReviewStates[$scope.availableFilterReviewStates.indexOf(_filter.getState())] || null;
 
           if ($scope.branches) {
             $scope.branchSelection = _.pluck(branchList, 'name');
@@ -128,10 +128,10 @@
             if (newSelectedBranch && newSelectedBranch !== oldSelectedBranch) {
               $scope.commits = [];
               $scope.contributorList = [];
-              filter.setBranch(newSelectedBranch);
+              _filter.setBranch(newSelectedBranch);
               controller.getCommitList();
               controller.getContributorList();
-              filter.getTree()
+              _filter.getTree()
                 .then(function (treeData) {
                   $scope.repoTree = repoTree = treeData;
                 });
@@ -140,12 +140,12 @@
 
           $scope.$watch('selectedRepo', function (newSelectedRepo, oldSelectedRepo) {
             if (newSelectedRepo && (newSelectedRepo !== oldSelectedRepo)) {
-              filter.setRepo(newSelectedRepo.name);
-              filter.setOwner(newSelectedRepo.owner.login);
+              _filter.setRepo(newSelectedRepo.name);
+              _filter.setOwner(newSelectedRepo.owner.login);
               $scope.branchSelection = [];
               $scope.selectedBranch = null;
               $scope.fetchingBranches = true;
-              filter.getBranchList()
+              _filter.getBranchList()
                 .then(controller.setBranchSelection);
             }
           });
@@ -181,7 +181,7 @@
 
         controller.setCommits = function (commits) {
           $scope.commits = commits;
-          $scope.commitsLength = filter.getTotalCommitsLength();
+          $scope.commitsLength = _filter.getTotalCommitsLength();
           $scope.fetchingCommits = false;
           return $q.when();
         };
@@ -201,7 +201,7 @@
         controller.getCommitList = function () {
           $scope.fetchingCommits = true;
           $scope.commits = [];
-          filter.getCommits()
+          _filter.getCommits()
             .then(controller.setCommits, controller.handleError, controller.setCommits);
         };
 
@@ -211,7 +211,7 @@
         };
 
         controller.getContributorList = function () {
-          return filter.getContributorList()
+          return _filter.getContributorList()
             .then(controller.setContributorList);
         };
 
@@ -225,12 +225,12 @@
 
           if (shouldCheck) {
             var updated = false;
-            var contributorList = filter.getAuthors();
-            var filterSincePattern = filter.getSince().pattern;
-            var filterSinceAmount = filter.getSince().amount;
-            var filterExcludeOwnCommits = filter.getExcludeOwnCommits();
-            var filterReviewState = filter.getState() || null;
-            var filterPath = filter.getPath();
+            var contributorList = _filter.getAuthors();
+            var filterSincePattern = _filter.getSince().pattern;
+            var filterSinceAmount = _filter.getSince().amount;
+            var filterExcludeOwnCommits = _filter.getExcludeOwnCommits();
+            var filterReviewState = _filter.getState() || null;
+            var filterPath = _filter.getPath();
 
             var selectedContributor = [];
             contributorList.forEach(function (contributor) {
@@ -266,14 +266,14 @@
         };
 
         $scope.updateCommits = function () {
-          filter.addAuthor(_.pluck($scope.selectedContributor, 'login'));
-          filter.setSince({
+          _filter.addAuthor(_.pluck($scope.selectedContributor, 'login'));
+          _filter.setSince({
             pattern: $scope.filterSincePattern,
             amount: $scope.filterSinceAmount
           });
-          filter.setExcludeOwnCommits($scope.excludeOwnCommits);
-          filter.setState($scope.filterReviewState);
-          filter.setPath($scope.filterPath);
+          _filter.setExcludeOwnCommits($scope.excludeOwnCommits);
+          _filter.setState($scope.filterReviewState);
+          _filter.setPath($scope.filterPath);
           $scope.settingsUpdated = false;
           controller.getCommitList();
         };
@@ -283,16 +283,16 @@
         };
 
         $scope.filterIsSaved = function () {
-          return filter.isSaved();
+          return _filter.isSaved();
         };
 
         $scope.saveFilter = function () {
-          filter.save();
+          _filter.save();
         };
 
         $scope.reset = function () {
-          filter.reset();
-          filter.setSince({
+          _filter.reset();
+          _filter.setSince({
             pattern: 'weeks',
             amount: 2
           });
