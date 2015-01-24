@@ -7,7 +7,12 @@
 
       if ('travis' === target) {
         tasklist.push('karma:travis');
+        tasklist.push('serve:e2e');
+        tasklist.push('nightwatch');
         tasklist.push('coveralls');
+      } else if ('e2e' === target) {
+        tasklist.push('serve:e2e');
+        tasklist.push('nightwatch');
       } else {
         tasklist.push('karma:dev');
       }

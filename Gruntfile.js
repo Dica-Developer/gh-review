@@ -37,7 +37,8 @@ module.exports = function(grunt) {
     ngtemplates: require('./grunt/ngtemplates'),
     ngAnnotate: require('./grunt/ngAnnotate'),
     rev: require('./grunt/rev'),
-    coveralls: require('./grunt/coveralls')
+    coveralls: require('./grunt/coveralls'),
+    nightwatch: require('./grunt/nightwatch')
   });
 
   grunt.registerTask('server-keepalive', 'Keep grunt running', function() {
@@ -47,6 +48,10 @@ module.exports = function(grunt) {
   grunt.registerTask('serve', function (target) {
     if (target === 'dist') {
       return grunt.task.run(['build', 'connect:dist', 'server-keepalive']);
+    }
+
+    if (target === 'e2e') {
+      return grunt.task.run(['connect:e2e']);
     }
 
     grunt.task.run([
