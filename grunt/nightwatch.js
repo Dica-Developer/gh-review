@@ -9,7 +9,12 @@
       src_folders: ['<%= config.test %>/e2e'],
       output_folder: '<%= config.test %>/report',
       custom_commands_path: '<%= config.test %>/helper/nightwatch-custom-commands',
-      test_settings: {},
+      custom_assertions_path: '<%= config.test %>/helper/nightwatch-custom-assertions',
+      test_settings: {
+        'default': {
+          'launch_url' : 'http://localhost:9000'
+        }
+      },
       selenium: {}
     }
   };
