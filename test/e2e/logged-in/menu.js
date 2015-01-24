@@ -32,6 +32,7 @@
         .url('http://localhost:9000')
         .login()
         .click('#menu-modules')
+        .waitForElementVisible('#searchValue', 5000)
         .assert.urlContains('#/filter/modules')
         .end();
     },
