@@ -8,43 +8,51 @@
       $scope.menu = [
         {
           'title': 'Commits',
-          'link': 'listFilter'
+          'link': 'listFilter',
+          'id': 'menu-commits'
         },
         {
           'title': 'Modules',
-          'link': 'modules'
+          'link': 'modules',
+          'id': 'menu-modules'
         }
       ];
       $scope.submenu = [
         {
           'title': 'Who Am I',
           'linkType': 'sref',
-          'link': 'whoami'
+          'link': 'whoami',
+          'id': 'submenu-whoami'
         },
         {
           'title': 'I found a bug',
           'linkType': 'href',
-          'link': 'https://github.com/Dica-Developer/gh-review/issues'
+          'link': 'https://github.com/Dica-Developer/gh-review/issues',
+          'id': 'submenu-bug'
         },
         {
           'title': 'I need more',
           'linkType': 'href',
-          'link': 'https://github.com/Dica-Developer/gh-review'
+          'link': 'https://github.com/Dica-Developer/gh-review',
+          'id': 'submenu-more'
         },
         {
           'title': 'How to use',
           'linkType': 'href',
-          'link': 'https://github.com/Dica-Developer/gh-review/wiki'
+          'link': 'https://github.com/Dica-Developer/gh-review/wiki',
+          'id': 'submenu-howto'
         },
         {
           'title': 'About',
           'linkType': 'sref',
-          'link': 'about'
+          'link': 'about',
+          'id': 'submenu-about'
         },
         {
           'title': 'Logout',
           'linkType': 'sref',
-          'link': 'logout'
+          'link': 'logout',
+          'id': 'submenu-logout'
         }
       ];
       if ($scope.isAuthenticated()) {
