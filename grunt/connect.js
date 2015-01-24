@@ -17,6 +17,13 @@
         open: true,
         base: '<%= config.dist %>'
       }
+    },
+    e2e: {
+      options: {
+        hostname: 'localhost',
+        port: 9000,
+        base: ['<%= config.tmp %>', '<%= config.app %>']
+      }
     }
   };
 }());
