@@ -20,13 +20,14 @@ describe('Factory: Filter', function () {
       isSaved: true
     }
   },
-    Filter, localStorageService, branchCollector, contributorCollector, treeCollector, commentCollector;
+    Filter, filterService, localStorageService, branchCollector, contributorCollector, treeCollector, commentCollector;
 
   beforeEach(module('GHReview'));
   beforeEach(module('commitMockModule'));
 
   beforeEach(inject(function($injector){
     Filter = $injector.get('Filter');
+    filterService = $injector.get('filter');
     localStorageService = $injector.get('localStorageService');
     branchCollector = $injector.get('branchCollector');
     contributorCollector = $injector.get('contributorCollector');
@@ -281,6 +282,26 @@ describe('Factory: Filter', function () {
       spyOn(localStorageService, 'set');
       filter.save();
       expect(localStorageService.get).toHaveBeenCalledWith('filter');
+    });
+
+    it('Should delete clone properties while saving', function () {
+      var clonedFilter = filterService.getCloneOf(filter);
+      expect(clonedFilter.options.meta.isClone).toBe(true);
+      expect(clonedFilter.options.meta.originalId).toBeDefined();
+      spyOn(localStorageService, 'get').and.returnValue('filter1,filter2');
+      spyOn(localStorageService, 'set');
+      clonedFilter.save();
+      expect(clonedFilter.options.meta.isClone).not.toBeDefined();
+      expect(clonedFilter.options.meta.originalId).not.toBeDefined();
+    });
+
+    it('Should delete isNew property while saving if Filter is new', function () {
+      var newFilter = new Filter();
+      expect(newFilter.options.meta.isNew).toBe(true);
+      spyOn(localStorageService, 'get').and.returnValue('filter1,filter2');
+      spyOn(localStorageService, 'set');
+      newFilter.save();
+      expect(newFilter.options.meta.isNew).not.toBeDefined();
     });
   });
 
