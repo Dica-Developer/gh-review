@@ -7,7 +7,7 @@
 
       var filterCache = {},
         fastClone = function(objectToClone){
-          return JSON.parse(JSON.stringify((objectToClone)));
+          return JSON.parse(JSON.stringify(objectToClone));
         };
 
       this.getAll = function () {
