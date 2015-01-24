@@ -27,7 +27,7 @@
         .click('#searchButton')
         .waitForElementPresent('#commitList a', 5000)
         .click('#commitList a:first-child')
-        .waitForElementPresent('.div-table.github', 5000)
+        .waitForElementPresent('.div-table.github', 10000)
         .assert.urlContains('Dica-Developer/gh-review/blob');
     },
   };
