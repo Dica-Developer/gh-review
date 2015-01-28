@@ -57,19 +57,24 @@
         };
 
         Comment.prototype.remove = function () {
+          var defer = $q.defer();
           var githubCallback = function (error) {
             if (!error) {
+              defer.resolve();
               $log.log('Comment succesfully removed.');
             } else {
+              defer.reject();
               $log.log(error);
             }
-          }.bind(this);
+          };
 
           github.repos.deleteCommitComment({
             user: this.editInformations.user,
             repo: this.editInformations.repo,
             id: this.id
           }, githubCallback);
+
+          return defer.promise;
         };
 
         Comment.prototype.edit = function () {
