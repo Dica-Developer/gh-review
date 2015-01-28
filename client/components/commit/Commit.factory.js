@@ -12,7 +12,6 @@
           comments = $injector.get('comments'),
           Comment = $injector.get('Comment'),
           options = $injector.get('options'),
-          githubUserData = $injector.get('githubUserData'),
           Chunk = $injector.get('Chunk');
 
 
