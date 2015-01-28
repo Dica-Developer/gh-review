@@ -1,5 +1,5 @@
 angular.module('commitMockModule', [])
-  .constant('commits', [
+  .constant('commitsMock', [
     {
       'sha': '7e3cc043458366a4205621bc2c006bafd6f6c4db',
       'commit': {
