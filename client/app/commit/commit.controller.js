@@ -103,7 +103,7 @@
           /*jshint camelcase:false*/
           return comment.mode === 'edit' || _.isUndefined(comment.body_html);
         });
-        _.remove($scope.commitResponse.commitComments, function (comment) {
+        _.remove($scope.commitComments, function (comment) {
           /*jshint camelcase:false*/
           return comment.mode === 'edit' || _.isUndefined(comment.body_html);
         });
