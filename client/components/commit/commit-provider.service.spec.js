@@ -25,7 +25,9 @@ describe('Service: commitProvider', function () {
     it('Should call "github.repos.getCommit"', function () {
       spyOn(github.repos, 'getCommit');
       commits.bySha(githubParams);
-      expect(github.repos.getCommit.calls.argsFor(0)[0]).toEqual(githubParams);
+      var paramsClone = JSON.parse(JSON.stringify(githubParams));
+      paramsClone.headers = {Accept: 'application/vnd.github-commitcomment.html+json'};
+      expect(github.repos.getCommit.calls.argsFor(0)[0]).toEqual(paramsClone);
     });
 
     it('Should return promise and resolve if response has no errors', function (done) {
