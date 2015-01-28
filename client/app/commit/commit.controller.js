@@ -2,128 +2,120 @@
   'use strict';
 
   angular.module('GHReview')
-    .controller('CommitController', [
-      '$scope',
-      '$stateParams',
-      '$log',
-      '_',
-      'commitsAndComments',
-      'Comment',
-      'approveCommit',
-      'unapproveCommit',
-      'loggedInUser',
-      'isCommentNotApprovalComment',
-      'isCommentApprovalCommentFromUser',
-      'events',
-      function ($scope, $stateParams, $log, _, commitsAndComments, Comment, approveCommit, unapproveCommit, loggedInUser, isCommentNotApprovalComment, isCommentApprovalCommentFromUser, events) {
-        var commit = commitsAndComments[0].commitInfos ? commitsAndComments[0] : commitsAndComments[1],
-          comments = commitsAndComments[0].commitInfos ? commitsAndComments[1] : commitsAndComments[0],
-          lineWithNewComment = [],
-          lineComments = comments.comments.lineComments;
+    .controller('CommitController', ['$injector', '$scope', '$stateParams', function ($injector, $scope, $stateParams) {
 
-        events.removeNewCommit(commit.commitInfos.sha);
+      var _ = $injector.get('_'),
+        Comment = $injector.get('Comment'),
+        Commit = $injector.get('Commit'),
+        githubUserData = $injector.get('githubUserData'),
+        events = $injector.get('events'),
+        addLineCommentsToLines, getComments, lineWithNewComment, removeCommentFromScope;
 
-        var removeCommentFromScope = function () {
-          _.remove(lineWithNewComment, function (comment) {
-            /*jshint camelcase:false*/
-            return comment.mode === 'edit' || _.isUndefined(comment.body_html);
+      githubUserData.get()
+        .then(function (user) {
+          $scope.loggedInUser = user;
+        });
+
+      $scope.commit = new Commit($stateParams);
+      $scope.commit.getCommit($stateParams)
+        .then(function (commitResponse) {
+          $scope.commitResponse = commitResponse;
+          events.removeNewCommit(commitResponse.commit.sha);
+        });
+
+      $scope.commit.getFiles()
+        .then(function (files) {
+          $scope.files = files;
+          getComments();
+        });
+
+      getComments = function () {
+        $scope.commit.getComments()
+          .then(function (commentsResponse) {
+            $scope.commitComments = commentsResponse.commitComments;
+            addLineCommentsToLines(commentsResponse.lineComments);
+            $scope.approvers = $scope.commit.getApprover();
           });
-          _.remove($scope.comments.commitComments, function (comment) {
-            /*jshint camelcase:false*/
-            return comment.mode === 'edit' || _.isUndefined(comment.body_html);
+      };
+
+      $scope.addLineComment = function (line) {
+        removeCommentFromScope();
+        line.comments = line.comments || [];
+        lineWithNewComment = line.comments;
+
+        line.comments.push(new Comment({
+          mode: 'edit',
+          position: line.position,
+          line: line.lineNrLeft || line.lineNrRight,
+          sha: $stateParams.sha,
+          path: line.path,
+          editInformations: {
+            repo: $stateParams.repo,
+            user: $stateParams.user
+          },
+          user: $scope.loggedInUser
+        }));
+      };
+
+
+      $scope.addCommitComment = function () {
+        removeCommentFromScope();
+        $scope.commitComments.push(new Comment({
+          mode: 'edit',
+          position: null,
+          line: null,
+          sha: $stateParams.sha,
+          path: null,
+          editInformations: {
+            repo: $stateParams.repo,
+            user: $stateParams.user
+          },
+          user: $scope.loggedInUser
+        }));
+      };
+
+      $scope.removeComment = function (line, commentToRemove) {
+        commentToRemove.remove()
+          .then(getComments);
+        if (line) {
+          _.remove(line.comments, function (comment) {
+            return comment.id === commentToRemove.id;
           });
-        };
+        }
+      };
 
-        $scope.commitHeaderStatus = {
-          open: false
-        };
-        $scope.commit = commit.commitInfos;
-        $scope.files = commit.files;
-        $scope.approvers = comments.approvers;
-        $scope.comments = comments.comments;
-        $scope.loggedInUserIsApprover = _.contains(comments.approvers, loggedInUser.login);
-        $scope.isCommentNotApprovalComment = isCommentNotApprovalComment;
+      $scope.cancelCreateComment = function () {
+        removeCommentFromScope();
+      };
 
-        $scope.addComment = function (line) {
-          removeCommentFromScope();
-          line.comments = line.comments || [];
-          lineWithNewComment = line.comments;
+      $scope.approveCommit = function () {
+        $scope.commit.approve($scope.loggedInUser)
+          .then(getComments);
+      };
 
-          line.comments.push(new Comment({
-            mode: 'edit',
-            position: line.position,
-            line: line.lineNrLeft || line.lineNrRight,
-            sha: $stateParams.sha,
-            path: line.path,
-            editInformations: {
-              repo: $stateParams.repo,
-              user: $stateParams.user
-            },
-            user: loggedInUser
-          }));
-        };
+      $scope.unapproveCommit = function () {
+        $scope.commit.unapprove($scope.loggedInUser)
+          .then(getComments);
+      };
 
-        $scope.addCommitComment = function () {
-          removeCommentFromScope();
-          $scope.comments.commitComments.push(new Comment({
-            mode: 'edit',
-            position: null,
-            line: null,
-            sha: $stateParams.sha,
-            path: null,
-            editInformations: {
-              repo: $stateParams.repo,
-              user: $stateParams.user
-            },
-            user: loggedInUser
-          }));
-        };
+      removeCommentFromScope = function () {
+        _.remove(lineWithNewComment, function (comment) {
+          /*jshint camelcase:false*/
+          return comment.mode === 'edit' || _.isUndefined(comment.body_html);
+        });
+        _.remove($scope.commitResponse.commitComments, function (comment) {
+          /*jshint camelcase:false*/
+          return comment.mode === 'edit' || _.isUndefined(comment.body_html);
+        });
+      };
 
-        $scope.removeComment = function (line, commentToRemove) {
-          commentToRemove.remove();
-          if (line) {
-            _.remove(line.comments, function (comment) {
-              return comment.id === commentToRemove.id;
+      addLineCommentsToLines = function (lineComments) {
+        lineComments.forEach(function (comment) {
+          var path = comment.path,
+            file = _.findWhere($scope.files, {
+              name: path
             });
-          } else {
-            _.remove($scope.comments.commitComments, function (comment) {
-              return comment.id === commentToRemove.id;
-            });
-          }
-        };
 
-        $scope.cancelCreateComment = function () {
-          removeCommentFromScope();
-        };
-
-        $scope.approveCommit = function () {
-          approveCommit($stateParams.sha, $stateParams.user, $stateParams.repo).then(function () {
-            $scope.loggedInUserIsApprover = true;
-            $log.log('ok');
-          }).fail(function (error) {
-            $log.log('to bad: ' + error);
-          });
-        };
-
-        $scope.unapproveCommit = function () {
-          _.each(comments.comments.commitComments, function (comment) {
-            if (isCommentApprovalCommentFromUser(comment, loggedInUser)) {
-              unapproveCommit(comment.id, $stateParams.sha, $stateParams.user, $stateParams.repo).then(function () {
-                // TODO for unapproval before the next refresh the comment made needs to be added to the list of comments on approve
-                $scope.loggedInUserIsApprover = false;
-                $log.log('ok');
-              }).fail(function (error) {
-                $log.log('to bad: ' + error);
-              });
-            }
-          });
-        };
-
-        _.each(lineComments, function (comment) {
-          var path = comment.path;
-          var file = _.findWhere(commit.files, {
-            name: path
-          });
           if (file) {
             var commentPosition = file.lines.lines[comment.position];
             if (!commentPosition.comments) {
@@ -136,6 +128,6 @@
             file.commentCount++;
           }
         });
-      }
-    ]);
+      };
+    }]);
 }(angular));
