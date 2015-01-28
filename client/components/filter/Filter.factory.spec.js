@@ -431,21 +431,21 @@ describe('Factory: Filter', function () {
   });
 
   describe('Filter._processCustomFilter', function () {
-    var filter, commits, $rootScope, githubUserData, $q;
+    var filter, commitsMock, $rootScope, githubUserData, $q;
 
     beforeEach(inject(function ($injector) {
       $rootScope = $injector.get('$rootScope');
       $q = $injector.get('$q');
-      commits = $injector.get('commits');
+      commitsMock = $injector.get('commitsMock');
       githubUserData = $injector.get('githubUserData');
       filter = new Filter();
     }));
 
     it('Should set commitList to given commits if no filtering is needed', function (done) {
       spyOn(filter, '_needsPostFiltering').and.returnValue(false);
-      filter._processCustomFilter(commits)
+      filter._processCustomFilter(commitsMock)
         .then(function () {
-          expect(filter.commitList).toBe(commits);
+          expect(filter.commitList).toBe(commitsMock);
           done();
         });
 
@@ -456,7 +456,7 @@ describe('Factory: Filter', function () {
       spyOn(githubUserData, 'get').and.returnValue($q.when({login: 'AnotherUser'}));
       spyOn(commentCollector, 'getCommitApproved').and.returnValue($q.when({}));
       filter.options.meta.customFilter.authors = ['sebfroh'];
-      filter._processCustomFilter(commits)
+      filter._processCustomFilter(commitsMock)
         .then(function () {
           expect(filter.commitList.length).toBe(1);
           expect(filter.commitList[0].author.login).toBe('sebfroh');
@@ -470,7 +470,7 @@ describe('Factory: Filter', function () {
       spyOn(githubUserData, 'get').and.returnValue($q.when({login: 'sebfroh'}));
       spyOn(commentCollector, 'getCommitApproved').and.returnValue($q.when({}));
       filter.options.meta.customFilter.excludeOwnCommits = true;
-      filter._processCustomFilter(commits)
+      filter._processCustomFilter(commitsMock)
         .then(function () {
           expect(filter.commitList.length).toBe(3);
           expect(filter.commitList[0].author.login).toBe('JayGray');
@@ -485,7 +485,7 @@ describe('Factory: Filter', function () {
       spyOn(githubUserData, 'get').and.returnValue($q.when({login: 'sebfroh'}));
       spyOn(commentCollector, 'getCommitApproved').and.returnValue($q.when({'7e3cc043458366a4205621bc2c006bafd6f6c4db': true}));
       filter.options.meta.customFilter.state = 'approved';
-      filter._processCustomFilter(commits)
+      filter._processCustomFilter(commitsMock)
         .then(function () {
           expect(filter.commitList.length).toBe(1);
           expect(filter.commitList[0].author.login).toBe('sebfroh');
@@ -499,7 +499,7 @@ describe('Factory: Filter', function () {
       spyOn(githubUserData, 'get').and.returnValue($q.when({login: 'sebfroh'}));
       spyOn(commentCollector, 'getCommitApproved').and.returnValue($q.when({'7e3cc043458366a4205621bc2c006bafd6f6c4db': true}));
       filter.options.meta.customFilter.state = 'reviewed';
-      filter._processCustomFilter(commits)
+      filter._processCustomFilter(commitsMock)
         .then(function () {
           expect(filter.commitList.length).toBe(1);
           expect(filter.commitList[0].author.login).toBe('mschaaf');
@@ -513,7 +513,7 @@ describe('Factory: Filter', function () {
       spyOn(githubUserData, 'get').and.returnValue($q.when({login: 'sebfroh'}));
       spyOn(commentCollector, 'getCommitApproved').and.returnValue($q.when({'7e3cc043458366a4205621bc2c006bafd6f6c4db': true}));
       filter.options.meta.customFilter.state = 'unseen';
-      filter._processCustomFilter(commits)
+      filter._processCustomFilter(commitsMock)
         .then(function () {
           expect(filter.commitList.length).toBe(2);
           expect(filter.commitList[0].author.login).toBe('JayGray');

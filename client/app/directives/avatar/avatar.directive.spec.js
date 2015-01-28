@@ -9,7 +9,7 @@ describe('Directive: avatar', function () {
 
   beforeEach(inject(function ($injector) {
     $compile = $injector.get('$compile');
-    commitMock = $injector.get('commits');
+    commitMock = $injector.get('commitsMock');
     $rootScope = $injector.get('$rootScope');
     $scope = $rootScope.$new();
   }));
