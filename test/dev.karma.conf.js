@@ -25,7 +25,8 @@ module.exports = function (config) {
       'client/components/**/*.js',
       'client/components/**/*.html',
       '.tmp/options.js',
-      'test/helper/commitMockModule.js'
+      'test/helper/commitMockModule.js',
+      'test/helper/commentMockModule.js'
     ],
     exclude: [
       'client/worker/*.*'
