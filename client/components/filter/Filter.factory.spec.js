@@ -472,7 +472,7 @@ describe('Factory: Filter', function () {
       filter.options.meta.customFilter.excludeOwnCommits = true;
       filter._processCustomFilter(commits)
         .then(function () {
-          expect(filter.commitList.length).toBe(2);
+          expect(filter.commitList.length).toBe(3);
           expect(filter.commitList[0].author.login).toBe('JayGray');
           expect(filter.commitList[1].author.login).toBe('mschaaf');
           done();
@@ -515,7 +515,7 @@ describe('Factory: Filter', function () {
       filter.options.meta.customFilter.state = 'unseen';
       filter._processCustomFilter(commits)
         .then(function () {
-          expect(filter.commitList.length).toBe(1);
+          expect(filter.commitList.length).toBe(2);
           expect(filter.commitList[0].author.login).toBe('JayGray');
           done();
         });

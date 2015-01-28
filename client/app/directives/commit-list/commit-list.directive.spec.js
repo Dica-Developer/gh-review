@@ -104,7 +104,7 @@ describe('Directive: commit-list', function () {
     });
 
     it('Should bind "down" combo and don\'t call $location.hash if it is the last commit in list', function () {
-      spyOn($location, 'hash').and.returnValue('b8ce653175caa3b397bc4618eb952a41b4e648c1');
+      spyOn($location, 'hash').and.returnValue('6ff8da937f901a1ff470e84d663161a3446cb8b7');
       $controller('commitListDirectiveController', {
         $scope: $scope,
         hotkeys: hotkeys
@@ -119,7 +119,7 @@ describe('Directive: commit-list', function () {
       expect(combo).toBeDefined();
       expect(combo.description).toBe('Navigate through commits');
       expect(comboCallback).toEqual(jasmine.any(Function));
-      expect($scope.selectedCommit).toBe('b8ce653175caa3b397bc4618eb952a41b4e648c1');
+      expect($scope.selectedCommit).toBe('6ff8da937f901a1ff470e84d663161a3446cb8b7');
       expect(fakeEvent.preventDefault).toHaveBeenCalled();
     });
 
