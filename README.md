@@ -1,6 +1,6 @@
 [![Stories in Ready](https://badge.waffle.io/dica-developer/gh-review.png?label=ready&title=Ready)](https://waffle.io/dica-developer/gh-review)
 [![Open Issues](http://img.shields.io/github/issues/Dica-Developer/gh-review.svg?style=flat-square&label=Open%20Issues)](https://github.com/Dica-Developer/gh-review/issues)
-[![Build Status](http://img.shields.io/travis/Dica-Developer/gh-review/master.svg?style=flat-square&label=Travis%20CI)](https://travis-ci.org/Dica-Developer/gh-review)  [![Coverage Status](http://img.shields.io/coveralls/Dica-Developer/gh-review/master.svg?style=flat-square&label=Test%20Coverage)](https://coveralls.io/r/Dica-Developer/gh-review?branch=master)
+[![Build Status](http://img.shields.io/travis/Dica-Developer/gh-review/refactor/commits.svg?style=flat-square&label=Travis%20CI)](https://travis-ci.org/Dica-Developer/gh-review)  [![Coverage Status](http://img.shields.io/coveralls/Dica-Developer/gh-review/refactor/commits.svg?style=flat-square&label=Test%20Coverage)](https://coveralls.io/r/Dica-Developer/gh-review?branch=master)
 - - -
 # GitHub Review #
 
