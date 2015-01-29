@@ -115,8 +115,8 @@
   var start = function () {
     clearTimeout(timeout);
     var uniqUrls = [];
-    _urls.forEach(function(url){
-      if(uniqUrls.indexOf(url) === -1){
+    _urls.forEach(function (url) {
+      if (uniqUrls.indexOf(url) === -1) {
         uniqUrls.push(url);
         commentsForRepo[url] = [];
         urlPromises.push(getComments(url));
