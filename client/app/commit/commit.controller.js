@@ -20,6 +20,11 @@
       $scope.commit.getCommit($stateParams)
         .then(function (commitResponse) {
           $scope.commitResponse = commitResponse;
+          //TODO add test
+          /*jshint camelcase: false*/
+          var splittedUrl = commitResponse.html_url.split('/');
+          $scope.commitRepo = splittedUrl[4];
+          $scope.repoOwner = splittedUrl[3];
           events.removeNewCommit(commitResponse.commit.sha);
         });
 
