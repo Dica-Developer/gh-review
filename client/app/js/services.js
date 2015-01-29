@@ -17,12 +17,6 @@
     }
   ]);
 
-  services.factory('commitProviderService', ['commitProvider',
-    function (commitProvider) {
-      return commitProvider;
-    }
-  ]);
-
   services.factory('isCommentNotApprovalComment', ['commentCollector',
     function (commentCollector) {
       return function (commentId) {

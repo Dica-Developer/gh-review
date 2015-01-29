@@ -26,6 +26,7 @@ module.exports = function (config) {
       'client/components/**/*.html',
       '.tmp/options.js',
       'test/helper/commitMockModule.js',
+      'test/helper/commentMockModule.js',
       'test/helper/bind-polyfill.js'
     ],
     exclude: [

@@ -7,7 +7,7 @@ describe('Directive: commit-list', function () {
   beforeEach(module('app/directives/commit-list/commit-list.html'));
   beforeEach(module('app/welcome/welcome.html'));
 
-  var $rootScope, $scope, $controller, $q, $location, commits, commentCollector, filter;
+  var $rootScope, $scope, $controller, $q, $location, commitsMock, commentCollector, filter;
 
   beforeEach(inject(function ($injector) {
     $rootScope = $injector.get('$rootScope');
@@ -15,7 +15,7 @@ describe('Directive: commit-list', function () {
     $controller = $injector.get('$controller');
     $q = $injector.get('$q');
     $location = $injector.get('$location');
-    commits = $injector.get('commits');
+    commitsMock = $injector.get('commitsMock');
     commentCollector = $injector.get('commentCollector');
 
     var filterService = $injector.get('filter');
@@ -37,7 +37,7 @@ describe('Directive: commit-list', function () {
     $controller('commitListDirectiveController', {
       $scope: $scope
     });
-    $scope.commits = commits;
+    $scope.commits = commitsMock;
     $rootScope.$apply();
     expect($scope.sortedCommits).toBeDefined();
   });
@@ -89,7 +89,7 @@ describe('Directive: commit-list', function () {
         $scope: $scope,
         hotkeys: hotkeys
       });
-      $scope.commits = commits;
+      $scope.commits = commitsMock;
       $rootScope.$apply();
 
       var combo = hotkeys.get('down');
@@ -104,12 +104,12 @@ describe('Directive: commit-list', function () {
     });
 
     it('Should bind "down" combo and don\'t call $location.hash if it is the last commit in list', function () {
-      spyOn($location, 'hash').and.returnValue('b8ce653175caa3b397bc4618eb952a41b4e648c1');
+      spyOn($location, 'hash').and.returnValue('6ff8da937f901a1ff470e84d663161a3446cb8b7');
       $controller('commitListDirectiveController', {
         $scope: $scope,
         hotkeys: hotkeys
       });
-      $scope.commits = commits;
+      $scope.commits = commitsMock;
       $rootScope.$apply();
 
       var combo = hotkeys.get('down');
@@ -119,7 +119,7 @@ describe('Directive: commit-list', function () {
       expect(combo).toBeDefined();
       expect(combo.description).toBe('Navigate through commits');
       expect(comboCallback).toEqual(jasmine.any(Function));
-      expect($scope.selectedCommit).toBe('b8ce653175caa3b397bc4618eb952a41b4e648c1');
+      expect($scope.selectedCommit).toBe('6ff8da937f901a1ff470e84d663161a3446cb8b7');
       expect(fakeEvent.preventDefault).toHaveBeenCalled();
     });
 
@@ -129,7 +129,7 @@ describe('Directive: commit-list', function () {
         $scope: $scope,
         hotkeys: hotkeys
       });
-      $scope.commits = commits;
+      $scope.commits = commitsMock;
       $rootScope.$apply();
 
       var combo = hotkeys.get('up');
@@ -149,7 +149,7 @@ describe('Directive: commit-list', function () {
         $scope: $scope,
         hotkeys: hotkeys
       });
-      $scope.commits = commits;
+      $scope.commits = commitsMock;
       $rootScope.$apply();
 
       var combo = hotkeys.get('up');
@@ -169,7 +169,7 @@ describe('Directive: commit-list', function () {
         $scope: $scope,
         hotkeys: hotkeys
       });
-      $scope.commits = commits;
+      $scope.commits = commitsMock;
       $rootScope.$apply();
 
       var stateSpy = spyOn($state, 'go');
@@ -192,7 +192,7 @@ describe('Directive: commit-list', function () {
         $scope: $scope,
         hotkeys: hotkeys
       });
-      $scope.commits = commits;
+      $scope.commits = commitsMock;
       $scope.filter = filter;
       $rootScope.$apply();
 
@@ -213,7 +213,7 @@ describe('Directive: commit-list', function () {
         $scope: $scope,
         hotkeys: hotkeys
       });
-      $scope.commits = commits;
+      $scope.commits = commitsMock;
       $scope.filter = filter;
       $rootScope.$apply();
 
@@ -236,7 +236,7 @@ describe('Directive: commit-list', function () {
         $scope: $scope,
         hotkeys: hotkeys
       });
-      $scope.commits = commits;
+      $scope.commits = commitsMock;
       $scope.filter = filter;
       $rootScope.$apply();
 
@@ -259,7 +259,7 @@ describe('Directive: commit-list', function () {
         $scope: $scope,
         hotkeys: hotkeys
       });
-      $scope.commits = commits;
+      $scope.commits = commitsMock;
       $scope.filter = filter;
       $rootScope.$apply();
 
@@ -282,7 +282,7 @@ describe('Directive: commit-list', function () {
         $scope: $scope,
         hotkeys: hotkeys
       });
-      $scope.commits = commits;
+      $scope.commits = commitsMock;
       $scope.filter = filter;
       $rootScope.$apply();
 

@@ -57,19 +57,24 @@
         };
 
         Comment.prototype.remove = function () {
+          var defer = $q.defer();
           var githubCallback = function (error) {
             if (!error) {
+              defer.resolve();
               $log.log('Comment succesfully removed.');
             } else {
+              defer.reject();
               $log.log(error);
             }
-          }.bind(this);
+          };
 
           github.repos.deleteCommitComment({
             user: this.editInformations.user,
             repo: this.editInformations.repo,
             id: this.id
           }, githubCallback);
+
+          return defer.promise;
         };
 
         Comment.prototype.edit = function () {
@@ -112,6 +117,32 @@
         Comment.prototype.shouldShowEditButton = function () {
           return this.mode === 'show';
         };
+
+        Comment.prototype.isApproval = function () {
+          return this.body && this.body.indexOf('approved with [gh-review](http://gh-review.herokuapp.com/)') > -1;
+        };
+
+        Comment.prototype.isNotApproval = function () {
+          return !this.isApproval();
+        };
+
+        Comment.prototype.getApprover = function () {
+          if(this.isNotApproval()){
+            return null;
+          }
+
+          var startIndex = this.body.indexOf('```json');
+          if (startIndex > -1) {
+            var endIndex = this.body.lastIndexOf('```');
+            if (endIndex > -1) {
+              var commentJson = this.body.substring(7, endIndex),
+                commentObj = JSON.parse(commentJson);
+              return commentObj.approver;
+            }
+          }
+        };
+
+
 
         return Comment;
       }
