@@ -46,23 +46,28 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('serve', function (target) {
-    if (target === 'dist') {
-      return grunt.task.run(['build', 'connect:dist', 'server-keepalive']);
-    }
 
-    if (target === 'e2e') {
-      return grunt.task.run(['connect:e2e']);
+    switch (target){
+    case 'dist':
+      grunt.task.run(['build', 'connect:dist', 'server-keepalive']);
+      break;
+    case 'e2e':
+      grunt.task.run(['connect:e2e']);
+      break;
+    case 'saucelabs':
+      grunt.task.run(['connect:saucelabs']);
+      break;
+    default:
+      grunt.task.run([
+        'jshint',
+        'processTmpl:dev',
+        'injector:scripts',
+        'injector:less',
+        'less:dev',
+        'connect:dev',
+        'watch'
+      ]);
     }
-
-    grunt.task.run([
-      'jshint',
-      'processTmpl:dev',
-      'injector:scripts',
-      'injector:less',
-      'less:dev',
-      'connect:dev',
-      'watch'
-    ]);
   });
 
   grunt.registerTask('processTmpl', function (target) {
