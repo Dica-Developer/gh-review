@@ -26,7 +26,8 @@ module.exports = function (config) {
       'client/components/**/*.html',
       '.tmp/options.js',
       'test/helper/commitMockModule.js',
-      'test/helper/commentMockModule.js'
+      'test/helper/commentMockModule.js',
+      'test/helper/bind-polyfill.js'
     ],
     exclude: [
       'client/worker/*.*'
@@ -41,7 +42,7 @@ module.exports = function (config) {
       stripPrefix: 'client/'
     },
     coverageReporter: {
-      type: 'html',
+      type: 'lcov',
       dir: 'test/coverage/'
     },
 
@@ -50,6 +51,6 @@ module.exports = function (config) {
 
     LogLevel: config.LOG_DEBUG,
 
-    browsers: ['Chrome']
+    browsers: ['PhantomJS']
   });
 };
