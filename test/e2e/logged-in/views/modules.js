@@ -7,7 +7,7 @@
       browser.url('http://localhost:9000').login();
     },
     'beforeEach': function (browser) {
-      browser.goTo('Modules').waitForElementPresent('#searchValue', 5000);
+      browser.goTo('modules').waitForElementPresent('#searchValue', 5000);
     },
     'after': function(browser){
       browser.end();
