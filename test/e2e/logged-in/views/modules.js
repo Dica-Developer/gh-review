@@ -2,6 +2,7 @@
   'use strict';
 
   module.exports = {
+    tags: ['logged-in', 'view', 'modules'],
     'before': function(browser){
       browser.url('http://localhost:9000').login();
     },
