@@ -30,7 +30,7 @@
         .click('#commitList a:first-child')
         .waitForElementPresent('.div-table.github', 10000)
         .assert.urlContains('Dica-Developer/gh-review/blob');
-    },
+    }
   };
 
 }());
