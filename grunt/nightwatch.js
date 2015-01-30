@@ -11,7 +11,7 @@
       custom_assertions_path: '<%= config.test %>/helper/nightwatch-custom-assertions',
       test_settings: {
         'default': {
-          'launch_url': 'http://localhost:9000'
+          'launch_url': 'http://localhost:9000/'
         },
         'saucelabs': {
           'selenium_host': 'ondemand.saucelabs.com',
