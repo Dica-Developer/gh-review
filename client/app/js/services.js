@@ -17,19 +17,4 @@
     }
   ]);
 
-  services.factory('isCommentNotApprovalComment', ['commentCollector',
-    function (commentCollector) {
-      return function (commentId) {
-        return (true !== commentCollector.getApproveComments()[commentId]);
-      };
-    }
-  ]);
-
-  services.factory('isCommentApprovalCommentFromUser', ['commentCollector',
-    function (commentCollector) {
-      return function (comment, loggedInUser) {
-        return (true === commentCollector.getApproveComments()[comment.id]) && comment.user.login === loggedInUser.login;
-      };
-    }
-  ]);
 }(angular));
