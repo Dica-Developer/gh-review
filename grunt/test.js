@@ -6,7 +6,8 @@
       var tasklist = ['jshint', 'processTmpl:dev'];
 
       if ('travis' === target) {
-        tasklist.push('build');
+        tasklist.push('karma:travis');
+        tasklist.push('buildForTest');
         tasklist.push('serve:saucelabs');
         tasklist.push('nightwatch:saucelabs');
         tasklist.push('coveralls');
