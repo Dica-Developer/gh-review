@@ -24,6 +24,13 @@
         port: 9000,
         base: ['<%= config.tmp %>', '<%= config.app %>']
       }
+    },
+    saucelabs: {
+      options: {
+        hostname: 'localhost',
+        port: 9000,
+        base: '<%= config.dist %>'
+      }
     }
   };
 }());
