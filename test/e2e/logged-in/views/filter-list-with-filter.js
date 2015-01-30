@@ -27,6 +27,7 @@
     'Click on remove icon should delete folder': function (browser) {
       browser
         .assert.elementPresent('#reviewList')
+        .waitForElementPresent('#reviewList a:first-child span.destroy', 5000)
         .click('#reviewList a:first-child span.destroy')
         .assert.elementNotPresent('#reviewList');
     },
