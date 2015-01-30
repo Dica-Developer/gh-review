@@ -5,9 +5,15 @@ before_script:
   - npm install -g grunt-cli
   - npm install -g bower
   - bower install --config.interactive=false
-before_install:
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
+env:
+  global:
+    - SAUCE_USERNAME=Dica-Developer
+    - secure: "cIm8m55uMqYaCUpmk98LuHbvUKEfOUBc00eSdc8Iz1/4echufRjKN+Hh6xgYYtTFVYeFRPOX5fny/xQAOglGYMKa4FCj1c/AYkCOUb2J2TAEaEzyoFayeQ4TOQH/lnaRgeyhBKPJnaLb24474+vap80dc+2KN3EZ+54MABbg3Mw="
+addons:
+  sauce_connect:
+    username: "Dica-Developer"
+    access_key:
+      secure: "fCJZ8IH7wWMC5Orgn92fR+G78XRc9HPk2NRWc3d7tXHCzz+A3avKK8fl/yXQKnRSIMkksinCUuZRwMOk8fYCwRBC/tCylYAyLfUg8802R4Yw+ckDnGgmhUzxS00mlQPPUJYH32Swj1pbRDdX3ZSjI9UcWB9xdhBzag61A4xbiSU="
 notifications:
   email:
     - ci@dica-developer.org
