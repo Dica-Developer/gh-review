@@ -2,8 +2,8 @@ describe('Service: Comment', function () {
   'use strict';
 
   /*jshint camelcase:false*/
-  var Comment,
-    commentData = {
+  var Comment, comments, $q, $rootScope,
+    commitComment = {
       mode: 'test',
       body_html: '<p>Line comment test</p>',
       preview_html: '<p>Line comment test preview</p>',
@@ -16,22 +16,29 @@ describe('Service: Comment', function () {
       created_at: '2014-06-05T14:19:31Z',
       html_url: 'https://github.com/Dica-Developer/gh-review/commit/9dc35ebda672c3a0443d0af3fa54fda0372cdcd2#commitcomment-6569207',
       id: 6569207,
-      line: 39,
-      path: 'app/templates/_filter.html',
-      position: 6,
+      line: null,
+      position: null,
       updated_at: '2014-06-05T14:19:31Z',
       url: 'https://api.github.com/repos/Dica-Developer/gh-review/comments/6569207',
       editInformations: {
         repo: 'gh-review',
         user: 'Dica-Developer'
       }
-    };
+    },
+    lineComment = JSON.parse(JSON.stringify(commitComment));
+
+  lineComment.line = 39;
+  lineComment.path = 'app/templates/_filter.html';
+  lineComment.position = 6;
 
   beforeEach(module('GHReview'));
 
   beforeEach(inject(function ($injector) {
     localStorage.setItem('ghreview.accessToken', '44046cd4b4b85afebfe3ccaec13fd8c08cc80aad');
     Comment = $injector.get('Comment');
+    comments = $injector.get('comments');
+    $q = $injector.get('$q');
+    $rootScope = $injector.get('$rootScope');
   }));
 
   afterEach(function () {
@@ -43,75 +50,49 @@ describe('Service: Comment', function () {
   });
 
   describe('.createComment', function () {
-    var github, $rootScope;
 
-    beforeEach(inject(function ($injector) {
-      github = $injector.get('github');
-      $rootScope = $injector.get('$rootScope');
-    }));
-
-    it('Should call github.repos.createCommitComment', function () {
-      var comment = new Comment(commentData);
-      var expectedCallArgs = {
-        user: commentData.editInformations.user,
-        repo: commentData.editInformations.repo,
-        sha: commentData.sha,
-        /*jshint camelcase:false*/
-        body: commentData.edit_text,
-        path: commentData.path,
-        position: commentData.position,
-        line: commentData.line,
-        headers: {
-          Accept: 'application/vnd.github-commitcomment.full+json'
-        }
-      };
-      var githubSpy = spyOn(github.repos, 'createCommitComment');
+    it('should call comments.addCommitComment', function () {
+      spyOn(comments, 'addCommitComment').and.returnValue($q.when({}));
+      var comment = new Comment(commitComment);
       comment.createComment();
-      expect(githubSpy.calls.argsFor(0)[0]).toEqual(expectedCallArgs);
+      $rootScope.$apply();
+      expect(comments.addCommitComment).toHaveBeenCalled();
     });
 
-    it('Should set comment.mode to "show" and $rootScope.$apply', function () {
-      var comment = new Comment(commentData);
-      var githubSpy = spyOn(github.repos, 'createCommitComment');
-      var scopeSpy = spyOn($rootScope, '$apply');
+    it('should call comments.addLineComment', function () {
+      spyOn(comments, 'addLineComment').and.returnValue($q.when({}));
+      var comment = new Comment(lineComment);
       comment.createComment();
-      var callback = githubSpy.calls.argsFor(0)[1];
-      callback(null, {});
-      expect(scopeSpy).toHaveBeenCalled();
+      $rootScope.$apply();
+      expect(comments.addLineComment).toHaveBeenCalled();
+    });
+
+    it('Should set comment.mode to "show"', function () {
+      var comment = new Comment(commitComment);
+      spyOn(comments, 'addCommitComment').and.returnValue($q.when({}));
+      expect(comment.mode).toBe('test');
+      comment.createComment();
+      $rootScope.$apply();
       expect(comment.mode).toBe('show');
     });
   });
 
   describe('.preview', function () {
-    var github, $rootScope;
 
-    beforeEach(inject(function ($injector) {
-      github = $injector.get('github');
-      $rootScope = $injector.get('$rootScope');
-    }));
-
-    it('Should call github.markdown.render', function () {
-      var comment = new Comment(commentData);
-      var expectedCallArgs = {
-        /*jshint camelcase:false*/
-        text: commentData.edit_text,
-        mode: 'gfm'
-      };
-      var githubSpy = spyOn(github.markdown, 'render');
+    it('Should call comments.renderAsMarkdown', function () {
+      spyOn(comments, 'renderAsMarkdown').and.returnValue($q.when({}));
+      var comment = new Comment(commitComment);
       comment.preview();
-      expect(githubSpy.calls.argsFor(0)[0]).toEqual(expectedCallArgs);
+      $rootScope.$apply();
+      expect(comments.renderAsMarkdown).toHaveBeenCalled();
     });
 
-    it('Should set comment.mode to "preview" comment.preview_html to resp.data and $rootScope.$apply', function () {
-      var comment = new Comment(commentData);
-      var githubSpy = spyOn(github.markdown, 'render');
-      var scopeSpy = spyOn($rootScope, '$apply');
+    it('Should set comment.mode to "preview" comment.preview_html to resp.data', function () {
+      spyOn(comments, 'renderAsMarkdown').and.returnValue($q.when({ data: '<p>Test</p>' }));
+      var comment = new Comment(commitComment);
       comment.preview();
-      var callback = githubSpy.calls.argsFor(0)[1];
-      callback(null, {
-        data: '<p>Test</p>'
-      });
-      expect(scopeSpy).toHaveBeenCalled();
+      $rootScope.$apply();
+      expect(comments.renderAsMarkdown).toHaveBeenCalled();
       expect(comment.mode).toBe('preview');
       /*jshint camelcase:false*/
       expect(comment.preview_html).toBe('<p>Test</p>');
@@ -119,91 +100,95 @@ describe('Service: Comment', function () {
   });
 
   describe('.edit', function () {
-    var github, $rootScope;
-
-    beforeEach(inject(function ($injector) {
-      github = $injector.get('github');
-      $rootScope = $injector.get('$rootScope');
-    }));
 
     it('Should set comment.mode to "edit" ', function () {
-      var comment = new Comment(commentData);
+      var comment = new Comment(commitComment);
       comment.edit();
       expect(comment.mode).toBe('edit');
     });
+
+  });
+
+  describe('.continueEditing', function () {
+
+    it('Should set comment.mode to "edit" ', function () {
+      var comment = new Comment(commitComment);
+      comment.continueEditing();
+      expect(comment.mode).toBe('edit');
+    });
+
+  });
+
+  describe('.cancelEdit', function () {
+
+    it('Should set comment.mode to "show" and comment.edit_text to empty string', function () {
+      var comment = new Comment(commitComment);
+      comment.cancelEdit();
+      expect(comment.mode).toBe('show');
+      expect(comment.edit_text).toBe('');
+    });
+
   });
 
   describe('.remove', function () {
-    var github, $rootScope;
 
-    beforeEach(inject(function ($injector) {
-      github = $injector.get('github');
-      $rootScope = $injector.get('$rootScope');
-    }));
-
-    it('Should call github.repos.deleteCommitComment', function () {
-      var comment = new Comment(commentData);
-      var expectedCallArgs = {
-        user: commentData.editInformations.user,
-        repo: commentData.editInformations.repo,
-        id: commentData.id
-      };
-      var githubSpy = spyOn(github.repos, 'deleteCommitComment');
+    it('should call comments.deleteComment', function () {
+      spyOn(comments, 'deleteComment').and.returnValue($q.when());
+      var comment = new Comment(commitComment);
       comment.remove();
-      expect(githubSpy.calls.argsFor(0)[0]).toEqual(expectedCallArgs);
+      $rootScope.$apply();
+      expect(comments.deleteComment).toHaveBeenCalled();
     });
 
-    xit('Should set comment.mode to "edit" comment.content to resp.body and $rootScope.$apply', function () {
-      var comment = new Comment(commentData);
-      var githubSpy = spyOn(github.repos, 'getCommitComment');
-      var scopeSpy = spyOn($rootScope, '$apply');
-      comment.edit();
-      var callback = githubSpy.calls.argsFor(0)[1];
-      callback(null, {
-        body: 'Test'
-      });
-      expect(scopeSpy).toHaveBeenCalled();
-      expect(comment.mode).toBe('edit');
-      expect(comment.content).toBe('Test');
-    });
   });
 
   describe('.save', function () {
-    var github, $rootScope;
 
-    beforeEach(inject(function ($injector) {
-      github = $injector.get('github');
-      $rootScope = $injector.get('$rootScope');
-    }));
-
-    it('Should call github.repos.updateCommitComment', function () {
-      var comment = new Comment(commentData);
-      var expectedCallArgs = {
-        user: commentData.editInformations.user,
-        repo: commentData.editInformations.repo,
-        id: commentData.id,
-        body: commentData.edit_text,
-        headers: {
-          Accept: 'application/vnd.github-commitcomment.full+json'
-        }
-      };
-      var githubSpy = spyOn(github.repos, 'updateCommitComment');
+    it('Should call comments.updateComment', function () {
+      spyOn(comments, 'updateComment').and.returnValue($q.when({}));
+      var comment = new Comment(commitComment);
       comment.save();
-      expect(githubSpy.calls.argsFor(0)[0]).toEqual(expectedCallArgs);
+      $rootScope.$apply();
+      expect(comments.updateComment).toHaveBeenCalled();
     });
 
-    it('Should set comment.mode to "show" and call $rootScope.$apply', function () {
-      var comment = new Comment(commentData);
-      var githubSpy = spyOn(github.repos, 'updateCommitComment');
-      var scopeSpy = spyOn($rootScope, '$apply');
+    it('Should set comment.mode to "show" comment.body to resp.body', function () {
+      spyOn(comments, 'updateComment').and.returnValue($q.when({ body: 'Test' }));
+      var comment = new Comment(commitComment);
       comment.save();
-      var callback = githubSpy.calls.argsFor(0)[1];
-      callback(null, {
-        body: 'Test'
-      });
-      expect(scopeSpy).toHaveBeenCalled();
+      $rootScope.$apply();
       expect(comment.mode).toBe('show');
+      expect(comment.body).toBe('Test');
     });
   });
 
+  describe('.isApproval', function () {
+
+    it('should return false', function () {
+      var comment = new Comment(commitComment);
+      expect(comment.isApproval()).toBe(false);
+    });
+
+    it('should return true', function () {
+      var comment = new Comment(commitComment);
+      comment.body = 'approved with [gh-review](http://gh-review.herokuapp.com/)';
+      expect(comment.isApproval()).toBe(true);
+    });
+
+  });
+
+  describe('.getApprover', function () {
+
+    it('should return null', function () {
+      var comment = new Comment(commitComment);
+      expect(comment.getApprover()).toBeNull();
+    });
+
+    it('should return "JayGray"', function () {
+      var comment = new Comment(commitComment);
+      comment.body = '```json\n{\n  "version": "0.6.2",\n  "approved": true,\n  "approver": "JayGray",\n  "approvalDate": 1414186947435\n}\n```\napproved with [gh-review](http://gh-review.herokuapp.com/)';
+      expect(comment.getApprover()).toBe('JayGray');
+    });
+
+  });
 });

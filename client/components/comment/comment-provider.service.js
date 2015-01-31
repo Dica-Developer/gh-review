@@ -2,8 +2,8 @@
   'use strict';
 
   angular.module('GHReview')
-    .factory('commentProvider', ['$q', '_', 'github', 'commentCollector', 'Comment',
-      function ($q, _, github, commentCollector, Comment) {
+    .service('commentProvider', ['$q', '_', 'comments', 'commentCollector', 'Comment',
+      function ($q, _, comments, commentCollector, Comment) {
 
         var getApproversFromComments = function (comments) {
           var defer = $q.defer();
@@ -52,68 +52,34 @@
           };
         };
 
-        var getCommentsForCommit = function (stateParams) {
+        this.getCommentsForCommit = function (stateParams) {
           var defer = $q.defer();
-          github.repos.getCommitComments({
-            user: stateParams.user,
-            repo: stateParams.repo,
-            sha: stateParams.sha,
-            headers: {
-              'Accept': 'application/vnd.github-commitcomment.full+json'
-            }
-          }, function (error, res) {
-            if (error) {
-              defer.reject(error);
-            } else {
-              /*istanbul ignore next*/
-              if (res.meta) {
-                delete res.meta;
-              }
-              getApproversFromComments(res).then(function (approvers) {
-                var comments = splitInLineAndCommitComments(res, stateParams.user, stateParams.repo);
-                var resolveObject = {
-                  comments: comments,
-                  approvers: approvers
-                };
-                defer.resolve(resolveObject);
-              });
-            }
-          });
+          comments.getForCommit(stateParams)
+            .then(function (comments) {
+              getApproversFromComments(comments)
+                .then(function (approvers) {
+                  var resolveObject = {
+                    comments: splitInLineAndCommitComments(comments, stateParams.user, stateParams.repo),
+                    approvers: approvers
+                  };
+                  defer.resolve(resolveObject);
+                }, defer.reject);
+            }, defer.reject);
           return defer.promise;
         };
 
-        function getCommentsForCommitWithoutApprovers(stateParams) {
+        this.getCommentsForCommitWithoutApprovers = function (stateParams) {
           var defer = $q.defer();
-          github.repos.getCommitComments({
-            user: stateParams.user,
-            repo: stateParams.repo,
-            sha: stateParams.sha,
-            headers: {
-              'Accept': 'application/vnd.github-commitcomment.full+json'
-            }
-          }, function (error, res) {
-            if (error) {
-              defer.reject(error);
-            } else {
-              /*istanbul ignore next*/
-              if (res.meta) {
-                delete res.meta;
-              }
-              if (res.length) {
-                var comments = splitInLineAndCommitComments(res, stateParams.user, stateParams.repo);
-                defer.resolve(comments);
+          comments.getForCommit(stateParams)
+            .then(function (comments) {
+              if (comments.length) {
+                var resolveObject = splitInLineAndCommitComments(comments, stateParams.user, stateParams.repo);
+                defer.resolve(resolveObject);
               } else {
                 defer.resolve(false);
               }
-            }
-          });
+            }, defer.reject);
           return defer.promise;
-        }
-
-        return {
-          getCommentsForCommit: getCommentsForCommit,
-          getCommentsForCommitWithoutApprovers: getCommentsForCommitWithoutApprovers
         };
-      }
-    ]);
+      }]);
 }(angular));
