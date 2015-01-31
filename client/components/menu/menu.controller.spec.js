@@ -5,7 +5,7 @@ describe('Controller: MenuDirectiveController', function () {
   beforeEach(module('GHReview'));
   beforeEach(module('app/welcome/welcome.html'));
 
-  describe('MenuController', function () {
+  describe('authenticated', function () {
 
     describe('$scope.name', function () {
 
@@ -132,5 +132,43 @@ describe('Controller: MenuDirectiveController', function () {
         expect(fakeEvent.preventDefault).toHaveBeenCalled();
       });
     });
+  });
+
+  describe('not authenticated', function () {
+    var $rootScope, $scope, controller, $q, authenticated, githubUserData, collectComments;
+
+    beforeEach(inject(function ($injector) {
+      $rootScope = $injector.get('$rootScope');
+      $scope = $rootScope.$new();
+      $q = $injector.get('$q');
+      authenticated = {
+        get: function () {
+          return false;
+        }
+      };
+      githubUserData = {
+        get: function () {}
+      };
+      collectComments = jasmine.createSpy('collectComments');
+      var $controller = $injector.get('$controller');
+      controller = $controller('MenuController', {
+        '$scope': $scope,
+        'authenticated': authenticated,
+        'collectComments': collectComments,
+        'githubUserData': githubUserData
+      });
+    }));
+
+    it('Should not call "githubUserData.get"', function () {
+      spyOn(githubUserData, 'get');
+      $rootScope.$apply();
+      expect(githubUserData.get).not.toHaveBeenCalled();
+    });
+
+    it('Should not call "collectComments"', function () {
+      $rootScope.$apply();
+      expect(collectComments).not.toHaveBeenCalled();
+    });
+
   });
 });
