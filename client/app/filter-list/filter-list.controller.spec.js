@@ -96,5 +96,16 @@
       });
     });
 
+    describe('without filter', function(){
+
+      it('should redirect to addFilter if no filter exists', function(){
+        spyOn($state, 'go');
+        $controller('FilterListController', {
+          '$scope': $scope
+        });
+        expect($state.go).toHaveBeenCalledWith('addFilter');
+      });
+    });
+
   });
 }());
