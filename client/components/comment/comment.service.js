@@ -1,8 +1,8 @@
 (function (angular) {
   'use strict';
   angular.module('GHReview')
-    .factory('Comment', ['$q', '$rootScope', '$log', 'github', '_',
-      function ($q, $rootScope, $log, github, _) {
+    .factory('Comment', ['$q', '$rootScope', '$log', 'comments', '_',
+      function ($q, $rootScope, $log, comments, _) {
 
         function Comment(options) {
           if (!options.mode) {
@@ -12,69 +12,37 @@
         }
 
         Comment.prototype.preview = function () {
-          var githubCallback = function (error, response) {
-            if (!error) {
-              /*jshint camelcase:false*/
-              this.preview_html = response.data;
-              this.mode = 'preview';
-              $rootScope.$apply();
-            }
-          }.bind(this);
-
-          github.markdown.render({
-            /*jshint camelcase:false*/
-            text: this.edit_text,
-            mode: 'gfm'
-          }, githubCallback);
+          var self = this;
+          /*jshint camelcase: false*/
+          comments.renderAsMarkdown(this.edit_text)
+            .then(function(comment){
+              self.preview_html = comment.data;
+              self.mode = 'preview';
+            });
         };
 
         Comment.prototype.createComment = function () {
+          var self = this,
+            user = this.editInformations.user,
+            repo = this.editInformations.repo,
+            sha = this.sha,
+            callback = function(comment){
+              comment.mode = 'show';
+              _.extend(self, comment);
+            };
 
-          var githubCallback = function (error, result) {
-
-            if (!error) {
-              result.mode = 'show';
-              _.extend(this, result);
-              $rootScope.$apply();
-            } else {
-              $log.log(error);
-            }
-          }.bind(this);
-
-          github.repos.createCommitComment({
-            user: this.editInformations.user,
-            repo: this.editInformations.repo,
-            sha: this.sha,
+          if (_.isNull(this.line) && _.isNull(this.position)) {
             /*jshint camelcase:false*/
-            body: this.edit_text,
-            path: this.path,
-            position: this.position,
-            line: this.line,
-            headers: {
-              'Accept': 'application/vnd.github-commitcomment.full+json'
-            }
-          }, githubCallback);
+            comments.addCommitComment(sha, user, repo, this.edit_text)
+              .then(callback);
+          } else {
+            comments.addLineComment(sha, user, repo, this.line, this.position, this.path, this.edit_text)
+              .then(callback);
+          }
         };
 
         Comment.prototype.remove = function () {
-          var defer = $q.defer();
-          var githubCallback = function (error) {
-            if (!error) {
-              defer.resolve();
-              $log.log('Comment succesfully removed.');
-            } else {
-              defer.reject();
-              $log.log(error);
-            }
-          };
-
-          github.repos.deleteCommitComment({
-            user: this.editInformations.user,
-            repo: this.editInformations.repo,
-            id: this.id
-          }, githubCallback);
-
-          return defer.promise;
+          return comments.deleteComment(this.editInformations.user, this.editInformations.repo, this.id);
         };
 
         Comment.prototype.edit = function () {
@@ -94,24 +62,16 @@
         };
 
         Comment.prototype.save = function () {
-          var githubCallback = function (error, res) {
-            if (!error) {
-              res.mode = 'show';
-              /*jshint camelcase:false*/
-              _.extend(this, res);
-              $rootScope.$apply();
-            }
-          }.bind(this);
-          github.repos.updateCommitComment({
-            user: this.editInformations.user,
-            repo: this.editInformations.repo,
-            id: this.id,
-            /*jshint camelcase:false*/
-            body: this.edit_text,
-            headers: {
-              'Accept': 'application/vnd.github-commitcomment.full+json'
-            }
-          }, githubCallback);
+          var self = this,
+            user = this.editInformations.user,
+            repo = this.editInformations.repo;
+
+          /*jshint camelcase:false*/
+          comments.updateComment(user, repo, this.id, this.edit_text)
+            .then(function(comment){
+              comment.mode = 'show';
+              _.extend(self, comment);
+            });
         };
 
         Comment.prototype.shouldShowEditButton = function () {
@@ -127,7 +87,7 @@
         };
 
         Comment.prototype.getApprover = function () {
-          if(this.isNotApproval()){
+          if (this.isNotApproval()) {
             return null;
           }
 
@@ -141,8 +101,6 @@
             }
           }
         };
-
-
 
         return Comment;
       }
