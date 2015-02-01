@@ -2,7 +2,7 @@
 describe('Service: repoCollector', function () {
   'use strict';
 
-  var repoCollector, github, $rootScope, $interval, $q;
+  var repoCollector, github, $rootScope, $timeout, $q;
 
   beforeEach(module('GHReview'));
 
@@ -10,7 +10,7 @@ describe('Service: repoCollector', function () {
     repoCollector = $injector.get('repoCollector');
     github = $injector.get('github');
     $rootScope = $injector.get('$rootScope');
-    $interval = $injector.get('$interval');
+    $timeout = $injector.get('$timeout');
     $q = $injector.get('$q');
   }));
 
@@ -133,9 +133,9 @@ describe('Service: repoCollector', function () {
 
     repoCollector.getAll();
     expect(repoCollector.getAll.cache).toBeDefined();
-    expect(Object.keys(repoCollector.getAll.cache).length).toBe(1);
+    expect(repoCollector.getAll.cache.has('all-repos')).toBe(true);
     var cacheExpireTime = 60 * 60 * 1000; //60min
-    $interval.flush(cacheExpireTime);
-    expect(Object.keys(repoCollector.getAll.cache).length).toBe(0);
+    $timeout.flush(cacheExpireTime);
+    expect(repoCollector.getAll.cache.has('all-repos')).toBe(false);
   });
 });

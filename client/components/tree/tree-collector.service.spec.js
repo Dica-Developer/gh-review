@@ -2,7 +2,7 @@
 describe('Service: treeCollector', function () {
   'use strict';
 
-  var treeCollector, github, $rootScope, $interval;
+  var treeCollector, github, $rootScope, $timeout;
 
   beforeEach(module('GHReview'));
 
@@ -10,7 +10,7 @@ describe('Service: treeCollector', function () {
     treeCollector = $injector.get('treeCollector');
     github = $injector.get('github');
     $rootScope = $injector.get('$rootScope');
-    $interval = $injector.get('$interval');
+    $timeout = $injector.get('$timeout');
   }));
 
   it('Should be defined', function () {
@@ -145,17 +145,15 @@ describe('Service: treeCollector', function () {
   it('Should add a well named cache object', function () {
     spyOn(github.gitdata, 'getTree');
     treeCollector.get('TestUser', 'TestRepo', 'master');
-    expect(treeCollector.get.cache).toBeDefined();
-    expect(treeCollector.get.cache['TestUser-TestRepo-master']).toBeDefined();
+    expect(treeCollector.get.cache.has('TestUser-TestRepo-master')).toBe(true);
   });
 
   it('Should invalidate cache after a given time', function () {
     spyOn(github.gitdata, 'getTree');
     treeCollector.get('TestUser', 'TestRepo', 'master');
-    expect(treeCollector.get.cache).toBeDefined();
-    expect(treeCollector.get.cache['TestUser-TestRepo-master']).toBeDefined();
+    expect(treeCollector.get.cache.has('TestUser-TestRepo-master')).toBe(true);
     var cacheExpireTime = 30 * 60 * 1000; //30min
-    $interval.flush(cacheExpireTime);
-    expect(treeCollector.get.cache['TestUser-TestRepo-master']).not.toBeDefined();
+    $timeout.flush(cacheExpireTime);
+    expect(treeCollector.get.cache.has('TestUser-TestRepo-master')).toBe(false);
   });
 });

@@ -2,14 +2,14 @@
   'use strict';
 
   angular.module('GHReview')
-    .service('treeCollector', ['$q', '$interval', 'github', '_', function ($q, $interval, github, _) {
+    .service('treeCollector', ['$q', '$timeout', 'github', '_', function ($q, $timeout, github, _) {
       var q = $q.defer;
 
       function TreeCollector() {
         this.get = _.memoize(function (owner, repo, branch) {
           var _this = this;
-          $interval(function () {
-            _this.get.cache = {};
+          $timeout(function () {
+            _this.get.cache.delete(owner + '-' + repo + '-' + branch);
           }, (30 * 60 * 1000)); //30min
           return _this.getTreeFromGithub(owner, repo, branch);
         }, function (owner, repo, branch) {

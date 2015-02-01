@@ -2,7 +2,7 @@
 describe('Service: commitCollector', function () {
   'use strict';
 
-  var commitCollector, github, $rootScope, $interval;
+  var commitCollector, github, $rootScope, $timeout;
 
   beforeEach(angular.mock.module('GHReview'));
 
@@ -10,7 +10,7 @@ describe('Service: commitCollector', function () {
     commitCollector = $injector.get('commitCollector');
     github = $injector.get('github');
     $rootScope = $injector.get('$rootScope');
-    $interval = $injector.get('$interval');
+    $timeout = $injector.get('$timeout');
   }));
 
   it('Should be defined', function () {
@@ -171,11 +171,11 @@ describe('Service: commitCollector', function () {
       sha: 'master',
       author: 'TestAuthor'
     });
-    expect(commitCollector.get.cache).toBeDefined();
-    expect(commitCollector.get.cache['TestUser-TestRepo-master-TestAuthor']).toBeDefined();
+    expect(commitCollector.get.cache.has('TestUser-TestRepo-master-TestAuthor')).toBe(true);
   });
 
   it('Should invalidate cache after a given time', function () {
+    var cacheExpireTime = 10 * 60 * 1000; //10min
     spyOn(github.repos, 'getCommits');
     commitCollector.get({
       user: 'TestUser',
@@ -183,10 +183,19 @@ describe('Service: commitCollector', function () {
       sha: 'master',
       author: 'TestAuthor'
     });
-    expect(commitCollector.get.cache).toBeDefined();
-    expect(commitCollector.get.cache['TestUser-TestRepo-master-TestAuthor']).toBeDefined();
-    var cacheExpireTime = 10 * 60 * 1000; //10min
-    $interval.flush(cacheExpireTime);
-    expect(commitCollector.get.cache['TestUser-TestRepo-master-TestAuthor']).not.toBeDefined();
+    $timeout.flush(cacheExpireTime / 2);
+    commitCollector.get({
+      user: 'TestUser1',
+      repo: 'TestRepo2',
+      sha: 'master3',
+      author: 'TestAuthor4'
+    });
+    expect(commitCollector.get.cache.has('TestUser-TestRepo-master-TestAuthor')).toBe(true);
+    expect(commitCollector.get.cache.has('TestUser1-TestRepo2-master3-TestAuthor4')).toBe(true);
+    $timeout.flush(cacheExpireTime / 2);
+    expect(commitCollector.get.cache.has('TestUser-TestRepo-master-TestAuthor')).toBe(false);
+    expect(commitCollector.get.cache.has('TestUser1-TestRepo2-master3-TestAuthor4')).toBe(true);
+    $timeout.flush(cacheExpireTime / 2);
+    expect(commitCollector.get.cache.has('TestUser1-TestRepo2-master3-TestAuthor4')).toBe(false);
   });
 });

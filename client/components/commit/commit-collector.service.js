@@ -2,19 +2,22 @@
   'use strict';
 
   angular.module('GHReview')
-    .service('commitCollector', ['$q', '$interval', 'github', '_', function ($q, $interval, github, _) {
+    .service('commitCollector', ['$q', '$timeout', 'github', '_', function ($q, $timeout, github, _) {
       var q = $q.defer;
+
+      function getCacheKey (options) {
+        return _.values(options).join('-');
+      }
 
       function CommitCollector() {
         this.get = _.memoize(function (githubOptions) {
-          var _this = this;
-          $interval(function () {
-            _this.get.cache = {};
+          var _this = this,
+            cacheKey = getCacheKey(githubOptions);
+          $timeout(function () {
+            _this.get.cache.delete(cacheKey);
           }, (10 * 60 * 1000)); //10min
           return _this.getCommitsFromGithub(githubOptions);
-        }, function (githubOptions) {
-          return _.values(githubOptions).join('-');
-        });
+        }, getCacheKey);
       }
 
       CommitCollector.prototype.getCommitsFromGithub = function (githubOptions) {
