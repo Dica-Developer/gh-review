@@ -6,7 +6,6 @@
 
     self
       .click('.dropdown-toggle.ng-binding')
-      .click('.dropdown-toggle.ng-binding')
       .click('#submenu-' + menuEntry);
 
     return this; // allows the command to be chained.

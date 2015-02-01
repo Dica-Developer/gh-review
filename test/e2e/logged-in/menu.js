@@ -18,7 +18,6 @@
         .assert.containsText('#menu-modules', 'Modules')
         //We have to make the submenu visible otherwise the text assertion does not work
         .click('.dropdown-toggle.ng-binding')
-        .click('.dropdown-toggle.ng-binding')
         .assert.elementPresent('#submenu-whoami')
         .assert.containsText('#submenu-whoami', 'Who Am I')
         .assert.elementPresent('#submenu-bug')
