@@ -30,6 +30,10 @@
     gruntfile: {
       files: ['Gruntfile.js']
     },
+    bower: {
+      files: ['bower.json'],
+      tasks: ['wiredep']
+    },
     livereload: {
       files: [
         '{.tmp,<%= config.app %>}/{app,components}/**/*.css',
