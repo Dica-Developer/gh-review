@@ -204,7 +204,7 @@ describe('Factory: Filter', function () {
     });
 
     it('getSinceDate should return current since date without seconds', function () {
-      var dateString = moment().startOf('minute').subtract(filterOptions.since.pattern, filterOptions.since.amount).toISOString();
+      var dateString = moment().startOf('minute').subtract(filterOptions.since.amount, filterOptions.since.pattern).toISOString();
       expect(filter.getSinceDate()).toBe(dateString);
     });
 
