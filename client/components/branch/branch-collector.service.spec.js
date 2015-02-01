@@ -2,7 +2,7 @@
 describe('Service: branchCollector', function () {
   'use strict';
 
-  var branchCollector, github, $rootScope, $interval;
+  var branchCollector, github, $rootScope, $timeout;
 
   beforeEach(module('GHReview'));
 
@@ -10,7 +10,7 @@ describe('Service: branchCollector', function () {
     branchCollector = $injector.get('branchCollector');
     github = $injector.get('github');
     $rootScope = $injector.get('$rootScope');
-    $interval = $injector.get('$interval');
+    $timeout = $injector.get('$timeout');
   }));
 
   it('Should be defined', function () {
@@ -132,17 +132,15 @@ describe('Service: branchCollector', function () {
   it('Should add a well named cache object', function () {
     spyOn(github.repos, 'getBranches');
     branchCollector.get('TestUser', 'TestRepo');
-    expect(branchCollector.get.cache).toBeDefined();
-    expect(branchCollector.get.cache['TestUser-TestRepo']).toBeDefined();
+    expect(branchCollector.get.cache.has('TestUser-TestRepo')).toBe(true);
   });
 
   it('Should invalidate cache after a given time', function () {
     spyOn(github.repos, 'getBranches');
     branchCollector.get('TestUser', 'TestRepo');
-    expect(branchCollector.get.cache).toBeDefined();
-    expect(branchCollector.get.cache['TestUser-TestRepo']).toBeDefined();
+    expect(branchCollector.get.cache.has('TestUser-TestRepo')).toBe(true);
     var cacheExpireTime = 15 * 60 * 1000; //15min
-    $interval.flush(cacheExpireTime);
-    expect(branchCollector.get.cache['TestUser-TestRepo']).not.toBeDefined();
+    $timeout.flush(cacheExpireTime);
+    expect(branchCollector.get.cache.has('TestUser-TestRepo')).toBe(false);
   });
 });

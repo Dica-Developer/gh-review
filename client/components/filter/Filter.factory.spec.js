@@ -378,7 +378,7 @@ describe('Factory: Filter', function () {
 
     it('#Filter.getContributorList should call github.repos.getContributors with correct values', function () {
       var githubSpy = spyOn(github.repos, 'getContributors');
-      contributorCollector.get.cache = {};
+      contributorCollector.get.cache = new _.memoize.Cache();
 
       filter.getContributorList();
       expect(githubSpy).toHaveBeenCalled();
@@ -387,7 +387,7 @@ describe('Factory: Filter', function () {
 
     it('#Filter.getContributorList should promise.resolve if response', function (done) {
       spyOn(github.repos, 'getContributors');
-      contributorCollector.get.cache = {};
+      contributorCollector.get.cache = new _.memoize.Cache();
 
       filter.getContributorList()
         .then(function (data) {
@@ -405,7 +405,7 @@ describe('Factory: Filter', function () {
 
     it('#Filter.getContributorList should promise.reject if response error', function (done) {
       spyOn(github.repos, 'getContributors');
-      contributorCollector.get.cache = {};
+      contributorCollector.get.cache = new _.memoize.Cache();
       filter.getContributorList()
         .then(null, function () {
           done();

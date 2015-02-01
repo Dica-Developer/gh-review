@@ -5,7 +5,7 @@ describe('Factory: Commit', function () {
   beforeEach(module('commitMockModule'));
   beforeEach(module('commentMockModule'));
 
-  var Commit, commitsMock, commentsMock, commits, comments, $q, $rootScope, $interval, github;
+  var Commit, commitsMock, commentsMock, commits, comments, $q, $rootScope, $timeout, github;
 
   beforeEach(inject(function ($injector) {
     Commit = $injector.get('Commit');
@@ -15,7 +15,7 @@ describe('Factory: Commit', function () {
     comments = $injector.get('comments');
     $q = $injector.get('$q');
     $rootScope = $injector.get('$rootScope');
-    $interval = $injector.get('$interval');
+    $timeout = $injector.get('$timeout');
     github = $injector.get('github');
   }));
 
@@ -34,8 +34,7 @@ describe('Factory: Commit', function () {
     it('Should add a well named cache object', function () {
       spyOn(github.repos, 'getCommit');
       commit.getCommit({user: 'TestUser', repo: 'testRepo', sha: 'testSha'});
-      expect(commit.getCommit.cache).toBeDefined();
-      expect(commit.getCommit.cache['TestUser-testRepo-testSha']).toBeDefined();
+      expect(commit.getCommit.cache.has('TestUser-testRepo-testSha')).toBe(true);
     });
 
     it('Should invalidate cache after a given time', function () {
@@ -43,10 +42,9 @@ describe('Factory: Commit', function () {
 
       spyOn(github.repos, 'getCommit');
       commit.getCommit({user: 'TestUser', repo: 'testRepo', sha: 'testSha'});
-      expect(commit.getCommit.cache).toBeDefined();
-      expect(commit.getCommit.cache['TestUser-testRepo-testSha']).toBeDefined();
-      $interval.flush(cacheExpireTime);
-      expect(commit.getCommit.cache['TestUser-testRepo-testSha']).not.toBeDefined();
+      expect(commit.getCommit.cache.has('TestUser-testRepo-testSha')).toBe(true);
+      $timeout.flush(cacheExpireTime + 1);
+      expect(commit.getCommit.cache.has('TestUser-testRepo-testSha')).toBe(false);
     });
   });
 

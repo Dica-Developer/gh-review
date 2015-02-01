@@ -2,14 +2,14 @@
   'use strict';
 
   angular.module('GHReview')
-    .service('contributorCollector', ['$q', '$interval', 'github', '_', function ($q, $interval, github, _) {
+    .service('contributorCollector', ['$q', '$timeout', 'github', '_', function ($q, $timeout, github, _) {
       var q = $q.defer;
 
       function ContributorCollector() {
         this.get = _.memoize(function (owner, repo) {
           var _this = this;
-          $interval(function () {
-            _this.get.cache = {};
+          $timeout(function () {
+            _this.get.cache.delete(owner + '-' + repo);
           }, (2 * 60 * 60 * 1000)); //2h
           return _this.getContributorFromGithub(repo, owner);
         }, function (owner, repo) {

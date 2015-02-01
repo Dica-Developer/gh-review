@@ -6,7 +6,7 @@
       function ($injector) {
 
         var $q = $injector.get('$q'),
-          $interval = $injector.get('$interval'),
+          $timeout = $injector.get('$timeout'),
           _ = $injector.get('_'),
           commits = $injector.get('commits'),
           comments = $injector.get('comments'),
@@ -46,17 +46,20 @@
           };
         }
 
+        function getCacheKey (options) {
+          return _.values(options).join('-');
+        }
+
         function Commit(options) {
           this.options = options;
           this.getCommit = _.memoize(function (githubOptions) {
-            var _this = this;
-            $interval(function () {
-              _this.getCommit.cache = {};
+            var _this = this,
+              cacheKey = getCacheKey(githubOptions);
+            $timeout(function () {
+              _this.getCommit.cache.delete(cacheKey);
             }, (10 * 60 * 1000)); //10min
             return commits.bySha(githubOptions);
-          }, function (githubOptions) {
-            return _.values(githubOptions).join('-');
-          });
+          }, getCacheKey);
         }
 
         Commit.prototype.getFiles = function () {

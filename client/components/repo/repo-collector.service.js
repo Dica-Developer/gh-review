@@ -2,16 +2,18 @@
   'use strict';
 
   angular.module('GHReview')
-    .service('repoCollector', ['$q', '$interval', 'github', '_', function ($q, $interval, github, _) {
+    .service('repoCollector', ['$q', '$timeout', 'github', '_', function ($q, $timeout, github, _) {
       var q = $q.defer;
 
       function RepoCollector() {
         this.getAll = _.memoize(function () {
           var _this = this;
-          $interval(function () {
-            _this.getAll.cache = {};
+          $timeout(function () {
+            _this.getAll.cache.delete('all-repos');
           }, (60 * 60 * 1000)); //60min
           return _this.getAllReposFromGithub();
+        }, function(){
+          return 'all-repos';
         });
       }
 

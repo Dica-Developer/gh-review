@@ -1,7 +1,7 @@
 describe('Service: contributorCollector', function () {
   'use strict';
 
-  var contributorCollector, github, $rootScope, $interval;
+  var contributorCollector, github, $rootScope, $timeout;
 
   beforeEach(angular.mock.module('GHReview'));
 
@@ -9,7 +9,7 @@ describe('Service: contributorCollector', function () {
     contributorCollector = $injector.get('contributorCollector');
     github = $injector.get('github');
     $rootScope = $injector.get('$rootScope');
-    $interval = $injector.get('$interval');
+    $timeout = $injector.get('$timeout');
   }));
 
   it('Should be defined', function () {
@@ -133,17 +133,15 @@ describe('Service: contributorCollector', function () {
   it('Should add a well named cache object', function () {
     spyOn(github.repos, 'getContributors');
     contributorCollector.get('TestUser', 'TestRepo');
-    expect(contributorCollector.get.cache).toBeDefined();
-    expect(contributorCollector.get.cache['TestUser-TestRepo']).toBeDefined();
+    expect(contributorCollector.get.cache.has('TestUser-TestRepo')).toBe(true);
   });
 
   it('Should invalidate cache after a given time', function () {
     spyOn(github.repos, 'getContributors');
     contributorCollector.get('TestUser', 'TestRepo');
-    expect(contributorCollector.get.cache).toBeDefined();
-    expect(contributorCollector.get.cache['TestUser-TestRepo']).toBeDefined();
+    expect(contributorCollector.get.cache.has('TestUser-TestRepo')).toBe(true);
     var cacheExpireTime = 2 * 60 * 60 * 1000; //2h
-    $interval.flush(cacheExpireTime);
-    expect(contributorCollector.get.cache['TestUser-TestRepo']).not.toBeDefined();
+    $timeout.flush(cacheExpireTime);
+    expect(contributorCollector.get.cache.has('TestUser-TestRepo')).toBe(false);
   });
 });

@@ -6,7 +6,7 @@ module.exports = function (config) {
     frameworks: ['jasmine'],
     files: [
       'client/bower_components/moment/moment.js',
-      'client/bower_components/lodash/dist/lodash.js',
+      'client/bower_components/lodash/lodash.js',
       'client/bower_components/highlightjs/highlight.pack.js',
       'client/bower_components/github-js/dist/github.js',
       'client/bower_components/angular/angular.js',
