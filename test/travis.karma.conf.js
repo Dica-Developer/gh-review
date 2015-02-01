@@ -16,7 +16,7 @@ module.exports = function (config) {
       'client/bower_components/angular-ui-select/dist/select.js',
       'client/bower_components/angular-animate/angular-animate.js',
       'client/bower_components/angular-sanitize/angular-sanitize.js',
-      'client/bower_components/angular-local-storage/angular-local-storage.js',
+      'client/bower_components/angular-local-storage/dist/angular-local-storage.js',
       'client/bower_components/angular-highlightjs/angular-highlightjs.js',
       'client/bower_components/angular-hotkeys/build/hotkeys.js',
       'client/app/app.js',

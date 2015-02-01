@@ -5,7 +5,7 @@
 
   angular.module('GHReview')
     .constant('GitHub', window.Github)
-    .factory('github', ['GitHub', 'localStorageService',
+    .service('github', ['GitHub', 'localStorageService',
       function (GitHub, localStorageService) {
         var accessToken = localStorageService.get('accessToken');
         if (!github && accessToken !== null) {

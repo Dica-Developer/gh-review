@@ -27,7 +27,7 @@ describe('Service: humanReadableDate', function () {
   });
 
   it('.format should return a string', function () {
-    expect(humanReadableDate.format(date)).toBe('Mon, Dec 10 1979 12:00 AM');
+    expect(humanReadableDate.format(date)).toBe('Mon, Dec 10, 1979 12:00 AM');
   });
 
   it('.format should return null if no date is given', function () {

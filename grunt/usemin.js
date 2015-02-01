@@ -28,7 +28,7 @@
           ],
           css: [
             [/(assets\/images\/.*?\.(?:gif|jpeg|jpg|png|webp|svg))/gm, 'Update the CSS to reference our revved images'],
-            [/(assets\/fonts\/.*?\.(?:eot|svg|ttf|woff))/gm, 'Update the CSS to reference our revved fonts']
+            [/(assets\/fonts\/.*?\.(?:eot|svg|ttf|woff\b|woff2\b))/gm, 'Update the CSS to reference our revved fonts']
           ]
         }
       }

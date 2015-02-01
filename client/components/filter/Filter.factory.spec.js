@@ -204,7 +204,7 @@ describe('Factory: Filter', function () {
     });
 
     it('getSinceDate should return current since date without seconds', function () {
-      var dateString = moment().startOf('minute').subtract(filterOptions.since.pattern, filterOptions.since.amount).toISOString();
+      var dateString = moment().startOf('minute').subtract(filterOptions.since.amount, filterOptions.since.pattern).toISOString();
       expect(filter.getSinceDate()).toBe(dateString);
     });
 
@@ -215,7 +215,7 @@ describe('Factory: Filter', function () {
 
     it('getSinceDateISO should return current since date in ISO string', function () {
       var is = filter.getSinceDateISO();
-      var expected = moment().subtract(filterOptions.since.pattern, filterOptions.since.amount).startOf('day').toISOString();
+      var expected = moment().subtract(filterOptions.since.amount, filterOptions.since.pattern).startOf('day').toISOString();
       expect(moment(is).isSame(expected, 'seconds')).toBeTruthy();
     });
 
