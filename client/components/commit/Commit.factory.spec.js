@@ -5,13 +5,13 @@ describe('Factory: Commit', function () {
   beforeEach(module('commitMockModule'));
   beforeEach(module('commentMockModule'));
 
-  var Commit, commitsMock, commentsMock, commits, ghComments, $q, $rootScope, $timeout, github;
+  var Commit, commitsMock, commentsMock, ghCommits, ghComments, $q, $rootScope, $timeout, github;
 
   beforeEach(inject(function ($injector) {
     Commit = $injector.get('Commit');
     commitsMock = $injector.get('commitsMock');
     commentsMock = $injector.get('commentsMock');
-    commits = $injector.get('commits');
+    ghCommits = $injector.get('ghCommits');
     ghComments = $injector.get('ghComments');
     $q = $injector.get('$q');
     $rootScope = $injector.get('$rootScope');

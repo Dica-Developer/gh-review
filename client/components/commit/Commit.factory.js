@@ -8,7 +8,7 @@
         var $q = $injector.get('$q'),
           $timeout = $injector.get('$timeout'),
           _ = $injector.get('_'),
-          commits = $injector.get('commits'),
+          ghCommits = $injector.get('ghCommits'),
           ghComments = $injector.get('ghComments'),
           Comment = $injector.get('Comment'),
           options = $injector.get('options'),
@@ -58,7 +58,7 @@
             $timeout(function () {
               _this.getCommit.cache.delete(cacheKey);
             }, (10 * 60 * 1000)); //10min
-            return commits.bySha(githubOptions);
+            return ghCommits.bySha(githubOptions);
           }, getCacheKey);
         }
 
