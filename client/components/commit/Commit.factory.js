@@ -9,7 +9,7 @@
           $timeout = $injector.get('$timeout'),
           _ = $injector.get('_'),
           commits = $injector.get('commits'),
-          comments = $injector.get('comments'),
+          ghComments = $injector.get('ghComments'),
           Comment = $injector.get('Comment'),
           options = $injector.get('options'),
           Chunk = $injector.get('Chunk');
@@ -100,7 +100,7 @@
             }, null, 2),
             comment = '```json\n' + commitState + '\n```\napproved with [gh-review](http://gh-review.herokuapp.com/)';
 
-          comments.addCommitComment(self.options.sha, self.options.user, self.options.repo, comment)
+          ghComments.addCommitComment(self.options.sha, self.options.user, self.options.repo, comment)
             .then(defer.resolve);
           return defer.promise;
         };
@@ -117,7 +117,7 @@
         Commit.prototype.getComments = function(){
           var defer = $q.defer(),
             self = this;
-          comments.getForCommit(this.options)
+          ghComments.getForCommit(this.options)
             .then(function(commentResponse){
               self.comments = splitInLineAndCommitComments(commentResponse, self.options.user, self.options.repo);
               defer.resolve(self.comments);

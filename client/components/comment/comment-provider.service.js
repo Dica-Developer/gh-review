@@ -2,8 +2,8 @@
   'use strict';
 
   angular.module('GHReview')
-    .service('commentProvider', ['$q', '_', 'comments', 'commentCollector', 'Comment',
-      function ($q, _, comments, commentCollector, Comment) {
+    .service('commentProvider', ['$q', '_', 'ghComments', 'commentCollector', 'Comment',
+      function ($q, _, ghComments, commentCollector, Comment) {
 
         var getApproversFromComments = function (comments) {
           var defer = $q.defer();
@@ -54,7 +54,7 @@
 
         this.getCommentsForCommit = function (stateParams) {
           var defer = $q.defer();
-          comments.getForCommit(stateParams)
+          ghComments.getForCommit(stateParams)
             .then(function (comments) {
               getApproversFromComments(comments)
                 .then(function (approvers) {
@@ -70,7 +70,7 @@
 
         this.getCommentsForCommitWithoutApprovers = function (stateParams) {
           var defer = $q.defer();
-          comments.getForCommit(stateParams)
+          ghComments.getForCommit(stateParams)
             .then(function (comments) {
               if (comments.length) {
                 var resolveObject = splitInLineAndCommitComments(comments, stateParams.user, stateParams.repo);

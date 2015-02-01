@@ -4,7 +4,7 @@
   describe('Controller: CommitController', function () {
 
     var $controller, $q, $rootScope, githubUserData, commits,
-      Commit, comments, Comment, commitsMock, commentsMock, github,
+      Commit, ghComments, Comment, commitsMock, commentsMock, github,
       mockUserData = {login: 'jayGray'};
 
     beforeEach(module('GHReview'));
@@ -18,7 +18,7 @@
       $rootScope = $injector.get('$rootScope');
       commits = $injector.get('commits');
       Commit = $injector.get('Commit');
-      comments = $injector.get('comments');
+      ghComments = $injector.get('ghComments');
       Comment = $injector.get('Comment');
       githubUserData = $injector.get('githubUserData');
       github = $injector.get('github');
@@ -32,7 +32,7 @@
       beforeEach(function () {
         spyOn(githubUserData, 'get').and.returnValue($q.when(mockUserData));
         spyOn(commits, 'bySha').and.returnValue($q.when(commitsMock[0]));
-        spyOn(comments, 'getForCommit').and.returnValue($q.when(commentsMock[0]));
+        spyOn(ghComments, 'getForCommit').and.returnValue($q.when(commentsMock[0]));
         $scope = $rootScope.$new();
       });
 
@@ -109,7 +109,7 @@
       beforeEach(function () {
         spyOn(githubUserData, 'get').and.returnValue($q.when(mockUserData));
         spyOn(commits, 'bySha').and.returnValue($q.when(commitsMock[0]));
-        spyOn(comments, 'getForCommit').and.returnValue($q.when(commentsMock[0]));
+        spyOn(ghComments, 'getForCommit').and.returnValue($q.when(commentsMock[0]));
         $scope = $rootScope.$new();
       });
 
