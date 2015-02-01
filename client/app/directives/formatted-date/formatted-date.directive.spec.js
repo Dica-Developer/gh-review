@@ -12,7 +12,7 @@ describe('Directive: formatted-Date', function () {
   }));
 
   it('Should set date', function () {
-    var date = moment().subtract('week', 2);
+    var date = moment().subtract(2, 'week');
     var element = $compile('<small formatted-date date="' + date + '"></small>')($rootScope);
     $rootScope.$digest();
     expect(element.text()).toBe('14 days ago');
@@ -20,7 +20,7 @@ describe('Directive: formatted-Date', function () {
   });
 
   it('Should set date with custom format', function () {
-    var date = moment().subtract('week', 2);
+    var date = moment().subtract(2, 'week');
     var element = $compile('<small formatted-date date="' + date + '" format="LL"></small>')($rootScope);
     $rootScope.$digest();
     expect(element.text()).toBe(moment(date).format('LL'));

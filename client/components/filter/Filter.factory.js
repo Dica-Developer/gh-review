@@ -168,7 +168,7 @@
       Filter.prototype.getSinceDate = function () {
         var sinceDate = null;
         if (!_.isUndefined(this.options.since) && _.size(this.options.since) === 2) {
-          sinceDate = moment().startOf('minute').subtract(this.options.since.pattern, this.options.since.amount).toISOString();
+          sinceDate = moment().startOf('minute').subtract(this.options.since.amount, this.options.since.pattern).toISOString();
         }
         return sinceDate;
       };
@@ -176,7 +176,7 @@
       Filter.prototype.getSinceDateISO = function () {
         var sinceDate = null;
         if (!_.isUndefined(this.options.since) && _.size(this.options.since) === 2) {
-          sinceDate = moment().subtract(this.options.since.pattern, this.options.since.amount).startOf('day').toISOString();
+          sinceDate = moment().subtract(this.options.since.amount, this.options.since.pattern).startOf('day').toISOString();
         }
         return sinceDate;
       };

@@ -215,7 +215,7 @@ describe('Factory: Filter', function () {
 
     it('getSinceDateISO should return current since date in ISO string', function () {
       var is = filter.getSinceDateISO();
-      var expected = moment().subtract(filterOptions.since.pattern, filterOptions.since.amount).startOf('day').toISOString();
+      var expected = moment().subtract(filterOptions.since.amount, filterOptions.since.pattern).startOf('day').toISOString();
       expect(moment(is).isSame(expected, 'seconds')).toBeTruthy();
     });
 
