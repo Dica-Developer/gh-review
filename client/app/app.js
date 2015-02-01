@@ -10,7 +10,11 @@
     'ngSanitize',
     'ngAnimate',
     'hljs'
-  ]).config(['localStorageServiceProvider', '$urlRouterProvider',
+  ]).run(['authenticated', 'collectComments', function (authenticated, collectComments) {
+    if(authenticated.get()){
+      collectComments();
+    }
+  }]).config(['localStorageServiceProvider', '$urlRouterProvider',
     function (localStorageServiceProvider, $urlRouterProvider) {
       localStorageServiceProvider.setPrefix('ghreview');
 

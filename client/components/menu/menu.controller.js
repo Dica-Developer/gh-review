@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('GHReview')
-    .controller('MenuController', ['$scope', '$state', 'authenticated', 'githubUserData', 'collectComments', 'hotkeys', function ($scope, $state, authenticated, githubUserData, collectComments, hotkeys) {
+    .controller('MenuController', ['$scope', '$state', 'authenticated', 'githubUserData', 'hotkeys', function ($scope, $state, authenticated, githubUserData, hotkeys) {
       $scope.isAuthenticated = authenticated.get;
       $scope.isCollapsed = true;
       $scope.menu = [
@@ -56,7 +56,6 @@
         }
       ];
       if ($scope.isAuthenticated()) {
-        collectComments();
         hotkeys.bindTo($scope)
           .add({
             combo: 'g f',
