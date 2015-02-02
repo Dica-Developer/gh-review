@@ -5,7 +5,7 @@
     .service('ghUser', ['$q', 'github',
       function ($q, github) {
         var userData = null;
-        this.get = function(){
+        this.get = function () {
           var defer = $q.defer();
           if (userData) {
             defer.resolve(userData);
@@ -19,6 +19,19 @@
               }
             });
           }
+          return defer.promise;
+        };
+
+        this.getOrgs = function (options) {
+          options = options || {};
+          var defer = $q.defer();
+          github.user.getOrgs(options, function (err, result) {
+            if (!err) {
+              defer.resolve(result);
+            } else {
+              defer.reject();
+            }
+          });
           return defer.promise;
         };
       }
