@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('GHReview')
-    .service('comments', ['$q', 'github',
+    .service('ghComments', ['$q', 'github',
       function ($q, github) {
 
         this.getForCommit = function (params) {

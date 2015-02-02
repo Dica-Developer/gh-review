@@ -1,68 +1,44 @@
-(function () {
+describe('Controller: ModuleFilterController', function () {
   'use strict';
 
-  describe('Controller: ModuleFilterController', function () {
+  beforeEach(module('GHReview'));
 
-    beforeEach(module('GHReview'));
+  var $q, $scope, ghSearch;
 
-    var $q, ModuleFilterController, $scope, $controller, github, spy = {};
+  beforeEach(inject(function ($injector) {
+    var $controller = $injector.get('$controller');
+    var $rootScope = $injector.get('$rootScope');
 
-    beforeEach(inject(function ($injector) {
-      github = $injector.get('github');
-      spy.githubFreeSearch = $injector.get('githubFreeSearch');
-      $q = $injector.get('$q');
-      $controller = $injector.get('$controller');
-      var $rootScope = $injector.get('$rootScope');
-      $scope = $rootScope.$new();
-    }));
+    ghSearch = $injector.get('ghSearch');
+    $q = $injector.get('$q');
+    $scope = $rootScope.$new();
+    $controller('ModuleFilterController', {$scope: $scope});
+  }));
 
-    it('Should be defined', function () {
-      ModuleFilterController = $controller('ModuleFilterController', {
-        $scope: $scope
-      });
-      expect(ModuleFilterController).toBeDefined();
-    });
-
-    it('Should have empty search string', function () {
-      ModuleFilterController = $controller('ModuleFilterController', {
-        $scope: $scope
-      });
-      expect($scope.searchString).toBeDefined();
-      expect($scope.searchString).toBe('');
-    });
-
-    it('Should call githubFreeSearch when calling $scope.doSearch', function () {
-      spyOn(spy, 'githubFreeSearch').and.returnValue({
-        then: function () {
-        }
-      });
-      ModuleFilterController = $controller('ModuleFilterController', {
-        $scope: $scope,
-        githubFreeSearch: spy.githubFreeSearch
-      });
-      $scope.doSearch();
-      $scope.$apply();
-      expect(spy.githubFreeSearch).toHaveBeenCalled();
-    });
-
-    it('Should set $scope.reult to response of gitHubFreeSearch request', function () {
-      var defer = $q.defer();
-      spyOn(spy, 'githubFreeSearch').and.returnValue(defer.promise);
-      ModuleFilterController = $controller('ModuleFilterController', {
-        $scope: $scope,
-        githubFreeSearch: spy.githubFreeSearch
-      });
-      $scope.doSearch();
-      expect($scope.result).toBeUndefined();
-      var items = [1, 2, 3];
-      defer.resolve({
-        items: items
-      });
-      $scope.$apply();
-      expect($scope.result).toBeDefined();
-      expect($scope.result).toBe(items);
-    });
-
+  it('Should have empty search string', function () {
+    expect($scope.searchString).toBeDefined();
+    expect($scope.searchString).toBe('');
   });
 
-}());
+  it('Should call ghSearch.query when calling $scope.doSearch', function () {
+    spyOn(ghSearch, 'query').and.returnValue($q.when({items: []}));
+    $scope.doSearch();
+    $scope.$apply();
+    expect(ghSearch.query).toHaveBeenCalled();
+  });
+
+  it('Should set $scope.result to response of ghSearch.query request', function () {
+    var defer = $q.defer();
+    spyOn(ghSearch, 'query').and.returnValue(defer.promise);
+    $scope.doSearch();
+    expect($scope.result).toBeUndefined();
+    var items = [1, 2, 3];
+    defer.resolve({
+      items: items
+    });
+    $scope.$apply();
+    expect($scope.result).toBeDefined();
+    expect($scope.result).toBe(items);
+  });
+
+});

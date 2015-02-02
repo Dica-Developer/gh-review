@@ -4,7 +4,7 @@ describe('Service: CommentProvider', function () {
   beforeEach(module('GHReview'));
 
 
-  var commentProvider, comments,
+  var commentProvider, ghComments,
     githubOptions = {
       user: 'testUser',
       repo: 'testRepo',
@@ -24,7 +24,7 @@ describe('Service: CommentProvider', function () {
 
   beforeEach(inject(function ($injector) {
     commentProvider = $injector.get('commentProvider');
-    comments = $injector.get('comments');
+    ghComments = $injector.get('ghComments');
     _ = $injector.get('_');
   }));
 
@@ -47,7 +47,7 @@ describe('Service: CommentProvider', function () {
     }));
 
     it('Should reject if github.repos.getCommitComments returns error', function (done) {
-      spyOn(comments, 'getForCommit').and.returnValue($q.reject({Error: 'Error'}));
+      spyOn(ghComments, 'getForCommit').and.returnValue($q.reject({Error: 'Error'}));
       commentProvider.getCommentsForCommit(githubOptions)
         .then(null, function (reason) {
           expect(reason).toEqual({Error: 'Error'});
@@ -57,7 +57,7 @@ describe('Service: CommentProvider', function () {
     });
 
     it('Should return one approver', function (done) {
-      spyOn(comments, 'getForCommit').and.returnValue($q.when([commentMock]));
+      spyOn(ghComments, 'getForCommit').and.returnValue($q.when([commentMock]));
       spyOn(commentCollector, 'getCommitApproved').and.returnValue($q.when({'123': true}));
       spyOn(commentCollector, 'getApproveComments').and.returnValue({'456': true});
       commentProvider.getCommentsForCommit(githubOptions)
@@ -70,7 +70,7 @@ describe('Service: CommentProvider', function () {
     });
 
     it('Should return no approver', function (done) {
-      spyOn(comments, 'getForCommit').and.returnValue($q.when([commentMock]));
+      spyOn(ghComments, 'getForCommit').and.returnValue($q.when([commentMock]));
       spyOn(commentCollector, 'getCommitApproved').and.returnValue($q.when({'123': false}));
       spyOn(commentCollector, 'getApproveComments').and.returnValue({'456': true});
       commentProvider.getCommentsForCommit(githubOptions)
@@ -84,7 +84,7 @@ describe('Service: CommentProvider', function () {
     it('Should return one line comment if comment.line not null', function (done) {
       var commentClone = _.clone(commentMock);
       commentClone.line = 23;
-      spyOn(comments, 'getForCommit').and.returnValue($q.when([commentClone]));
+      spyOn(ghComments, 'getForCommit').and.returnValue($q.when([commentClone]));
       spyOn(commentCollector, 'getCommitApproved').and.returnValue($q.when({'123': true}));
       spyOn(commentCollector, 'getApproveComments').and.returnValue({'456': true});
       commentProvider.getCommentsForCommit(githubOptions)
@@ -104,7 +104,7 @@ describe('Service: CommentProvider', function () {
     it('Should return one line comment if comment.position not null', function (done) {
       var commentClone = _.clone(commentMock);
       commentClone.position = 23;
-      spyOn(comments, 'getForCommit').and.returnValue($q.when([commentClone]));
+      spyOn(ghComments, 'getForCommit').and.returnValue($q.when([commentClone]));
       spyOn(commentCollector, 'getCommitApproved').and.returnValue($q.when({'123': true}));
       spyOn(commentCollector, 'getApproveComments').and.returnValue({'456': true});
       commentProvider.getCommentsForCommit(githubOptions)
@@ -122,7 +122,7 @@ describe('Service: CommentProvider', function () {
     });
 
     it('Should return commit comment if comment.line and comment.position is null', function (done) {
-      spyOn(comments, 'getForCommit').and.returnValue($q.when([commentMock]));
+      spyOn(ghComments, 'getForCommit').and.returnValue($q.when([commentMock]));
       spyOn(commentCollector, 'getCommitApproved').and.returnValue($q.when({'123': true}));
       spyOn(commentCollector, 'getApproveComments').and.returnValue({'456': true});
       commentProvider.getCommentsForCommit(githubOptions)

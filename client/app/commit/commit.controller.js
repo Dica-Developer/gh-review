@@ -7,11 +7,11 @@
       var _ = $injector.get('_'),
         Comment = $injector.get('Comment'),
         Commit = $injector.get('Commit'),
-        githubUserData = $injector.get('githubUserData'),
+        ghUser = $injector.get('ghUser'),
         events = $injector.get('events'),
         addLineCommentsToLines, getComments, lineWithNewComment, removeCommentFromScope;
 
-      githubUserData.get()
+      ghUser.get()
         .then(function (user) {
           $scope.loggedInUser = user;
         });

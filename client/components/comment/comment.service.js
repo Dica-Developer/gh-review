@@ -1,8 +1,8 @@
 (function (angular) {
   'use strict';
   angular.module('GHReview')
-    .factory('Comment', ['$q', '$rootScope', '$log', 'comments', '_',
-      function ($q, $rootScope, $log, comments, _) {
+    .factory('Comment', ['$q', '$rootScope', '$log', 'ghComments', '_',
+      function ($q, $rootScope, $log, ghComments, _) {
 
         function Comment(options) {
           if (!options.mode) {
@@ -14,7 +14,7 @@
         Comment.prototype.preview = function () {
           var self = this;
           /*jshint camelcase: false*/
-          comments.renderAsMarkdown(this.edit_text)
+          ghComments.renderAsMarkdown(this.edit_text)
             .then(function(comment){
               self.preview_html = comment.data;
               self.mode = 'preview';
@@ -33,16 +33,16 @@
 
           if (_.isNull(this.line) && _.isNull(this.position)) {
             /*jshint camelcase:false*/
-            comments.addCommitComment(sha, user, repo, this.edit_text)
+            ghComments.addCommitComment(sha, user, repo, this.edit_text)
               .then(callback);
           } else {
-            comments.addLineComment(sha, user, repo, this.line, this.position, this.path, this.edit_text)
+            ghComments.addLineComment(sha, user, repo, this.line, this.position, this.path, this.edit_text)
               .then(callback);
           }
         };
 
         Comment.prototype.remove = function () {
-          return comments.deleteComment(this.editInformations.user, this.editInformations.repo, this.id);
+          return ghComments.deleteComment(this.editInformations.user, this.editInformations.repo, this.id);
         };
 
         Comment.prototype.edit = function () {
@@ -67,7 +67,7 @@
             repo = this.editInformations.repo;
 
           /*jshint camelcase:false*/
-          comments.updateComment(user, repo, this.id, this.edit_text)
+          ghComments.updateComment(user, repo, this.id, this.edit_text)
             .then(function(comment){
               comment.mode = 'show';
               _.extend(self, comment);

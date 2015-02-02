@@ -3,23 +3,23 @@ describe('Service: github-file', function () {
 
   beforeEach(module('GHReview'));
 
-  var getFileContent, github, $rootScope;
+  var ghFile, github, $rootScope;
 
   beforeEach(inject(function ($injector) {
-    getFileContent = $injector.get('getFileContent');
+    ghFile = $injector.get('ghFile');
     github = $injector.get('github');
     $rootScope = $injector.get('$rootScope');
   }));
 
   it('Should call github.search.code', function () {
     spyOn(github.repos, 'getContent');
-    getFileContent({});
+    ghFile.getContent({});
     expect(github.repos.getContent).toHaveBeenCalled();
   });
 
   it('Should return promise and resolve if data exist', function (done) {
     spyOn(github.repos, 'getContent');
-    getFileContent({})
+    ghFile.getContent({})
       .then(function (data) {
         expect(data).toBeDefined();
         expect(data.result).toBe('testResult');
@@ -37,7 +37,7 @@ describe('Service: github-file', function () {
 
   it('Should return promise and reject if error exist', function (done) {
     spyOn(github.repos, 'getContent');
-    getFileContent({})
+    ghFile.getContent({})
       .then(null, function (error) {
         expect(error).toBeDefined();
         expect(error.name).toBe('Error');

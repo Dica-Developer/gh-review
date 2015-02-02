@@ -10,9 +10,9 @@
             templateUrl: 'app/file/file.html',
             controller: 'FileController',
             resolve: {
-              fileContent: ['$stateParams', 'getFileContent',
-                function ($stateParams, getFileContent) {
-                  return getFileContent($stateParams);
+              fileContent: ['$stateParams', 'ghFile',
+                function ($stateParams, ghFile) {
+                  return ghFile.getContent($stateParams);
                 }
               ]
             }

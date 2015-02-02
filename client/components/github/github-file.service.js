@@ -2,9 +2,9 @@
   'use strict';
 
   angular.module('GHReview')
-    .factory('getFileContent', ['$q', 'github',
+    .service('ghFile', ['$q', 'github',
       function ($q, github) {
-        return function (options) {
+        this.getContent = function (options) {
           var defer = $q.defer();
           options.headers = {
             'accept': 'application/vnd.github.v3.raw'

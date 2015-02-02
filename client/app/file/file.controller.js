@@ -9,10 +9,10 @@
       '_',
       'moment',
       'fileContent',
-      'commits',
+      'ghCommits',
       'Chunk',
       'commentProvider',
-      function ($scope, $q, $log, $stateParams, _, moment, fileContent, commits, Chunk, commentProvider) {
+      function ($scope, $q, $log, $stateParams, _, moment, fileContent, ghCommits, Chunk, commentProvider) {
 
         var filePath = $stateParams.path,
           filePathSplit = filePath.split('.'),
@@ -156,7 +156,7 @@
 
           var annotateLines = function (responseCommits) {
 
-            commits.bySha({
+            ghCommits.bySha({
               sha: responseCommits.pop().sha,
               user: $stateParams.user,
               repo: $stateParams.repo
@@ -253,7 +253,7 @@
           path: $stateParams.path,
           sha: $stateParams.sha
         };
-        commits.byPath(msg)
+        ghCommits.byPath(msg)
           .then(startAnnotateLines)
           .then(
           //Success

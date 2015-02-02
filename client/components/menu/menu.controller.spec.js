@@ -26,7 +26,7 @@ describe('Controller: MenuDirectiveController', function () {
           },
           'collectComments': function () {
           },
-          'githubUserData': {
+          'ghUser': {
             get: function () {
               var defer = $q.defer();
               defer.resolve({name: 'TestUser'});
@@ -36,7 +36,7 @@ describe('Controller: MenuDirectiveController', function () {
         });
       }));
 
-      it('Should call "githubUserData.get" and set $scope.name to returned value', function () {
+      it('Should call "ghUser.get" and set $scope.name to returned value', function () {
         $rootScope.$digest();
         expect($scope.name).toBe('TestUser');
       });
@@ -66,7 +66,7 @@ describe('Controller: MenuDirectiveController', function () {
           },
           'collectComments': function () {
           },
-          'githubUserData': {
+          'ghUser': {
             get: function () {
               var defer = $q.defer();
               defer.resolve({name: 'TestUser'});
@@ -135,7 +135,7 @@ describe('Controller: MenuDirectiveController', function () {
   });
 
   describe('not authenticated', function () {
-    var $rootScope, $scope, controller, $q, authenticated, githubUserData, collectComments;
+    var $rootScope, $scope, controller, $q, authenticated, ghUser, collectComments;
 
     beforeEach(inject(function ($injector) {
       $rootScope = $injector.get('$rootScope');
@@ -146,7 +146,7 @@ describe('Controller: MenuDirectiveController', function () {
           return false;
         }
       };
-      githubUserData = {
+      ghUser = {
         get: function () {}
       };
       collectComments = jasmine.createSpy('collectComments');
@@ -155,14 +155,14 @@ describe('Controller: MenuDirectiveController', function () {
         '$scope': $scope,
         'authenticated': authenticated,
         'collectComments': collectComments,
-        'githubUserData': githubUserData
+        'ghUser': ghUser
       });
     }));
 
-    it('Should not call "githubUserData.get"', function () {
-      spyOn(githubUserData, 'get');
+    it('Should not call "ghUser.get"', function () {
+      spyOn(ghUser, 'get');
       $rootScope.$apply();
-      expect(githubUserData.get).not.toHaveBeenCalled();
+      expect(ghUser.get).not.toHaveBeenCalled();
     });
 
     it('Should not call "collectComments"', function () {

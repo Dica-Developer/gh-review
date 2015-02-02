@@ -2,9 +2,9 @@
   'use strict';
 
   angular.module('GHReview')
-    .controller('WhoAmIController', ['$scope', 'githubUserData',
-      function ($scope, githubUserData) {
-        githubUserData.get()
+    .controller('WhoAmIController', ['$scope', 'ghUser',
+      function ($scope, ghUser) {
+        ghUser.get()
           .then(function (userData) {
             $scope.userData = userData;
           });

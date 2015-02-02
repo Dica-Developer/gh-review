@@ -3,25 +3,25 @@ describe('Service: github-comment', function () {
 
   beforeEach(module('GHReview'));
 
-  var github, $rootScope, comments;
+  var github, $rootScope, ghComments;
 
   beforeEach(inject(function ($injector) {
     github = $injector.get('github');
     $rootScope = $injector.get('$rootScope');
-    comments = $injector.get('comments');
+    ghComments = $injector.get('ghComments');
   }));
 
   describe('.getForCommit', function(){
 
     it('should call github.repos.getCommitComments', function () {
       spyOn(github.repos, 'getCommitComments');
-      comments.getForCommit({});
+      ghComments.getForCommit({});
       expect(github.repos.getCommitComments).toHaveBeenCalled();
     });
 
     it('should return promise and resolve if data exist', function (done) {
       spyOn(github.repos, 'getCommitComments');
-      comments.getForCommit({})
+      ghComments.getForCommit({})
         .then(function (data) {
           expect(data).toBeDefined();
           expect(data.result).toBe('testResult');
@@ -35,7 +35,7 @@ describe('Service: github-comment', function () {
 
     it('should remove meta property from response', function (done) {
       spyOn(github.repos, 'getCommitComments');
-      comments.getForCommit({})
+      ghComments.getForCommit({})
         .then(function (data) {
           expect(data).toBeDefined();
           expect(data.meta).not.toBeDefined();
@@ -49,7 +49,7 @@ describe('Service: github-comment', function () {
 
     it('should return promise and reject if error exist', function (done) {
       spyOn(github.repos, 'getCommitComments');
-      comments.getForCommit({})
+      ghComments.getForCommit({})
         .then(null, function (error) {
           expect(error).toBeDefined();
           expect(error.name).toBe('Error');
@@ -67,13 +67,13 @@ describe('Service: github-comment', function () {
 
     it('should call github.repos.createCommitComment', function () {
       spyOn(github.repos, 'createCommitComment');
-      comments.addCommitComment({});
+      ghComments.addCommitComment({});
       expect(github.repos.createCommitComment).toHaveBeenCalled();
     });
 
     it('should return promise and resolve error is null', function (done) {
       spyOn(github.repos, 'createCommitComment');
-      comments.addCommitComment({})
+      ghComments.addCommitComment({})
         .then(function (data) {
           expect(data).toBeDefined();
           expect(data.result).toBe('testResult');
@@ -87,7 +87,7 @@ describe('Service: github-comment', function () {
 
     it('should return promise and reject if error exist', function (done) {
       spyOn(github.repos, 'createCommitComment');
-      comments.addCommitComment({})
+      ghComments.addCommitComment({})
         .then(null, function (error) {
           expect(error).toBeDefined();
           expect(error.name).toBe('Error');
@@ -105,13 +105,13 @@ describe('Service: github-comment', function () {
 
     it('should call github.repos.createCommitComment', function () {
       spyOn(github.repos, 'createCommitComment');
-      comments.addLineComment({});
+      ghComments.addLineComment({});
       expect(github.repos.createCommitComment).toHaveBeenCalled();
     });
 
     it('should return promise and resolve error is null', function (done) {
       spyOn(github.repos, 'createCommitComment');
-      comments.addLineComment({})
+      ghComments.addLineComment({})
         .then(function (data) {
           expect(data).toBeDefined();
           expect(data.result).toBe('testResult');
@@ -125,7 +125,7 @@ describe('Service: github-comment', function () {
 
     it('should return promise and reject if error exist', function (done) {
       spyOn(github.repos, 'createCommitComment');
-      comments.addLineComment({})
+      ghComments.addLineComment({})
         .then(null, function (error) {
           expect(error).toBeDefined();
           expect(error.name).toBe('Error');
@@ -143,13 +143,13 @@ describe('Service: github-comment', function () {
 
     it('should call github.repos.deleteCommitComment', function () {
       spyOn(github.repos, 'deleteCommitComment');
-      comments.deleteComment({});
+      ghComments.deleteComment({});
       expect(github.repos.deleteCommitComment).toHaveBeenCalled();
     });
 
     it('should return promise and resolve error is null', function (done) {
       spyOn(github.repos, 'deleteCommitComment');
-      comments.deleteComment({})
+      ghComments.deleteComment({})
         .then(function () {
           done();
         });
@@ -161,7 +161,7 @@ describe('Service: github-comment', function () {
 
     it('should return promise and reject if error exist', function (done) {
       spyOn(github.repos, 'deleteCommitComment');
-      comments.deleteComment({})
+      ghComments.deleteComment({})
         .then(null, function (error) {
           expect(error).toBeDefined();
           expect(error.name).toBe('Error');
@@ -179,13 +179,13 @@ describe('Service: github-comment', function () {
 
     it('should call github.repos.updateCommitComment', function () {
       spyOn(github.repos, 'updateCommitComment');
-      comments.updateComment({});
+      ghComments.updateComment({});
       expect(github.repos.updateCommitComment).toHaveBeenCalled();
     });
 
     it('should return promise and resolve error is null', function (done) {
       spyOn(github.repos, 'updateCommitComment');
-      comments.updateComment({})
+      ghComments.updateComment({})
         .then(function (data) {
           expect(data).toBeDefined();
           expect(data.result).toBe('testResult');
@@ -199,7 +199,7 @@ describe('Service: github-comment', function () {
 
     it('should return promise and reject if error exist', function (done) {
       spyOn(github.repos, 'updateCommitComment');
-      comments.updateComment({})
+      ghComments.updateComment({})
         .then(null, function (error) {
           expect(error).toBeDefined();
           expect(error.name).toBe('Error');
@@ -217,13 +217,13 @@ describe('Service: github-comment', function () {
 
     it('should call github.markdown.render', function () {
       spyOn(github.markdown, 'render');
-      comments.renderAsMarkdown({});
+      ghComments.renderAsMarkdown({});
       expect(github.markdown.render).toHaveBeenCalled();
     });
 
     it('should return promise and resolve error is null', function (done) {
       spyOn(github.markdown, 'render');
-      comments.renderAsMarkdown({})
+      ghComments.renderAsMarkdown({})
         .then(function (data) {
           expect(data).toBeDefined();
           expect(data.result).toBe('testResult');
@@ -237,7 +237,7 @@ describe('Service: github-comment', function () {
 
     it('should return promise and reject if error exist', function (done) {
       spyOn(github.markdown, 'render');
-      comments.renderAsMarkdown({})
+      ghComments.renderAsMarkdown({})
         .then(null, function (error) {
           expect(error).toBeDefined();
           expect(error.name).toBe('Error');

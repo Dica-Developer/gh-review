@@ -5,14 +5,14 @@ describe('Factory: Commit', function () {
   beforeEach(module('commitMockModule'));
   beforeEach(module('commentMockModule'));
 
-  var Commit, commitsMock, commentsMock, commits, comments, $q, $rootScope, $timeout, github;
+  var Commit, commitsMock, commentsMock, ghCommits, ghComments, $q, $rootScope, $timeout, github;
 
   beforeEach(inject(function ($injector) {
     Commit = $injector.get('Commit');
     commitsMock = $injector.get('commitsMock');
     commentsMock = $injector.get('commentsMock');
-    commits = $injector.get('commits');
-    comments = $injector.get('comments');
+    ghCommits = $injector.get('ghCommits');
+    ghComments = $injector.get('ghComments');
     $q = $injector.get('$q');
     $rootScope = $injector.get('$rootScope');
     $timeout = $injector.get('$timeout');
@@ -96,15 +96,15 @@ describe('Factory: Commit', function () {
     });
 
     it('should call comments.addCommitComment', function () {
-      spyOn(comments, 'addCommitComment').and.returnValue($q.when());
+      spyOn(ghComments, 'addCommitComment').and.returnValue($q.when());
       commit.approve({login: 'me'});
-      expect(comments.addCommitComment).toHaveBeenCalled();
+      expect(ghComments.addCommitComment).toHaveBeenCalled();
     });
 
     it('should call comments.addCommitComment with correct arguments', function () {
-      spyOn(comments, 'addCommitComment').and.returnValue($q.when());
+      spyOn(ghComments, 'addCommitComment').and.returnValue($q.when());
       commit.approve({login: 'me'});
-      var callArgs = comments.addCommitComment.calls.argsFor(0);
+      var callArgs = ghComments.addCommitComment.calls.argsFor(0);
       expect(callArgs[0]).toBe('testSha');
       expect(callArgs[1]).toBe('TestUser');
       expect(callArgs[2]).toBe('testRepo');
@@ -113,7 +113,7 @@ describe('Factory: Commit', function () {
     });
 
     it('should return promise', function () {
-      spyOn(comments, 'addCommitComment').and.returnValue($q.when());
+      spyOn(ghComments, 'addCommitComment').and.returnValue($q.when());
       var expectedPromise = commit.approve({login: 'me'});
       expect(expectedPromise.then).toBeDefined();
     });
@@ -124,7 +124,7 @@ describe('Factory: Commit', function () {
     var commit;
     beforeEach(function () {
       spyOn(github.repos, 'deleteCommitComment');
-      spyOn(comments, 'getForCommit').and.returnValue($q.when(commentsMock[0]));
+      spyOn(ghComments, 'getForCommit').and.returnValue($q.when(commentsMock[0]));
       commit = new Commit({user: 'TestUser', repo: 'testRepo', sha: 'testSha'});
       commit.getComments();
       $rootScope.$apply();
@@ -150,13 +150,13 @@ describe('Factory: Commit', function () {
     });
 
     it('should return promise', function () {
-      spyOn(comments, 'getForCommit').and.returnValue($q.when(commentsMock[0]));
+      spyOn(ghComments, 'getForCommit').and.returnValue($q.when(commentsMock[0]));
       var expectedPromise = commit.getComments();
       expect(expectedPromise.then).toBeDefined();
     });
 
     it('should resolve with splitted line and commit comments', function (done) {
-      spyOn(comments, 'getForCommit').and.returnValue($q.when(commentsMock[0]));
+      spyOn(ghComments, 'getForCommit').and.returnValue($q.when(commentsMock[0]));
       commit.getComments()
         .then(function (comments) {
           expect(comments.lineComments).toBeDefined();
@@ -170,7 +170,7 @@ describe('Factory: Commit', function () {
     });
 
     it('should add comments as property to Commit', function (done) {
-      spyOn(comments, 'getForCommit').and.returnValue($q.when(commentsMock[0]));
+      spyOn(ghComments, 'getForCommit').and.returnValue($q.when(commentsMock[0]));
       commit.getComments()
         .then(function () {
           expect(commit.comments.lineComments).toBeDefined();
@@ -188,7 +188,7 @@ describe('Factory: Commit', function () {
     var commit;
     beforeEach(function () {
       spyOn(github.repos, 'deleteCommitComment');
-      spyOn(comments, 'getForCommit').and.returnValue($q.when(commentsMock[0]));
+      spyOn(ghComments, 'getForCommit').and.returnValue($q.when(commentsMock[0]));
       commit = new Commit({user: 'TestUser', repo: 'testRepo', sha: 'testSha'});
       commit.getComments();
       $rootScope.$apply();
@@ -213,7 +213,7 @@ describe('Factory: Commit', function () {
     var commit;
     beforeEach(function () {
       spyOn(github.repos, 'deleteCommitComment');
-      spyOn(comments, 'getForCommit').and.returnValue($q.when(commentsMock[0]));
+      spyOn(ghComments, 'getForCommit').and.returnValue($q.when(commentsMock[0]));
       commit = new Commit({user: 'TestUser', repo: 'testRepo', sha: 'testSha'});
       commit.getComments();
       $rootScope.$apply();

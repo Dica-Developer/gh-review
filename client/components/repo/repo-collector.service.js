@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('GHReview')
-    .service('repoCollector', ['$q', '$timeout', 'github', '_', function ($q, $timeout, github, _) {
+    .service('repoCollector', ['$q', '$timeout', 'ghUser', 'ghRepos', '_', function ($q, $timeout, ghUser, ghRepos, _) {
       var q = $q.defer;
 
       function RepoCollector() {
@@ -24,19 +24,9 @@
       };
 
       RepoCollector.prototype.getOrganizationsForUser = function () {
-        var defer = q();
-
-        github.user.getOrgs({
+        return ghUser.getOrgs({
           'per_page': 100
-        }, function (err, result) {
-          if (!err) {
-            defer.resolve(result);
-          } else {
-            defer.reject();
-          }
         });
-
-        return defer.promise;
       };
 
       RepoCollector.prototype.getReposFromOrganizations = function (organizations) {
@@ -47,17 +37,13 @@
         organizations.forEach(function (organization) {
           var getRepoDefer = q();
           deferList.push(getRepoDefer.promise);
-          github.repos.getFromOrg({
+          ghRepos.getFromOrg({
             org: organization.login,
             'per_page': 100
-          }, function (err, result) {
-            if (!err) {
-              repoList = repoList.concat(result);
-              getRepoDefer.resolve();
-            } else {
-              getRepoDefer.reject();
-            }
-          });
+          }).then(function(repos){
+            repoList = repoList.concat(repos);
+            getRepoDefer.resolve();
+          }, getRepoDefer.reject);
         });
 
         $q.all(deferList)
@@ -69,18 +55,12 @@
 
       RepoCollector.prototype.getReposFromUser = function (repoList) {
         var defer = q();
-
-        github.repos.getAll({
+        ghRepos.getAll({
           'per_page': 100
-        }, function (err, result) {
-          if (!err) {
-            repoList = repoList.concat(result);
+        }).then(function (repos) {
+            repoList = repoList.concat(repos);
             defer.resolve(repoList);
-          } else {
-            defer.reject();
-          }
-        });
-
+        }, defer.reject);
         return defer.promise;
       };
       return new RepoCollector();

@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('GHReview')
-    .service('commits', ['$q', 'github', 'localStorageService',
+    .service('ghCommits', ['$q', 'github', 'localStorageService',
       function ($q, github, localStorageService) {
         this.bySha = function (params) {
           var defer = $q.defer();

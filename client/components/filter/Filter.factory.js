@@ -11,7 +11,7 @@
       moment = $injector.get('moment'),
       commentCollector = $injector.get('commentCollector'),
       localStorageService = $injector.get('localStorageService'),
-      githubUserData = $injector.get('githubUserData'),
+      ghUser = $injector.get('ghUser'),
       branchCollector = $injector.get('branchCollector'),
       contributorCollector = $injector.get('contributorCollector'),
       commitCollector = $injector.get('commitCollector'),
@@ -352,7 +352,7 @@
           var state = customFilter.state;
           var authors = customFilter.authors;
           var excludeOwnCommits = customFilter.excludeOwnCommits;
-          githubUserData.get()
+          ghUser.get()
             .then(function (result) {
               var userData = result;
               commentCollector.getCommitApproved()

@@ -2,7 +2,7 @@ describe('Service: Comment', function () {
   'use strict';
 
   /*jshint camelcase:false*/
-  var Comment, comments, $q, $rootScope,
+  var Comment, ghComments, $q, $rootScope,
     commitComment = {
       mode: 'test',
       body_html: '<p>Line comment test</p>',
@@ -36,7 +36,7 @@ describe('Service: Comment', function () {
   beforeEach(inject(function ($injector) {
     localStorage.setItem('ghreview.accessToken', '44046cd4b4b85afebfe3ccaec13fd8c08cc80aad');
     Comment = $injector.get('Comment');
-    comments = $injector.get('comments');
+    ghComments = $injector.get('ghComments');
     $q = $injector.get('$q');
     $rootScope = $injector.get('$rootScope');
   }));
@@ -52,24 +52,24 @@ describe('Service: Comment', function () {
   describe('.createComment', function () {
 
     it('should call comments.addCommitComment', function () {
-      spyOn(comments, 'addCommitComment').and.returnValue($q.when({}));
+      spyOn(ghComments, 'addCommitComment').and.returnValue($q.when({}));
       var comment = new Comment(commitComment);
       comment.createComment();
       $rootScope.$apply();
-      expect(comments.addCommitComment).toHaveBeenCalled();
+      expect(ghComments.addCommitComment).toHaveBeenCalled();
     });
 
     it('should call comments.addLineComment', function () {
-      spyOn(comments, 'addLineComment').and.returnValue($q.when({}));
+      spyOn(ghComments, 'addLineComment').and.returnValue($q.when({}));
       var comment = new Comment(lineComment);
       comment.createComment();
       $rootScope.$apply();
-      expect(comments.addLineComment).toHaveBeenCalled();
+      expect(ghComments.addLineComment).toHaveBeenCalled();
     });
 
     it('Should set comment.mode to "show"', function () {
       var comment = new Comment(commitComment);
-      spyOn(comments, 'addCommitComment').and.returnValue($q.when({}));
+      spyOn(ghComments, 'addCommitComment').and.returnValue($q.when({}));
       expect(comment.mode).toBe('test');
       comment.createComment();
       $rootScope.$apply();
@@ -80,19 +80,19 @@ describe('Service: Comment', function () {
   describe('.preview', function () {
 
     it('Should call comments.renderAsMarkdown', function () {
-      spyOn(comments, 'renderAsMarkdown').and.returnValue($q.when({}));
+      spyOn(ghComments, 'renderAsMarkdown').and.returnValue($q.when({}));
       var comment = new Comment(commitComment);
       comment.preview();
       $rootScope.$apply();
-      expect(comments.renderAsMarkdown).toHaveBeenCalled();
+      expect(ghComments.renderAsMarkdown).toHaveBeenCalled();
     });
 
     it('Should set comment.mode to "preview" comment.preview_html to resp.data', function () {
-      spyOn(comments, 'renderAsMarkdown').and.returnValue($q.when({ data: '<p>Test</p>' }));
+      spyOn(ghComments, 'renderAsMarkdown').and.returnValue($q.when({ data: '<p>Test</p>' }));
       var comment = new Comment(commitComment);
       comment.preview();
       $rootScope.$apply();
-      expect(comments.renderAsMarkdown).toHaveBeenCalled();
+      expect(ghComments.renderAsMarkdown).toHaveBeenCalled();
       expect(comment.mode).toBe('preview');
       /*jshint camelcase:false*/
       expect(comment.preview_html).toBe('<p>Test</p>');
@@ -133,11 +133,11 @@ describe('Service: Comment', function () {
   describe('.remove', function () {
 
     it('should call comments.deleteComment', function () {
-      spyOn(comments, 'deleteComment').and.returnValue($q.when());
+      spyOn(ghComments, 'deleteComment').and.returnValue($q.when());
       var comment = new Comment(commitComment);
       comment.remove();
       $rootScope.$apply();
-      expect(comments.deleteComment).toHaveBeenCalled();
+      expect(ghComments.deleteComment).toHaveBeenCalled();
     });
 
   });
@@ -145,15 +145,15 @@ describe('Service: Comment', function () {
   describe('.save', function () {
 
     it('Should call comments.updateComment', function () {
-      spyOn(comments, 'updateComment').and.returnValue($q.when({}));
+      spyOn(ghComments, 'updateComment').and.returnValue($q.when({}));
       var comment = new Comment(commitComment);
       comment.save();
       $rootScope.$apply();
-      expect(comments.updateComment).toHaveBeenCalled();
+      expect(ghComments.updateComment).toHaveBeenCalled();
     });
 
     it('Should set comment.mode to "show" comment.body to resp.body', function () {
-      spyOn(comments, 'updateComment').and.returnValue($q.when({ body: 'Test' }));
+      spyOn(ghComments, 'updateComment').and.returnValue($q.when({ body: 'Test' }));
       var comment = new Comment(commitComment);
       comment.save();
       $rootScope.$apply();

@@ -3,25 +3,25 @@ describe('Service: github-commit', function () {
 
   beforeEach(module('GHReview'));
 
-  var github, $rootScope, commits;
+  var github, $rootScope, ghCommits;
 
   beforeEach(inject(function ($injector) {
     github = $injector.get('github');
     $rootScope = $injector.get('$rootScope');
-    commits = $injector.get('commits');
+    ghCommits = $injector.get('ghCommits');
   }));
 
   describe('.bySha', function(){
 
     it('should call github.repos.getCommit', function () {
       spyOn(github.repos, 'getCommit');
-      commits.bySha({});
+      ghCommits.bySha({});
       expect(github.repos.getCommit).toHaveBeenCalled();
     });
 
     it('should return promise and resolve if data exist', function (done) {
       spyOn(github.repos, 'getCommit');
-      commits.bySha({})
+      ghCommits.bySha({})
         .then(function (data) {
           expect(data).toBeDefined();
           expect(data.result).toBe('testResult');
@@ -35,7 +35,7 @@ describe('Service: github-commit', function () {
 
     it('should remove meta property from response', function (done) {
       spyOn(github.repos, 'getCommit');
-      commits.bySha({})
+      ghCommits.bySha({})
         .then(function (data) {
           expect(data).toBeDefined();
           expect(data.meta).not.toBeDefined();
@@ -49,7 +49,7 @@ describe('Service: github-commit', function () {
 
     it('should return promise and reject if error exist', function (done) {
       spyOn(github.repos, 'getCommit');
-      commits.bySha({})
+      ghCommits.bySha({})
         .then(null, function (error) {
           expect(error).toBeDefined();
           expect(error.name).toBe('Error');

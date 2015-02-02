@@ -8,14 +8,7 @@
           .state('modules', {
             url: '/filter/modules',
             templateUrl: 'app/module/module.html',
-            controller: 'ModuleFilterController',
-            resolve: {
-              allRepos: ['getAllAvailableRepos',
-                function (getAllAvailableRepos) {
-                  return getAllAvailableRepos();
-                }
-              ]
-            }
+            controller: 'ModuleFilterController'
           });
       }]);
 }(angular));
