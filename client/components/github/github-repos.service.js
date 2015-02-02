@@ -2,9 +2,9 @@
   'use strict';
 
   angular.module('GHReview')
-    .factory('getAllAvailableRepos', ['$q', 'github',
+    .service('ghRepos', ['$q', 'github',
       function ($q, github) {
-        return function () {
+        this.getAll = function(){
           var defer = $q.defer();
           github.repos.getAll({}, function (error, res) {
             if (error) {

@@ -3,30 +3,30 @@ describe('Service: github-repos', function () {
 
   beforeEach(module('GHReview'));
 
-  var getAllAvailableRepos, githubUserData, github, $rootScope;
+  var ghRepos, githubUserData, github, $rootScope;
 
   beforeEach(inject(function ($injector) {
-    getAllAvailableRepos = $injector.get('getAllAvailableRepos');
+    ghRepos = $injector.get('ghRepos');
     githubUserData = $injector.get('githubUserData');
     github = $injector.get('github');
     $rootScope = $injector.get('$rootScope');
   }));
 
   it('Should be defined', function () {
-    getAllAvailableRepos();
-    expect(getAllAvailableRepos).toBeDefined();
+    ghRepos.getAll();
+    expect(ghRepos).toBeDefined();
   });
 
   it('Should call github.repos.getAll', function () {
     spyOn(github.repos, 'getAll');
-    getAllAvailableRepos();
+    ghRepos.getAll();
     $rootScope.$apply();
     expect(github.repos.getAll).toHaveBeenCalled();
   });
 
   it('Should return promise and resolve if data exist', function (done) {
     spyOn(github.repos, 'getAll');
-    getAllAvailableRepos()
+    ghRepos.getAll()
       .then(function (data) {
         expect(data).toBeDefined();
         done();
@@ -41,7 +41,7 @@ describe('Service: github-repos', function () {
 
   it('Should return promise and reject if error exist', function (done) {
     spyOn(github.repos, 'getAll');
-    getAllAvailableRepos()
+    ghRepos.getAll()
       .then(null, function (data) {
         expect(data).toBeDefined();
         expect(data.name).toBe('Error');
