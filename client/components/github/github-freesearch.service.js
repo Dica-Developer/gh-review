@@ -2,9 +2,9 @@
   'use strict';
 
   angular.module('GHReview')
-    .factory('githubFreeSearch', ['$q', 'github',
+    .service('ghSearch', ['$q', 'github',
       function ($q, github) {
-        return function (searchValue) {
+        this.query = function (searchValue) {
           var defer = $q.defer();
           github.search.code({
             q: searchValue
@@ -19,5 +19,4 @@
         };
       }
     ]);
-
 }(angular));

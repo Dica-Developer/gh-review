@@ -3,10 +3,10 @@ describe('Service: github-freesearch', function () {
 
   beforeEach(module('GHReview'));
 
-  var githubFreeSearch, authenticated, github, $rootScope;
+  var ghSearch, authenticated, github, $rootScope;
 
   beforeEach(inject(function ($injector) {
-    githubFreeSearch = $injector.get('githubFreeSearch');
+    ghSearch = $injector.get('ghSearch');
     authenticated = $injector.get('authenticated');
     github = $injector.get('github');
     $rootScope = $injector.get('$rootScope');
@@ -14,13 +14,13 @@ describe('Service: github-freesearch', function () {
 
   it('Should call github.search.code', function () {
     spyOn(github.search, 'code');
-    githubFreeSearch();
+    ghSearch.query();
     expect(github.search.code).toHaveBeenCalled();
   });
 
   it('Should return promise and resolve if data exist', function (done) {
     spyOn(github.search, 'code');
-    githubFreeSearch()
+    ghSearch.query()
       .then(function (data) {
         expect(data).toBeDefined();
         expect(data.result).toBe('testResult');
@@ -36,7 +36,7 @@ describe('Service: github-freesearch', function () {
 
   it('Should return promise and reject if error exist', function (done) {
     spyOn(github.search, 'code');
-    githubFreeSearch()
+    ghSearch.query()
       .then(null, function (error) {
         expect(error).toBeDefined();
         expect(error.name).toBe('Error');
