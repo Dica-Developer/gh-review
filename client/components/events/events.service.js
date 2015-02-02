@@ -110,7 +110,7 @@
     return defer.promise;
   };
 
-  function Events($q, _, moment, github, filter, localStorageService, githubUserData) {
+  function Events($q, _, moment, github, filter, localStorageService, ghUser) {
     __ = _;
     _moment = moment;
     this.$q = $q;
@@ -120,7 +120,7 @@
     this.maxPollInterval = 60;
     this.eventsByUrl = {};
     this.fetchedUrls = [];
-    this.githubUserData = githubUserData;
+    this.githubUserData = ghUser;
     this.init();
   }
 
@@ -174,6 +174,6 @@
   };
 
   var eventsModule = angular.module('GHReview');
-  eventsModule.service('events', ['$q', '_', 'moment', 'github', 'filter', 'localStorageService', 'githubUserData', Events]);
+  eventsModule.service('events', ['$q', '_', 'moment', 'github', 'filter', 'localStorageService', 'ghUser', Events]);
 
 }(angular));

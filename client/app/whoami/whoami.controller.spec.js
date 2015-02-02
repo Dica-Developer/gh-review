@@ -5,11 +5,11 @@
 
     beforeEach(module('GHReview'));
 
-    var WhoAmIController, $scope, $controller, githubUserDataSpy, githubUserData, github;
+    var WhoAmIController, $scope, $controller, githubUserDataSpy, ghUser, github;
 
     beforeEach(inject(function ($injector) {
       localStorage.setItem('ghreview.accessToken', '44046cd4b4b85afebfe3ccaec13fd8c08cc80aad');
-      githubUserData = $injector.get('githubUserData');
+      ghUser = $injector.get('ghUser');
       $controller = $injector.get('$controller');
       github = $injector.get('github');
       var $rootScope = $injector.get('$rootScope');
@@ -21,7 +21,7 @@
     });
 
     it('Should be defined', function () {
-      githubUserDataSpy = spyOn(githubUserData, 'get').and.returnValue({
+      githubUserDataSpy = spyOn(ghUser, 'get').and.returnValue({
         then: function () {
         }
       });
@@ -31,8 +31,8 @@
       expect(WhoAmIController).toBeDefined();
     });
 
-    it('Should call githubUserData', function () {
-      githubUserDataSpy = spyOn(githubUserData, 'get').and.returnValue({
+    it('Should call ghUser', function () {
+      githubUserDataSpy = spyOn(ghUser, 'get').and.returnValue({
         then: function () {
         }
       });

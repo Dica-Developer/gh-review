@@ -1,30 +1,30 @@
-describe('Service: github-userdata', function () {
+describe('Service: ghUser', function () {
   'use strict';
 
   beforeEach(module('GHReview'));
 
-  var githubUserData, github, $rootScope;
+  var ghUser, github, $rootScope;
 
   beforeEach(inject(function ($injector) {
-    githubUserData = $injector.get('githubUserData');
+    ghUser = $injector.get('ghUser');
     github = $injector.get('github');
     $rootScope = $injector.get('$rootScope');
   }));
 
   it('Should be defined', function () {
-    expect(githubUserData).toBeDefined();
+    expect(ghUser).toBeDefined();
   });
 
   it('Should call "github.user.get"', function () {
     spyOn(github.user, 'get');
-    githubUserData.get();
+    ghUser.get();
     expect(github.user.get).toHaveBeenCalled();
   });
 
   it('Should return promise and resolve if response has no errors', function (done) {
     spyOn(github.user, 'get');
 
-    githubUserData.get()
+    ghUser.get()
       .then(function (data) {
         expect(data).toBeDefined();
         done();
@@ -39,7 +39,7 @@ describe('Service: github-userdata', function () {
   it('Should return promise and reject if response has errors', function (done) {
     spyOn(github.user, 'get');
 
-    githubUserData.get()
+    ghUser.get()
       .then(function (data) {
         expect(data).toBeDefined();
         done();
@@ -59,7 +59,7 @@ describe('Service: github-userdata', function () {
   it('Should take cached userData instead calling github if userData already fetched', function (done) {
     spyOn(github.user, 'get');
 
-    githubUserData.get()
+    ghUser.get()
       .then(function () {
         expect(github.user.get).toHaveBeenCalled();
       });
@@ -68,7 +68,7 @@ describe('Service: github-userdata', function () {
     getCallback(null, {});
     $rootScope.$apply();
 
-    githubUserData.get()
+    ghUser.get()
       .then(function () {
         expect(github.user.get.call.length).toBe(1);
         done();

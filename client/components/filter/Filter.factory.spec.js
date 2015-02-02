@@ -431,13 +431,13 @@ describe('Factory: Filter', function () {
   });
 
   describe('Filter._processCustomFilter', function () {
-    var filter, commitsMock, $rootScope, githubUserData, $q;
+    var filter, commitsMock, $rootScope, ghUser, $q;
 
     beforeEach(inject(function ($injector) {
       $rootScope = $injector.get('$rootScope');
       $q = $injector.get('$q');
       commitsMock = $injector.get('commitsMock');
-      githubUserData = $injector.get('githubUserData');
+      ghUser = $injector.get('ghUser');
       filter = new Filter();
     }));
 
@@ -453,7 +453,7 @@ describe('Factory: Filter', function () {
     });
 
     it('Should set commitList to commits only for one author', function (done) {
-      spyOn(githubUserData, 'get').and.returnValue($q.when({login: 'AnotherUser'}));
+      spyOn(ghUser, 'get').and.returnValue($q.when({login: 'AnotherUser'}));
       spyOn(commentCollector, 'getCommitApproved').and.returnValue($q.when({}));
       filter.options.meta.customFilter.authors = ['sebfroh'];
       filter._processCustomFilter(commitsMock)
@@ -467,7 +467,7 @@ describe('Factory: Filter', function () {
     });
 
     it('Should exclude user commits from commit list', function (done) {
-      spyOn(githubUserData, 'get').and.returnValue($q.when({login: 'sebfroh'}));
+      spyOn(ghUser, 'get').and.returnValue($q.when({login: 'sebfroh'}));
       spyOn(commentCollector, 'getCommitApproved').and.returnValue($q.when({}));
       filter.options.meta.customFilter.excludeOwnCommits = true;
       filter._processCustomFilter(commitsMock)
@@ -482,7 +482,7 @@ describe('Factory: Filter', function () {
     });
 
     it('Should set commitList to approved commits only', function (done) {
-      spyOn(githubUserData, 'get').and.returnValue($q.when({login: 'sebfroh'}));
+      spyOn(ghUser, 'get').and.returnValue($q.when({login: 'sebfroh'}));
       spyOn(commentCollector, 'getCommitApproved').and.returnValue($q.when({'7e3cc043458366a4205621bc2c006bafd6f6c4db': true}));
       filter.options.meta.customFilter.state = 'approved';
       filter._processCustomFilter(commitsMock)
@@ -496,7 +496,7 @@ describe('Factory: Filter', function () {
     });
 
     it('Should set commitList to reviewed commits only', function (done) {
-      spyOn(githubUserData, 'get').and.returnValue($q.when({login: 'sebfroh'}));
+      spyOn(ghUser, 'get').and.returnValue($q.when({login: 'sebfroh'}));
       spyOn(commentCollector, 'getCommitApproved').and.returnValue($q.when({'7e3cc043458366a4205621bc2c006bafd6f6c4db': true}));
       filter.options.meta.customFilter.state = 'reviewed';
       filter._processCustomFilter(commitsMock)
@@ -510,7 +510,7 @@ describe('Factory: Filter', function () {
     });
 
     it('Should set commitList to uncommented commits only', function (done) {
-      spyOn(githubUserData, 'get').and.returnValue($q.when({login: 'sebfroh'}));
+      spyOn(ghUser, 'get').and.returnValue($q.when({login: 'sebfroh'}));
       spyOn(commentCollector, 'getCommitApproved').and.returnValue($q.when({'7e3cc043458366a4205621bc2c006bafd6f6c4db': true}));
       filter.options.meta.customFilter.state = 'unseen';
       filter._processCustomFilter(commitsMock)

@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('GHReview')
-    .controller('MenuController', ['$scope', '$state', 'authenticated', 'githubUserData', 'hotkeys', function ($scope, $state, authenticated, githubUserData, hotkeys) {
+    .controller('MenuController', ['$scope', '$state', 'authenticated', 'ghUser', 'hotkeys', function ($scope, $state, authenticated, ghUser, hotkeys) {
       $scope.isAuthenticated = authenticated.get;
       $scope.isCollapsed = true;
       $scope.menu = [
@@ -89,7 +89,7 @@
               $state.go('logout');
             }
           });
-        githubUserData.get()
+        ghUser.get()
           .then(function (userData) {
             $scope.name = userData.name;
           });
