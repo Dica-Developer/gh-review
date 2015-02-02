@@ -1,13 +1,12 @@
-describe('Service: github-repos', function () {
+describe('Service: ghRepos', function () {
   'use strict';
 
   beforeEach(module('GHReview'));
 
-  var ghRepos, githubUserData, github, $rootScope;
+  var ghRepos, github, $rootScope;
 
   beforeEach(inject(function ($injector) {
     ghRepos = $injector.get('ghRepos');
-    githubUserData = $injector.get('githubUserData');
     github = $injector.get('github');
     $rootScope = $injector.get('$rootScope');
   }));
