@@ -33,7 +33,10 @@
             user: user,
             repo: repo,
             sha: sha,
-            body: comment
+            body: comment,
+            headers: {
+              'Accept': 'application/vnd.github-commitcomment.full+json'
+            }
           }, function (error, comment) {
             if (!error) {
               defer.resolve(comment);
@@ -53,7 +56,10 @@
             line: line,
             position: position,
             path: path,
-            body: comment
+            body: comment,
+            headers: {
+              'Accept': 'application/vnd.github-commitcomment.full+json'
+            }
           }, function (error, comment) {
             if (!error) {
               defer.resolve(comment);
