@@ -8,12 +8,16 @@
         templateUrl: 'app/directives/avatar/avatar.html',
         link: function ($scope, element, attr) {
           $scope.imgLink = 'assets/images/icon-social-github-128.png';
+          $scope.link = '#';
           $scope.$watch(attr.commit, function (commitResponse) {
             if(commitResponse){
               $scope.name = commitResponse.commit.committer.name;
+            }
+
+            if(commitResponse.committer){
               /*jshint camelcase:false*/
               $scope.imgLink = commitResponse.committer.avatar_url;
-              $scope.link = commitResponse.committer.html_url || '#';
+              $scope.link = commitResponse.committer.html_url;
             }
           });
         }
