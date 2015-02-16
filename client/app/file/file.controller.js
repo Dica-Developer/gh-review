@@ -12,7 +12,8 @@
       'ghCommits',
       'Chunk',
       'commentProvider',
-      function ($scope, $q, $log, $stateParams, _, moment, fileContent, ghCommits, Chunk, commentProvider) {
+      'userPref',
+      function ($scope, $q, $log, $stateParams, _, moment, fileContent, ghCommits, Chunk, commentProvider, userPref) {
 
         var filePath = $stateParams.path,
           filePathSplit = filePath.split('.'),
@@ -22,7 +23,9 @@
           splicedFileContent = [],
           commitLength = 0,
           alreadyUsedColors = [],
-          comments = {};
+          comments = {},
+          fileViewSettings = userPref.getFileView(),
+          themeOptionIndex = 0;
 
         $scope.comments = {};
         $scope.showComments = false;
@@ -91,7 +94,17 @@
           display: 'Monokai',
           value: 'monokai'
         }];
-        $scope.highlightTheme = $scope.themes[0];
+
+        if (fileViewSettings && fileViewSettings.highlightTheme) {
+          themeOptionIndex = _.findIndex($scope.themes, {'value': fileViewSettings.highlightTheme});
+        }
+
+        $scope.highlightTheme = $scope.themes[themeOptionIndex];
+
+        $scope.$watch('highlightTheme', function () {
+          userPref.setFileView('highlightTheme', $scope.highlightTheme.value);
+        });
+
 
         _.each(fileContentSplit, function (value, index) {
           var object = {
