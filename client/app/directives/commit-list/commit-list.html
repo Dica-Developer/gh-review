@@ -6,8 +6,7 @@
            class="list-group-item" ng-click="loader = commit.sha">
             <div id="{{commit.sha}}" class="scroll-anchor"></div>
             <div class="media">
-                <img height="36px" class="media-object pull-left" ng-src="{{commit.author.avatar_url}}"
-                     title="{{commit.commit.author.name}}">
+                <avatar commit="commit"></avatar>
 
                 <div class="media-body">
                     <div class="commit-message" title="{{commit.commit.message}}">
