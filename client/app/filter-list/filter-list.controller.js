@@ -2,8 +2,8 @@
   'use strict';
 
   angular.module('GHReview')
-    .controller('FilterListController', ['$scope', '$state', '$log', '_', 'filter', 'events',
-      function ($scope, $state, $log, _, filter, events) {
+    .controller('FilterListController', ['$scope', '$state', '$log', '_', 'filter', 'events', 'userPref',
+      function ($scope, $state, $log, _, filter, events, userPref) {
         if (filter.getAll().length === 0) {
           $state.go('addFilter');
         }
@@ -22,7 +22,14 @@
           }
         ];
 
-        $scope.selectedGrouping = $scope.groupingOptions[0];
+        var filterListSettings = userPref.getFilterList(),
+          groupingOptionIndex = 0;
+
+        if (filterListSettings && filterListSettings.grouping) {
+          groupingOptionIndex = _.findIndex($scope.groupingOptions, {'value': filterListSettings.grouping});
+        }
+
+        $scope.selectedGrouping = $scope.groupingOptions[groupingOptionIndex];
 
         var getGroupedAndSortedFilter = function () {
           var groupedFilter = _.groupBy(filter.getAll(), function (filter) {
@@ -50,6 +57,7 @@
         };
 
         var updateFilterList = function () {
+          userPref.setFilterList('grouping', $scope.selectedGrouping.value);
           $scope.filterList = getGroupedAndSortedFilter();
           $scope.filterEvents = events.getAll();
         };
