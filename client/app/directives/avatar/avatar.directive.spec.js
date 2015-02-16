@@ -25,16 +25,16 @@ describe('Directive: avatar', function () {
     expect(element.find('img').attr('height')).toBe('32px');
   });
 
-  it('Should render avatar link and img with committerLink is missing', function () {
+  it('Should render avatar link and img with default values if committer property is is missing', function () {
     var element = $compile('<avatar commit="commitResponse"></avatar>')($scope);
     $scope.commitResponse = commitMock[0];
     /*jshint camelcase:false*/
-    delete $scope.commitResponse.committer.html_url;
+    delete $scope.commitResponse.committer;
     $scope.$digest();
     expect(element.find('a').attr('title')).toBe('Sebastian Froehlich');
     expect(element.find('a').attr('href')).toBe('#');
-    expect(element.find('img').attr('ng-src')).toBe('https://avatars.githubusercontent.com/u/818746?v=2');
-    expect(element.find('img').attr('src')).toBe('https://avatars.githubusercontent.com/u/818746?v=2');
+    expect(element.find('img').attr('ng-src')).toBe('assets/images/icon-social-github-128.png');
+    expect(element.find('img').attr('src')).toBe('assets/images/icon-social-github-128.png');
     expect(element.find('img').attr('height')).toBe('32px');
   });
 });
