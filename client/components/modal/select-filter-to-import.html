@@ -1,0 +1,21 @@
+<div class="modal-header">
+    <button ng-if="modal.dismissable" type="button" ng-click="$dismiss()" class="close">&times;</button>
+    <h4 ng-if="modal.title" ng-bind="modal.title" class="modal-title"></h4>
+</div>
+<div class="modal-body">
+    <ul class="list-group">
+        <li ng-repeat="filter in modal.filterList | orderBy:'options.repo'" class="list-group-item">
+            <span ng-show="filter.getRepo()"><strong>Repo: </strong>{{ filter.getRepo() }}</span>
+            <span ng-show="filter.getBranch()"><strong>Branch: </strong>{{ filter.getBranch() }}</span>
+            <span ng-hide="!filter.getSinceDate()"><strong>Since: </strong><formatted-date date="filter.getSinceDate()"></formatted-date></span>
+            <span ng-show="filter.getAuthors()"><strong>Authors: </strong>{{ filter.getAuthors() }}</span>
+            <span ng-hide="!filter.getState()"><strong>Review State: </strong>{{ filter.getState() }}</span>
+            <div class="pull-right">
+                <input type="checkbox" value="modal.filterInList(filter)" ng-click="modal.toggleFilter(filter)">
+            </div>
+        </li>
+    </ul>
+</div>
+<div class="modal-footer">
+    <button ng-repeat="button in modal.buttons" ng-class="button.classes" ng-click="button.click($event)" ng-bind="button.text" class="btn"></button>
+</div>
