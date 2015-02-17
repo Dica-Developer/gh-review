@@ -42,7 +42,7 @@
         var newFilter = this.getNew(),
           tmpIdStore = newFilter.getId();
 
-        newFilter.options = settings;
+        newFilter.options = fastClone(settings);
         newFilter.options.meta.id = tmpIdStore;
         return newFilter;
       };
