@@ -71,4 +71,17 @@ describe('Service: filter', function () {
       expect(filterList.length).toBe(1);
     });
   });
+  
+  describe('.getNewFromSettings', function () {
+    var filterSettings = {'sha':'master','customFilter':{},'repo':'forTestUseOnly','user':'jwebertest','since':'2014-04-14T16:41:48.746Z','meta':{'isSaved':true,'lastEdited':1412547650986,'customFilter':{'excludeOwnCommits':false,'state':null},'id':'e0a35c44-1066-9a60-22f2-86bd825bc70c'}};
+    
+    it('Should remove id and use new if one exists', function () {
+      var newFilter = filter.getNewFromSettings(filterSettings);
+      expect(newFilter.getId()).not.toBe(filterSettings.meta.id);
+      delete newFilter.options.meta.id;
+      newFilter = filter.getNewFromSettings(newFilter.options);
+      expect(newFilter.getId()).toBeDefined();
+    });
+
+  });
 });
