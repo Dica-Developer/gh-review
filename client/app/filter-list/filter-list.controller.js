@@ -81,11 +81,8 @@
 
         $scope.exportName = 'gh-review-filter.json';
         $scope.exportFilter = function(){
-          var allFilter = _.cloneDeep(filter.getAll());
-          allFilter.forEach(function(filter){
-            if(filter.$$hashKey){
-              delete filter.$$hashKey;
-            }
+          var allFilter = _.map(filter.getAll(), function(filter){
+            return JSON.parse(JSON.stringify(filter.options));
           });
           importExport.exportFilter($scope.exportName, allFilter);
         };
@@ -100,9 +97,7 @@
 
           importExport.importFilter(files[0])
             .then(function(filterList){
-              var newFilter = _.map(filterList, function(settings){
-                return filter.getNewFromSettings(settings);
-              });
+              var newFilter = _.map(filterList, filter.getNewFromSettings);
               selectFilterModal(newFilter);
             });
         };

@@ -36,13 +36,13 @@
       };
 
       this.getNewFromSettings = function(settings){
-        if(settings.options.meta.id){
-          delete settings.options.meta.id;
+        if(settings.meta.id){
+          delete settings.meta.id;
         }
         var newFilter = this.getNew(),
           tmpIdStore = newFilter.getId();
 
-        newFilter.options = fastClone(settings.options);
+        newFilter.options = settings;
         newFilter.options.meta.id = tmpIdStore;
         return newFilter;
       };
