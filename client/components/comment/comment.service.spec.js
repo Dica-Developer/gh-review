@@ -34,7 +34,7 @@ describe('Service: Comment', function () {
   beforeEach(module('GHReview'));
 
   beforeEach(inject(function ($injector) {
-    localStorage.setItem('ghreview.accessToken', '44046cd4b4b85afebfe3ccaec13fd8c08cc80aad');
+    localStorage.setItem('ghreview.accessToken', '4a9df10171fe681c56803493d2b736254370559c');
     Comment = $injector.get('Comment');
     ghComments = $injector.get('ghComments');
     $q = $injector.get('$q');
