@@ -8,7 +8,7 @@
     var WhoAmIController, $scope, $controller, githubUserDataSpy, ghUser, github;
 
     beforeEach(inject(function ($injector) {
-      localStorage.setItem('ghreview.accessToken', 'f4600eb91d0ee45dc7793be3a2399610cccbece4');
+      localStorage.setItem('ghreview.accessToken', '6867f021346fd59d3df8972b186c5ded726ad4da');
       ghUser = $injector.get('ghUser');
       $controller = $injector.get('$controller');
       github = $injector.get('github');
