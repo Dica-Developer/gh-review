@@ -63,7 +63,9 @@ module.exports = function (config) {
     sauceLabs: {
       testName: 'unit',
       startConnect: false,
-      recordVideo: true
+      recordVideo: true,
+      build: process.env.TRAVIS_BUILD_NUMBER,
+      tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER
     },
 
     browsers: Object.keys(customLaunchers)
