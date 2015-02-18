@@ -6,7 +6,7 @@
 
     this.execute(
       function () { // execute application specific code
-        localStorage.setItem('ghreview.accessToken', '44046cd4b4b85afebfe3ccaec13fd8c08cc80aad');
+        localStorage.setItem('ghreview.accessToken', 'a3109910c7c197a729d6bcf5935a7badfe19f825');
         return true;
       },
 

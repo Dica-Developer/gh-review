@@ -8,7 +8,7 @@
     beforeEach(module('GHReview'));
 
     beforeEach(inject(function ($injector) {
-      localStorage.setItem('ghreview.accessToken', '4a9df10171fe681c56803493d2b736254370559c');
+      localStorage.setItem('ghreview.accessToken', 'a3109910c7c197a729d6bcf5935a7badfe19f825');
       $controller = $injector.get('$controller');
     }));
 
@@ -17,7 +17,7 @@
     });
 
     it('Should remove access token from local storage and change call $state.go', function () {
-      expect(localStorage.getItem('ghreview.accessToken')).toBe('4a9df10171fe681c56803493d2b736254370559c');
+      expect(localStorage.getItem('ghreview.accessToken')).toBe('a3109910c7c197a729d6bcf5935a7badfe19f825');
       var LogoutController = $controller('LogoutController', {
         $state: $state
       });
