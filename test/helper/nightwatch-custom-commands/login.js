@@ -5,12 +5,12 @@
     var self = this;
 
     this.execute(
-      function () { // execute application specific code
-        localStorage.setItem('ghreview.accessToken', '44046cd4b4b85afebfe3ccaec13fd8c08cc80aad');
+      function (token) { // execute application specific code
+        localStorage.setItem('ghreview.accessToken', token);
         return true;
       },
 
-      [], // arguments array to be passed
+      [process.env.GITHUB_ACCESS_TOKEN], // arguments array to be passed
 
       function (result) {
         if (typeof callback === 'function') {
