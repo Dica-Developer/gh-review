@@ -29,7 +29,7 @@
         var defer = $q.defer();
         var reader = new FileReader();
         reader.readAsText(file, 'UTF-8');
-        reader.onload = function (event) {
+        reader.onloadend = function (event) {
           defer.resolve(event.target.result);
         };
         return defer.promise;
