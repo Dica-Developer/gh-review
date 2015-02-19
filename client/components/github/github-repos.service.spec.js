@@ -12,7 +12,6 @@ describe('Service: ghRepos', function () {
   }));
 
   it('Should be defined', function () {
-    ghRepos.getAll();
     expect(ghRepos).toBeDefined();
   });
 
