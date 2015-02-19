@@ -4,13 +4,13 @@
   exports.command = function (callback) {
     var self = this;
 
-    this.execute(
-      function () { // execute application specific code
-        localStorage.setItem('ghreview.accessToken', '6867f021346fd59d3df8972b186c5ded726ad4da');
-        return true;
+    this.executeAsync(
+      function (token) { // execute application specific code
+        localStorage.setItem('ghreview.accessToken', token);
+        return localStorage.getItem('ghreview.accessToken') !== null;
       },
 
-      [], // arguments array to be passed
+      [process.env.GITHUB_ACCESS_TOKEN], // arguments array to be passed
 
       function (result) {
         if (typeof callback === 'function') {

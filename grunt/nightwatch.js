@@ -26,7 +26,7 @@
           'desiredCapabilities': {
             browserName: 'firefox',
             platform: 'Linux',
-            version: '35',
+            version: '34',
             'tunnel-identifier' : '${TRAVIS_JOB_NUMBER}'
           },
           'selenium' : {

@@ -4,6 +4,10 @@ describe('Service: filter', function () {
   var filter, $log;
 
   beforeEach(module('GHReview'));
+  beforeEach(module('eventsMock'));
+  beforeEach(module('contributorCollectorMock'));
+  beforeEach(module('branchCollectorMock'));
+  beforeEach(module('treeCollectorMock'));
 
   beforeEach(inject(function ($injector) {
     localStorage.setItem('ghreview.filter', 'e0a35c44-1066-9a60-22f2-86bd825bc70c,2d3e5719-fc16-b69e-4a27-1cb2521fbeba');

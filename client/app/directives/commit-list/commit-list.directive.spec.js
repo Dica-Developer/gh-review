@@ -4,6 +4,7 @@ describe('Directive: commit-list', function () {
 
   beforeEach(module('GHReview'));
   beforeEach(module('commitMockModule'));
+  beforeEach(module('commentCollectorMock'));
   beforeEach(module('app/directives/commit-list/commit-list.html'));
   beforeEach(module('app/welcome/welcome.html'));
 

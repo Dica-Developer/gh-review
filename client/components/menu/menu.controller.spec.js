@@ -1,8 +1,9 @@
 /*global inject*/
-describe('Controller: MenuDirectiveController', function () {
+describe('Controller: MenuController', function () {
   'use strict';
 
   beforeEach(module('GHReview'));
+  beforeEach(module('commentCollectorMock'));
   beforeEach(module('app/welcome/welcome.html'));
 
   describe('authenticated', function () {
@@ -63,8 +64,6 @@ describe('Controller: MenuDirectiveController', function () {
             get: function () {
               return true;
             }
-          },
-          'collectComments': function () {
           },
           'ghUser': {
             get: function () {
@@ -135,7 +134,7 @@ describe('Controller: MenuDirectiveController', function () {
   });
 
   describe('not authenticated', function () {
-    var $rootScope, $scope, controller, $q, authenticated, ghUser, collectComments;
+    var $rootScope, $scope, controller, $q, authenticated, ghUser;
 
     beforeEach(inject(function ($injector) {
       $rootScope = $injector.get('$rootScope');
@@ -149,12 +148,10 @@ describe('Controller: MenuDirectiveController', function () {
       ghUser = {
         get: function () {}
       };
-      collectComments = jasmine.createSpy('collectComments');
       var $controller = $injector.get('$controller');
       controller = $controller('MenuController', {
         '$scope': $scope,
         'authenticated': authenticated,
-        'collectComments': collectComments,
         'ghUser': ghUser
       });
     }));
@@ -163,11 +160,6 @@ describe('Controller: MenuDirectiveController', function () {
       spyOn(ghUser, 'get');
       $rootScope.$apply();
       expect(ghUser.get).not.toHaveBeenCalled();
-    });
-
-    it('Should not call "collectComments"', function () {
-      $rootScope.$apply();
-      expect(collectComments).not.toHaveBeenCalled();
     });
 
   });
