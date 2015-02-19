@@ -306,11 +306,12 @@ describe('Factory: Filter', function () {
   });
 
   describe('core functions', function () {
-    var filter, $q, github, $rootScope;
+    var filter, $q, github, $rootScope, contributorCollector;
     beforeEach(inject(function ($injector) {
       window.localStorage.setItem('ls.accessToken', 'abc');
       $q = $injector.get('$q');
       github = $injector.get('github');
+      contributorCollector = $injector.get('contributorCollector');
       $rootScope = $injector.get('$rootScope');
       filter = new Filter('existing-filter');
     }));
@@ -376,18 +377,18 @@ describe('Factory: Filter', function () {
       expect(filter.isSaved()).toBe(false);
     });
 
-    it('#Filter.getContributorList should call github.repos.getContributors with correct values', function () {
-      var githubSpy = spyOn(github.repos, 'getContributors');
-      contributorCollector.get.cache = new _.memoize.Cache();
+    it('#Filter.getContributorList should call contributorCollector', function () {
+      spyOn(contributorCollector, 'get');
 
       filter.getContributorList();
-      expect(githubSpy).toHaveBeenCalled();
-      expect(githubSpy.calls.argsFor(0)[0]).toEqual({user: 'Dica-Developer', repo: 'gh-review', 'per_page': 100});
+      expect(contributorCollector.get).toHaveBeenCalledWith('Dica-Developer', 'gh-review');
     });
 
     it('#Filter.getContributorList should promise.resolve if response', function (done) {
-      spyOn(github.repos, 'getContributors');
-      contributorCollector.get.cache = new _.memoize.Cache();
+      spyOn(contributorCollector, 'get').and.returnValue($q.when({
+        result: 'testResult',
+        meta: {}
+      }));
 
       filter.getContributorList()
         .then(function (data) {
@@ -395,23 +396,15 @@ describe('Factory: Filter', function () {
           expect(data.result).toBe('testResult');
           done();
         });
-      var callback = github.repos.getContributors.calls.argsFor(0)[1];
-      callback(null, {
-        result: 'testResult',
-        meta: {}
-      });
       $rootScope.$apply();
     });
 
     it('#Filter.getContributorList should promise.reject if response error', function (done) {
-      spyOn(github.repos, 'getContributors');
-      contributorCollector.get.cache = new _.memoize.Cache();
+      spyOn(contributorCollector, 'get').and.returnValue($q.reject());
       filter.getContributorList()
         .then(null, function () {
           done();
         });
-      var callback = github.repos.getContributors.calls.argsFor(0)[1];
-      callback({});
       $rootScope.$apply();
     });
 
