@@ -9,7 +9,7 @@ env:
   global:
     - SAUCE_USERNAME=Dica-Developer
     - secure: "cIm8m55uMqYaCUpmk98LuHbvUKEfOUBc00eSdc8Iz1/4echufRjKN+Hh6xgYYtTFVYeFRPOX5fny/xQAOglGYMKa4FCj1c/AYkCOUb2J2TAEaEzyoFayeQ4TOQH/lnaRgeyhBKPJnaLb24474+vap80dc+2KN3EZ+54MABbg3Mw="
-    - secure: "A4QcD35VAODbtWCtdMfaJVAJS4fP09rkQsLUqDnx4lUt8kvrIY0DxHK5xBMyKCj7z34aM66OKtlSF81jUtfyDUVnxXZ5ptjWv8CnKIaP6LXyT8S7ow018+kw5XsQyvD0ggszC7HF655tSSejCXKSY1e3uOb3Ju48OEBdtsdVqik="
+    - secure: "UaN+Dwp8YUrCXjftUM9UaxR9oJoMVknRR0NnztMtf/j9mts+69xCUtbTa7sgszUGNyFjkeKZ6MrgMC5z6xoH29VHDWlY0CsC/I8CewuMwcdYr/aRP0WfMyAip3SZL4CQB3dCtyzTvIPfgAij3ANHVo65Eao+WYW13d7c5tcuRyY="
 addons:
   sauce_connect: true
 notifications:
