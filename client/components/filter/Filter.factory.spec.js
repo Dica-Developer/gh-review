@@ -24,6 +24,11 @@ describe('Factory: Filter', function () {
 
   beforeEach(module('GHReview'));
   beforeEach(module('commitMockModule'));
+  beforeEach(module('eventsMock'));
+  beforeEach(module('contributorCollectorMock'));
+  beforeEach(module('branchCollectorMock'));
+  beforeEach(module('treeCollectorMock'));
+  beforeEach(module('commentCollectorMock'));
 
   beforeEach(inject(function($injector){
     Filter = $injector.get('Filter');

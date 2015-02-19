@@ -3,6 +3,7 @@ describe('Controller: MenuController', function () {
   'use strict';
 
   beforeEach(module('GHReview'));
+  beforeEach(module('commentCollectorMock'));
   beforeEach(module('app/welcome/welcome.html'));
 
   describe('authenticated', function () {

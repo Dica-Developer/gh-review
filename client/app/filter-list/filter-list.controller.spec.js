@@ -5,6 +5,10 @@
     var $rootScope, $scope, $controller, $state;
 
     beforeEach(module('GHReview'));
+    beforeEach(module('eventsMock'));
+    beforeEach(module('contributorCollectorMock'));
+    beforeEach(module('branchCollectorMock'));
+    beforeEach(module('treeCollectorMock'));
 
     beforeEach(inject(function($injector){
       $rootScope = $injector.get('$rootScope');
