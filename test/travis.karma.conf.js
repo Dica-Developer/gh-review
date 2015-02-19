@@ -16,6 +16,7 @@ module.exports = function (config) {
       'client/bower_components/lodash/lodash.js',
       'client/bower_components/highlightjs/highlight.pack.js',
       'client/bower_components/github-js/dist/github.js',
+      'client/bower_components/FileSaver/FileSaver.js',
       'client/bower_components/angular/angular.js',
       'client/bower_components/angular-mocks/angular-mocks.js',
       'client/bower_components/angular-ui-router/release/angular-ui-router.js',
