@@ -18,7 +18,7 @@ describe('Service: authenticated', function () {
   });
 
   it('.get should return true if access token is stored', function () {
-    localStorage.setItem('ghreview.accessToken', '44046cd4b4b85afebfe3ccaec13fd8c08cc80aad');
+    localStorage.setItem('ghreview.accessToken', 'test-to-ken');
     expect(authenticated.get()).toBeTruthy();
   });
 
