@@ -97,7 +97,7 @@
 
           importExport.importFilter(files[0])
             .then(function(filterList){
-              var newFilter = _.map(filterList, filter.getNewFromSettings);
+              var newFilter = _.map(filterList, filter.getNewFromSettings, filter);
               selectFilterModal(newFilter);
             });
         };
