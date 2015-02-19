@@ -1,4 +1,3 @@
-/*global Github*/
 describe('Service: github', function () {
   'use strict';
 
