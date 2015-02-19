@@ -18,6 +18,7 @@
     beforeEach(module('contributorCollectorMock'));
     beforeEach(module('branchCollectorMock'));
     beforeEach(module('treeCollectorMock'));
+    beforeEach(module('commentCollectorMock'));
 
     beforeEach(inject(function($injector){
       localStorage.setItem('ghreview.accessToken', 'test-to-ken');
