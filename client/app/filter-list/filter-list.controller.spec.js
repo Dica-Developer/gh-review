@@ -135,15 +135,18 @@
     });
 
     describe('with filter', function(){
-      var controller;
-      beforeEach(function () {
+      var controller, Modal, Filter, $q;
+      beforeEach(inject(function ($injector) {
+        Modal = $injector.get('Modal');
+        Filter = $injector.get('Filter');
+        $q = $injector.get('$q');
         localStorage.setItem('ghreview.filter', 'e0a35c44-1066-9a60-22f2-86bd825bc70c,2d3e5719-fc16-b69e-4a27-1cb2521fbeba');
         localStorage.setItem('ghreview.filter-2d3e5719-fc16-b69e-4a27-1cb2521fbeba', '{"sha":"master","customFilter":{"state":"reviewed"},"repo":"gh-review","user":"Dica-Developer","since":"2012-05-13T18:21:29.919Z","id":"2d3e5719-fc16-b69e-4a27-1cb2521fbebf"}');
         localStorage.setItem('ghreview.filter-e0a35c44-1066-9a60-22f2-86bd825bc70c', '{"sha":"master","customFilter":{},"repo":"forTestUseOnly","user":"jwebertest","since":"2014-04-14T16:41:48.746Z","id":"e0a35c44-1066-9a60-22f2-86bd825bc70c"}');
         controller = $controller('FilterListController', {
           '$scope': $scope
         });
-      });
+      }));
 
       it('Should be defined', function () {
         expect(controller).toBeDefined();
@@ -219,6 +222,37 @@
           expect(importExport.exportFilter).toHaveBeenCalled();
           expect(importExport.exportFilter.calls.argsFor(0).length).toBe(2);
           expect(importExport.exportFilter.calls.argsFor(0)[0]).toBe($scope.exportName);
+        });
+
+      });
+
+      describe('.import', function(){
+
+        it('Should call importExport.importFilter with correct arguments', function(){
+          var files = [1];
+          spyOn(Modal, 'selectFilterToImport').and.callFake(function(){
+            return function(){};
+          });
+          spyOn(importExport, 'importFilter').and.returnValue($q.when());
+
+          $scope.importFilter({}, files);
+
+          expect(importExport.importFilter).toHaveBeenCalledWith(1);
+        });
+
+        it('Should open modal with actual Filter', function(){
+          var files = [1], modalSpy = jasmine.createSpy('modalSpy');
+
+          spyOn(Modal, 'selectFilterToImport').and.callFake(function(){
+            return modalSpy;
+          });
+          spyOn(importExport, 'importFilter').and.returnValue($q.when([filterOptions[0]]));
+
+          $scope.importFilter({}, files);
+          $rootScope.$apply();
+          expect(modalSpy).toHaveBeenCalled();
+          expect(modalSpy.calls.argsFor(0).length).toBe(1);
+          expect(modalSpy.calls.argsFor(0)[0][0] instanceof Filter).toBe(true);
         });
 
       });
