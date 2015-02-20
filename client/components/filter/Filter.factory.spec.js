@@ -522,4 +522,71 @@ describe('Factory: Filter', function () {
     });
 
   });
+
+  describe('Filter.getCommitsForStandup', function(){
+
+    var filter, $q, $rootScope, commitCollector;
+    beforeEach(inject(function ($injector) {
+      window.localStorage.setItem('ls.accessToken', 'abc');
+      $q = $injector.get('$q');
+      $rootScope = $injector.get('$rootScope');
+      commitCollector = $injector.get('commitCollector');
+      filter = new Filter('existing-filter');
+    }));
+
+    afterEach(function () {
+      window.localStorage.removeItem('ls.accessToken');
+    });
+
+    it('Should change since property of github options', function(){
+      spyOn(commitCollector, 'get').and.returnValue($q.when([]));
+      filter.getCommitsForStandup();
+      var originalSinceDatString = filter.getSinceDateISO();
+      var alteredSinceDateString = commitCollector.get.calls.argsFor(0)[0].since;
+
+      expect(alteredSinceDateString).not.toBe(originalSinceDatString);
+    });
+
+    it('Should change since property to now minus 24 hours', function(){
+      spyOn(commitCollector, 'get').and.returnValue($q.when([]));
+      filter.getCommitsForStandup();
+      var expectedSinceDatString = moment().subtract(24, 'hours').toISOString();
+      var alteredSinceDateString = commitCollector.get.calls.argsFor(0)[0].since;
+
+      expect(alteredSinceDateString).toBe(expectedSinceDatString);
+    });
+
+    it('Should call filter._processCustomFilter after receiving commit list', function(){
+      spyOn(commitCollector, 'get').and.returnValue($q.when([]));
+      spyOn(filter, '_processCustomFilter').and.returnValue($q.when([]));
+      filter.getCommitsForStandup();
+
+      $rootScope.$apply();
+      expect(filter._processCustomFilter).toHaveBeenCalled();
+    });
+
+    it('Should resolve if everything has worked correctly', function(done){
+      spyOn(commitCollector, 'get').and.returnValue($q.when([]));
+      spyOn(filter, '_processCustomFilter').and.returnValue($q.when([]));
+      filter.getCommitsForStandup()
+        .then(function(commitsList){
+          expect(commitsList).toBeDefined();
+          done();
+        });
+
+      $rootScope.$apply();
+    });
+
+    it('Should reject if something goes wrong', function(done){
+      spyOn(commitCollector, 'get').and.returnValue($q.reject('error'));
+      filter.getCommitsForStandup()
+        .then(null, function(error){
+          expect(error).toBeDefined();
+          done();
+        });
+
+      $rootScope.$apply();
+    });
+
+  });
 });

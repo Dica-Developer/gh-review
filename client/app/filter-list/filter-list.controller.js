@@ -62,6 +62,15 @@
           $scope.filterEvents = events.getAll();
         };
 
+        $scope.standup = function (filterId, event) {
+          if (void 0 !== event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+          }
+          $state.go('standup', {
+            'filterId': filterId
+          });
+        };
         $scope.removeFilter = function (filterId, event) {
           if (void 0 !== event) {
             event.preventDefault();

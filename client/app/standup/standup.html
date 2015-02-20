@@ -1,0 +1,22 @@
+<div ng-include="'components/menu/menu.html'"></div>
+<div id="main" class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4><span ng-show="fetchingCommits">Fetching commits</span><span ng-show="!fetchingCommits">Showing commits</span> of {{filter.getOwner()}}/{{filter.getRepo()}}/{{filter.getBranch()}} of the last 24 hours.</h4>
+                    <h5 ng-show="!fetchingCommits && commits.length === 0">It seems nothing happened in the last 24 hours!</h5>
+                </div>
+                <div class="panel-body" ng-if="commits.length > 0 || fetchingCommits">
+                    <div ng-if="commits.length <= 0 && fetchingCommits" class="well">
+                        Fetching commits
+                    </div>
+                    <div class="col-lg-12" ng-if="commits.length > 0 && !fetchingCommits">
+                        <ghreview-commit-list ng-if="commits.length > 0 && !fetchingCommits" x-commit-list="commits"
+                                              x-filter="filter"></ghreview-commit-list>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
