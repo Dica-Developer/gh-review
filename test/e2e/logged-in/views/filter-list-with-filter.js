@@ -24,6 +24,14 @@
         .waitForElementPresent('ghreview-commit-list', 5000)
         .assert.urlContains('commits');
     },
+    'Click on standup icon should forward to standup view': function (browser) {
+      browser
+        .assert.elementPresent('#reviewList')
+        .waitForElementPresent('#reviewList a:first-child span.standup', 5000)
+        .click('#reviewList a:first-child span.standup')
+        .assert.urlContains('standup')
+        .goTo('filter-list');
+    },
     'Click on remove icon should delete folder': function (browser) {
       browser
         .assert.elementPresent('#reviewList')
