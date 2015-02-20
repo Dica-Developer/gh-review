@@ -214,6 +214,29 @@
 
       });
 
+      describe('.standup', function(){
+
+        it('Should call $state.go', function () {
+          spyOn($state, 'go');
+          $scope.standup('filterId', void 0);
+          expect($state.go).toHaveBeenCalledWith('standup', {
+            filterId: 'filterId'
+          });
+        });
+
+        it('Should call preventDefault and stopImmediatePropagation event is given', function () {
+          spyOn($state, 'go');
+          var event = {
+            preventDefault: jasmine.createSpy(),
+            stopImmediatePropagation: jasmine.createSpy()
+          };
+          $scope.editFilter('filterId', event);
+          expect(event.preventDefault).toHaveBeenCalled();
+          expect(event.stopImmediatePropagation).toHaveBeenCalled();
+        });
+
+      });
+
       describe('.export', function(){
 
         it('Should call importExport.exportFilter', function(){
