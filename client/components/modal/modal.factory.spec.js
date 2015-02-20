@@ -1,4 +1,3 @@
-/*global $*/
 describe('Service: repoCollector', function () {
   'use strict';
 
