@@ -550,10 +550,20 @@ describe('Factory: Filter', function () {
     it('Should change since property to now minus 24 hours', function(){
       spyOn(commitCollector, 'get').and.returnValue($q.when([]));
       filter.getCommitsForStandup();
-      var expectedSinceDatString = moment().subtract(24, 'hours').toISOString();
-      var alteredSinceDateString = commitCollector.get.calls.argsFor(0)[0].since;
+      var expectedSinceDatString = new Date(moment().subtract(24, 'hours').toISOString());
+      var alteredSinceDateString = new Date(commitCollector.get.calls.argsFor(0)[0].since);
 
-      expect(alteredSinceDateString).toBe(expectedSinceDatString);
+      expect(alteredSinceDateString.getMonth()).toBe(expectedSinceDatString.getMonth());
+      expect(alteredSinceDateString.getMonth()).toBe(expectedSinceDatString.getMonth());
+
+      expect(alteredSinceDateString.getDate()).toBe(expectedSinceDatString.getDate());
+      expect(alteredSinceDateString.getDate()).toBe(expectedSinceDatString.getDate());
+
+      expect(alteredSinceDateString.getHours()).toBe(expectedSinceDatString.getHours());
+      expect(alteredSinceDateString.getHours()).toBe(expectedSinceDatString.getHours());
+
+      expect(alteredSinceDateString.getMinutes()).toBe(expectedSinceDatString.getMinutes());
+      expect(alteredSinceDateString.getMinutes()).toBe(expectedSinceDatString.getMinutes());
     });
 
     it('Should call filter._processCustomFilter after receiving commit list', function(){
