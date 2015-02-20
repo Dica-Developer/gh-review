@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('GHReview').
-    service('filterUtils', ['_', 'moment', function (_, moment) {
+    service('filterUtils', ['_', 'moment', 'localStorageService', function (_, moment, localStorageService) {
 
       var defaultOptions = {
         repo: null,
@@ -25,6 +25,27 @@
 
       function fastClone(object){
         return JSON.parse(JSON.stringify(object));
+      }
+
+      function getFilterIds(){
+        var filterIds = [];
+        var filterIdsString = localStorageService.get('filter');
+        if (angular.isString(filterIdsString)) {
+          filterIds = filterIdsString.split(',');
+        }
+        return filterIds;
+      }
+
+      function addIdToLocalStorage (id){
+        var filterIds = getFilterIds();
+        if (filterIds.indexOf(id) === -1) {
+          filterIds.push(id);
+          localStorageService.set('filter', filterIds.join(','));
+        }
+      }
+
+      function addSettingsToLocalStorage (filter){
+        localStorageService.set('filter-' + filter.getId(), JSON.stringify(filter.options));
       }
 
       this.getOptions = function(filterId){
@@ -95,6 +116,15 @@
           }
         }, this);
         return preparedGithubOptions;
+      };
+
+      this.getFromLocalStorage = function(id){
+        return localStorageService.get('filter-' + id);
+      };
+
+      this.storeToLocalStorage = function(filter){
+        addIdToLocalStorage(filter.getId());
+        addSettingsToLocalStorage(filter);
       };
 
     }]);

@@ -5,9 +5,8 @@
   var services = angular.module('GHReview');
   services.factory('Filter', ['$q', '$location', 'filterUtils', '$injector', function ($q, $location, filterUtils, $injector) {
 
-    var commentCollector = $injector.get('commentCollector'),
-      localStorageService = $injector.get('localStorageService'),
-      ghUser = $injector.get('ghUser'),
+    var ghUser = $injector.get('ghUser'),
+      commentCollector = $injector.get('commentCollector'),
       branchCollector = $injector.get('branchCollector'),
       contributorCollector = $injector.get('contributorCollector'),
       commitCollector = $injector.get('commitCollector'),
@@ -24,7 +23,8 @@
 
     Filter.prototype.init = function () {
       if (this.options.meta.id) {
-        angular.extend(this.options, localStorageService.get('filter-' + this.getId()));
+        var storedSettings = filterUtils.getFromLocalStorage(this.getId());
+        angular.extend(this.options, storedSettings);
         this.getContributorList();
         this.getBranchList();
         this.getTree();
@@ -45,16 +45,7 @@
         delete this.options.meta.isNew;
       }
       this.options.meta.isSaved = true;
-      var filterIdsString = localStorageService.get('filter');
-      var filterIds = [];
-      if (angular.isString(filterIdsString)) {
-        filterIds = filterIdsString.split(',');
-      }
-      if (filterIds.indexOf(this.getId()) === -1) {
-        filterIds.push(this.getId());
-        localStorageService.set('filter', filterIds.join(','));
-      }
-      localStorageService.set('filter-' + this.getId(), JSON.stringify(this.options));
+      filterUtils.storeToLocalStorage(this);
     };
 
     Filter.prototype.set = function (key, value) {
