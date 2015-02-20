@@ -70,7 +70,7 @@
         return sinceDate;
       };
 
-      this.prepareGithubApiCallOptions = function (filter) {
+      this.prepareGithubApiCallOptions = function (filter, prepareForStandup) {
         var options = fastClone(filter.options),
           preparedGithubOptions = {};
 
@@ -88,6 +88,10 @@
             //TODO set correct until value
           } else if ('meta' !== key && value !== null) {
             preparedGithubOptions[key] = value;
+          }
+
+          if(prepareForStandup){
+            preparedGithubOptions.since = moment().subtract(24, 'hours').toISOString();
           }
         }, this);
         return preparedGithubOptions;

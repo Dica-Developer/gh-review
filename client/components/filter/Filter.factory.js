@@ -5,8 +5,7 @@
   var services = angular.module('GHReview');
   services.factory('Filter', ['$q', '$location', 'filterUtils', '$injector', function ($q, $location, filterUtils, $injector) {
 
-    var moment = $injector.get('moment'),
-      commentCollector = $injector.get('commentCollector'),
+    var commentCollector = $injector.get('commentCollector'),
       localStorageService = $injector.get('localStorageService'),
       ghUser = $injector.get('ghUser'),
       branchCollector = $injector.get('branchCollector'),
@@ -240,7 +239,7 @@
       this.maxResults = maxResults || this.maxResults;
       var getCommitsRefer = $q.defer(),
         _this = this;
-      commitCollector.get(filterUtils.prepareGithubApiCallOptions(this))
+      commitCollector.get(filterUtils.prepareGithubApiCallOptions(this, false))
         .then(
         function (commitList) {
           _this._processCustomFilter(commitList)
@@ -265,9 +264,8 @@
       this.maxResults = maxResults || this.maxResults;
       var getCommitsRefer = $q.defer(),
         _this = this,
-        githubCallOptions = filterUtils.prepareGithubApiCallOptions(this);
+        githubCallOptions = filterUtils.prepareGithubApiCallOptions(this, true);
 
-      githubCallOptions.since = moment().subtract(24, 'hours').toISOString();
       commitCollector.get(githubCallOptions)
         .then(
         function (commitList) {
