@@ -16,6 +16,7 @@
         .assert.containsText('#menu-commits', 'Commits')
         .assert.elementPresent('#menu-modules')
         .assert.containsText('#menu-modules', 'Modules')
+        .waitForElementPresent('#userMenuDropdown', 1000)
         //We have to make the submenu visible otherwise the text assertion does not work
         .click('.dropdown-toggle.ng-binding')
         .assert.elementPresent('#submenu-whoami')
