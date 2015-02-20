@@ -14,12 +14,12 @@
 
     function Filter(filterId) {
       this.options = filterUtils.getOptions(filterId);
+      this.maxResults = 20;
+      this.commitList = [];
+      this.currentPage = 1;
       this.init();
     }
 
-    Filter.prototype.maxResults = 20;
-    Filter.prototype.commitList = [];
-    Filter.prototype.currentPage = 1;
 
     Filter.prototype.init = function () {
       if (this.options.meta.id) {
