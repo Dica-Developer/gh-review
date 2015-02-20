@@ -28,7 +28,12 @@
               commentCollectorStarted = true;
               collectComments();
             }
-            return $location.abbsUrl;
+
+            if(path === '/welcome' && authenticated){
+              return $location.replace().path('/filter');
+            } else {
+              return $location.abbsUrl;
+            }
           } else {
             return $location.replace().path('/welcome');
           }
