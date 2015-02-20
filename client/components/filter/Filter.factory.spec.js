@@ -20,7 +20,7 @@ describe('Factory: Filter', function () {
       isSaved: true
     }
   },
-    Filter, filterService, localStorageService, branchCollector, contributorCollector, treeCollector, commentCollector;
+    Filter, filterService, localStorageService, branchCollector, contributorCollector, treeCollector, commentCollector, filterUtils;
 
   beforeEach(module('GHReview'));
   beforeEach(module('commitMockModule'));
@@ -38,6 +38,7 @@ describe('Factory: Filter', function () {
     contributorCollector = $injector.get('contributorCollector');
     treeCollector = $injector.get('treeCollector');
     commentCollector = $injector.get('commentCollector');
+    filterUtils = $injector.get('filterUtils');
     window.localStorage.setItem('ghreview.filter-existing-filter', JSON.stringify(filterOptions));
   }));
 
@@ -362,14 +363,15 @@ describe('Factory: Filter', function () {
       expect(url).toBe('https://api.github.com/repos/gh-review/comments?per_page=100');
     });
 
+    //TODO move to filterUtils spec
     it('#Filter.prepareGithubApiCallOptions should filter all github API relevant options', function () {
-      var githubOptions = filter.prepareGithubApiCallOptions();
+      var githubOptions = filterUtils.prepareGithubApiCallOptions(filter);
       expect(githubOptions.repo).toEqual('gh-review');
       expect(githubOptions.user).toEqual('Dica-Developer');
       expect(githubOptions.sha).toEqual('master');
 
       filter.addAuthor(['She']);
-      githubOptions = filter.prepareGithubApiCallOptions();
+      githubOptions = filterUtils.prepareGithubApiCallOptions(filter);
       expect(githubOptions.repo).toEqual('gh-review');
       expect(githubOptions.user).toEqual('Dica-Developer');
       expect(githubOptions.sha).toEqual('master');

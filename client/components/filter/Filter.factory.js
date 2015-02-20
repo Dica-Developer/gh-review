@@ -3,12 +3,9 @@
 
 
   var services = angular.module('GHReview');
-  services.factory('Filter', ['$injector', function ($injector) {
+  services.factory('Filter', ['$q', '$location', 'filterUtils', '$injector', function ($q, $location, filterUtils, $injector) {
 
-    var $q = $injector.get('$q'),
-      $location = $injector.get('$location'),
-      _ = $injector.get('_'),
-      moment = $injector.get('moment'),
+    var moment = $injector.get('moment'),
       commentCollector = $injector.get('commentCollector'),
       localStorageService = $injector.get('localStorageService'),
       ghUser = $injector.get('ghUser'),
@@ -17,34 +14,8 @@
       commitCollector = $injector.get('commitCollector'),
       treeCollector = $injector.get('treeCollector');
 
-    var generateUUID = function () {
-      var d = new Date().getTime();
-      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-        var r = (d + Math.random() * 16) % 16 | 0;
-        d = Math.floor(d / 16);
-        return (c === 'x' ? r : (r & 0x7 | 0x8)).toString(16);
-      });
-    };
-
-
     function Filter(filterId) {
-      this.options = {
-        repo: null,
-        user: null,
-        sha: 'master',
-        since: {},
-        until: {},
-        path: null,
-        authors: [],
-        meta: {
-          isSaved: false,
-          lastEdited: null,
-          customFilter: {
-            excludeOwnCommits: false
-          },
-          id: filterId || null
-        }
-      };
+      this.options = filterUtils.getOptions(filterId);
       this.init();
     }
 
@@ -53,13 +24,13 @@
     Filter.prototype.currentPage = 1;
 
     Filter.prototype.init = function () {
-      if (!_.isNull(this.options.meta.id)) {
-        _.extend(this.options, localStorageService.get('filter-' + this.options.meta.id), true);
+      if (this.options.meta.id) {
+        angular.extend(this.options, localStorageService.get('filter-' + this.getId()));
         this.getContributorList();
         this.getBranchList();
         this.getTree();
       } else {
-        this.options.meta.id = generateUUID();
+        this.options.meta.id = filterUtils.generateUUID();
         this.options.meta.isNew = true;
       }
     };
@@ -71,24 +42,24 @@
         delete this.options.meta.isClone;
       }
 
-      if (!_.isUndefined(this.options.meta.isNew)) {
+      if (angular.isDefined(this.options.meta.isNew)) {
         delete this.options.meta.isNew;
       }
       this.options.meta.isSaved = true;
       var filterIdsString = localStorageService.get('filter');
       var filterIds = [];
-      if (!_.isNull(filterIdsString)) {
+      if (angular.isString(filterIdsString)) {
         filterIds = filterIdsString.split(',');
       }
-      if (!_.contains(filterIds, this.options.meta.id)) {
-        filterIds.push(this.options.meta.id);
+      if (filterIds.indexOf(this.getId()) === -1) {
+        filterIds.push(this.getId());
         localStorageService.set('filter', filterIds.join(','));
       }
-      localStorageService.set('filter-' + this.options.meta.id, JSON.stringify(this.options));
+      localStorageService.set('filter-' + this.getId(), JSON.stringify(this.options));
     };
 
     Filter.prototype.set = function (key, value) {
-      if (_.isUndefined(this.options[key])) {
+      if (!angular.isDefined(this.options[key])) {
         throw new Error('Unknown filter property');
       } else {
         this.options[key] = value;
@@ -124,11 +95,11 @@
     };
 
     Filter.prototype.hasAuthor = function (author) {
-      return _.contains(this.options.authors, author);
+      return this.options.authors.indexOf(author) > -1;
     };
 
     Filter.prototype.addAuthor = function (author) {
-      if (_.isArray(author)) {
+      if (angular.isArray(author)) {
         this.options.authors = author;
       } else {
         this.options.authors.push(author);
@@ -154,7 +125,7 @@
     };
 
     Filter.prototype.setSince = function (since) {
-      if (_.isObject(since)) {
+      if (angular.isObject(since)) {
         this.set('since', since);
       } else {
         throw new Error('Since should be an object but was ' + typeof since);
@@ -166,19 +137,11 @@
     };
 
     Filter.prototype.getSinceDate = function () {
-      var sinceDate = null;
-      if (!_.isUndefined(this.options.since) && _.size(this.options.since) === 2) {
-        sinceDate = moment().startOf('minute').subtract(this.options.since.amount, this.options.since.pattern).toISOString();
-      }
-      return sinceDate;
+      return filterUtils.getSinceDate(this.options);
     };
 
     Filter.prototype.getSinceDateISO = function () {
-      var sinceDate = null;
-      if (!_.isUndefined(this.options.since) && _.size(this.options.since) === 2) {
-        sinceDate = moment().subtract(this.options.since.amount, this.options.since.pattern).startOf('day').toISOString();
-      }
-      return sinceDate;
+      return filterUtils.getSinceDateISO(this.options);
     };
 
     Filter.prototype.unsetSince = function () {
@@ -227,27 +190,12 @@
 
     Filter.prototype.reset = function () {
       this.tree = [];
-      this.options = {
-        repo: null,
-        user: null,
-        sha: 'master',
-        since: {},
-        until: {},
-        path: null,
-        authors: [],
-        contributor: null,
-        meta: {
-          isSaved: false,
-          lastEdited: null,
-          customFilter: {},
-          id: null
-        }
-      };
+      this.options = filterUtils.getOptions();
       this.init();
     };
 
     Filter.prototype._needsPostFiltering = function () {
-      return (_.size(this.options.meta.customFilter) > 0);
+      return (Object.keys(this.options.meta.customFilter).length > 0);
     };
 
     Filter.prototype.getContributorList = function () {
@@ -285,42 +233,14 @@
     };
 
     Filter.prototype.getCommentsUrl = function () {
-      var repo = this.getRepo();
-      var owner = this.getOwner();
-      var url = 'https://api.github.com/repos/';
-      if (owner && !(/^\s*$/).test(owner)) {
-        url += owner + '/';
-      }
-      url += repo + '/comments';
-      url += '?per_page=100';
-      return url;
-    };
-
-    Filter.prototype.prepareGithubApiCallOptions = function () {
-      var preparedGithubOptions = {};
-      _.each(this.options, function (value, key) {
-        if ('authors' === key) {
-          if (value.length === 1) {
-            preparedGithubOptions.author = value[0];
-          } else if (value.length > 1) {
-            this.setCustomFilter('authors', value);
-          }
-        } else if (key === 'since' && value !== null) {
-          preparedGithubOptions.since = this.getSinceDateISO();
-        } else if (key === 'until' && value !== null) {
-          //TODO set correct until value
-        } else if ('meta' !== key && value !== null) {
-          preparedGithubOptions[key] = value;
-        }
-      }, this);
-      return preparedGithubOptions;
+      return filterUtils.getCommentsUrl(this.options);
     };
 
     Filter.prototype.getCommits = function (maxResults) {
       this.maxResults = maxResults || this.maxResults;
       var getCommitsRefer = $q.defer(),
         _this = this;
-      commitCollector.get(this.prepareGithubApiCallOptions())
+      commitCollector.get(filterUtils.prepareGithubApiCallOptions(this))
         .then(
         function (commitList) {
           _this._processCustomFilter(commitList)
@@ -345,7 +265,7 @@
       this.maxResults = maxResults || this.maxResults;
       var getCommitsRefer = $q.defer(),
         _this = this,
-        githubCallOptions = this.prepareGithubApiCallOptions();
+        githubCallOptions = filterUtils.prepareGithubApiCallOptions(this);
 
       githubCallOptions.since = moment().subtract(24, 'hours').toISOString();
       commitCollector.get(githubCallOptions)
@@ -360,7 +280,8 @@
     };
 
     Filter.prototype._processCustomFilter = function (commits) {
-      var defer = $q.defer();
+      var defer = $q.defer(),
+        _this = this;
       if (!this._needsPostFiltering()) {
         this.commitList = commits;
         defer.resolve();
@@ -375,10 +296,10 @@
             var userData = result;
             commentCollector.getCommitApproved()
               .then(function (commitApproved) {
-                _.each(commits, function (commit) {
+                commits.forEach(function (commit) {
                   var selectCommit = true,
                     author = commit.author ? commit.author.login : commit.commit.author.login;
-                  if (!_.isUndefined(authors)) {
+                  if (angular.isDefined(authors)) {
                     /*
                      TODO commit.author can be null how to find the login name of an author
                      example commit object without author:
@@ -408,7 +329,7 @@
                      url: "https://api.github.com/repos/Datameer-Inc/dap/commits/67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b"
                      }
                      */
-                    if (!_.contains(authors, author)) {
+                    if (authors.indexOf(author) === -1) {
                       selectCommit = false;
                     }
                   }
@@ -417,7 +338,7 @@
                     selectCommit = false;
                   }
 
-                  if (!_.isUndefined(state)) {
+                  if (angular.isDefined(state)) {
                     switch (state) {
                     case 'approved':
                       if (!commitApproved[commit.sha]) {
@@ -442,10 +363,10 @@
                     tmpCommits.push(commit);
                   }
                 });
-                this.commitList = tmpCommits;
+                _this.commitList = tmpCommits;
                 defer.resolve();
-              }.bind(this));
-          }.bind(this));
+              });
+          });
       }
       return defer.promise;
     };
