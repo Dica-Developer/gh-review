@@ -341,6 +341,24 @@
         return getCommitsRefer.promise;
       };
 
+      Filter.prototype.getCommitsForStandup = function(maxResults){
+        this.maxResults = maxResults || this.maxResults;
+        var getCommitsRefer = $q.defer(),
+          _this = this,
+          githubCallOptions = this.prepareGithubApiCallOptions();
+
+        githubCallOptions.since = moment().subtract(24, 'hours').toISOString();
+        commitCollector.get(githubCallOptions)
+          .then(
+          function (commitList) {
+            _this._processCustomFilter(commitList)
+              .then(function () {
+                getCommitsRefer.resolve(_this.getPage());
+              });
+          },getCommitsRefer.reject);
+        return getCommitsRefer.promise;
+      };
+
       Filter.prototype._processCustomFilter = function (commits) {
         var defer = $q.defer();
         if (!this._needsPostFiltering()) {
