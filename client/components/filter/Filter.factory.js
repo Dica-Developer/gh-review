@@ -25,9 +25,6 @@
       if (this.options.meta.id) {
         var storedSettings = filterUtils.getFromLocalStorage(this.getId());
         angular.extend(this.options, storedSettings);
-        this.getContributorList();
-        this.getBranchList();
-        this.getTree();
       } else {
         this.options.meta.id = filterUtils.generateUUID();
         this.options.meta.isNew = true;
