@@ -35,6 +35,18 @@
         return newFilter;
       };
 
+      this.getNewFromSettings = function(settings){
+        if(settings.meta.id){
+          delete settings.meta.id;
+        }
+        var newFilter = this.getNew(),
+          tmpIdStore = newFilter.getId();
+
+        newFilter.options = fastClone(settings);
+        newFilter.options.meta.id = tmpIdStore;
+        return newFilter;
+      };
+
       this.getCloneOf = function(filter){
         if (filter instanceof Filter) {
           var clonedFilter = new Filter();

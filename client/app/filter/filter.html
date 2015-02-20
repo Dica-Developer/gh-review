@@ -12,6 +12,12 @@
         <div class="col-xs-12">
             <div class="well well-lg" ng-if="filter.options.meta.isNew">Do find commits you want to review try to select
                 a repository and a branch. After selecting them you will have more criterias to dive in the commits.
+                <p>
+                    <label class="input-sm">Import Filter:</label>
+                    <span class="btn btn-primary btn-file btn-sm">
+                        Browse&hellip;<input type="file" data-file-change="importFilter($event, files)" accept="application/json">
+                    </span>
+                </p>
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">

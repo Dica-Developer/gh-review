@@ -2,6 +2,8 @@ describe('Controller: FilterController', function () {
   'use strict';
 
   beforeEach(module('GHReview'));
+  beforeEach(module('commentCollectorMock'));
+  beforeEach(module('app/welcome/welcome.html'));
 
   describe('With new filter', function () {
     var $rootScope, $scope, $q, _$injector;

@@ -6,11 +6,14 @@
       '$scope',
       '$q',
       '$stateParams',
+      '$state',
       '$timeout',
       '_',
       'repoCollector',
       'filter',
-      function ($scope, $q, $stateParams, $timeout, _, repoCollector, filter) {
+      'importExport',
+      'Modal',
+      function ($scope, $q, $stateParams, $state, $timeout, _, repoCollector, filter, importExport, Modal) {
         var orgFilter = null,
           _filter = null,
           branchList = null,
@@ -304,6 +307,23 @@
           $scope.commits = null;
           $scope.repoTree = null;
           controller.setRepos($scope.allRepos);
+        };
+
+        $scope.importFilter = function($event, files){
+          var selectFilterModal = Modal.selectFilterToImport(function(selectedFilter){
+            selectedFilter.forEach(function(filter){
+              filter.save();
+            });
+            $state.go('listFilter');
+          });
+
+          importExport.importFilter(files[0])
+            .then(function(filterList){
+              var newFilter = _.map(filterList, function(settings){
+                return filter.getNewFromSettings(settings);
+              });
+              selectFilterModal(newFilter);
+            });
         };
 
         controller.isExistingFilter()

@@ -2,8 +2,8 @@
   'use strict';
 
   angular.module('GHReview')
-    .controller('FilterListController', ['$scope', '$state', '$log', '_', 'filter', 'events', 'userPref',
-      function ($scope, $state, $log, _, filter, events, userPref) {
+    .controller('FilterListController', ['$scope', '$state', '$log', '_', 'filter', 'events', 'userPref', 'importExport', 'Modal',
+      function ($scope, $state, $log, _, filter, events, userPref, importExport, Modal) {
         if (filter.getAll().length === 0) {
           $state.go('addFilter');
         }
@@ -77,6 +77,29 @@
           $state.go('editFilter', {
             'filterId': filterId
           });
+        };
+
+        $scope.exportName = 'gh-review-filter.json';
+        $scope.exportFilter = function(){
+          var allFilter = _.map(filter.getAll(), function(filter){
+            return JSON.parse(JSON.stringify(filter.options));
+          });
+          importExport.exportFilter($scope.exportName, allFilter);
+        };
+
+        $scope.importFilter = function($event, files){
+          var selectFilterModal = Modal.selectFilterToImport(function(selectedFilter){
+            selectedFilter.forEach(function(filter){
+              filter.save();
+            });
+            updateFilterList();
+          });
+
+          importExport.importFilter(files[0])
+            .then(function(filterList){
+              var newFilter = _.map(filterList, filter.getNewFromSettings, filter);
+              selectFilterModal(newFilter);
+            });
         };
 
         $scope.$watch('selectedGrouping', updateFilterList);
