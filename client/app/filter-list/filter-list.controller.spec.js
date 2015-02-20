@@ -230,7 +230,7 @@
             preventDefault: jasmine.createSpy(),
             stopImmediatePropagation: jasmine.createSpy()
           };
-          $scope.editFilter('filterId', event);
+          $scope.standup('filterId', event);
           expect(event.preventDefault).toHaveBeenCalled();
           expect(event.stopImmediatePropagation).toHaveBeenCalled();
         });
