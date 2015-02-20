@@ -24,7 +24,7 @@
             path = $location.path();
 
           if ((path === '/' || path === '/login' || path === '/welcome') || authenticated) {
-            if(!commentCollectorStarted){
+            if(!commentCollectorStarted && authenticated){
               commentCollectorStarted = true;
               collectComments();
             }
