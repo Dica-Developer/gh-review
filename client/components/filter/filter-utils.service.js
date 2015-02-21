@@ -131,7 +131,7 @@
         return preparedGithubOptions;
       };
 
-      this.storeToLocalStorage = function (filter) {
+      this.storeFilterToLocalStorage = function (filter) {
         addIdToLocalStorage(filter.getId());
         addSettingsToLocalStorage(filter);
       };

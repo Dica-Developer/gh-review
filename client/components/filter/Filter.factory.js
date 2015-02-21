@@ -30,7 +30,7 @@
         delete this.options.meta.isNew;
       }
       this.options.meta.isSaved = true;
-      filterUtils.storeToLocalStorage(this);
+      filterUtils.storeFilterToLocalStorage(this);
     };
 
     Filter.prototype.set = function (key, value) {
