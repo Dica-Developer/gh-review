@@ -415,8 +415,7 @@ describe('Factory: Filter', function () {
       $rootScope.$apply();
     });
 
-    it('#Filter.reset should set all options to default and call Filter.init', function () {
-      var initSpy = spyOn(filter, 'init');
+    it('#Filter.reset should set all options to default', function () {
       expect(filter.options.repo).toEqual('gh-review');
       expect(filter.options.user).toEqual('Dica-Developer');
       expect(filter.options.sha).toEqual('master');
@@ -426,7 +425,6 @@ describe('Factory: Filter', function () {
       expect(filter.options.user).toBeNull();
       expect(filter.options.sha).toEqual('master');
       expect(filter.isSaved()).toBe(false);
-      expect(initSpy).toHaveBeenCalled();
     });
   });
 

@@ -23,11 +23,20 @@
         }
       };
 
-      function fastClone(object){
+      function fastClone(object) {
         return JSON.parse(JSON.stringify(object));
       }
 
-      function getFilterIds(){
+      function generateUUID() {
+        var d = new Date().getTime();
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+          var r = (d + Math.random() * 16) % 16 | 0;
+          d = Math.floor(d / 16);
+          return (c === 'x' ? r : (r & 0x7 | 0x8)).toString(16);
+        });
+      }
+
+      function getFilterIds() {
         var filterIds = [];
         var filterIdsString = localStorageService.get('filter');
         if (angular.isString(filterIdsString)) {
@@ -36,7 +45,11 @@
         return filterIds;
       }
 
-      function addIdToLocalStorage (id){
+      function getFromLocalStorage(id) {
+        return localStorageService.get('filter-' + id);
+      }
+
+      function addIdToLocalStorage(id) {
         var filterIds = getFilterIds();
         if (filterIds.indexOf(id) === -1) {
           filterIds.push(id);
@@ -44,25 +57,25 @@
         }
       }
 
-      function addSettingsToLocalStorage (filter){
+      function addSettingsToLocalStorage(filter) {
         localStorageService.set('filter-' + filter.getId(), JSON.stringify(filter.options));
       }
 
-      this.getOptions = function(filterId){
+      this.getOptions = function (filterId, isInit) {
         var options = fastClone(defaultOptions);
         filterId = filterId || null;
-        options.meta.lastEdited = new Date().getTime();
-        options.meta.id = filterId;
-        return options;
-      };
 
-      this.generateUUID = function () {
-        var d = new Date().getTime();
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-          var r = (d + Math.random() * 16) % 16 | 0;
-          d = Math.floor(d / 16);
-          return (c === 'x' ? r : (r & 0x7 | 0x8)).toString(16);
-        });
+        if (isInit && filterId) {
+          var storedSettings = getFromLocalStorage(filterId);
+          _.extend(options, storedSettings);
+        } else if (isInit && !filterId) {
+          options.meta.id = generateUUID();
+          options.meta.isNew = true;
+        } else {
+          options.meta.lastEdited = new Date().getTime();
+          options.meta.id = generateUUID();
+        }
+        return options;
       };
 
       this.getCommentsUrl = function (options) {
@@ -101,7 +114,7 @@
               preparedGithubOptions.author = value[0];
             } else if (value.length > 1) {
               //Attention manipulation original filter settings
-             filter.setCustomFilter.call(filter, 'authors', value);
+              filter.setCustomFilter.call(filter, 'authors', value);
             }
           } else if (key === 'since' && value !== null) {
             preparedGithubOptions.since = this.getSinceDateISO(options);
@@ -111,18 +124,14 @@
             preparedGithubOptions[key] = value;
           }
 
-          if(prepareForStandup){
+          if (prepareForStandup) {
             preparedGithubOptions.since = moment().subtract(24, 'hours').toISOString();
           }
         }, this);
         return preparedGithubOptions;
       };
 
-      this.getFromLocalStorage = function(id){
-        return localStorageService.get('filter-' + id);
-      };
-
-      this.storeToLocalStorage = function(filter){
+      this.storeToLocalStorage = function (filter) {
         addIdToLocalStorage(filter.getId());
         addSettingsToLocalStorage(filter);
       };

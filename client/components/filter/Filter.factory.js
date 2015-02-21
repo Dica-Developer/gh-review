@@ -13,23 +13,11 @@
       treeCollector = $injector.get('treeCollector');
 
     function Filter(filterId) {
-      this.options = filterUtils.getOptions(filterId);
+      this.options = filterUtils.getOptions(filterId, true);
       this.maxResults = 20;
       this.commitList = [];
       this.currentPage = 1;
-      this.init();
     }
-
-
-    Filter.prototype.init = function () {
-      if (this.options.meta.id) {
-        var storedSettings = filterUtils.getFromLocalStorage(this.getId());
-        angular.extend(this.options, storedSettings);
-      } else {
-        this.options.meta.id = filterUtils.generateUUID();
-        this.options.meta.isNew = true;
-      }
-    };
 
     Filter.prototype.save = function () {
       if (this.options.meta.isClone) {
@@ -177,8 +165,7 @@
 
     Filter.prototype.reset = function () {
       this.tree = [];
-      this.options = filterUtils.getOptions();
-      this.init();
+      this.options = filterUtils.getOptions(false, false);
     };
 
     Filter.prototype._needsPostFiltering = function () {
