@@ -30,11 +30,6 @@
             defer.resolve();
           } else {
             _filter = filter.getNew();
-            //Set initial to new Filter to reduce commit size
-            _filter.setSince({
-              pattern: 'weeks',
-              amount: 2
-            });
             defer.reject();
           }
           return defer.promise;
@@ -295,10 +290,6 @@
 
         $scope.reset = function () {
           _filter.reset();
-          _filter.setSince({
-            pattern: 'weeks',
-            amount: 2
-          });
           $scope.selectedRepo = null;
           $scope.selectedBranch = null;
           $scope.branchSelection = null;

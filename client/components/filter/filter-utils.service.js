@@ -8,7 +8,10 @@
         repo: null,
         user: null,
         sha: 'master',
-        since: {},
+        since: {
+          pattern: 'weeks',
+          amount: 2
+        },
         until: {},
         path: null,
         authors: [],
