@@ -57,8 +57,8 @@
         }
       }
 
-      function addSettingsToLocalStorage(filter) {
-        localStorageService.set('filter-' + filter.getId(), JSON.stringify(filter.options));
+      function addSettingsToLocalStorage(id, options) {
+        localStorageService.set('filter-' + id, JSON.stringify(options));
       }
 
       this.getOptions = function (filterId, isInit) {
@@ -131,9 +131,9 @@
         return preparedGithubOptions;
       };
 
-      this.storeFilterToLocalStorage = function (filter) {
-        addIdToLocalStorage(filter.getId());
-        addSettingsToLocalStorage(filter);
+      this.storeFilterToLocalStorage = function (id, options) {
+        addIdToLocalStorage(id);
+        addSettingsToLocalStorage(id, options);
       };
 
     }]);
