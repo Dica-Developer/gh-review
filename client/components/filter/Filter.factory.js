@@ -42,7 +42,9 @@
     Filter.prototype.set = function (key, value) {
       if (!angular.isDefined(this.options[key])) {
         throw new Error('Unknown filter property');
-      } else {
+      }
+
+      if (!angular.equals(this.options[key], value)) {
         this.options[key] = value;
         this.options.meta.lastEdited = new Date().getTime();
         this.options.meta.isSaved = false;
@@ -50,9 +52,12 @@
     };
 
     Filter.prototype.setCustomFilter = function (key, value) {
-      this.options.meta.customFilter[key] = value;
-      this.options.meta.lastEdited = new Date().getTime();
-      this.options.meta.isSaved = false;
+      if (!angular.equals(this.options.meta.customFilter[key], value)) {
+        this.options.meta.customFilter[key] = value;
+        this.options.meta.lastEdited = new Date().getTime();
+        this.options.meta.isSaved = false;
+      }
+    };
     };
 
     Filter.prototype.getId = function () {
