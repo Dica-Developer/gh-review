@@ -92,17 +92,34 @@
     };
 
     Filter.prototype.addAuthor = function (author) {
+      var newAuthors = this.options.authors.concat([]);
       if (angular.isArray(author)) {
-        this.options.authors = author;
+        newAuthors = author;
       } else {
-        this.options.authors.push(author);
+        newAuthors.push(author);
       }
-      this.options.meta.isSaved = false;
+      if(newAuthors.length > 1){
+        this.setCustomFilter('authors', newAuthors);
+      }
+
+      this.set('authors', newAuthors);
     };
 
     Filter.prototype.removeAuthor = function (author) {
-      this.options.authors.pop(author);
-      this.options.meta.isSaved = false;
+      var newAuthors = this.options.authors.concat([]);
+      newAuthors.splice(newAuthors.indexOf(author) - 1, 1);
+      if(newAuthors.length > 1){
+        this.setCustomFilter('authors', newAuthors);
+      }
+
+      this.set('authors', newAuthors);
+    };
+
+    Filter.prototype.unsetAuthors = function () {
+      this.set('authors', []);
+      if(angular.isDefined(this.options.meta.customFilter.authors)){
+        delete this.options.meta.customFilter.authors;
+      }
     };
 
     Filter.prototype.getAuthors = function () {
