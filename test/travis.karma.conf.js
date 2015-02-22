@@ -1,13 +1,6 @@
 module.exports = function (config) {
   'use strict';
 
-  var customLaunchers = {
-    'SL_Chrome': {
-      base: 'SauceLabs',
-      browserName: 'chrome'
-    }
-  };
-
   config.set({
     basePath: '..',
     frameworks: ['jasmine'],
@@ -61,16 +54,6 @@ module.exports = function (config) {
 
     LogLevel: config.LOG_DEBUG,
 
-    customLaunchers: customLaunchers,
-
-    sauceLabs: {
-      testName: 'unit',
-      startConnect: false,
-      recordVideo: true,
-      build: process.env.TRAVIS_BUILD_NUMBER,
-      tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER
-    },
-
-    browsers: Object.keys(customLaunchers)
+    browsers: ['Firefox']
   });
 };
