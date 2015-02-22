@@ -17,6 +17,7 @@
       this.maxResults = 20;
       this.commitList = [];
       this.currentPage = 1;
+      this.isFetchingCommits = false;
     }
 
     Filter.prototype.save = function () {
@@ -211,6 +212,7 @@
     };
 
     Filter.prototype.getCommits = function (maxResults) {
+      this.isFetchingCommits = true;
       this.maxResults = maxResults || this.maxResults;
       var getCommitsRefer = $q.defer(),
         _this = this;
@@ -219,10 +221,12 @@
         function (commitList) {
           _this._processCustomFilter(commitList)
             .then(function () {
+              _this.isFetchingCommits = false;
               getCommitsRefer.resolve(_this.getPage());
             });
         },
         function (err) {
+          _this.isFetchingCommits = false;
           getCommitsRefer.reject(err);
         },
         function (uncompleteCommitList) {
@@ -236,6 +240,7 @@
     };
 
     Filter.prototype.getCommitsForStandup = function (maxResults) {
+      this.isFetchingCommits = true;
       this.maxResults = maxResults || this.maxResults;
       var getCommitsRefer = $q.defer(),
         _this = this,
@@ -246,9 +251,13 @@
         function (commitList) {
           _this._processCustomFilter(commitList)
             .then(function () {
+              _this.isFetchingCommits = false;
               getCommitsRefer.resolve(_this.getPage());
             });
-        }, getCommitsRefer.reject);
+        }, function(error){
+          _this.isFetchingCommits = false;
+          getCommitsRefer.reject(error);
+        });
       return getCommitsRefer.promise;
     };
 
