@@ -365,13 +365,13 @@ describe('Factory: Filter', function () {
 
     //TODO move to filterUtils spec
     it('#Filter.prepareGithubApiCallOptions should filter all github API relevant options', function () {
-      var githubOptions = filterUtils.prepareGithubApiCallOptions(filter);
+      var githubOptions = filterUtils.prepareGithubApiCallOptions(filter.options);
       expect(githubOptions.repo).toEqual('gh-review');
       expect(githubOptions.user).toEqual('Dica-Developer');
       expect(githubOptions.sha).toEqual('master');
 
       filter.addAuthor(['She']);
-      githubOptions = filterUtils.prepareGithubApiCallOptions(filter);
+      githubOptions = filterUtils.prepareGithubApiCallOptions(filter.options);
       expect(githubOptions.repo).toEqual('gh-review');
       expect(githubOptions.user).toEqual('Dica-Developer');
       expect(githubOptions.sha).toEqual('master');
@@ -385,7 +385,7 @@ describe('Factory: Filter', function () {
     });
 
     it('#Filter.getContributorList should call contributorCollector', function () {
-      spyOn(contributorCollector, 'get');
+      spyOn(contributorCollector, 'get').and.returnValue($q.when());
 
       filter.getContributorList();
       expect(contributorCollector.get).toHaveBeenCalledWith('Dica-Developer', 'gh-review');
@@ -406,7 +406,8 @@ describe('Factory: Filter', function () {
       $rootScope.$apply();
     });
 
-    it('#Filter.getContributorList should promise.reject if response error', function (done) {
+    //TODO test error handling
+    xit('#Filter.getContributorList should promise.reject if response error', function (done) {
       spyOn(contributorCollector, 'get').and.returnValue($q.reject());
       filter.getContributorList()
         .then(null, function () {
@@ -415,16 +416,50 @@ describe('Factory: Filter', function () {
       $rootScope.$apply();
     });
 
-    it('#Filter.reset should set all options to default', function () {
+    it('#Filter.reset should set all options to stored settings if filter is already saved', function () {
       expect(filter.options.repo).toEqual('gh-review');
       expect(filter.options.user).toEqual('Dica-Developer');
       expect(filter.options.sha).toEqual('master');
       expect(filter.isSaved()).toBe(true);
-      filter.reset();
-      expect(filter.options.repo).toBeNull();
-      expect(filter.options.user).toBeNull();
-      expect(filter.options.sha).toEqual('master');
+
+      filter.setRepo('newRepo');
+      filter.setOwner('newUser');
+      filter.setBranch('newBranch');
+      expect(filter.options.repo).toEqual('newRepo');
+      expect(filter.options.user).toEqual('newUser');
+      expect(filter.options.sha).toEqual('newBranch');
       expect(filter.isSaved()).toBe(false);
+
+      filter.reset();
+
+      expect(filter.options.repo).toEqual('gh-review');
+      expect(filter.options.user).toEqual('Dica-Developer');
+      expect(filter.options.sha).toEqual('master');
+      expect(filter.isSaved()).toBe(true);
+    });
+
+    it('#Filter.reset should set all options to default settings if filter is new', function () {
+      var newFilter = new Filter();
+      expect(newFilter.options.repo).toBeNull();
+      expect(newFilter.options.user).toBeNull();
+      expect(newFilter.options.sha).toBe('master');
+      expect(newFilter.options.since).toEqual({amount: 2, pattern: 'weeks'});
+
+      newFilter.setRepo('newRepo');
+      newFilter.setOwner('newUser');
+      newFilter.setBranch('newBranch');
+      newFilter.setSince({amount: 1, pattern: 'years'});
+      expect(newFilter.options.repo).toEqual('newRepo');
+      expect(newFilter.options.user).toEqual('newUser');
+      expect(newFilter.options.sha).toEqual('newBranch');
+      expect(newFilter.options.since).toEqual({amount: 1, pattern: 'years'});
+
+      newFilter.reset();
+
+      expect(newFilter.options.repo).toBeNull();
+      expect(newFilter.options.user).toBeNull();
+      expect(newFilter.options.sha).toBe('master');
+      expect(newFilter.options.since).toEqual({amount: 2, pattern: 'weeks'});
     });
   });
 
