@@ -22,10 +22,10 @@
         $scope.saveFilterAsNew = $scope.filter.saveAsNew.bind($scope.filter);
 
         $scope.getRepoTree = function(filterValue){
-          var regEx = new RegExp(filterValue, 'gi');
           return $scope.filter.getTree()
             .then(function(repoTree){
               var filteredTree = repoTree.filter(function(treeEntry){
+                var regEx = new RegExp(filterValue, 'gi');
                 return regEx.test(treeEntry.path);
               });
               return limitToFilter(filteredTree, 15);
