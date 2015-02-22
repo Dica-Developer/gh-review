@@ -250,7 +250,7 @@
       this.maxResults = maxResults || this.maxResults;
       var getCommitsRefer = $q.defer(),
         _this = this;
-      commitCollector.get(filterUtils.prepareGithubApiCallOptions(this, false))
+      commitCollector.get(filterUtils.prepareGithubApiCallOptions(this.options, false))
         .then(
         function (commitList) {
           _this._processCustomFilter(commitList)
@@ -278,7 +278,7 @@
       this.maxResults = maxResults || this.maxResults;
       var getCommitsRefer = $q.defer(),
         _this = this,
-        githubCallOptions = filterUtils.prepareGithubApiCallOptions(this, true);
+        githubCallOptions = filterUtils.prepareGithubApiCallOptions(this.options, true);
 
       commitCollector.get(githubCallOptions)
         .then(
