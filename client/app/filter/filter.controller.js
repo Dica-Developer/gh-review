@@ -134,10 +134,7 @@
         $scope.$watch('selectedBranch', function (newBranch, oldBranch) {
           if (!_.isEqual(newBranch, oldBranch) && !_.isNull(newBranch) && !_.isUndefined(oldBranch)) {
             $scope.filter.setBranch(newBranch);
-            $scope.filter.unsetAuthors();
             $scope.filter.unsetPath();
-            $scope.filter.getBranchList().then(setBranchList, handleGetBranchError);
-            $scope.filter.getContributorList().then(setContributorList, handleGetContributorError);
           }
         });
 
