@@ -228,6 +228,7 @@
       $location.search('page', this.currentPage);
     };
 
+    //TODO move $location dependency out of Filter
     Filter.prototype.getPage = function () {
       if ($location.search().page && $location.search().page !== this.currentPage) {
         this.setCurrentPage($location.search().page);
