@@ -58,6 +58,13 @@
         this.options.meta.isSaved = false;
       }
     };
+
+    Filter.prototype.isNew = function(){
+      return angular.isDefined(this.options.meta.isNew);
+    };
+
+    Filter.prototype.lastEdited = function(){
+      return this.options.meta.lastEdited;
     };
 
     Filter.prototype.getId = function () {
