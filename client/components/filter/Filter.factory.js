@@ -34,6 +34,11 @@
       filterUtils.storeFilterToLocalStorage(this.getId(), this.options);
     };
 
+    Filter.prototype.saveAsNew = function () {
+      this.options.meta.id = filterUtils.generateUUID();
+      this.save();
+    };
+
     Filter.prototype.set = function (key, value) {
       if (!angular.isDefined(this.options[key])) {
         throw new Error('Unknown filter property');
