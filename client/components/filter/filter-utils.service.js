@@ -30,15 +30,6 @@
         return JSON.parse(JSON.stringify(object));
       }
 
-      function generateUUID() {
-        var d = new Date().getTime();
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-          var r = (d + Math.random() * 16) % 16 | 0;
-          d = Math.floor(d / 16);
-          return (c === 'x' ? r : (r & 0x7 | 0x8)).toString(16);
-        });
-      }
-
       function getFilterIds() {
         var filterIds = [];
         var filterIdsString = localStorageService.get('filter');
@@ -64,20 +55,28 @@
         localStorageService.set('filter-' + id, JSON.stringify(options));
       }
 
-      this.getOptions = function (filterId, isInit) {
-        var options = fastClone(defaultOptions);
-        filterId = filterId || null;
+      this.generateUUID = function() {
+        var d = new Date().getTime();
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+          var r = (d + Math.random() * 16) % 16 | 0;
+          d = Math.floor(d / 16);
+          return (c === 'x' ? r : (r & 0x7 | 0x8)).toString(16);
+        });
+      };
 
-        if (isInit && filterId) {
-          var storedSettings = getFromLocalStorage(filterId);
+      this.getOptions = function (filterId) {
+        filterId = filterId || this.generateUUID();
+        var options = fastClone(defaultOptions),
+          storedSettings = getFromLocalStorage(filterId);
+
+        if (!_.isNull(storedSettings)) {
           _.extend(options, storedSettings);
-        } else if (isInit && !filterId) {
-          options.meta.id = generateUUID();
-          options.meta.isNew = true;
+          options.meta.isSaved = true;
         } else {
-          options.meta.lastEdited = new Date().getTime();
-          options.meta.id = generateUUID();
+          options.meta.isNew = true;
+          options.meta.id = filterId;
         }
+
         return options;
       };
 
@@ -107,17 +106,14 @@
         return sinceDate;
       };
 
-      this.prepareGithubApiCallOptions = function (filter, prepareForStandup) {
-        var options = fastClone(filter.options),
+      this.prepareGithubApiCallOptions = function (filterOptions, prepareForStandup) {
+        var options = fastClone(filterOptions),
           preparedGithubOptions = {};
 
         _.each(options, function (value, key) {
           if ('authors' === key) {
             if (value.length === 1) {
               preparedGithubOptions.author = value[0];
-            } else if (value.length > 1) {
-              //Attention manipulation original filter settings
-              filter.setCustomFilter.call(filter, 'authors', value);
             }
           } else if (key === 'since' && value !== null) {
             preparedGithubOptions.since = this.getSinceDateISO(options);
