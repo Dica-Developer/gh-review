@@ -13,7 +13,7 @@
       treeCollector = $injector.get('treeCollector');
 
     function Filter(filterId) {
-      this.options = filterUtils.getOptions(filterId, true);
+      this.options = filterUtils.getOptions(filterId);
       this.maxResults = 20;
       this.commitList = [];
       this.currentPage = 1;
@@ -165,7 +165,7 @@
 
     Filter.prototype.reset = function () {
       this.tree = [];
-      this.options = filterUtils.getOptions(false, false);
+      this.options = filterUtils.getOptions(this.getId());
     };
 
     Filter.prototype._needsPostFiltering = function () {
