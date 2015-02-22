@@ -107,7 +107,7 @@
 
     Filter.prototype.removeAuthor = function (author) {
       var newAuthors = this.options.authors.concat([]);
-      newAuthors.splice(newAuthors.indexOf(author) - 1, 1);
+      newAuthors.splice(newAuthors.indexOf(author), 1);
       if(newAuthors.length > 1){
         this.setCustomFilter('authors', newAuthors);
       }
