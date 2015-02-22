@@ -4,7 +4,7 @@
   exports.command = function (callback) {
     var self = this;
 
-    this.executeAsync(
+    this.execute(
       function (token) { // execute application specific code
         localStorage.setItem('ghreview.accessToken', token);
         return localStorage.getItem('ghreview.accessToken') !== null;
