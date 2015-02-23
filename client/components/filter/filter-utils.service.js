@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('GHReview').
-    service('filterUtils', ['_', 'moment', 'localStorageService', function (_, moment, localStorageService) {
+    service('filterUtils', ['_', 'moment', 'localStorageService', 'github', '$log', '$q', function (_, moment, localStorageService, github, $log, $q) {
 
       var defaultOptions = {
         repo: null,
@@ -133,6 +133,28 @@
       this.storeFilterToLocalStorage = function (id, options) {
         addIdToLocalStorage(id);
         addSettingsToLocalStorage(id, options);
+      };
+
+      this.filterHealthCheck = function(orgOptions){
+        var defer = $q.defer(),
+          user = orgOptions.user,
+          repo = orgOptions.repo,
+          branch = orgOptions.sha;
+
+        if(user && repo && branch){
+          github.repos.getBranch({
+            user: user,
+            repo: repo,
+            branch: branch
+          }, function(err, result){
+            if(err){
+              defer.reject(err);
+            } else {
+              defer.resolve(result);
+            }
+          });
+        }
+        return defer.promise;
       };
 
     }]);

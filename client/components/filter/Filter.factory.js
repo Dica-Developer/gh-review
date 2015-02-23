@@ -18,7 +18,23 @@
       this.commitList = [];
       this.currentPage = 1;
       this.isFetchingCommits = false;
+      this.healthCheckError = null;
+      this.healthCheck();
     }
+
+    Filter.prototype.healthCheck = function(){
+      var _this = this;
+      filterUtils.filterHealthCheck(this.options)
+        .then(function(){
+          _this.healthCheckError = null;
+        }, function(error){
+          _this.healthCheckError = error;
+        });
+    };
+
+    Filter.prototype.isHealthy = function(){
+      return this.healthCheckError === null;
+    };
 
     Filter.prototype.save = function () {
       if (this.options.meta.isClone) {
@@ -261,6 +277,7 @@
         githubApiCallOptions = filterUtils.prepareGithubApiCallOptions(this.options, forStandup);
 
 
+      if(this.isHealthy()){
         this.isFetchingCommits = true;
         commitCollector.get(githubApiCallOptions)
           .then(
@@ -282,6 +299,10 @@
               });
           }
         );
+      } else {
+        getCommitsDefer.reject();
+      }
+
       return getCommitsDefer.promise;
     };
 
