@@ -85,7 +85,7 @@
 
             $scope.filter.getBranchList().then(setBranchList, handleGetBranchError);
             $scope.filter.getContributorList().then(setContributorList, handleGetContributorError);
-            $scope.filter.getCommits().then(setCommitList, handleGetCommitsError, setCommitList);
+            $scope.filter.getCommits(false).then(setCommitList, handleGetCommitsError, setCommitList);
           } else {
             $scope.selectedRepo = null;
             $scope.selectedBranch = null;
@@ -192,7 +192,7 @@
           if (!_.isEqual(newValue, oldValue) && !_.isNull(newValue)) {
             $timeout.cancel(getCommitsTimeout);
             getCommitsTimeout = $timeout(function () {
-              $scope.filter.getCommits().then(setCommitList, handleGetCommitsError, setCommitList);
+              $scope.filter.getCommits(false).then(setCommitList, handleGetCommitsError, setCommitList);
             }, 1000);
           }
         });

@@ -253,54 +253,36 @@
       return filterUtils.getCommentsUrl(this.options);
     };
 
-    Filter.prototype.getCommits = function (maxResults) {
-      this.isFetchingCommits = true;
+    Filter.prototype.getCommits = function (forStandup, maxResults) {
       this.maxResults = maxResults || this.maxResults;
-      var getCommitsRefer = $q.defer(),
-        _this = this;
-      commitCollector.get(filterUtils.prepareGithubApiCallOptions(this.options, false))
-        .then(
-        function (commitList) {
-          _this._processCustomFilter(commitList)
-            .then(function () {
-              _this.isFetchingCommits = false;
-              getCommitsRefer.resolve(_this.getPage());
-            });
-        },
-        function (err) {
-          _this.isFetchingCommits = false;
-          getCommitsRefer.reject(err);
-        },
-        function (uncompleteCommitList) {
-          _this._processCustomFilter(uncompleteCommitList)
-            .then(function () {
-              getCommitsRefer.notify(_this.getPage());
-            });
-        }
-      );
-      return getCommitsRefer.promise;
-    };
 
-    Filter.prototype.getCommitsForStandup = function (maxResults) {
-      this.isFetchingCommits = true;
-      this.maxResults = maxResults || this.maxResults;
-      var getCommitsRefer = $q.defer(),
-        _this = this,
-        githubCallOptions = filterUtils.prepareGithubApiCallOptions(this.options, true);
+      var _this = this,
+        getCommitsDefer = $q.defer(),
+        githubApiCallOptions = filterUtils.prepareGithubApiCallOptions(this.options, forStandup);
 
-      commitCollector.get(githubCallOptions)
-        .then(
-        function (commitList) {
-          _this._processCustomFilter(commitList)
-            .then(function () {
-              _this.isFetchingCommits = false;
-              getCommitsRefer.resolve(_this.getPage());
-            });
-        }, function(error){
-          _this.isFetchingCommits = false;
-          getCommitsRefer.reject(error);
-        });
-      return getCommitsRefer.promise;
+
+        this.isFetchingCommits = true;
+        commitCollector.get(githubApiCallOptions)
+          .then(
+          function (commitList) {
+            _this._processCustomFilter(commitList)
+              .then(function () {
+                _this.isFetchingCommits = false;
+                getCommitsDefer.resolve(_this.getPage());
+              });
+          },
+          function (err) {
+            _this.isFetchingCommits = false;
+            getCommitsDefer.reject(err);
+          },
+          function (uncompleteCommitList) {
+            _this._processCustomFilter(uncompleteCommitList)
+              .then(function () {
+                getCommitsDefer.notify(_this.getPage());
+              });
+          }
+        );
+      return getCommitsDefer.promise;
     };
 
     Filter.prototype._processCustomFilter = function (commits) {
