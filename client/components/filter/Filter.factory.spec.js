@@ -20,7 +20,7 @@ describe('Factory: Filter', function () {
       isSaved: true
     }
   },
-    Filter, filterService, localStorageService, branchCollector, contributorCollector, treeCollector, commentCollector, filterUtils;
+    Filter, filterService, localStorageService, branchCollector, contributorCollector, treeCollector, commentCollector, filterUtils, $q;
 
   beforeEach(module('GHReview'));
   beforeEach(module('commitMockModule'));
@@ -38,7 +38,9 @@ describe('Factory: Filter', function () {
     contributorCollector = $injector.get('contributorCollector');
     treeCollector = $injector.get('treeCollector');
     commentCollector = $injector.get('commentCollector');
+    $q = $injector.get('$q');
     filterUtils = $injector.get('filterUtils');
+    spyOn(filterUtils, 'filterHealthCheck').and.returnValue($q.when());
     window.localStorage.setItem('ghreview.filter-existing-filter', JSON.stringify(filterOptions));
   }));
 
@@ -582,7 +584,7 @@ describe('Factory: Filter', function () {
 
   });
 
-  describe('Filter.getCommitsForStandup', function(){
+  describe('Filter.getCommits', function(){
 
     var filter, $q, $rootScope, commitCollector;
     beforeEach(inject(function ($injector) {
@@ -597,64 +599,66 @@ describe('Factory: Filter', function () {
       window.localStorage.removeItem('ls.accessToken');
     });
 
-    it('Should change since property of github options', function(){
-      spyOn(commitCollector, 'get').and.returnValue($q.when([]));
-      filter.getCommitsForStandup();
-      var originalSinceDatString = filter.getSinceDateISO();
-      var alteredSinceDateString = commitCollector.get.calls.argsFor(0)[0].since;
+    describe('for standup', function(){
+      it('Should change since property of github options', function(){
+        spyOn(commitCollector, 'get').and.returnValue($q.when([]));
+        filter.getCommits(true);
+        var originalSinceDatString = filter.getSinceDateISO();
+        var alteredSinceDateString = commitCollector.get.calls.argsFor(0)[0].since;
 
-      expect(alteredSinceDateString).not.toBe(originalSinceDatString);
-    });
+        expect(alteredSinceDateString).not.toBe(originalSinceDatString);
+      });
 
-    it('Should change since property to now minus 24 hours', function(){
-      spyOn(commitCollector, 'get').and.returnValue($q.when([]));
-      filter.getCommitsForStandup();
-      var expectedSinceDatString = new Date(moment().subtract(24, 'hours').toISOString());
-      var alteredSinceDateString = new Date(commitCollector.get.calls.argsFor(0)[0].since);
+      it('Should change since property to now minus 24 hours', function(){
+        spyOn(commitCollector, 'get').and.returnValue($q.when([]));
+        filter.getCommits(true);
+        var expectedSinceDatString = new Date(moment().subtract(24, 'hours').toISOString());
+        var alteredSinceDateString = new Date(commitCollector.get.calls.argsFor(0)[0].since);
 
-      expect(alteredSinceDateString.getMonth()).toBe(expectedSinceDatString.getMonth());
-      expect(alteredSinceDateString.getMonth()).toBe(expectedSinceDatString.getMonth());
+        expect(alteredSinceDateString.getMonth()).toBe(expectedSinceDatString.getMonth());
+        expect(alteredSinceDateString.getMonth()).toBe(expectedSinceDatString.getMonth());
 
-      expect(alteredSinceDateString.getDate()).toBe(expectedSinceDatString.getDate());
-      expect(alteredSinceDateString.getDate()).toBe(expectedSinceDatString.getDate());
+        expect(alteredSinceDateString.getDate()).toBe(expectedSinceDatString.getDate());
+        expect(alteredSinceDateString.getDate()).toBe(expectedSinceDatString.getDate());
 
-      expect(alteredSinceDateString.getHours()).toBe(expectedSinceDatString.getHours());
-      expect(alteredSinceDateString.getHours()).toBe(expectedSinceDatString.getHours());
+        expect(alteredSinceDateString.getHours()).toBe(expectedSinceDatString.getHours());
+        expect(alteredSinceDateString.getHours()).toBe(expectedSinceDatString.getHours());
 
-      expect(alteredSinceDateString.getMinutes()).toBe(expectedSinceDatString.getMinutes());
-      expect(alteredSinceDateString.getMinutes()).toBe(expectedSinceDatString.getMinutes());
-    });
+        expect(alteredSinceDateString.getMinutes()).toBe(expectedSinceDatString.getMinutes());
+        expect(alteredSinceDateString.getMinutes()).toBe(expectedSinceDatString.getMinutes());
+      });
 
-    it('Should call filter._processCustomFilter after receiving commit list', function(){
-      spyOn(commitCollector, 'get').and.returnValue($q.when([]));
-      spyOn(filter, '_processCustomFilter').and.returnValue($q.when([]));
-      filter.getCommitsForStandup();
+      it('Should call filter._processCustomFilter after receiving commit list', function(){
+        spyOn(commitCollector, 'get').and.returnValue($q.when([]));
+        spyOn(filter, '_processCustomFilter').and.returnValue($q.when([]));
+        filter.getCommits(true);
 
-      $rootScope.$apply();
-      expect(filter._processCustomFilter).toHaveBeenCalled();
-    });
+        $rootScope.$apply();
+        expect(filter._processCustomFilter).toHaveBeenCalled();
+      });
 
-    it('Should resolve if everything has worked correctly', function(done){
-      spyOn(commitCollector, 'get').and.returnValue($q.when([]));
-      spyOn(filter, '_processCustomFilter').and.returnValue($q.when([]));
-      filter.getCommitsForStandup()
-        .then(function(commitsList){
-          expect(commitsList).toBeDefined();
-          done();
-        });
+      it('Should resolve if everything has worked correctly', function(done){
+        spyOn(commitCollector, 'get').and.returnValue($q.when([]));
+        spyOn(filter, '_processCustomFilter').and.returnValue($q.when([]));
+        filter.getCommits(true)
+          .then(function(commitsList){
+            expect(commitsList).toBeDefined();
+            done();
+          });
 
-      $rootScope.$apply();
-    });
+        $rootScope.$apply();
+      });
 
-    it('Should reject if something goes wrong', function(done){
-      spyOn(commitCollector, 'get').and.returnValue($q.reject('error'));
-      filter.getCommitsForStandup()
-        .then(null, function(error){
-          expect(error).toBeDefined();
-          done();
-        });
+      it('Should reject if something goes wrong', function(done){
+        spyOn(commitCollector, 'get').and.returnValue($q.reject('error'));
+        filter.getCommits(true)
+          .then(null, function(error){
+            expect(error).toBeDefined();
+            done();
+          });
 
-      $rootScope.$apply();
+        $rootScope.$apply();
+      });
     });
 
   });

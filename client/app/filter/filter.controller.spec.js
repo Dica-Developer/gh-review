@@ -1,7 +1,7 @@
 describe('Controller: FilterController', function () {
   'use strict';
 
-  var $rootScope, $scope, $controller, $q, $timeout, Filter, filterService;
+  var $rootScope, $scope, $controller, $q, $timeout, Filter, filterService, filterUtils;
 
   beforeEach(module('GHReview'));
   beforeEach(module('app/welcome/welcome.html'));
@@ -13,6 +13,8 @@ describe('Controller: FilterController', function () {
     $timeout = $injector.get('$timeout');
     Filter = $injector.get('Filter');
     filterService = $injector.get('filter');
+    filterUtils = $injector.get('filterUtils');
+    spyOn(filterUtils, 'filterHealthCheck').and.returnValue($q.when());
     $scope = $rootScope.$new();
   }));
 
