@@ -19,8 +19,8 @@
                     </span>
                 </p>
             </div>
-            <div class="panel panel-default">
-                <div class="panel-heading">
+            <div class="panel" ng-class="{'panel-danger': !filter.isHealthy(), 'panel-default': filter.isHealthy()}">
+                <div class="panel-heading ">
                     <form class="form-inline" role="form">
                         <div class="form-group">
                             <label for="selectGroup">Repository: </label>

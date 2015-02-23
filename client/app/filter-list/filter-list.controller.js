@@ -111,6 +111,31 @@
             });
         };
 
+        //TODO refactor to be a bit more generic, maybe moving to filterUtils
+        $scope.getErrorDescription = function(filter){
+          var error = filter.healthCheckError,
+            description = '';
+
+          if(error && error.message){
+            var message = JSON.parse(error.message);
+            if(message.message.indexOf('Branch not found') > -1){
+              description = 'Could not find branch. Maybe deleted or renamed.';
+            }
+          }
+          return description;
+        };
+
+        $scope.getErrorTitle = function(filter){
+          var error = filter.healthCheckError,
+            title = '';
+
+          if(error && error.message){
+            var message = JSON.parse(error.message);
+            title = message.message;
+          }
+          return title;
+        };
+
         $scope.$watch('selectedGrouping', updateFilterList);
         updateFilterList();
       }

@@ -48,14 +48,16 @@
                 </div>
                 <ul id="reviewList" class="list-group">
                     <a ng-repeat="filter in groupedFilter" ui-sref="commitsByFilter({filterId: filter.getId()})"
-                       class="list-group-item">
+                       class="list-group-item" ng-class="{'list-group-item-danger': !filter.isHealthy()}"
+                       {{!filter.isHealthy() ? popover="{{getErrorDescription(filter)}}" popover-title="{{getErrorTitle(filter)}}" popover-placement="top" popover-trigger="mouseenter" : ''}}>
+
                         <span ng-if="selectedGrouping.value !== 'owner'"><strong>Owner: </strong>{{groupedFilter[0].getOwner()}}</span>
                         <span ng-if="selectedGrouping.value !== 'repo'"><strong>Repository: </strong>{{ filter.getRepo() }}</span>
                         <span ng-show="filter.getBranch()"><strong>Branch: </strong>{{ filter.getBranch() }}</span>
-                        <span ng-hide="!filter.getSinceDate()"><strong>Since: </strong><formatted-date
+                        <span ng-show="filter.getSinceDate()"><strong>Since: </strong><formatted-date
                                 date="filter.getSinceDate()"></formatted-date></span>
-                        <span ng-show="filter.getAuthors()"><strong>Authors: </strong>{{ filter.getAuthors() }}</span>
-                        <span ng-hide="!filter.getState()"><strong>Review State: </strong>{{ filter.getState() }}</span>
+                        <span ng-show="filter.getAuthors().length"><strong>Authors: </strong>{{ filter.getAuthors().join(', ') }}</span>
+                        <span ng-show="filter.getState()"><strong>Review State: </strong>{{ filter.getState() }}</span>
 
                         <div class="pull-right">
                         <span ng-show="filterEvents[filter.getId()].commits.length > 0" class="label label-info">

@@ -135,6 +135,7 @@
 
     Filter.prototype.setBranch = function (branch) {
       this.set('sha', branch);
+      this.healthCheck();
     };
 
     Filter.prototype.getBranch = function () {
@@ -208,6 +209,7 @@
     Filter.prototype.reset = function () {
       this.tree = [];
       this.options = filterUtils.getOptions(this.getId());
+      this.healthCheck();
     };
 
     Filter.prototype._needsPostFiltering = function () {
