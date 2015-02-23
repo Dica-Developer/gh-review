@@ -3,7 +3,7 @@
 
 
   var services = angular.module('GHReview');
-  services.factory('Filter', ['$q', '$location', 'filterUtils', '$injector', function ($q, $location, filterUtils, $injector) {
+  services.factory('Filter', ['$q', '$location', '$log', 'filterUtils', '$injector', function ($q, $location, $log, filterUtils, $injector) {
 
     var ghUser = $injector.get('ghUser'),
       commentCollector = $injector.get('commentCollector'),
@@ -198,16 +198,32 @@
       return (Object.keys(this.options.meta.customFilter).length > 0) || this.getAuthors().length > 1;
     };
 
+    Filter.prototype.handleError = function(error){
+      $log.error(error);
+    };
+
     Filter.prototype.getContributorList = function () {
-      return contributorCollector.get(this.getOwner(), this.getRepo());
+      var defer = $q.defer();
+      contributorCollector
+        .get(this.getOwner(), this.getRepo())
+        .then(defer.resolve, this.handleError);
+      return defer.promise;
     };
 
     Filter.prototype.getBranchList = function () {
-      return branchCollector.get(this.getOwner(), this.getRepo());
+      var defer = $q.defer();
+      branchCollector
+        .get(this.getOwner(), this.getRepo())
+        .then(defer.resolve, this.handleError);
+      return defer.promise;
     };
 
     Filter.prototype.getTree = function () {
-      return treeCollector.get(this.getOwner(), this.getRepo(), this.getBranch());
+      var defer = $q.defer();
+      treeCollector
+        .get(this.getOwner(), this.getRepo(), this.getBranch())
+        .then(defer.resolve, this.handleError);
+      return defer.promise;
     };
 
     Filter.prototype.getCurrentPage = function () {
