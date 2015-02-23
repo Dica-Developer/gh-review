@@ -75,7 +75,7 @@ describe('Controller: FilterController', function () {
     expect($scope.saveFilterAsNew).toEqual(jasmine.any(Function));
   });
 
-  describe('$scope.getRepoTree', function () {
+  var getRepoTreeSpec = function () {
     var newFilter;
     beforeEach(function () {
       newFilter = new Filter();
@@ -109,9 +109,9 @@ describe('Controller: FilterController', function () {
       expect(result.$$state.value[0].path).toBe('component');
       expect(result.$$state.value[1].path).toBe('commit');
     });
-  });
+  };
 
-  describe('$scope.reset', function () {
+  var resetSpec = function () {
     var newFilter;
     beforeEach(function () {
       newFilter = new Filter();
@@ -138,9 +138,9 @@ describe('Controller: FilterController', function () {
       expect($scope.commits).toEqual([]);
       expect($scope.currentPage).toBe(1);
     });
-  });
+  };
 
-  describe('$scope.pathSelected', function () {
+  var pathSelectedSpec = function () {
     var newFilter;
     beforeEach(function () {
       newFilter = new Filter();
@@ -157,9 +157,9 @@ describe('Controller: FilterController', function () {
       expect($scope.selectedPath).toBe('givenPath');
     });
 
-  });
+  };
 
-  describe('Watcher', function () {
+  var watcherSpec = function () {
     var newFilter, repos;
     beforeEach(function () {
       /*jshint camelcase:false*/
@@ -187,7 +187,7 @@ describe('Controller: FilterController', function () {
       $rootScope.$digest();
     });
 
-    describe('selectedRepo', function () {
+    var watcherSelectRepoSpec = function () {
 
       it('Should only trigger if new value is not null and does not equal old value', function () {
         spyOn(newFilter, 'setRepo');
@@ -229,9 +229,9 @@ describe('Controller: FilterController', function () {
         expect($scope.selectedBranch).toBe(repos[1].default_branch);
       });
 
-    });
+    };
 
-    describe('selectedBranch', function () {
+    var watcherSelectBranchSpec = function () {
 
       it('Should only trigger if new value is not null and does not equal old value', function () {
         spyOn(newFilter, 'setBranch');
@@ -263,9 +263,9 @@ describe('Controller: FilterController', function () {
         expect($scope.selectedBranch).toBe('branch2');
       });
 
-    });
+    };
 
-    describe('selectedContributor', function () {
+    var watcherSelectContributorSpec = function () {
 
       it('Should only trigger if new value is not null and does not equal old value', function () {
         spyOn(newFilter, 'addAuthor');
@@ -292,9 +292,9 @@ describe('Controller: FilterController', function () {
         expect(newFilter.getAuthors()).toEqual(['author1', 'author2']);
       });
 
-    });
+    };
 
-    describe('filterSinceAmount', function () {
+    var watcherFilterSinceAmountSpec = function () {
 
       it('Should only trigger if new value is not null and does not equal old value', function () {
         spyOn(newFilter, 'setSince');
@@ -318,9 +318,9 @@ describe('Controller: FilterController', function () {
         expect(newFilter.getSince()).toEqual({amount: 3, pattern: 'weeks'});
       });
 
-    });
+    };
 
-    describe('filterSincePattern', function () {
+    var watcherFilterSincePatternSpec = function () {
 
       it('Should only trigger if new value is not null and does not equal old value', function () {
         spyOn(newFilter, 'setSince');
@@ -344,9 +344,9 @@ describe('Controller: FilterController', function () {
         expect(newFilter.getSince()).toEqual({amount: 2, pattern: 'years'});
       });
 
-    });
+    };
 
-    describe('excludeOwnCommits', function () {
+    var watcherExcludeOwnCommitsSpec = function () {
 
       it('Should only trigger if new value is not null and does not equal old value', function () {
         spyOn(newFilter, 'setExcludeOwnCommits');
@@ -370,9 +370,9 @@ describe('Controller: FilterController', function () {
         expect(newFilter.getExcludeOwnCommits()).toBe(true);
       });
 
-    });
+    };
 
-    describe('filterReviewState', function () {
+    var watcherFilterReviewStateSpec = function () {
 
       it('Should only trigger if new value does not equal old value', function () {
         spyOn(newFilter, 'setState');
@@ -396,9 +396,9 @@ describe('Controller: FilterController', function () {
         expect(newFilter.getState()).toBe('unseen');
       });
 
-    });
+    };
 
-    describe('selectedPath', function () {
+    var watcherSelectedPathSpec = function () {
 
       it('Should only trigger if new value is not null and does not equal old value', function () {
         spyOn(newFilter, 'setPath');
@@ -422,9 +422,9 @@ describe('Controller: FilterController', function () {
         expect(newFilter.getPath()).toBe('path');
       });
 
-    });
+    };
 
-    describe('filterPath', function () {
+    var watcherFilterPathSpec = function () {
 
       it('Should only trigger if new value is not null, does not equal old value and is empty', function () {
         spyOn(newFilter, 'setPath');
@@ -453,9 +453,9 @@ describe('Controller: FilterController', function () {
         expect(newFilter.getPath()).toBe('');
       });
 
-    });
+    };
 
-    describe('currentPage', function () {
+    var watcherCurrentPageSpec = function () {
 
       it('Should only trigger if new value is not null and does not equal old value', function () {
         spyOn(newFilter, 'setCurrentPage');
@@ -479,9 +479,9 @@ describe('Controller: FilterController', function () {
         expect(newFilter.getCurrentPage()).toBe(42);
       });
 
-    });
+    };
 
-    describe('filter.lastEdited', function () {
+    var watcherLastEditedSpec = function () {
 
       it('Should only trigger if new value is not null and does not equal old value', function () {
         spyOn(newFilter, 'getCommits').and.returnValue($q.when([]));
@@ -511,11 +511,23 @@ describe('Controller: FilterController', function () {
         expect(newFilter.getCommits).toHaveBeenCalled();
       });
 
-    });
+    };
 
-  });
+    describe('selectedRepo', watcherSelectRepoSpec);
+    describe('selectedBranch', watcherSelectBranchSpec);
+    describe('selectedContributor', watcherSelectContributorSpec);
+    describe('filterSinceAmount', watcherFilterSinceAmountSpec);
+    describe('filterSincePattern', watcherFilterSincePatternSpec);
+    describe('excludeOwnCommits', watcherExcludeOwnCommitsSpec);
+    describe('filterReviewState', watcherFilterReviewStateSpec);
+    describe('selectedPath', watcherSelectedPathSpec);
+    describe('filterPath', watcherFilterPathSpec);
+    describe('currentPage', watcherCurrentPageSpec);
+    describe('filter.lastEdited', watcherLastEditedSpec);
 
-  describe('new filter', function () {
+  };
+
+  var newFilterSpec = function () {
     var newFilter;
     beforeEach(function () {
       newFilter = new Filter();
@@ -537,9 +549,9 @@ describe('Controller: FilterController', function () {
       expect($scope.contributorList).toEqual([]);
       expect($scope.excludeOwnCommits).toBe(false);
     });
-  });
+  };
 
-  describe('Existing filter', function(){
+  var existingFilterSpec = function () {
 
     var newFilter, repos;
     beforeEach(function () {
@@ -568,10 +580,10 @@ describe('Controller: FilterController', function () {
         {login: 'author2'},
         {login: 'author3'}
       ]));
-      spyOn(newFilter, 'getCommits').and.returnValue($q.when([1,2,3]));
+      spyOn(newFilter, 'getCommits').and.returnValue($q.when([1, 2, 3]));
     });
 
-    it('Should set all options correctly', function(){
+    it('Should set all options correctly', function () {
       $controller('FilterController', {
         $scope: $scope,
         repoList: repos
@@ -588,8 +600,15 @@ describe('Controller: FilterController', function () {
       expect($scope.selectedContributor[0].login).toEqual(newFilter.getAuthors()[0]);
       expect($scope.excludeOwnCommits).toBe(newFilter.getExcludeOwnCommits());
 
-      expect($scope.commits).toEqual([1,2,3]);
+      expect($scope.commits).toEqual([1, 2, 3]);
     });
 
-  });
+  };
+
+  describe('$scope.getRepoTree', getRepoTreeSpec);
+  describe('$scope.reset', resetSpec);
+  describe('$scope.pathSelected', pathSelectedSpec);
+  describe('Watcher', watcherSpec);
+  describe('New filter', newFilterSpec);
+  describe('Existing filter', existingFilterSpec);
 });
