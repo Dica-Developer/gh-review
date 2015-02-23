@@ -9,7 +9,8 @@
         tasklist.push('karma:travis');
         tasklist.push('buildForTest');
         tasklist.push('serve:saucelabs');
-        tasklist.push('nightwatch');
+        tasklist.push('force:nightwatch');
+        tasklist.push('dropbox');
         tasklist.push('coveralls');
       } else if ('e2e' === target) {
         tasklist.push('serve:e2e');

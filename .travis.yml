@@ -10,6 +10,7 @@ before_install:
   - "sh -e /etc/init.d/xvfb start"
 env:
   global:
+    - secure: "jVifyBP7isCaBPddVoXlQfVc5YcqTIvgOGvvBCDLQJFpLFx9fMx/r2Y43AvlXNFHy1aSNoE0PD3sN5uud8+7WcwYxuHeiOz1fT0350O+JmbQaf+bhrYt5s5YVMnlrkO3ml9HHNwLEgeUcQyfWxXujBY/Efz4bGc1ddZcNDUOObE="
     - secure: "UaN+Dwp8YUrCXjftUM9UaxR9oJoMVknRR0NnztMtf/j9mts+69xCUtbTa7sgszUGNyFjkeKZ6MrgMC5z6xoH29VHDWlY0CsC/I8CewuMwcdYr/aRP0WfMyAip3SZL4CQB3dCtyzTvIPfgAij3ANHVo65Eao+WYW13d7c5tcuRyY="
 notifications:
   email:
