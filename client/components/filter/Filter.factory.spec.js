@@ -1,4 +1,4 @@
-/*global _, inject, moment*/
+/*global _*/
 
 describe('Factory: Filter', function () {
   'use strict';
@@ -349,10 +349,20 @@ describe('Factory: Filter', function () {
       expect(filter.options.path).toBeNull();
     });
 
-    it('#Filter._needsPostFiltering should return true/false dependeing on custom filter length', function () {
-      expect(filter._needsPostFiltering).toBeTruthy();
-      filter.options.meta.customFilter = {};
-      expect(filter._needsPostFiltering()).toBeFalsy();
+    it('#Filter._needsPostFiltering should return true if custom filter is set', function () {
+      var newFilter = new Filter();
+      newFilter.options.meta.customFilter = {};
+      expect(newFilter._needsPostFiltering()).toBeFalsy();
+      newFilter.setCustomFilter('customFilter', true);
+      expect(newFilter._needsPostFiltering).toBeTruthy();
+    });
+
+    it('#Filter._needsPostFiltering should return true if author is more than one', function () {
+      var newFilter = new Filter();
+      newFilter.options.meta.customFilter = {};
+      expect(newFilter._needsPostFiltering()).toBeFalsy();
+      newFilter.unsetAuthors([1, 2]);
+      expect(newFilter._needsPostFiltering).toBeTruthy();
     });
 
     it('#Filter.getCommentsUrl should return correct URL to fetch repo comments', function () {
@@ -485,14 +495,28 @@ describe('Factory: Filter', function () {
       $rootScope.$apply();
     });
 
-    it('Should set commitList to commits only for one author', function (done) {
+    it('Should filter commitList if more than 1 author is set', function (done) {
       spyOn(ghUser, 'get').and.returnValue($q.when({login: 'AnotherUser'}));
       spyOn(commentCollector, 'getCommitApproved').and.returnValue($q.when({}));
-      filter.options.meta.customFilter.authors = ['sebfroh'];
+      filter.options.authors = ['sebfroh', 'mschaaf'];
       filter._processCustomFilter(commitsMock)
         .then(function () {
-          expect(filter.commitList.length).toBe(1);
+          expect(filter.commitList.length).toBe(2);
           expect(filter.commitList[0].author.login).toBe('sebfroh');
+          expect(filter.commitList[1].author.login).toBe('mschaaf');
+          done();
+        });
+
+      $rootScope.$apply();
+    });
+
+    it('Should not filter commitList if only 1 author is set (this is already done with fetching commits)', function (done) {
+      spyOn(ghUser, 'get').and.returnValue($q.when({login: 'AnotherUser'}));
+      spyOn(commentCollector, 'getCommitApproved').and.returnValue($q.when({}));
+      filter.options.authors = ['sebfroh'];
+      filter._processCustomFilter(commitsMock)
+        .then(function () {
+          expect(filter.commitList.length).toBe(4);
           done();
         });
 
