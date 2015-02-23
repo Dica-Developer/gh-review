@@ -98,9 +98,6 @@
       } else {
         newAuthors.push(author);
       }
-      if(newAuthors.length > 1){
-        this.setCustomFilter('authors', newAuthors);
-      }
 
       this.set('authors', newAuthors);
     };
@@ -108,18 +105,12 @@
     Filter.prototype.removeAuthor = function (author) {
       var newAuthors = this.options.authors.concat([]);
       newAuthors.splice(newAuthors.indexOf(author), 1);
-      if(newAuthors.length > 1){
-        this.setCustomFilter('authors', newAuthors);
-      }
 
       this.set('authors', newAuthors);
     };
 
     Filter.prototype.unsetAuthors = function () {
       this.set('authors', []);
-      if(angular.isDefined(this.options.meta.customFilter.authors)){
-        delete this.options.meta.customFilter.authors;
-      }
     };
 
     Filter.prototype.getAuthors = function () {
@@ -204,7 +195,7 @@
     };
 
     Filter.prototype._needsPostFiltering = function () {
-      return (Object.keys(this.options.meta.customFilter).length > 0);
+      return (Object.keys(this.options.meta.customFilter).length > 0) || this.getAuthors().length > 1;
     };
 
     Filter.prototype.getContributorList = function () {
@@ -303,52 +294,23 @@
         this.commitList = commits;
         defer.resolve();
       } else {
-        var tmpCommits = [];
-        var customFilter = this.options.meta.customFilter;
-        var state = customFilter.state;
-        var authors = customFilter.authors;
-        var excludeOwnCommits = customFilter.excludeOwnCommits;
+        var authors = this.getAuthors(),
+          processAuthors = authors.length > 1,
+          state = this.getState(),
+          excludeOwnCommits = this.getExcludeOwnCommits();
+
         ghUser.get()
           .then(function (result) {
             var userData = result;
             commentCollector.getCommitApproved()
               .then(function (commitApproved) {
-                commits.forEach(function (commit) {
+                _this.commitList = commits.filter(function (commit) {
                   var selectCommit = true,
                     author = commit.author ? commit.author.login : commit.commit.author.login;
-                  if (angular.isDefined(authors)) {
-                    /*
-                     TODO commit.author can be null how to find the login name of an author
-                     example commit object without author:
-                     {
-                     author: null
-                     comments_url: "https://api.github.com/repos/Datameer-Inc/dap/commits/67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b/comments"
-                     commit: {
-                     author: {
-                     date: "2014-09-26T07:00:52Z"
-                     email: "author@email.com"
-                     name: "Author Name"
-                     }
-                     comment_count: 0
-                     committer: {
-                     date: "2014-09-26T07:00:52Z"
-                     email: "author@email.com"
-                     name: "Author Name"
-                     }
-                     message: "added id's for workbook filter dialog plus/minus icons to ensure new ui-tests"
-                     tree: {sha:0bf402614436f1f9bc7326b77b7815b3a6bcafe6,…}
-                     url: "https://api.github.com/repos/Datameer-Inc/dap/git/commits/67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b"
-                     }
-                     committer: null
-                     html_url: "https://github.com/Datameer-Inc/dap/commit/67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b"
-                     parents: [{sha:960d78b69fab212d608d78ad86364162460f5654,…}]
-                     sha: "67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b"
-                     url: "https://api.github.com/repos/Datameer-Inc/dap/commits/67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b"
-                     }
-                     */
-                    if (authors.indexOf(author) === -1) {
+
+                  //TODO commit.author can be null how to find the login name of an author
+                  if (processAuthors && (authors.indexOf(author) === -1)) {
                       selectCommit = false;
-                    }
                   }
 
                   if (excludeOwnCommits && author === userData.login) {
@@ -376,11 +338,8 @@
                       break;
                     }
                   }
-                  if (selectCommit) {
-                    tmpCommits.push(commit);
-                  }
+                  return selectCommit;
                 });
-                _this.commitList = tmpCommits;
                 defer.resolve();
               });
           });
