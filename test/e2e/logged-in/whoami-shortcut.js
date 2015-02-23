@@ -6,9 +6,9 @@
       browser
         .url('http://localhost:9000')
         .login()
+        .waitForElementVisible('.navbar-brand', 5000)
         .click('.navbar-brand')
-        .waitForElementVisible('body', 1000)
-        .pause(2000)
+        .waitForElementVisible('.navbar-brand', 5000)
         .keys(['g', 'w'])
         .waitForElementVisible('ul.list-group', 5000)
         .assert.urlContains('whoami')
