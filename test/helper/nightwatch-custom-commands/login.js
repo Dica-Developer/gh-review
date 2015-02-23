@@ -19,7 +19,7 @@
       }
     )
       .refresh()
-      .waitForElementVisible('#submenu-authenticated', 5000, 'Application ready in %d ms');
+      .waitForElementVisible('#submenu-authenticated', 10000, '%s visible. Application ready in %d ms');
 
     return this; // allows the command to be chained.
   };
