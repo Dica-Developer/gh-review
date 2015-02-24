@@ -48,8 +48,15 @@
                 </div>
                 <ul id="reviewList" class="list-group">
                     <a ng-repeat="filter in groupedFilter" ui-sref="commitsByFilter({filterId: filter.getId()})"
-                       class="list-group-item" ng-class="{'list-group-item-danger': !filter.isHealthy()}"
-                       {{!filter.isHealthy() ? popover="{{getErrorDescription(filter)}}" popover-title="{{getErrorTitle(filter)}}" popover-placement="top" popover-trigger="mouseenter" : ''}}>
+                       class="list-group-item" ng-class="{'list-group-item-danger': !filter.isHealthy()}">
+
+                    <span ng-if="!filter.isHealthy()"
+                          class="filter-error glyphicon glyphicon-alert"
+                          popover="{{getErrorDescription(filter)}}"
+                          popover-title="{{getErrorTitle(filter)}}"
+                          popover-placement="right"
+                          popover-trigger="mouseenter"
+                          ></span>
 
                         <span ng-if="selectedGrouping.value !== 'owner'"><strong>Owner: </strong>{{groupedFilter[0].getOwner()}}</span>
                         <span ng-if="selectedGrouping.value !== 'repo'"><strong>Repository: </strong>{{ filter.getRepo() }}</span>
