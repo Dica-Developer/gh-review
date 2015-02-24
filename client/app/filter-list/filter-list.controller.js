@@ -119,7 +119,7 @@
           if(error && error.message){
             var message = JSON.parse(error.message);
             if(message.message.indexOf('Branch not found') > -1){
-              description = 'Could not find branch. Maybe deleted or renamed.';
+              description = 'Could not find branch: "'+ filter.getBranch() +'". Maybe deleted or renamed.';
             }
           }
           return description;
