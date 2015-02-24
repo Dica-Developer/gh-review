@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  exports.command = function (menuEntry) {
+  module.exports.command = function (menuEntry) {
     var self = this;
 
     self

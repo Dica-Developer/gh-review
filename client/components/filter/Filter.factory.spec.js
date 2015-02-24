@@ -1,4 +1,4 @@
-/*global _, inject, moment*/
+/*global _*/
 
 describe('Factory: Filter', function () {
   'use strict';
@@ -20,7 +20,7 @@ describe('Factory: Filter', function () {
       isSaved: true
     }
   },
-    Filter, filterService, localStorageService, branchCollector, contributorCollector, treeCollector, commentCollector;
+    Filter, filterService, localStorageService, branchCollector, contributorCollector, treeCollector, commentCollector, filterUtils, $q;
 
   beforeEach(module('GHReview'));
   beforeEach(module('commitMockModule'));
@@ -38,6 +38,9 @@ describe('Factory: Filter', function () {
     contributorCollector = $injector.get('contributorCollector');
     treeCollector = $injector.get('treeCollector');
     commentCollector = $injector.get('commentCollector');
+    $q = $injector.get('$q');
+    filterUtils = $injector.get('filterUtils');
+    spyOn(filterUtils, 'filterHealthCheck').and.returnValue($q.when());
     window.localStorage.setItem('ghreview.filter-existing-filter', JSON.stringify(filterOptions));
   }));
 
@@ -348,10 +351,20 @@ describe('Factory: Filter', function () {
       expect(filter.options.path).toBeNull();
     });
 
-    it('#Filter._needsPostFiltering should return true/false dependeing on custom filter length', function () {
-      expect(filter._needsPostFiltering).toBeTruthy();
-      filter.options.meta.customFilter = {};
-      expect(filter._needsPostFiltering()).toBeFalsy();
+    it('#Filter._needsPostFiltering should return true if custom filter is set', function () {
+      var newFilter = new Filter();
+      newFilter.options.meta.customFilter = {};
+      expect(newFilter._needsPostFiltering()).toBeFalsy();
+      newFilter.setCustomFilter('customFilter', true);
+      expect(newFilter._needsPostFiltering).toBeTruthy();
+    });
+
+    it('#Filter._needsPostFiltering should return true if author is more than one', function () {
+      var newFilter = new Filter();
+      newFilter.options.meta.customFilter = {};
+      expect(newFilter._needsPostFiltering()).toBeFalsy();
+      newFilter.unsetAuthors([1, 2]);
+      expect(newFilter._needsPostFiltering).toBeTruthy();
     });
 
     it('#Filter.getCommentsUrl should return correct URL to fetch repo comments', function () {
@@ -362,14 +375,15 @@ describe('Factory: Filter', function () {
       expect(url).toBe('https://api.github.com/repos/gh-review/comments?per_page=100');
     });
 
+    //TODO move to filterUtils spec
     it('#Filter.prepareGithubApiCallOptions should filter all github API relevant options', function () {
-      var githubOptions = filter.prepareGithubApiCallOptions();
+      var githubOptions = filterUtils.prepareGithubApiCallOptions(filter.options);
       expect(githubOptions.repo).toEqual('gh-review');
       expect(githubOptions.user).toEqual('Dica-Developer');
       expect(githubOptions.sha).toEqual('master');
 
       filter.addAuthor(['She']);
-      githubOptions = filter.prepareGithubApiCallOptions();
+      githubOptions = filterUtils.prepareGithubApiCallOptions(filter.options);
       expect(githubOptions.repo).toEqual('gh-review');
       expect(githubOptions.user).toEqual('Dica-Developer');
       expect(githubOptions.sha).toEqual('master');
@@ -383,7 +397,7 @@ describe('Factory: Filter', function () {
     });
 
     it('#Filter.getContributorList should call contributorCollector', function () {
-      spyOn(contributorCollector, 'get');
+      spyOn(contributorCollector, 'get').and.returnValue($q.when());
 
       filter.getContributorList();
       expect(contributorCollector.get).toHaveBeenCalledWith('Dica-Developer', 'gh-review');
@@ -404,7 +418,8 @@ describe('Factory: Filter', function () {
       $rootScope.$apply();
     });
 
-    it('#Filter.getContributorList should promise.reject if response error', function (done) {
+    //TODO test error handling
+    xit('#Filter.getContributorList should promise.reject if response error', function (done) {
       spyOn(contributorCollector, 'get').and.returnValue($q.reject());
       filter.getContributorList()
         .then(null, function () {
@@ -413,18 +428,50 @@ describe('Factory: Filter', function () {
       $rootScope.$apply();
     });
 
-    it('#Filter.reset should set all options to default and call Filter.init', function () {
-      var initSpy = spyOn(filter, 'init');
+    it('#Filter.reset should set all options to stored settings if filter is already saved', function () {
       expect(filter.options.repo).toEqual('gh-review');
       expect(filter.options.user).toEqual('Dica-Developer');
       expect(filter.options.sha).toEqual('master');
       expect(filter.isSaved()).toBe(true);
-      filter.reset();
-      expect(filter.options.repo).toBeNull();
-      expect(filter.options.user).toBeNull();
-      expect(filter.options.sha).toEqual('master');
+
+      filter.setRepo('newRepo');
+      filter.setOwner('newUser');
+      filter.setBranch('newBranch');
+      expect(filter.options.repo).toEqual('newRepo');
+      expect(filter.options.user).toEqual('newUser');
+      expect(filter.options.sha).toEqual('newBranch');
       expect(filter.isSaved()).toBe(false);
-      expect(initSpy).toHaveBeenCalled();
+
+      filter.reset();
+
+      expect(filter.options.repo).toEqual('gh-review');
+      expect(filter.options.user).toEqual('Dica-Developer');
+      expect(filter.options.sha).toEqual('master');
+      expect(filter.isSaved()).toBe(true);
+    });
+
+    it('#Filter.reset should set all options to default settings if filter is new', function () {
+      var newFilter = new Filter();
+      expect(newFilter.options.repo).toBeNull();
+      expect(newFilter.options.user).toBeNull();
+      expect(newFilter.options.sha).toBe('master');
+      expect(newFilter.options.since).toEqual({amount: 2, pattern: 'weeks'});
+
+      newFilter.setRepo('newRepo');
+      newFilter.setOwner('newUser');
+      newFilter.setBranch('newBranch');
+      newFilter.setSince({amount: 1, pattern: 'years'});
+      expect(newFilter.options.repo).toEqual('newRepo');
+      expect(newFilter.options.user).toEqual('newUser');
+      expect(newFilter.options.sha).toEqual('newBranch');
+      expect(newFilter.options.since).toEqual({amount: 1, pattern: 'years'});
+
+      newFilter.reset();
+
+      expect(newFilter.options.repo).toBeNull();
+      expect(newFilter.options.user).toBeNull();
+      expect(newFilter.options.sha).toBe('master');
+      expect(newFilter.options.since).toEqual({amount: 2, pattern: 'weeks'});
     });
   });
 
@@ -450,14 +497,28 @@ describe('Factory: Filter', function () {
       $rootScope.$apply();
     });
 
-    it('Should set commitList to commits only for one author', function (done) {
+    it('Should filter commitList if more than 1 author is set', function (done) {
       spyOn(ghUser, 'get').and.returnValue($q.when({login: 'AnotherUser'}));
       spyOn(commentCollector, 'getCommitApproved').and.returnValue($q.when({}));
-      filter.options.meta.customFilter.authors = ['sebfroh'];
+      filter.options.authors = ['sebfroh', 'mschaaf'];
       filter._processCustomFilter(commitsMock)
         .then(function () {
-          expect(filter.commitList.length).toBe(1);
+          expect(filter.commitList.length).toBe(2);
           expect(filter.commitList[0].author.login).toBe('sebfroh');
+          expect(filter.commitList[1].author.login).toBe('mschaaf');
+          done();
+        });
+
+      $rootScope.$apply();
+    });
+
+    it('Should not filter commitList if only 1 author is set (this is already done with fetching commits)', function (done) {
+      spyOn(ghUser, 'get').and.returnValue($q.when({login: 'AnotherUser'}));
+      spyOn(commentCollector, 'getCommitApproved').and.returnValue($q.when({}));
+      filter.options.authors = ['sebfroh'];
+      filter._processCustomFilter(commitsMock)
+        .then(function () {
+          expect(filter.commitList.length).toBe(4);
           done();
         });
 
@@ -523,7 +584,7 @@ describe('Factory: Filter', function () {
 
   });
 
-  describe('Filter.getCommitsForStandup', function(){
+  describe('Filter.getCommits', function(){
 
     var filter, $q, $rootScope, commitCollector;
     beforeEach(inject(function ($injector) {
@@ -538,64 +599,66 @@ describe('Factory: Filter', function () {
       window.localStorage.removeItem('ls.accessToken');
     });
 
-    it('Should change since property of github options', function(){
-      spyOn(commitCollector, 'get').and.returnValue($q.when([]));
-      filter.getCommitsForStandup();
-      var originalSinceDatString = filter.getSinceDateISO();
-      var alteredSinceDateString = commitCollector.get.calls.argsFor(0)[0].since;
+    describe('for standup', function(){
+      it('Should change since property of github options', function(){
+        spyOn(commitCollector, 'get').and.returnValue($q.when([]));
+        filter.getCommits(true);
+        var originalSinceDatString = filter.getSinceDateISO();
+        var alteredSinceDateString = commitCollector.get.calls.argsFor(0)[0].since;
 
-      expect(alteredSinceDateString).not.toBe(originalSinceDatString);
-    });
+        expect(alteredSinceDateString).not.toBe(originalSinceDatString);
+      });
 
-    it('Should change since property to now minus 24 hours', function(){
-      spyOn(commitCollector, 'get').and.returnValue($q.when([]));
-      filter.getCommitsForStandup();
-      var expectedSinceDatString = new Date(moment().subtract(24, 'hours').toISOString());
-      var alteredSinceDateString = new Date(commitCollector.get.calls.argsFor(0)[0].since);
+      it('Should change since property to now minus 24 hours', function(){
+        spyOn(commitCollector, 'get').and.returnValue($q.when([]));
+        filter.getCommits(true);
+        var expectedSinceDatString = new Date(moment().subtract(24, 'hours').toISOString());
+        var alteredSinceDateString = new Date(commitCollector.get.calls.argsFor(0)[0].since);
 
-      expect(alteredSinceDateString.getMonth()).toBe(expectedSinceDatString.getMonth());
-      expect(alteredSinceDateString.getMonth()).toBe(expectedSinceDatString.getMonth());
+        expect(alteredSinceDateString.getMonth()).toBe(expectedSinceDatString.getMonth());
+        expect(alteredSinceDateString.getMonth()).toBe(expectedSinceDatString.getMonth());
 
-      expect(alteredSinceDateString.getDate()).toBe(expectedSinceDatString.getDate());
-      expect(alteredSinceDateString.getDate()).toBe(expectedSinceDatString.getDate());
+        expect(alteredSinceDateString.getDate()).toBe(expectedSinceDatString.getDate());
+        expect(alteredSinceDateString.getDate()).toBe(expectedSinceDatString.getDate());
 
-      expect(alteredSinceDateString.getHours()).toBe(expectedSinceDatString.getHours());
-      expect(alteredSinceDateString.getHours()).toBe(expectedSinceDatString.getHours());
+        expect(alteredSinceDateString.getHours()).toBe(expectedSinceDatString.getHours());
+        expect(alteredSinceDateString.getHours()).toBe(expectedSinceDatString.getHours());
 
-      expect(alteredSinceDateString.getMinutes()).toBe(expectedSinceDatString.getMinutes());
-      expect(alteredSinceDateString.getMinutes()).toBe(expectedSinceDatString.getMinutes());
-    });
+        expect(alteredSinceDateString.getMinutes()).toBe(expectedSinceDatString.getMinutes());
+        expect(alteredSinceDateString.getMinutes()).toBe(expectedSinceDatString.getMinutes());
+      });
 
-    it('Should call filter._processCustomFilter after receiving commit list', function(){
-      spyOn(commitCollector, 'get').and.returnValue($q.when([]));
-      spyOn(filter, '_processCustomFilter').and.returnValue($q.when([]));
-      filter.getCommitsForStandup();
+      it('Should call filter._processCustomFilter after receiving commit list', function(){
+        spyOn(commitCollector, 'get').and.returnValue($q.when([]));
+        spyOn(filter, '_processCustomFilter').and.returnValue($q.when([]));
+        filter.getCommits(true);
 
-      $rootScope.$apply();
-      expect(filter._processCustomFilter).toHaveBeenCalled();
-    });
+        $rootScope.$apply();
+        expect(filter._processCustomFilter).toHaveBeenCalled();
+      });
 
-    it('Should resolve if everything has worked correctly', function(done){
-      spyOn(commitCollector, 'get').and.returnValue($q.when([]));
-      spyOn(filter, '_processCustomFilter').and.returnValue($q.when([]));
-      filter.getCommitsForStandup()
-        .then(function(commitsList){
-          expect(commitsList).toBeDefined();
-          done();
-        });
+      it('Should resolve if everything has worked correctly', function(done){
+        spyOn(commitCollector, 'get').and.returnValue($q.when([]));
+        spyOn(filter, '_processCustomFilter').and.returnValue($q.when([]));
+        filter.getCommits(true)
+          .then(function(commitsList){
+            expect(commitsList).toBeDefined();
+            done();
+          });
 
-      $rootScope.$apply();
-    });
+        $rootScope.$apply();
+      });
 
-    it('Should reject if something goes wrong', function(done){
-      spyOn(commitCollector, 'get').and.returnValue($q.reject('error'));
-      filter.getCommitsForStandup()
-        .then(null, function(error){
-          expect(error).toBeDefined();
-          done();
-        });
+      it('Should reject if something goes wrong', function(done){
+        spyOn(commitCollector, 'get').and.returnValue($q.reject('error'));
+        filter.getCommits(true)
+          .then(null, function(error){
+            expect(error).toBeDefined();
+            done();
+          });
 
-      $rootScope.$apply();
+        $rootScope.$apply();
+      });
     });
 
   });

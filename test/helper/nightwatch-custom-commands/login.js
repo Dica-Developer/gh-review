@@ -1,10 +1,11 @@
+/*global process*/
 (function () {
   'use strict';
 
-  exports.command = function (callback) {
+  module.exports.command = function (callback) {
     var self = this;
 
-    this.executeAsync(
+    this.execute(
       function (token) { // execute application specific code
         localStorage.setItem('ghreview.accessToken', token);
         return localStorage.getItem('ghreview.accessToken') !== null;
@@ -19,7 +20,7 @@
       }
     )
       .refresh()
-      .waitForElementVisible('#submenu-authenticated', 5000, 'Application ready in %d ms');
+      .waitForElementVisible('#submenu-authenticated', 10000, '%s visible. Application ready in %d ms');
 
     return this; // allows the command to be chained.
   };

@@ -3,7 +3,7 @@ describe('Controller: StandupController', function(){
 
   beforeEach(module('GHReview'));
 
-  var $rootScope, $controller, $scope, $q, newFilter;
+  var $rootScope, $controller, $scope, $q, newFilter, filterUtils;
 
   beforeEach(inject(function ($injector) {
     var filter = $injector.get('filter');
@@ -11,12 +11,14 @@ describe('Controller: StandupController', function(){
     $rootScope = $injector.get('$rootScope');
     $controller = $injector.get('$controller');
     $q = $injector.get('$q');
+    filterUtils = $injector.get('filterUtils');
+    spyOn(filterUtils, 'filterHealthCheck').and.returnValue($q.when());
     $scope = $rootScope.$new();
     newFilter = filter.getNew();
   }));
 
-  it('Should call filter.getCommitsForStandup', function(){
-    spyOn(newFilter, 'getCommitsForStandup').and.returnValue($q.when());
+  it('Should call filter.getCommits with first argument true', function(){
+    spyOn(newFilter, 'getCommits').and.returnValue($q.when());
     var filterId = newFilter.getId();
     $controller('StandupController', {
       $scope: $scope,
@@ -25,11 +27,12 @@ describe('Controller: StandupController', function(){
       }
     });
 
-    expect(newFilter.getCommitsForStandup).toHaveBeenCalled();
+    expect(newFilter.getCommits).toHaveBeenCalled();
+    expect(newFilter.getCommits).toHaveBeenCalledWith(true);
   });
 
   it('Should set correct $scope variables before fetching', function(){
-    spyOn(newFilter, 'getCommitsForStandup').and.returnValue($q.when());
+    spyOn(newFilter, 'getCommits').and.returnValue($q.when());
     var filterId = newFilter.getId();
     $controller('StandupController', {
       $scope: $scope,
@@ -45,7 +48,7 @@ describe('Controller: StandupController', function(){
 
   it('Should set correct $scope variables after fetching', function(){
     var commitList = [1, 2, 3];
-    spyOn(newFilter, 'getCommitsForStandup').and.returnValue($q.when(commitList));
+    spyOn(newFilter, 'getCommits').and.returnValue($q.when(commitList));
     var filterId = newFilter.getId();
     $controller('StandupController', {
       $scope: $scope,

@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  exports.command = function (callback) {
+  module.exports.command = function (callback) {
     var self = this;
 
     this.execute(

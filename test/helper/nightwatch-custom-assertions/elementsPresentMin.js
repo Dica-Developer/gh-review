@@ -2,7 +2,7 @@
   'use strict';
 
   var util = require('util');
-  exports.assertion = function(selector, min, msg) {
+  module.exports.assertion = function(selector, min, msg) {
 
     this.message = msg || util.format('Testing if element <%s> is at lease %d times present.', selector, min);
     this.expected = min;

@@ -3,454 +3,371 @@
 
 
   var services = angular.module('GHReview');
-  services.factory('Filter', ['$injector', function ($injector) {
+  services.factory('Filter', ['$q', '$location', '$log', 'filterUtils', '$injector', function ($q, $location, $log, filterUtils, $injector) {
 
-    var $q = $injector.get('$q'),
-      $location = $injector.get('$location'),
-      _ = $injector.get('_'),
-      moment = $injector.get('moment'),
+    var ghUser = $injector.get('ghUser'),
       commentCollector = $injector.get('commentCollector'),
-      localStorageService = $injector.get('localStorageService'),
-      ghUser = $injector.get('ghUser'),
       branchCollector = $injector.get('branchCollector'),
       contributorCollector = $injector.get('contributorCollector'),
       commitCollector = $injector.get('commitCollector'),
       treeCollector = $injector.get('treeCollector');
 
-      var generateUUID = function () {
-          var d = new Date().getTime();
-          return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            var r = (d + Math.random() * 16) % 16 | 0;
-            d = Math.floor(d / 16);
-            return (c === 'x' ? r : (r & 0x7 | 0x8)).toString(16);
-          });
-        };
+    function Filter(filterId) {
+      this.options = filterUtils.getOptions(filterId);
+      this.maxResults = 20;
+      this.commitList = [];
+      this.currentPage = 1;
+      this.isFetchingCommits = false;
+      this.healthCheckError = null;
+      this.healthCheck();
+    }
 
+    Filter.prototype.healthCheck = function(){
+      var _this = this;
+      filterUtils.filterHealthCheck(this.options)
+        .then(function(){
+          _this.healthCheckError = null;
+        }, function(error){
+          _this.healthCheckError = error;
+        });
+    };
 
-      function Filter(filterId) {
-        this.options = {
-          repo: null,
-          user: null,
-          sha: 'master',
-          since: {},
-          until: {},
-          path: null,
-          authors: [],
-          meta: {
-            isSaved: false,
-            lastEdited: null,
-            customFilter: {
-              excludeOwnCommits: false
-            },
-            id: filterId || null
-          }
-        };
-        this.init();
+    Filter.prototype.isHealthy = function(){
+      return this.healthCheckError === null;
+    };
+
+    Filter.prototype.save = function () {
+      if (this.options.meta.isClone) {
+        this.options.meta.id = this.options.meta.originalId;
+        delete this.options.meta.originalId;
+        delete this.options.meta.isClone;
       }
 
-      Filter.prototype.maxResults = 20;
-      Filter.prototype.commitList = [];
-      Filter.prototype.currentPage = 1;
+      if (angular.isDefined(this.options.meta.isNew)) {
+        delete this.options.meta.isNew;
+      }
+      this.options.meta.isSaved = true;
+      filterUtils.storeFilterToLocalStorage(this.getId(), this.options);
+    };
 
-      Filter.prototype.init = function () {
-        if (!_.isNull(this.options.meta.id)) {
-          _.extend(this.options, localStorageService.get('filter-' + this.options.meta.id), true);
-          this.getContributorList();
-          this.getBranchList();
-          this.getTree();
-        } else {
-          this.options.meta.id = generateUUID();
-          this.options.meta.isNew = true;
-        }
-      };
+    Filter.prototype.saveAsNew = function () {
+      this.options.meta.id = filterUtils.generateUUID();
+      this.save();
+    };
 
-      Filter.prototype.save = function () {
-        if (this.options.meta.isClone) {
-          this.options.meta.id = this.options.meta.originalId;
-          delete this.options.meta.originalId;
-          delete this.options.meta.isClone;
-        }
+    Filter.prototype.set = function (key, value) {
+      if (!angular.isDefined(this.options[key])) {
+        throw new Error('Unknown filter property');
+      }
 
-        if (!_.isUndefined(this.options.meta.isNew)) {
-          delete this.options.meta.isNew;
-        }
-        this.options.meta.isSaved = true;
-        var filterIdsString = localStorageService.get('filter');
-        var filterIds = [];
-        if (!_.isNull(filterIdsString)) {
-          filterIds = filterIdsString.split(',');
-        }
-        if (!_.contains(filterIds, this.options.meta.id)) {
-          filterIds.push(this.options.meta.id);
-          localStorageService.set('filter', filterIds.join(','));
-        }
-        localStorageService.set('filter-' + this.options.meta.id, JSON.stringify(this.options));
-      };
+      if (!angular.equals(this.options[key], value)) {
+        this.options[key] = value;
+        this.options.meta.lastEdited = new Date().getTime();
+        this.options.meta.isSaved = false;
+      }
+    };
 
-      Filter.prototype.set = function (key, value) {
-        if (_.isUndefined(this.options[key])) {
-          throw new Error('Unknown filter property');
-        } else {
-          this.options[key] = value;
-          this.options.meta.lastEdited = new Date().getTime();
-          this.options.meta.isSaved = false;
-        }
-      };
-
-      Filter.prototype.setCustomFilter = function (key, value) {
+    Filter.prototype.setCustomFilter = function (key, value) {
+      if (!angular.equals(this.options.meta.customFilter[key], value)) {
         this.options.meta.customFilter[key] = value;
         this.options.meta.lastEdited = new Date().getTime();
         this.options.meta.isSaved = false;
-      };
+      }
+    };
 
-      Filter.prototype.getId = function () {
-        return this.options.meta.id;
-      };
+    Filter.prototype.isNew = function(){
+      return angular.isDefined(this.options.meta.isNew);
+    };
 
-      Filter.prototype.setOwner = function (owner) {
-        this.set('user', owner);
-      };
+    Filter.prototype.lastEdited = function(){
+      return this.options.meta.lastEdited;
+    };
 
-      Filter.prototype.getOwner = function () {
-        return this.options.user;
-      };
+    Filter.prototype.getId = function () {
+      return this.options.meta.id;
+    };
 
-      Filter.prototype.setRepo = function (repo) {
-        this.set('repo', repo);
-      };
+    Filter.prototype.setOwner = function (owner) {
+      this.set('user', owner);
+    };
 
-      Filter.prototype.getRepo = function () {
-        return this.options.repo;
-      };
+    Filter.prototype.getOwner = function () {
+      return this.options.user;
+    };
 
-      Filter.prototype.hasAuthor = function (author) {
-        return _.contains(this.options.authors, author);
-      };
+    Filter.prototype.setRepo = function (repo) {
+      this.set('repo', repo);
+    };
 
-      Filter.prototype.addAuthor = function (author) {
-        if (_.isArray(author)) {
-          this.options.authors = author;
-        } else {
-          this.options.authors.push(author);
-        }
-        this.options.meta.isSaved = false;
-      };
+    Filter.prototype.getRepo = function () {
+      return this.options.repo;
+    };
 
-      Filter.prototype.removeAuthor = function (author) {
-        this.options.authors.pop(author);
-        this.options.meta.isSaved = false;
-      };
+    Filter.prototype.hasAuthor = function (author) {
+      return this.options.authors.indexOf(author) > -1;
+    };
 
-      Filter.prototype.getAuthors = function () {
-        return this.options.authors;
-      };
+    Filter.prototype.addAuthor = function (author) {
+      var newAuthors = this.options.authors.concat([]);
+      if (angular.isArray(author)) {
+        newAuthors = author;
+      } else {
+        newAuthors.push(author);
+      }
 
-      Filter.prototype.setBranch = function (branch) {
-        this.set('sha', branch);
-      };
+      this.set('authors', newAuthors);
+    };
 
-      Filter.prototype.getBranch = function () {
-        return this.options.sha;
-      };
+    Filter.prototype.removeAuthor = function (author) {
+      var newAuthors = this.options.authors.concat([]);
+      newAuthors.splice(newAuthors.indexOf(author), 1);
 
-      Filter.prototype.setSince = function (since) {
-        if (_.isObject(since)) {
-          this.set('since', since);
-        } else {
-          throw new Error('Since should be an object but was ' + typeof since);
-        }
-      };
+      this.set('authors', newAuthors);
+    };
 
-      Filter.prototype.getSince = function () {
-        return this.options.since;
-      };
+    Filter.prototype.unsetAuthors = function () {
+      this.set('authors', []);
+    };
 
-      Filter.prototype.getSinceDate = function () {
-        var sinceDate = null;
-        if (!_.isUndefined(this.options.since) && _.size(this.options.since) === 2) {
-          sinceDate = moment().startOf('minute').subtract(this.options.since.amount, this.options.since.pattern).toISOString();
-        }
-        return sinceDate;
-      };
+    Filter.prototype.getAuthors = function () {
+      return this.options.authors;
+    };
 
-      Filter.prototype.getSinceDateISO = function () {
-        var sinceDate = null;
-        if (!_.isUndefined(this.options.since) && _.size(this.options.since) === 2) {
-          sinceDate = moment().subtract(this.options.since.amount, this.options.since.pattern).startOf('day').toISOString();
-        }
-        return sinceDate;
-      };
+    Filter.prototype.setBranch = function (branch) {
+      this.set('sha', branch);
+      this.healthCheck();
+    };
 
-      Filter.prototype.unsetSince = function () {
-        this.set('since', {});
-      };
+    Filter.prototype.getBranch = function () {
+      return this.options.sha;
+    };
 
-      Filter.prototype.setUntil = function (until) {
-        this.set('until', until);
-      };
+    Filter.prototype.setSince = function (since) {
+      if (angular.isObject(since)) {
+        this.set('since', since);
+      } else {
+        throw new Error('Since should be an object but was ' + typeof since);
+      }
+    };
 
-      Filter.prototype.unsetUntil = function () {
-        this.set('until', {});
-      };
+    Filter.prototype.getSince = function () {
+      return this.options.since;
+    };
 
-      Filter.prototype.setPath = function (path) {
-        this.set('path', path);
-      };
+    Filter.prototype.getSinceDate = function () {
+      return filterUtils.getSinceDate(this.options);
+    };
 
-      Filter.prototype.unsetPath = function () {
-        this.set('path', null);
-      };
+    Filter.prototype.getSinceDateISO = function () {
+      return filterUtils.getSinceDateISO(this.options);
+    };
 
-      Filter.prototype.getPath = function () {
-        return this.options.path;
-      };
+    Filter.prototype.unsetSince = function () {
+      this.set('since', {});
+    };
 
-      Filter.prototype.setState = function (state) {
-        this.setCustomFilter('state', state);
-      };
+    Filter.prototype.setUntil = function (until) {
+      this.set('until', until);
+    };
 
-      Filter.prototype.getState = function () {
-        return this.options.meta.customFilter.state;
-      };
+    Filter.prototype.unsetUntil = function () {
+      this.set('until', {});
+    };
 
-      Filter.prototype.setExcludeOwnCommits = function (state) {
-        this.setCustomFilter('excludeOwnCommits', state);
-      };
+    Filter.prototype.setPath = function (path) {
+      this.set('path', path);
+    };
 
-      Filter.prototype.getExcludeOwnCommits = function () {
-        return this.options.meta.customFilter.excludeOwnCommits;
-      };
+    Filter.prototype.unsetPath = function () {
+      this.set('path', null);
+    };
 
-      Filter.prototype.isSaved = function () {
-        return this.options.meta.isSaved;
-      };
+    Filter.prototype.getPath = function () {
+      return this.options.path;
+    };
 
-      Filter.prototype.reset = function () {
-        this.tree = [];
-        this.options = {
-          repo: null,
-          user: null,
-          sha: 'master',
-          since: {},
-          until: {},
-          path: null,
-          authors: [],
-          contributor: null,
-          meta: {
-            isSaved: false,
-            lastEdited: null,
-            customFilter: {},
-            id: null
-          }
-        };
-        this.init();
-      };
+    Filter.prototype.setState = function (state) {
+      this.setCustomFilter('state', state);
+    };
 
-      Filter.prototype._needsPostFiltering = function () {
-        return (_.size(this.options.meta.customFilter) > 0);
-      };
+    Filter.prototype.getState = function () {
+      return this.options.meta.customFilter.state;
+    };
 
-      Filter.prototype.getContributorList = function () {
-        return contributorCollector.get(this.getOwner(), this.getRepo());
-      };
+    Filter.prototype.setExcludeOwnCommits = function (state) {
+      this.setCustomFilter('excludeOwnCommits', state);
+    };
 
-      Filter.prototype.getBranchList = function () {
-        return branchCollector.get(this.getOwner(), this.getRepo());
-      };
+    Filter.prototype.getExcludeOwnCommits = function () {
+      return this.options.meta.customFilter.excludeOwnCommits;
+    };
 
-      Filter.prototype.getTree = function () {
-        return treeCollector.get(this.getOwner(), this.getRepo(), this.getBranch());
-      };
+    Filter.prototype.isSaved = function () {
+      return this.options.meta.isSaved;
+    };
 
-      Filter.prototype.getCurrentPage = function () {
-        return this.currentPage;
-      };
+    Filter.prototype.reset = function () {
+      this.tree = [];
+      this.options = filterUtils.getOptions(this.getId());
+      this.healthCheck();
+    };
 
-      Filter.prototype.setCurrentPage = function (page) {
-        this.currentPage = page;
-        $location.search('page', this.currentPage);
-      };
+    Filter.prototype._needsPostFiltering = function () {
+      return (Object.keys(this.options.meta.customFilter).length > 0) || this.getAuthors().length > 1;
+    };
 
-      Filter.prototype.getPage = function () {
-        if ($location.search().page && $location.search().page !== this.currentPage) {
-          this.setCurrentPage($location.search().page);
-        }
-        var start = (this.currentPage * this.maxResults) - this.maxResults;
-        var end = start + this.maxResults;
-        return this.commitList.slice(start, end);
-      };
+    Filter.prototype.handleError = function(error){
+      $log.error(error);
+    };
 
-      Filter.prototype.getTotalCommitsLength = function () {
-        return this.commitList.length;
-      };
+    Filter.prototype.getContributorList = function () {
+      var defer = $q.defer();
+      contributorCollector
+        .get(this.getOwner(), this.getRepo())
+        .then(defer.resolve, this.handleError);
+      return defer.promise;
+    };
 
-      Filter.prototype.getCommentsUrl = function () {
-        var repo = this.getRepo();
-        var owner = this.getOwner();
-        var url = 'https://api.github.com/repos/';
-        if (owner && !(/^\s*$/).test(owner)) {
-          url += owner + '/';
-        }
-        url += repo + '/comments';
-        url += '?per_page=100';
-        return url;
-      };
+    Filter.prototype.getBranchList = function () {
+      var defer = $q.defer();
+      branchCollector
+        .get(this.getOwner(), this.getRepo())
+        .then(defer.resolve, this.handleError);
+      return defer.promise;
+    };
 
-      Filter.prototype.prepareGithubApiCallOptions = function () {
-        var preparedGithubOptions = {};
-        _.each(this.options, function (value, key) {
-          if ('authors' === key) {
-            if (value.length === 1) {
-              preparedGithubOptions.author = value[0];
-            } else if (value.length > 1) {
-              this.setCustomFilter('authors', value);
-            }
-          } else if (key === 'since' && value !== null) {
-            preparedGithubOptions.since = this.getSinceDateISO();
-          } else if (key === 'until' && value !== null) {
-            //TODO set correct until value
-          } else if ('meta' !== key && value !== null) {
-            preparedGithubOptions[key] = value;
-          }
-        }, this);
-        return preparedGithubOptions;
-      };
+    Filter.prototype.getTree = function () {
+      var defer = $q.defer();
+      treeCollector
+        .get(this.getOwner(), this.getRepo(), this.getBranch())
+        .then(defer.resolve, this.handleError);
+      return defer.promise;
+    };
 
-      Filter.prototype.getCommits = function (maxResults) {
-        this.maxResults = maxResults || this.maxResults;
-        var getCommitsRefer = $q.defer(),
-          _this = this;
-        commitCollector.get(this.prepareGithubApiCallOptions())
+    Filter.prototype.getCurrentPage = function () {
+      return this.currentPage;
+    };
+
+    Filter.prototype.setCurrentPage = function (page) {
+      this.currentPage = page;
+      $location.search('page', this.currentPage);
+    };
+
+    //TODO move $location dependency out of Filter
+    Filter.prototype.getPage = function () {
+      if ($location.search().page && $location.search().page !== this.currentPage) {
+        this.setCurrentPage($location.search().page);
+      }
+      var start = (this.currentPage * this.maxResults) - this.maxResults;
+      var end = start + this.maxResults;
+      return this.commitList.slice(start, end);
+    };
+
+    Filter.prototype.getTotalCommitsLength = function () {
+      return this.commitList.length;
+    };
+
+    Filter.prototype.getCommentsUrl = function () {
+      return filterUtils.getCommentsUrl(this.options);
+    };
+
+    Filter.prototype.getCommits = function (forStandup, maxResults) {
+      this.maxResults = maxResults || this.maxResults;
+
+      var _this = this,
+        getCommitsDefer = $q.defer(),
+        githubApiCallOptions = filterUtils.prepareGithubApiCallOptions(this.options, forStandup);
+
+
+      if(this.isHealthy()){
+        this.isFetchingCommits = true;
+        commitCollector.get(githubApiCallOptions)
           .then(
           function (commitList) {
             _this._processCustomFilter(commitList)
               .then(function () {
-                getCommitsRefer.resolve(_this.getPage());
+                _this.isFetchingCommits = false;
+                getCommitsDefer.resolve(_this.getPage());
               });
           },
           function (err) {
-            getCommitsRefer.reject(err);
+            _this.isFetchingCommits = false;
+            getCommitsDefer.reject(err);
           },
           function (uncompleteCommitList) {
             _this._processCustomFilter(uncompleteCommitList)
               .then(function () {
-                getCommitsRefer.notify(_this.getPage());
+                getCommitsDefer.notify(_this.getPage());
               });
           }
         );
-        return getCommitsRefer.promise;
-      };
+      } else {
+        getCommitsDefer.reject();
+      }
 
-      Filter.prototype.getCommitsForStandup = function(maxResults){
-        this.maxResults = maxResults || this.maxResults;
-        var getCommitsRefer = $q.defer(),
-          _this = this,
-          githubCallOptions = this.prepareGithubApiCallOptions();
+      return getCommitsDefer.promise;
+    };
 
-        githubCallOptions.since = moment().subtract(24, 'hours').toISOString();
-        commitCollector.get(githubCallOptions)
-          .then(
-          function (commitList) {
-            _this._processCustomFilter(commitList)
-              .then(function () {
-                getCommitsRefer.resolve(_this.getPage());
-              });
-          },getCommitsRefer.reject);
-        return getCommitsRefer.promise;
-      };
+    Filter.prototype._processCustomFilter = function (commits) {
+      var defer = $q.defer(),
+        _this = this;
+      if (!this._needsPostFiltering()) {
+        this.commitList = commits;
+        defer.resolve();
+      } else {
+        var authors = this.getAuthors(),
+          processAuthors = authors.length > 1,
+          state = this.getState(),
+          excludeOwnCommits = this.getExcludeOwnCommits();
 
-      Filter.prototype._processCustomFilter = function (commits) {
-        var defer = $q.defer();
-        if (!this._needsPostFiltering()) {
-          this.commitList = commits;
-          defer.resolve();
-        } else {
-          var tmpCommits = [];
-          var customFilter = this.options.meta.customFilter;
-          var state = customFilter.state;
-          var authors = customFilter.authors;
-          var excludeOwnCommits = customFilter.excludeOwnCommits;
-          ghUser.get()
-            .then(function (result) {
-              var userData = result;
-              commentCollector.getCommitApproved()
-                .then(function (commitApproved) {
-                  _.each(commits, function (commit) {
-                    var selectCommit = true,
-                      author = commit.author ? commit.author.login : commit.commit.author.login;
-                    if (!_.isUndefined(authors)) {
-                      /*
-                       TODO commit.author can be null how to find the login name of an author
-                       example commit object without author:
-                       {
-                       author: null
-                       comments_url: "https://api.github.com/repos/Datameer-Inc/dap/commits/67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b/comments"
-                       commit: {
-                       author: {
-                       date: "2014-09-26T07:00:52Z"
-                       email: "author@email.com"
-                       name: "Author Name"
-                       }
-                       comment_count: 0
-                       committer: {
-                       date: "2014-09-26T07:00:52Z"
-                       email: "author@email.com"
-                       name: "Author Name"
-                       }
-                       message: "added id's for workbook filter dialog plus/minus icons to ensure new ui-tests"
-                       tree: {sha:0bf402614436f1f9bc7326b77b7815b3a6bcafe6,…}
-                       url: "https://api.github.com/repos/Datameer-Inc/dap/git/commits/67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b"
-                       }
-                       committer: null
-                       html_url: "https://github.com/Datameer-Inc/dap/commit/67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b"
-                       parents: [{sha:960d78b69fab212d608d78ad86364162460f5654,…}]
-                       sha: "67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b"
-                       url: "https://api.github.com/repos/Datameer-Inc/dap/commits/67ccc56e848911d7f3ac0b56e5c3f821b35dbb1b"
-                       }
-                       */
-                      if (!_.contains(authors, author)) {
+        ghUser.get()
+          .then(function (result) {
+            var userData = result;
+            commentCollector.getCommitApproved()
+              .then(function (commitApproved) {
+                _this.commitList = commits.filter(function (commit) {
+                  var selectCommit = true,
+                    author = commit.author ? commit.author.login : commit.commit.author.login;
+
+                  //TODO commit.author can be null how to find the login name of an author
+                  if (processAuthors && (authors.indexOf(author) === -1)) {
+                      selectCommit = false;
+                  }
+
+                  if (excludeOwnCommits && author === userData.login) {
+                    selectCommit = false;
+                  }
+
+                  if (angular.isDefined(state)) {
+                    switch (state) {
+                    case 'approved':
+                      if (!commitApproved[commit.sha]) {
                         selectCommit = false;
                       }
-                    }
-
-                    if (excludeOwnCommits && author === userData.login) {
-                      selectCommit = false;
-                    }
-
-                    if (!_.isUndefined(state)) {
-                      switch (state) {
-                      case 'approved':
-                        if (!commitApproved[commit.sha]) {
-                          selectCommit = false;
-                        }
-                        break;
-                      case 'reviewed':
-                        /*jshint camelcase:false*/
-                        if (!(!commitApproved[commit.sha] && commit.commit.comment_count > 0)) {
-                          selectCommit = false;
-                        }
-                        break;
-                      case 'unseen':
-                        /*jshint camelcase:false*/
-                        if (commit.commit.comment_count !== 0) {
-                          selectCommit = false;
-                        }
-                        break;
+                      break;
+                    case 'reviewed':
+                      /*jshint camelcase:false*/
+                      if (!(!commitApproved[commit.sha] && commit.commit.comment_count > 0)) {
+                        selectCommit = false;
                       }
+                      break;
+                    case 'unseen':
+                      /*jshint camelcase:false*/
+                      if (commit.commit.comment_count !== 0) {
+                        selectCommit = false;
+                      }
+                      break;
                     }
-                    if (selectCommit) {
-                      tmpCommits.push(commit);
-                    }
-                  });
-                  this.commitList = tmpCommits;
-                  defer.resolve();
-                }.bind(this));
-            }.bind(this));
-        }
-        return defer.promise;
-      };
+                  }
+                  return selectCommit;
+                });
+                defer.resolve();
+              });
+          });
+      }
+      return defer.promise;
+    };
 
-      return Filter;
-    }
-  ]);
+    return Filter;
+  }]);
 }(angular));

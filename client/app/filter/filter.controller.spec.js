@@ -1,416 +1,596 @@
 describe('Controller: FilterController', function () {
   'use strict';
 
+  var $rootScope, $scope, $controller, $q, $timeout, Filter, filterService, filterUtils;
+
   beforeEach(module('GHReview'));
-  beforeEach(module('commentCollectorMock'));
   beforeEach(module('app/welcome/welcome.html'));
 
-  describe('With new filter', function () {
-    var $rootScope, $scope, $q, _$injector;
+  beforeEach(inject(function ($injector) {
+    $rootScope = $injector.get('$rootScope');
+    $controller = $injector.get('$controller');
+    $q = $injector.get('$q');
+    $timeout = $injector.get('$timeout');
+    Filter = $injector.get('Filter');
+    filterService = $injector.get('filter');
+    filterUtils = $injector.get('filterUtils');
+    spyOn(filterUtils, 'filterHealthCheck').and.returnValue($q.when());
+    $scope = $rootScope.$new();
+  }));
 
-    beforeEach(inject(function ($injector) {
-      _$injector = $injector;
-      $rootScope = $injector.get('$rootScope');
-      $scope = $rootScope.$new();
-      $q = $injector.get('$q');
-    }));
+  it('Should be defined', function () {
+    var controller = $controller('FilterController', {
+      $scope: $scope,
+      repoList: []
+    });
+    expect(controller).toBeDefined();
+  });
 
-    afterEach(function () {
-      localStorage.clear();
+  it('Should call filter.getById', function () {
+    spyOn(filterService, 'getById').and.returnValue(new Filter());
+    $controller('FilterController', {
+      $scope: $scope,
+      repoList: []
+    });
+    expect(filterService.getById).toHaveBeenCalled();
+  });
+
+  it('Should call filter.getById with given id', function () {
+    spyOn(filterService, 'getById').and.returnValue(new Filter());
+    $controller('FilterController', {
+      $scope: $scope,
+      repoList: [],
+      $stateParams: {
+        filterId: 'filter-id'
+      }
+    });
+    expect(filterService.getById).toHaveBeenCalledWith('filter-id');
+  });
+
+  it('Should set $scope.filter', function () {
+    var newFilter = new Filter();
+    spyOn(filterService, 'getById').and.returnValue(newFilter);
+    $controller('FilterController', {
+      $scope: $scope,
+      repoList: []
+    });
+    expect($scope.filter).toBe(newFilter);
+  });
+
+  it('Should set $scope variable to correct default values', function () {
+    var newFilter = new Filter();
+    spyOn(filterService, 'getById').and.returnValue(newFilter);
+    $controller('FilterController', {
+      $scope: $scope,
+      repoList: []
     });
 
-    it('Should call filterProvider.getNew if no filter id is given', function () {
-      var filter = _$injector.get('filter');
+    expect($scope.branchList).toEqual([]);
+    expect($scope.commits).toEqual([]);
+    expect($scope.currentPage).toBe(1);
+    expect($scope.availableFilterSincePattern).toEqual(['days', 'weeks', 'years']);
+    expect($scope.availableFilterReviewStates).toEqual(['unseen', 'reviewed', 'approved']);
+    expect($scope.showAdvanced).toBe(false);
 
-      spyOn(filter, 'getNew').and.callThrough();
+    expect($scope.filterIsSaved).toEqual(jasmine.any(Function));
+    expect($scope.saveFilter).toEqual(jasmine.any(Function));
+    expect($scope.saveFilterAsNew).toEqual(jasmine.any(Function));
+  });
 
-      var $controller = _$injector.get('$controller');
+  describe('$scope.getRepoTree', function () {
+    var newFilter;
+    beforeEach(function () {
+      newFilter = new Filter();
+      spyOn(filterService, 'getById').and.returnValue(newFilter);
       $controller('FilterController', {
-        '$scope': $scope,
-        filter: filter
+        $scope: $scope,
+        repoList: []
       });
-
-      expect(filter.getNew).toHaveBeenCalled();
     });
 
-    it('Should set filter since to "2 weeks"', function () {
-      var filter = _$injector.get('filter');
-      var mockedFilter = filter.getNew();
-      spyOn(filter, 'getNew').and.returnValue(mockedFilter);
-
-      var $controller = _$injector.get('$controller');
-      $controller('FilterController', {
-        '$scope': $scope,
-        filter: filter
-      });
-
-      expect(mockedFilter.getSince()).toEqual({pattern: 'weeks', amount: 2});
+    it('Should call filter.getTree', function () {
+      spyOn(newFilter, 'getTree').and.returnValue($q.when());
+      $scope.getRepoTree();
+      expect(newFilter.getTree).toHaveBeenCalled();
     });
 
-    it('Should call repoCollector.getAll and set "$scope.fetchingRepos" to true', function () {
-      var repoCollector = _$injector.get('repoCollector');
-      spyOn(repoCollector, 'getAll').and.returnValue($q.reject());
-
-      var $controller = _$injector.get('$controller');
-      $controller('FilterController', {
-        '$scope': $scope,
-        repoCollector: repoCollector
-      });
-
-      $rootScope.$apply();
-
-      expect($scope.fetchingRepos).toBe(true);
-      expect(repoCollector.getAll).toHaveBeenCalled();
-    });
-
-    it('Should set $scope variables and "$scope.fetchingRepos" to true', function () {
-      var repoCollector = _$injector.get('repoCollector');
-      var filter = _$injector.get('filter');
-      var mockedFilter = filter.getNew();
-
-      spyOn(repoCollector, 'getAll').and.returnValue($q.when([
-        {name: 'TestRepo'}
+    it('Should filter returned results by given argument', function () {
+      spyOn(newFilter, 'getTree').and.returnValue($q.when([
+        {path: 'client'},
+        {path: 'component'},
+        {path: 'commit'}
       ]));
-      spyOn(filter, 'getNew').and.returnValue(mockedFilter);
-
-      var $controller = _$injector.get('$controller');
-      $controller('FilterController', {
-        '$scope': $scope,
-        repoCollector: repoCollector,
-        filter: filter
-      });
-
+      var result = $scope.getRepoTree('ient');
       $rootScope.$apply();
+      expect(result.$$state.value.length).toBe(1);
+      expect(result.$$state.value[0].path).toBe('client');
 
-      expect($scope.fetchingRepos).toBe(false);
-      expect(repoCollector.getAll).toHaveBeenCalled();
-      expect($scope.scope).toBe($scope);
+      result = $scope.getRepoTree('com');
+      $rootScope.$apply();
+      expect(result.$$state.value.length).toBe(2);
+      expect(result.$$state.value[0].path).toBe('component');
+      expect(result.$$state.value[1].path).toBe('commit');
+    });
+  });
+
+  describe('$scope.reset', function () {
+    var newFilter;
+    beforeEach(function () {
+      newFilter = new Filter();
+      spyOn(filterService, 'getById').and.returnValue(newFilter);
+      $controller('FilterController', {
+        $scope: $scope,
+        repoList: []
+      });
+    });
+
+    it('Should call filter.reset', function () {
+      spyOn(newFilter, 'reset');
+      $scope.reset();
+      expect(newFilter.reset).toHaveBeenCalled();
+    });
+
+    it('Should reset some $scope variables', function () {
+      spyOn(newFilter, 'reset');
+      $scope.branchList = [1, 2, 3];
+      $scope.commits = [4, 5, 6];
+      $scope.currentPage = 42;
+      $scope.reset();
+      expect($scope.branchList).toEqual([]);
+      expect($scope.commits).toEqual([]);
       expect($scope.currentPage).toBe(1);
-      expect($scope.excludeOwnCommits).toBe(false);
-      expect($scope.filterPath).toBeNull();
-      expect($scope.showAdvanced).toBe(false);
-      expect($scope.filter).toBe(mockedFilter);
-      expect($scope.allRepos).toEqual([
-        {name: 'TestRepo'}
-      ]);
-      expect($scope.branches).toBeNull();
-      expect($scope.contributorList).toBeNull();
-      expect($scope.repoTree).toBeNull();
-      expect($scope.availableFilterSincePattern).toEqual(['days', 'weeks', 'years']);
-      expect($scope.availableFilterReviewStates).toEqual(['unseen', 'reviewed', 'approved']);
-      expect($scope.filterReviewState).toBeNull();
     });
+  });
 
-    describe('Scope helper functions', function () {
-      var mockedFilter, controller;
-      beforeEach(function () {
-        var repoCollector = _$injector.get('repoCollector');
-        var filter = _$injector.get('filter');
-        mockedFilter = filter.getNew();
-
-        spyOn(repoCollector, 'getAll').and.returnValue($q.when([
-          {name: 'TestRepo'}
-        ]));
-        spyOn(filter, 'getNew').and.returnValue(mockedFilter);
-
-        var $controller = _$injector.get('$controller');
-        controller = $controller('FilterController', {
-          '$scope': $scope,
-          repoCollector: repoCollector,
-          filter: filter
-        });
-      });
-
-      it('$scope.repoGroupFn should return correct value', function () {
-        var testItem = {
-          owner: {
-            login: 'TestOwner'
-          }
-        };
-
-        var returnValue = $scope.repoGroupFn(testItem);
-        expect(returnValue).toBe('TestOwner');
-      });
-
-      it('$scope.filterIsSaved should return correct value', function () {
-
-        expect($scope.filterIsSaved()).toBe(false);
-        mockedFilter.options.meta.isSaved = true;
-        expect($scope.filterIsSaved()).toBe(true);
-      });
-
-      it('$scope.saveFilter should call Filter.save', function () {
-        spyOn(mockedFilter, 'save');
-        $scope.saveFilter();
-        expect(mockedFilter.save).toHaveBeenCalled();
-      });
-
-      it('$scope.reset should call filter.reset and reset all $scope variables', function () {
-        $scope.selectedRepo = 'TestRepo';
-        $scope.selectedBranch = 'TestBranch';
-        $scope.branchSelection = [1, 2, 3];
-        $scope.contributor = ['TestAuthor'];
-        $scope.contributorList = [1, 2, 3];
-        $scope.commits = [1, 2, 3];
-        $scope.repoTree = [1, 2, 3];
-        spyOn(mockedFilter, 'reset');
-        spyOn(controller, 'setRepos');
-
-        $scope.reset();
-        expect($scope.selectedRepo).toBeNull();
-        expect($scope.selectedBranch).toBeNull();
-        expect($scope.branchSelection).toBeNull();
-        expect($scope.contributorList.length).toBe(0);
-        expect($scope.commits).toBeNull();
-        expect($scope.repoTree).toBeNull();
-        expect(mockedFilter.reset).toHaveBeenCalled();
-        expect(controller.setRepos).toHaveBeenCalled();
-      });
-
-      it('$scope.updateCommits should call different filter setter, set $scope.settingsUpdated to false and call .getCommitList', function () {
-        spyOn(mockedFilter, 'addAuthor');
-        spyOn(mockedFilter, 'setSince');
-        spyOn(mockedFilter, 'setExcludeOwnCommits');
-        spyOn(mockedFilter, 'setState');
-        spyOn(mockedFilter, 'setPath');
-        spyOn(controller, 'getCommitList');
-
-        $scope.settingsUpdated = true;
-        expect($scope.settingsUpdated).toBe(true);
-
-        $scope.updateCommits();
-
-        expect(mockedFilter.addAuthor).toHaveBeenCalled();
-        expect(mockedFilter.setSince).toHaveBeenCalled();
-        expect(mockedFilter.setExcludeOwnCommits).toHaveBeenCalled();
-        expect(mockedFilter.setState).toHaveBeenCalled();
-        expect(mockedFilter.setPath).toHaveBeenCalled();
-        expect(controller.getCommitList).toHaveBeenCalled();
-        expect($scope.settingsUpdated).toBe(false);
+  describe('$scope.pathSelected', function () {
+    var newFilter;
+    beforeEach(function () {
+      newFilter = new Filter();
+      spyOn(filterService, 'getById').and.returnValue(newFilter);
+      $controller('FilterController', {
+        $scope: $scope,
+        repoList: []
       });
     });
 
-    describe('Controller functions', function () {
-      var filter, repoCollector, mockedFilter, controller, stateParams = {};
-      beforeEach(function () {
-        repoCollector = _$injector.get('repoCollector');
-        filter = _$injector.get('filter');
-        mockedFilter = filter.getNew();
-
-        spyOn(repoCollector, 'getAll').and.returnValue($q.when([
-          {name: 'TestRepo'}
-        ]));
-        spyOn(filter, 'getNew').and.returnValue(mockedFilter);
-        spyOn(filter, 'getById').and.returnValue(mockedFilter);
-
-        var $controller = _$injector.get('$controller');
-        controller = $controller('FilterController', {
-          '$scope': $scope,
-          repoCollector: repoCollector,
-          filter: filter,
-          $stateParams: stateParams
-        });
-      });
-
-      it('controller.isExistingFilter should reject if stateParams has no filter id', function (done) {
-        controller.isExistingFilter()
-          .then(null, function () {
-            expect(filter.getNew).toHaveBeenCalled();
-            done();
-          });
-
-        $rootScope.$apply();
-      });
-
-      it('controller.isExistingFilter should resolve if stateParams has filter id', function (done) {
-        stateParams.filterId = 'existing-filter';
-        controller.isExistingFilter()
-          .then(function () {
-            expect(filter.getById).toHaveBeenCalledWith('existing-filter');
-            delete stateParams.filterId;
-            done();
-          });
-
-        $rootScope.$apply();
-      });
-
-      it('controller.getContributorList should call filter.getContributorList and controller.setContributorList', function (done) {
-        spyOn(mockedFilter, 'getContributorList').and.returnValue($q.when());
-        spyOn(controller, 'setContributorList').and.returnValue($q.when());
-        controller.getContributorList()
-          .then(function () {
-            expect(mockedFilter.getContributorList).toHaveBeenCalled();
-            expect(controller.setContributorList).toHaveBeenCalled();
-            done();
-          });
-
-        $rootScope.$apply();
-      });
-
-      it('controller.setContributorList should set $scope.contributorList to given value', function (done) {
-        expect($scope.contributorList).not.toBeDefined();
-        controller.setContributorList([1, 2, 3])
-          .then(function () {
-            expect($scope.contributorList).toEqual([1, 2, 3]);
-            done();
-          });
-
-        $rootScope.$apply();
-      });
-
-      it('controller.getCommitList should set $scope.fetchingCommits to true, $scope.commits to [] and call filter.getCommits', function () {
-        $scope.commits = [1, 2, 3];
-        expect($scope.fetchingCommits).not.toBeDefined();
-        expect($scope.commits).toEqual([1, 2, 3]);
-        spyOn(mockedFilter, 'getCommits').and.returnValue($q.reject());
-        controller.getCommitList([1, 2, 3]);
-        expect($scope.fetchingCommits).toBe(true);
-        expect($scope.commits).toEqual([]);
-        expect(mockedFilter.getCommits).toHaveBeenCalled();
-      });
-
-      it('controller.setBranchSelection should set $scope.fetchingBranches to false, $scope.branches to given value', function () {
-        var branches = [
-          {name: 'master'},
-          {name: 'branch1'}
-        ];
-        $scope.selectedRepo = {
-          'default_branch': 'master'
-        };
-
-        expect($scope.fetchingBranches).not.toBeDefined();
-        expect($scope.branches).not.toBeDefined();
-
-        controller.setBranchSelection(branches);
-
-        expect($scope.fetchingBranches).toBe(false);
-        expect($scope.branches).toBe(branches);
-        expect($scope.branchSelection.length).toBe(2);
-        expect($scope.selectedBranch).toBe('master');
-      });
-
-      it('controller.handleExistingFilter should call filter.getBranchList, .getContributorList, .getTree and repoCollector.getAll', function () {
-        spyOn(mockedFilter, 'getBranchList').and.returnValue($q.reject());
-        spyOn(mockedFilter, 'getContributorList').and.returnValue($q.reject());
-        spyOn(mockedFilter, 'getTree').and.returnValue($q.reject());
-        spyOn(controller, 'setScopeVariables').and.returnValue($q.when());
-
-        controller.handleExistingFilter();
-        $rootScope.$apply();
-
-        expect(mockedFilter.getBranchList).toHaveBeenCalled();
-        expect(mockedFilter.getContributorList).toHaveBeenCalled();
-        expect(mockedFilter.getTree).toHaveBeenCalled();
-        expect(controller.setScopeVariables).toHaveBeenCalled();
-      });
-
-      it('controller.handleError check for handling supplied error', function () {
-        controller.handleError({message: 'This is a error.'});
-
-        expect($scope.error).toBe(JSON.stringify({message: 'This is a error.'}));
-        expect($scope.showError).toBe(true);
-        expect($scope.showDefaultError).toBe(false);
-      });
-
-      it('controller.handleError check for handling none supplied error', function () {
-        controller.handleError();
-
-        expect($scope.error).toBeUndefined();
-        expect($scope.showError).toBe(false);
-        expect($scope.showDefaultError).toBe(true);
-      });
+    it('Should set $scope.selectedPath to given value', function () {
+      expect($scope.selectedPath).not.toBeDefined();
+      $scope.pathSelected(null, 'givenPath');
+      expect($scope.selectedPath).toBe('givenPath');
     });
 
-    describe('Watcher', function () {
-      var controller;
+  });
 
-      beforeEach(function () {
-        var repoCollector = _$injector.get('repoCollector');
-        var filter = _$injector.get('filter');
-        var mockedFilter = filter.getNew();
-
-        spyOn(repoCollector, 'getAll').and.returnValue($q.when([
-          {name: 'TestRepo'}
-        ]));
-
-        spyOn(filter, 'getNew').and.returnValue(mockedFilter);
-
-        var $controller = _$injector.get('$controller');
-        controller = $controller('FilterController', {
-          '$scope': $scope,
-          repoCollector: repoCollector,
-          filter: filter
-        });
-
-        spyOn(controller, 'checkIfSettingAreUpdated').and.callThrough();
-        $rootScope.$apply();
+  describe('Watcher', function () {
+    var newFilter, repos;
+    beforeEach(function () {
+      /*jshint camelcase:false*/
+      repos = [{name: 'repo1', default_branch: 'master', owner: {login: 'owner1'}}, {
+        name: 'repo2',
+        default_branch: 'branch1',
+        owner: {login: 'owner2'}
+      }];
+      newFilter = new Filter();
+      spyOn(filterService, 'getById').and.returnValue(newFilter);
+      spyOn(newFilter, 'getBranchList').and.returnValue($q.when([
+        {name: 'master'},
+        {name: 'branch1'},
+        {name: 'branch2'}
+      ]));
+      spyOn(newFilter, 'getContributorList').and.returnValue($q.when([
+        {login: 'author1'},
+        {login: 'author2'},
+        {login: 'author3'}
+      ]));
+      $controller('FilterController', {
+        $scope: $scope,
+        repoList: repos
       });
+      $rootScope.$digest();
+    });
 
-      it('$scope.selectedContributor', function () {
-        $scope.contributorList = [
-          {login: 'TestAuthor'}
-        ];
-        $scope.selectedContributor = ['TestAuthor'];
-        $scope.filter.addAuthor('TestAuthor2');
+    describe('selectedRepo', function () {
+
+      it('Should only trigger if new value is not null and does not equal old value', function () {
+        spyOn(newFilter, 'setRepo');
+        $scope.selectedRepo = null;
         $rootScope.$digest();
+        expect(newFilter.setRepo.calls.count()).toBe(0);
 
-        expect(controller.checkIfSettingAreUpdated.calls.mostRecent().args[0]).toEqual(['TestAuthor']);
-        expect(controller.checkIfSettingAreUpdated.calls.mostRecent().args[1]).toEqual([]);
-        expect($scope.settingsUpdated).toBe(true);
+        $scope.selectedRepo = repos[0];
+        $rootScope.$digest();
+        expect(newFilter.setRepo.calls.count()).toBe(1);
+
+        $scope.selectedRepo = repos[0];
+        $rootScope.$digest();
+        expect(newFilter.setRepo.calls.count()).toBe(1);
       });
 
-      it('$scope.filterSinceAmount', function () {
+      it('Should set correct filter values', function () {
+        $scope.selectedRepo = repos[0];
+        $rootScope.$digest();
+        expect(newFilter.getRepo()).toBe(repos[0].name);
+        expect(newFilter.getOwner()).toBe(repos[0].owner.login);
+        /*jshint camelcase:false*/
+        expect(newFilter.getBranch()).toBe(repos[0].default_branch);
+        expect(newFilter.getAuthors()).toEqual([]);
+        expect(newFilter.getPath()).toBeNull();
+      });
+
+      it('Should call filter.getBranchList and filter.getContributorList', function () {
+        $scope.selectedRepo = repos[0];
+        $rootScope.$digest();
+        expect(newFilter.getBranchList).toHaveBeenCalled();
+        expect(newFilter.getContributorList).toHaveBeenCalled();
+      });
+
+      it('Should set $scope.selectedBranch to repo default branch if filter has no branch set', function () {
+        $scope.selectedRepo = repos[1];
+        $rootScope.$digest();
+        /*jshint camelcase:false*/
+        expect($scope.selectedBranch).toBe(repos[1].default_branch);
+      });
+
+    });
+
+    describe('selectedBranch', function () {
+
+      it('Should only trigger if new value is not null and does not equal old value', function () {
+        spyOn(newFilter, 'setBranch');
+        $scope.selectedBranch = null;
+        $rootScope.$digest();
+        expect(newFilter.setBranch.calls.count()).toBe(0);
+
+        $scope.selectedBranch = 'branch1';
+        $rootScope.$digest();
+        expect(newFilter.setBranch.calls.count()).toBe(1);
+
+        $scope.selectedBranch = 'branch1';
+        $rootScope.$digest();
+        expect(newFilter.setBranch.calls.count()).toBe(1);
+      });
+
+      it('Should set correct filter values', function () {
+        expect(newFilter.getBranch()).toBe('master');
+        $scope.selectedBranch = 'branch1';
+        $rootScope.$digest();
+        expect(newFilter.getBranch()).toBe('branch1');
+        expect(newFilter.getPath()).toBeNull();
+      });
+
+      it('Should set $scope.selectedBranch to given branch', function () {
+        $scope.selectedBranch = 'branch2';
+        $rootScope.$digest();
+        /*jshint camelcase:false*/
+        expect($scope.selectedBranch).toBe('branch2');
+      });
+
+    });
+
+    describe('selectedContributor', function () {
+
+      it('Should only trigger if new value is not null and does not equal old value', function () {
+        spyOn(newFilter, 'addAuthor');
+        $scope.selectedContributor = null;
+        $rootScope.$digest();
+        expect(newFilter.addAuthor.calls.count()).toBe(0);
+
+        $scope.selectedContributor = 'branch1';
+        $rootScope.$digest();
+        expect(newFilter.addAuthor.calls.count()).toBe(1);
+
+        $scope.selectedContributor = 'branch1';
+        $rootScope.$digest();
+        expect(newFilter.addAuthor.calls.count()).toBe(1);
+      });
+
+      it('Should set filter to given value', function () {
+        expect(newFilter.getAuthors()).toEqual([]);
+        $scope.selectedContributor = [
+          {login: 'author1'},
+          {login: 'author2'}
+        ];
+        $rootScope.$digest();
+        expect(newFilter.getAuthors()).toEqual(['author1', 'author2']);
+      });
+
+    });
+
+    describe('filterSinceAmount', function () {
+
+      it('Should only trigger if new value is not null and does not equal old value', function () {
+        spyOn(newFilter, 'setSince');
+        $scope.filterSinceAmount = null;
+        $rootScope.$digest();
+        expect(newFilter.setSince.calls.count()).toBe(0);
+
         $scope.filterSinceAmount = 3;
         $rootScope.$digest();
+        expect(newFilter.setSince.calls.count()).toBe(1);
 
-        expect(controller.checkIfSettingAreUpdated.calls.mostRecent().args[0]).toBe(3);
-        expect(controller.checkIfSettingAreUpdated.calls.mostRecent().args[1]).toBe(2);
-        expect($scope.settingsUpdated).toBe(true);
-      });
-
-      it('$scope.filterSincePattern', function () {
-        $scope.filterSincePattern = $scope.availableFilterSincePattern[0];
+        $scope.filterSinceAmount = 3;
         $rootScope.$digest();
-
-        expect(controller.checkIfSettingAreUpdated.calls.mostRecent().args[0]).toBe('days');
-        expect(controller.checkIfSettingAreUpdated.calls.mostRecent().args[1]).toBe('weeks');
-        expect($scope.settingsUpdated).toBe(true);
+        expect(newFilter.setSince.calls.count()).toBe(1);
       });
 
-      it('$scope.excludeOwnCommits', function () {
+      it('Should set filter to given value', function () {
+        expect(newFilter.getSince()).toEqual({amount: 2, pattern: 'weeks'});
+        $scope.filterSinceAmount = 3;
+        $rootScope.$digest();
+        expect(newFilter.getSince()).toEqual({amount: 3, pattern: 'weeks'});
+      });
+
+    });
+
+    describe('filterSincePattern', function () {
+
+      it('Should only trigger if new value is not null and does not equal old value', function () {
+        spyOn(newFilter, 'setSince');
+        $scope.filterSincePattern = null;
+        $rootScope.$digest();
+        expect(newFilter.setSince.calls.count()).toBe(0);
+
+        $scope.filterSincePattern = 'years';
+        $rootScope.$digest();
+        expect(newFilter.setSince.calls.count()).toBe(1);
+
+        $scope.filterSincePattern = 'years';
+        $rootScope.$digest();
+        expect(newFilter.setSince.calls.count()).toBe(1);
+      });
+
+      it('Should set filter to given value', function () {
+        expect(newFilter.getSince()).toEqual({amount: 2, pattern: 'weeks'});
+        $scope.filterSincePattern = 'years';
+        $rootScope.$digest();
+        expect(newFilter.getSince()).toEqual({amount: 2, pattern: 'years'});
+      });
+
+    });
+
+    describe('excludeOwnCommits', function () {
+
+      it('Should only trigger if new value is not null and does not equal old value', function () {
+        spyOn(newFilter, 'setExcludeOwnCommits');
+        $scope.excludeOwnCommits = null;
+        $rootScope.$digest();
+        expect(newFilter.setExcludeOwnCommits.calls.count()).toBe(0);
+
         $scope.excludeOwnCommits = true;
         $rootScope.$digest();
+        expect(newFilter.setExcludeOwnCommits.calls.count()).toBe(1);
 
-        expect(controller.checkIfSettingAreUpdated.calls.mostRecent().args[0]).toBe(true);
-        expect(controller.checkIfSettingAreUpdated.calls.mostRecent().args[1]).toBe(false);
-        expect($scope.settingsUpdated).toBe(true);
+        $scope.excludeOwnCommits = true;
+        $rootScope.$digest();
+        expect(newFilter.setExcludeOwnCommits.calls.count()).toBe(1);
       });
 
-      it('$scope.filterReviewState', function () {
-        $scope.filterReviewState = $scope.availableFilterReviewStates[1];
+      it('Should set filter to given value', function () {
+        expect(newFilter.getExcludeOwnCommits()).toBe(false);
+        $scope.excludeOwnCommits = true;
         $rootScope.$digest();
+        expect(newFilter.getExcludeOwnCommits()).toBe(true);
+      });
 
-        expect(controller.checkIfSettingAreUpdated.calls.mostRecent().args[0]).toBe('reviewed');
-        expect(controller.checkIfSettingAreUpdated.calls.mostRecent().args[1]).toBeNull();
-        expect($scope.settingsUpdated).toBe(true);
+    });
 
+    describe('filterReviewState', function () {
+
+      it('Should only trigger if new value does not equal old value', function () {
+        spyOn(newFilter, 'setState');
         $scope.filterReviewState = null;
-        $scope.filter.setState('reviewed');
         $rootScope.$digest();
+        expect(newFilter.setState.calls.count()).toBe(1);
 
-        expect(controller.checkIfSettingAreUpdated.calls.mostRecent().args[0]).toBeNull('reviewed');
-        expect(controller.checkIfSettingAreUpdated.calls.mostRecent().args[1]).toBe('reviewed');
-        expect($scope.settingsUpdated).toBe(true);
+        $scope.filterReviewState = 'unseen';
+        $rootScope.$digest();
+        expect(newFilter.setState.calls.count()).toBe(2);
+
+        $scope.filterReviewState = 'unseen';
+        $rootScope.$digest();
+        expect(newFilter.setState.calls.count()).toBe(2);
       });
 
-      it('$scope.filterPath', function () {
-        $scope.filterPath = '/path/to/nowhere';
+      it('Should set filter to given value', function () {
+        expect(newFilter.getState()).not.toBeDefined();
+        $scope.filterReviewState = 'unseen';
         $rootScope.$digest();
-
-        expect(controller.checkIfSettingAreUpdated.calls.mostRecent().args[0]).toBe('/path/to/nowhere');
-        expect(controller.checkIfSettingAreUpdated.calls.mostRecent().args[1]).toBeNull();
-        expect($scope.settingsUpdated).toBe(true);
+        expect(newFilter.getState()).toBe('unseen');
       });
+
+    });
+
+    describe('selectedPath', function () {
+
+      it('Should only trigger if new value is not null and does not equal old value', function () {
+        spyOn(newFilter, 'setPath');
+        $scope.selectedPath = null;
+        $rootScope.$digest();
+        expect(newFilter.setPath.calls.count()).toBe(0);
+
+        $scope.selectedPath = 'path';
+        $rootScope.$digest();
+        expect(newFilter.setPath.calls.count()).toBe(1);
+
+        $scope.selectedPath = 'path';
+        $rootScope.$digest();
+        expect(newFilter.setPath.calls.count()).toBe(1);
+      });
+
+      it('Should set filter to given value', function () {
+        expect(newFilter.getPath()).toBeNull();
+        $scope.selectedPath = 'path';
+        $rootScope.$digest();
+        expect(newFilter.getPath()).toBe('path');
+      });
+
+    });
+
+    describe('filterPath', function () {
+
+      it('Should only trigger if new value is not null, does not equal old value and is empty', function () {
+        spyOn(newFilter, 'setPath');
+        $scope.filterPath = null;
+        $rootScope.$digest();
+        expect(newFilter.setPath.calls.count()).toBe(0);
+
+        $scope.filterPath = 'path';
+        $rootScope.$digest();
+        expect(newFilter.setPath.calls.count()).toBe(0);
+
+        $scope.filterPath = '';
+        $rootScope.$digest();
+        expect(newFilter.setPath.calls.count()).toBe(1);
+
+        $scope.filterPath = '';
+        $rootScope.$digest();
+        expect(newFilter.setPath.calls.count()).toBe(1);
+
+      });
+
+      it('Should set filter to given value', function () {
+        expect(newFilter.getPath()).toBeNull();
+        $scope.filterPath = '';
+        $rootScope.$digest();
+        expect(newFilter.getPath()).toBe('');
+      });
+
+    });
+
+    describe('currentPage', function () {
+
+      it('Should only trigger if new value is not null and does not equal old value', function () {
+        spyOn(newFilter, 'setCurrentPage');
+        $scope.currentPage = null;
+        $rootScope.$digest();
+        expect(newFilter.setCurrentPage.calls.count()).toBe(0);
+
+        $scope.currentPage = 42;
+        $rootScope.$digest();
+        expect(newFilter.setCurrentPage.calls.count()).toBe(1);
+
+        $scope.currentPage = 42;
+        $rootScope.$digest();
+        expect(newFilter.setCurrentPage.calls.count()).toBe(1);
+      });
+
+      it('Should set filter to given value', function () {
+        expect(newFilter.getCurrentPage()).toBe(1);
+        $scope.currentPage = 42;
+        $rootScope.$digest();
+        expect(newFilter.getCurrentPage()).toBe(42);
+      });
+
+    });
+
+    describe('filter.lastEdited', function () {
+
+      it('Should only trigger if new value is not null and does not equal old value', function () {
+        spyOn(newFilter, 'getCommits').and.returnValue($q.when([]));
+        newFilter.options.meta.lastEdited = null;
+        $rootScope.$digest();
+        $timeout.flush(1000);
+        expect(newFilter.getCommits.calls.count()).toBe(0);
+
+        newFilter.options.meta.lastEdited = 42;
+        $rootScope.$digest();
+        $timeout.flush(1000);
+        expect(newFilter.getCommits.calls.count()).toBe(1);
+
+        newFilter.options.meta.lastEdited = 42;
+        $rootScope.$digest();
+        $timeout.flush(1000);
+        expect(newFilter.getCommits.calls.count()).toBe(1);
+      });
+
+      it('Should trigger after 1000ms timeout', function () {
+        spyOn(newFilter, 'getCommits').and.returnValue($q.when([]));
+        newFilter.options.meta.lastEdited = 42;
+        $rootScope.$digest();
+        $timeout.flush(100);
+        expect(newFilter.getCommits).not.toHaveBeenCalled();
+        $timeout.flush(900);
+        expect(newFilter.getCommits).toHaveBeenCalled();
+      });
+
+    });
+
+  });
+
+  describe('new filter', function () {
+    var newFilter;
+    beforeEach(function () {
+      newFilter = new Filter();
+      spyOn(filterService, 'getById').and.returnValue(newFilter);
+      $controller('FilterController', {
+        $scope: $scope,
+        repoList: []
+      });
+    });
+
+    it('Should set defaults if filter is new', function () {
+      expect($scope.filterSinceAmount).toBe(newFilter.getSince().amount);
+      expect($scope.filterSincePattern).toBe(newFilter.getSince().pattern);
+      expect($scope.filterPath).toBe(newFilter.getPath());
+
+      expect($scope.selectedRepo).toBeNull();
+      expect($scope.selectedBranch).toBeNull();
+      expect($scope.selectedContributor).toBeNull();
+      expect($scope.contributorList).toEqual([]);
+      expect($scope.excludeOwnCommits).toBe(false);
+    });
+  });
+
+  describe('Existing filter', function(){
+
+    var newFilter, repos;
+    beforeEach(function () {
+      /*jshint camelcase:false*/
+      repos = [{name: 'repo1', default_branch: 'master', owner: {login: 'owner1'}}, {
+        name: 'repo2',
+        default_branch: 'branch1',
+        owner: {login: 'owner2'}
+      }];
+      newFilter = new Filter();
+      delete newFilter.options.meta.isNew;
+      newFilter.setOwner('owner2');
+      newFilter.setRepo('repo2');
+      newFilter.setBranch('branch1');
+      newFilter.addAuthor('author2');
+      newFilter.setExcludeOwnCommits(true);
+      newFilter.setPath('components');
+      spyOn(filterService, 'getById').and.returnValue(newFilter);
+      spyOn(newFilter, 'getBranchList').and.returnValue($q.when([
+        {name: 'master'},
+        {name: 'branch1'},
+        {name: 'branch2'}
+      ]));
+      spyOn(newFilter, 'getContributorList').and.returnValue($q.when([
+        {login: 'author1'},
+        {login: 'author2'},
+        {login: 'author3'}
+      ]));
+      spyOn(newFilter, 'getCommits').and.returnValue($q.when([1,2,3]));
+    });
+
+    it('Should set all options correctly', function(){
+      $controller('FilterController', {
+        $scope: $scope,
+        repoList: repos
+      });
+      $rootScope.$digest();
+      $timeout.flush(1000);
+
+      expect($scope.filterSinceAmount).toBe(newFilter.getSince().amount);
+      expect($scope.filterSincePattern).toBe(newFilter.getSince().pattern);
+      expect($scope.filterPath).toBe(newFilter.getPath());
+
+      expect($scope.selectedRepo.name).toBe(newFilter.getRepo());
+      expect($scope.selectedBranch).toBe(newFilter.getBranch());
+      expect($scope.selectedContributor[0].login).toEqual(newFilter.getAuthors()[0]);
+      expect($scope.excludeOwnCommits).toBe(newFilter.getExcludeOwnCommits());
+
+      expect($scope.commits).toEqual([1,2,3]);
     });
 
   });

@@ -11,7 +11,7 @@
 
         $scope.fetchingCommits = true;
         $scope.filter = filter.getById($stateParams.filterId);
-        $scope.filter.getCommitsForStandup()
+        $scope.filter.getCommits(true)
           .then(function(commitList){
             $scope.commits = commitList;
             $scope.fetchingCommits = false;

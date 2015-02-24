@@ -2,8 +2,12 @@
 <div id="main" class="container-fluid">
     <div class="row">
         <div class="col-xs-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">
+            <div class="panel" ng-class="{'panel-danger': !filter.isHealthy(), 'panel-default': filter.isHealthy()}">
+                <div ng-if="!filter.isHealthy()" class="panel-heading">
+                    <h4>The filter with {{filter.getOwner()}}/{{filter.getRepo()}}/{{filter.getBranch()}} is broken.</h4>
+                    <h5>Please <a ui-sref="editFilter({filterId: filter.getId()})">edit</a> the filter settings.</h5>
+                </div>
+                <div ng-if="filter.isHealthy()" class="panel-heading">
                     <h4><span ng-show="fetchingCommits">Fetching commits</span><span ng-show="!fetchingCommits">Showing commits</span> of {{filter.getOwner()}}/{{filter.getRepo()}}/{{filter.getBranch()}} of the last 24 hours.</h4>
                     <h5 ng-show="!fetchingCommits && commits.length === 0">It seems nothing happened in the last 24 hours!</h5>
                 </div>

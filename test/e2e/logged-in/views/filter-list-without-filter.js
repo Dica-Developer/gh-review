@@ -13,7 +13,9 @@
       browser.end();
     },
     'Schould forward to add filter view if no filter exists': function (browser) {
-      browser.assert.urlContains('filter/add');
+      browser
+        .waitForElementVisible('.well', 5000)
+        .assert.urlContains('filter/add');
     }
   };
 

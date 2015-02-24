@@ -38,7 +38,8 @@ module.exports = function(grunt) {
     ngAnnotate: require('./grunt/ngAnnotate'),
     rev: require('./grunt/rev'),
     coveralls: require('./grunt/coveralls'),
-    nightwatch: require('./grunt/nightwatch')
+    nightwatch: require('./grunt/nightwatch'),
+    dropbox: require('./grunt/dropbox')
   });
 
   grunt.registerTask('server-keepalive', 'Keep grunt running', function() {

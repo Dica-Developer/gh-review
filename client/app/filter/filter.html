@@ -4,13 +4,13 @@
         <div class="col-sm-12">
             <ol class="breadcrumb">
                 <li><a ui-sref="listFilter()">filter</a></li>
-                <li>{{filter.options.meta.idOriginal}}</li>
+                <li>{{filter.getId()}}</li>
             </ol>
         </div>
     </div>
     <div class="row">
         <div class="col-xs-12">
-            <div class="well well-lg" ng-if="filter.options.meta.isNew">Do find commits you want to review try to select
+            <div class="well well-lg" ng-if="filter.isNew()">Do find commits you want to review try to select
                 a repository and a branch. After selecting them you will have more criterias to dive in the commits.
                 <p>
                     <label class="input-sm">Import Filter:</label>
@@ -19,46 +19,34 @@
                     </span>
                 </p>
             </div>
-            <div class="panel panel-default">
-                <div class="panel-heading">
+            <div class="panel" ng-class="{'panel-danger': !filter.isHealthy(), 'panel-default': filter.isHealthy()}">
+                <div class="panel-heading ">
                     <form class="form-inline" role="form">
                         <div class="form-group">
-                            <label ng-if="!fetchingRepos" for="selectGroup">Repository: </label>
-                            <label ng-if="fetchingRepos" for="selectGroup">Getting repositories!</label>
-                            <select ng-if="!fetchingRepos"
-                                    id="selectGroup"
+                            <label for="selectGroup">Repository: </label>
+                            <select id="selectGroup"
                                     class="form-control input-sm"
-                                    ng-options="repo.name group by repo.owner.login for repo in allRepos track by repo.full_name"
+                                    ng-options="repo.name group by repo.owner.login for repo in repoList track by repo.full_name"
                                     ng-model="scope.selectedRepo">
                                 <option value="">--- choose repository ---</option>
                             </select>
                         </div>
-                        <div ng-if="!fetchingRepos" class="form-group">
-                            <label ng-if="branchSelection.length > 0 && !fetchingBranches"
-                                   for="selectBranch">Branch: </label>
-                            <label ng-if="fetchingBranches" for="selectBranch">Getting branches!</label>
-                            <select ng-if="branchSelection.length > 0"
-                                    id="selectBranch"
-                                    class="form-control input-sm"
-                                    ng-model="scope.selectedBranch"
-                                    ng-options="branch for branch in branchSelection">
+                        <div class="form-group">
+                            <label for="selectBranch">Branch: </label>
+                            <select id="selectBranch" class="form-control input-sm" ng-model="scope.selectedBranch" ng-options="branch for branch in branchList">
+                                <option ng-if="!scope.selectedRepo || !branchList.length" value="">--- {{scope.selectedRepo && !branchList.length ? 'fetching branches' : 'choose repository first'}}---</option>
                             </select>
                         </div>
-                        <div ng-if="scope.selectedBranch" class="form-group">
+                        <div class="form-group">
                             <label for="filterSinceAmount">Since: </label>
-                            <input ng-model="scope.filterSinceAmount" id="filterSinceAmount"
-                                   class="form-control input-sm" type="number" min="0"
-                                   max="99"/>
+                            <input ng-model="scope.filterSinceAmount" id="filterSinceAmount" class="form-control input-sm" type="number" min="0" max="99"/>
                             <label class="sr-only" for="filterSincePattern">Since pattern</label>
-                            <select id="filterSincePattern"
-                                    class="form-control input-sm"
-                                    ng-model="scope.filterSincePattern"
-                                    ng-options="sincePattern for sincePattern in availableFilterSincePattern"></select>
+                            <select id="filterSincePattern" class="form-control input-sm" ng-model="scope.filterSincePattern" ng-options="sincePattern for sincePattern in availableFilterSincePattern"></select>
                         </div>
-                        <div ng-if="contributorList.length > 0" class="form-group">
+                        <div class="form-group">
                             <label for="filterContributor">Contributor: </label>
-                            <ui-select id="filterContributor" multiple ng-model="scope.selectedContributor"
-                                       class="input-sm" style="width: 300px;">
+                            <input type="text" disabled placeholder="" style="width: 300px;" ng-if="contributorList.length === 0">
+                            <ui-select id="filterContributor" multiple ng-model="scope.selectedContributor" class="input-sm" style="width: 300px;" ng-if="contributorList.length > 0">
                                 <ui-select-match placeholder="Select contributor...">{{$item.login}}</ui-select-match>
                                 <ui-select-choices repeat="contributor in contributorList | filter:$select.search">
                                     <img height="36px" class="media-object pull-left"
@@ -69,17 +57,10 @@
                         </div>
                         <div class="form-group pull-right">
                             <div class="btn-group btn-group-xs">
-                                <button ng-if="settingsUpdated" class="btn btn-primary" ng-click="updateCommits()">
-                                    Update Preview
-                                </button>
-                                <button ng-if="scope.selectedBranch && !filterIsSaved()" class="btn btn-success"
-                                        ng-click="saveFilter()">Save
-                                </button>
-                                <button ng-if="scope.selectedRepo" class="btn btn-warning" ng-click="reset()">Reset
-                                </button>
-                                <button class="btn btn-default" ng-click="showAdvanced = !showAdvanced">{{showAdvanced ?
-                                    'Less' : 'More'}}
-                                </button>
+                                <button ng-if="scope.selectedBranch && !filterIsSaved()" class="btn btn-success" ng-click="saveFilter()">Save</button>
+                                <button ng-if="scope.selectedBranch && !filterIsSaved() && !filter.isNew()" class="btn btn-success" ng-click="saveFilterAsNew()">Save as new</button>
+                                <button ng-if="scope.selectedRepo && !filterIsSaved()" class="btn btn-warning" ng-click="reset()">Reset </button>
+                                <button class="btn btn-default" ng-click="showAdvanced = !showAdvanced">{{showAdvanced ? 'Less' : 'More'}}</button>
                             </div>
                         </div>
                     </form>
@@ -101,23 +82,25 @@
                             </div>
                             <div class="form-group">
                                 <label for="filterTree">Tree: </label>
-                                <input type="text" ng-model="scope.filterPath"
-                                       typeahead="tree.path for tree in repoTree | filter:$viewValue | limitTo:10"
+                                <input id="filterTree" type="text" ng-model="scope.filterPath"
+                                       typeahead="tree.path for tree in getRepoTree($viewValue)"
+                                       typeahead-on-select="pathSelected($item, $model, $label)"
+                                       typeahead-append-to-body="true"
+                                       typeahead-focus-first="true"
                                        class="form-control input-sm">
                             </div>
                         </form>
                     </div>
                 </div>
-                <div class="panel-body" ng-if="commits.length > 0 || fetchingCommits">
-                    <div ng-if="commits.length <= 0 && fetchingCommits" class="well">
+                <div class="panel-body">
+                    <div ng-if="filter.isFetchingCommits" class="well">
                         Fetching commits for {{scope.selectedRepo.full_name}} - {{scope.selectedBranch}}
                     </div>
-                    <div class="col-lg-12" ng-if="commits.length > 0 && !fetchingCommits">
+                    <div class="col-lg-12" ng-if="commits.length > 0">
                         <pagination total-items="commitsLength" items-per-page="20" ng-model="scope.currentPage"
                                     max-size="5" class="pagination-sm" boundary-links="true"
                                     rotate="false"></pagination>
-                        <ghreview-commit-list ng-if="commits.length > 0 && !fetchingCommits" x-commit-list="commits"
-                                              x-filter="filter"></ghreview-commit-list>
+                        <ghreview-commit-list data-commit-list="commits" data-filter="filter"></ghreview-commit-list>
                         <pagination total-items="commitsLength" items-per-page="20" ng-model="scope.currentPage"
                                     max-size="5" class="pagination-sm" boundary-links="true"
                                     rotate="false"></pagination>
