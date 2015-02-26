@@ -78,15 +78,6 @@
           filter.remove(filterId);
           updateFilterList();
         };
-        $scope.editFilter = function (filterId, event) {
-          if (void 0 !== event) {
-            event.preventDefault();
-            event.stopImmediatePropagation();
-          }
-          $state.go('editFilter', {
-            'filterId': filterId
-          });
-        };
 
         $scope.exportName = 'gh-review-filter.json';
         $scope.exportFilter = function(){
