@@ -2,6 +2,11 @@
 <div id="main" class="container-fluid">
     <div class="row">
         <div class="col-xs-12">
+            <a ui-sref="listFilter()">Back to filter list</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
             <div class="panel" ng-class="{'panel-danger': !filter.isHealthy(), 'panel-default': filter.isHealthy()}">
                 <div ng-if="!filter.isHealthy()" class="panel-heading">
                     <h4>The filter with {{filter.getOwner()}}/{{filter.getRepo()}}/{{filter.getBranch()}} is broken.</h4>
