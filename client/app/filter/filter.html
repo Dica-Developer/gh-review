@@ -34,7 +34,7 @@
                         <div class="form-group">
                             <label for="selectBranch">Branch: </label>
                             <select id="selectBranch" class="form-control input-sm" ng-model="scope.selectedBranch" ng-options="branch for branch in branchList">
-                                <option ng-if="!scope.selectedRepo || !branchList.length" value="">--- {{scope.selectedRepo && !branchList.length ? 'fetching branches' : 'choose repository first'}}---</option>
+                                <option ng-if="!scope.selectedRepo || !branchList.length" value="">--- {{scope.selectedRepo && !branchList.length ? 'fetching branches' : 'choose repository first'}} filter-list---</option>
                             </select>
                         </div>
                         <div class="form-group">
