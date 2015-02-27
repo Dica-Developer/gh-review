@@ -43,12 +43,17 @@
                         <div class="form-group">
                             <label for="filterContributor">Contributor: </label>
                             <input type="text" disabled placeholder="" style="width: 300px;" ng-if="contributorList.length === 0">
-                            <ui-select id="filterContributor" multiple ng-model="scope.selectedContributor" class="input-sm" style="width: 300px;" ng-if="contributorList.length > 0">
+                            <ui-select id="filterContributor" multiple ng-model="scope.selectedContributor" class="input-sm" style="width: 100%;" ng-if="contributorList.length > 0">
                                 <ui-select-match placeholder="Select contributor...">{{$item.login}}</ui-select-match>
                                 <ui-select-choices repeat="contributor in contributorList | filter:$select.search">
-                                    <img height="36px" class="media-object pull-left"
-                                         ng-src="{{contributor.avatar_url}}"/>&nbsp;
-                                    <div ng-bind-html="contributor.login| highlight: $select.search"></div>
+                                    <div class="media">
+                                        <div class="media-left">
+                                            <img class="media-object" height="32px" ng-src="{{contributor.avatar_url}}"/>
+                                        </div>
+                                        <div class="media-body">
+                                            <div ng-bind-html="contributor.login| highlight: $select.search"></div>
+                                        </div>
+                                    </div>
                                 </ui-select-choices>
                             </ui-select>
                         </div>
