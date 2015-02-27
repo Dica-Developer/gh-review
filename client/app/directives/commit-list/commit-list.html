@@ -20,7 +20,7 @@
                         <span class="label label-success" ng-if="commitApproved(commit.sha)">approved</span>
                     </div>
                     <div class="pull-right">
-                            <span ng-show="commit.commit.comment_count > 0" class="label label-info">
+                            <span ng-show="commit.commit.comment_count > 0" class="label label-info hidden-xs">
                                 <ng-pluralize count="commit.commit.comment_count"
                                               when="{
                                                     'one': '1 comment',
@@ -30,7 +30,7 @@
                             </span>
                         &nbsp;
                         <span ng-show="filterEvents.commits.indexOf(commit.sha) > -1"
-                              class="label label-success">New</span>
+                              class="label label-success hidden-xs">New</span>
                     </div>
                 </div>
             </div>
