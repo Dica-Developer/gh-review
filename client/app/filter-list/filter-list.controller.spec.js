@@ -194,29 +194,6 @@
 
       });
 
-      describe('.editFilter', function(){
-
-        it('should call $state.go', function () {
-          spyOn($state, 'go');
-          $scope.editFilter('filterId', void 0);
-          expect($state.go).toHaveBeenCalledWith('editFilter', {
-            filterId: 'filterId'
-          });
-        });
-
-        it('should call preventDefault and stopImmediatePropagation event is given', function () {
-          spyOn($state, 'go');
-          var event = {
-            preventDefault: jasmine.createSpy(),
-            stopImmediatePropagation: jasmine.createSpy()
-          };
-          $scope.editFilter('filterId', event);
-          expect(event.preventDefault).toHaveBeenCalled();
-          expect(event.stopImmediatePropagation).toHaveBeenCalled();
-        });
-
-      });
-
       describe('.standup', function(){
 
         it('Should call $state.go', function () {
