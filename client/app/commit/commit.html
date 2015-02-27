@@ -1,7 +1,7 @@
 <div ng-include="'components/menu/menu.html'"></div>
 <div id="main" class="container-fluid">
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col-xs-12">
             <ol class="breadcrumb">
                 <li><a ui-sref="listFilter()">filter</a></li>
                 <li>commits</li>
@@ -11,13 +11,13 @@
     </div>
 
     <div ng-if="commitResponse" class="row">
-        <div class="col-sm-12">
+        <div class="col-xs-12">
             <commit-header commit="commitResponse.commit"></commit-header>
         </div>
     </div>
 
     <div ng-if="commitResponse" class="row">
-        <div class="col-sm-12">
+        <div class="col-xs-12">
             <small> Showing <strong> {{files.length}} changed {{files.length === 1 ? 'file' : 'files'}}</strong> with
                 <strong>{{commitResponse.stats.additions}} additions</strong> and <strong>{{commitResponse.stats.deletions}} deletions</strong>
             </small>
@@ -25,7 +25,7 @@
     </div>
 
     <div ng-if="files" class="row" id="diff-view" ng-cloak>
-        <div class="col-sm-12">
+        <div class="col-xs-12">
 
             <div ng-repeat="file in files" class="panel panel-default">
                 <div class="panel-heading"
