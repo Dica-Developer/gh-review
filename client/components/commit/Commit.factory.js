@@ -129,9 +129,13 @@
           if(!this.comments){
             return [];
           }
-          return _.map(this.comments.commitComments, function(comment){
-            return comment.getApprover();
-          });
+          return _.reduce(this.comments.commitComments, function(result, comment){
+            var approver = comment.getApprover();
+            if(approver){
+              result.push(approver);
+            }
+            return result;
+          }, []);
         };
 
         Commit.prototype.isApprovedByUser = function(user){
