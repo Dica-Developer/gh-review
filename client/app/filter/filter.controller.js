@@ -183,6 +183,10 @@
         $scope.$watch('currentPage', function (newValue, oldValue) {
           if (!_.isEqual(newValue, oldValue) && !_.isNull(newValue)) {
             $scope.filter.setCurrentPage(newValue);
+            $timeout.cancel(getCommitsTimeout);
+            getCommitsTimeout = $timeout(function () {
+              $scope.filter.getCommits(false).then(setCommitList, handleGetCommitsError, setCommitList);
+            }, 1000);
           }
         });
 
