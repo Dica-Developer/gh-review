@@ -481,6 +481,15 @@ describe('Controller: FilterController', function () {
         expect(newFilter.getCurrentPage()).toBe(42);
       });
 
+      it('Should call filter.getCommits after a timeout of 1000ms', function () {
+        spyOn(newFilter, 'getCommits').and.returnValue($q.when([]));
+        $scope.currentPage = 42;
+        $rootScope.$digest();
+        expect(newFilter.getCommits).not.toHaveBeenCalled();
+        $timeout.flush(1000);
+        expect(newFilter.getCommits).toHaveBeenCalled();
+      });
+
     });
 
     describe('filter.lastEdited', function () {
