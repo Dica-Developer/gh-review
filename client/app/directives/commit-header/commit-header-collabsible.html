@@ -3,12 +3,16 @@
         <accordion-group is-open="commitHeaderStatus.open">
             <accordion-heading>
                 <div class="media">
-                    <avatar commit="commitResponse"></avatar>
+                    <div class="media-left">
+                        <avatar commit="commitResponse"></avatar>
+                    </div>
                     <!--TODO remove inline style-->
                     <div class="media-body" style="padding-left: 5px; margin: 5px;">
-                        <strong>{{commitResponse.committer.name}}</strong> <span class="text-muted">authored <formatted-date
-                            date="commit.date"></formatted-date></span>
-                        {{getApprover()}}
+                        <commit-message-teaser message="commitResponse.commit.message"></commit-message-teaser>
+                        <div class="commit-meta">
+                            {{commitResponse.commit.committer.name}} <span class="text-muted">committed <formatted-date
+                                date="commitResponse.commit.committer.date"></formatted-date></span>
+                        </div>
                         <span class="pull-right" ng-if="approvers.length > 0">
                                 approved by
                                 <a ng-repeat="approver in approvers" href="https://github.com/{{approver}}"
@@ -16,7 +20,6 @@
                         </span>
                     </div>
                 </div>
-                <commit-message-teaser message="commitResponse.commit.message"></commit-message-teaser>
                 <i class="pull-right glyphicon"
                    ng-class="{'glyphicon-chevron-down': commitHeaderStatus.open, 'glyphicon-chevron-right': !commitHeaderStatus.open}"></i>
             </accordion-heading>
@@ -27,19 +30,23 @@
     <div ng-if="!commitHeaderStatus.shouldCollapse" class="panel panel-default">
         <div class="panel-heading">
             <div class="media">
-                <avatar commit="commitResponse"></avatar>
+                <div class="media-left">
+                    <avatar commit="commitResponse"></avatar>
+                </div>
                 <!--TODO remove inline style-->
                 <div class="media-body" style="padding-left: 5px; margin: 5px;">
-                    <strong>{{commitResponse.commit.committer.name}}</strong> <span class="text-muted">authored <formatted-date
-                        date="commitResponse.commit.committer.date"></formatted-date></span>
-                        <span class="pull-right" ng-if="approvers.length > 0">
-                                approved by
-                                <a ng-repeat="approver in approvers" href="https://github.com/{{approver}}"
-                                   class="user-mention">@{{approver}}</a>
-                        </span>
+                    <commit-message-teaser message="commitResponse.commit.message"></commit-message-teaser>
+                    <div class="commit-meta">
+                        {{commitResponse.commit.committer.name}} <span class="text-muted">committed <formatted-date
+                            date="commitResponse.commit.committer.date"></formatted-date></span>
+                    </div>
+                    <span class="pull-right" ng-if="approvers.length > 0">
+                            approved by
+                            <a ng-repeat="approver in approvers" href="https://github.com/{{approver}}"
+                               class="user-mention">@{{approver}}</a>
+                    </span>
                 </div>
             </div>
-            <h3 class="panel-title">{{commitResponse.commit.message}}</h3>
         </div>
     </div>
 </div>
