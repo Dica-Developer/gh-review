@@ -21,7 +21,7 @@ describe('Directive: commit-header', function () {
     $scope.commitResponse.commit.message = _.range(54).join('');
     var element = $compile('<commit-header commit="commitResponse.commit"></commit-header>')($scope);
     $scope.$apply();
-    var text = element.find('h3').text(),
+    var text = element.find('commit-message-teaser').text(),
       accordion = element.find('accordion');
 
     expect(text).toBe(_.range(54).join(''));
