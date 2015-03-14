@@ -3,16 +3,18 @@
   'use strict';
   angular.module('GHReview')
     .controller('FilterController', [
-      '$scope', '$state', '$stateParams', '$timeout', 'filter', 'repoList', '_', 'importExport', 'Modal', 'limitToFilter',
-      function ($scope, $state, $stateParams, $timeout, filter, repoList, _, importExport, Modal, limitToFilter) {
-        var getCommitsTimeout = null;
-        $scope.filter = filter.getById($stateParams.filterId);
+      '$scope', '$state', '$stateParams', '$location', '$timeout', 'filter', 'repoList', '_', 'importExport', 'Modal', 'limitToFilter',
+      function ($scope, $state, $stateParams, $location, $timeout, filter, repoList, _, importExport, Modal, limitToFilter) {
+        var getCommitsTimeout = null,
+          page = $location.search().page || 1;
 
+        $scope.filter = filter.getById($stateParams.filterId);
+        $scope.filter.setCurrentPage(page);
         $scope.scope = $scope;
         $scope.repoList = repoList;
         $scope.branchList = [];
         $scope.commits = [];
-        $scope.currentPage = 1;
+        $scope.currentPage = page;
         $scope.availableFilterSincePattern = ['days', 'weeks', 'years'];
         $scope.availableFilterReviewStates = ['unseen', 'reviewed', 'approved'];
         $scope.showAdvanced = false;
@@ -182,6 +184,7 @@
 
         $scope.$watch('currentPage', function (newValue, oldValue) {
           if (!_.isEqual(newValue, oldValue) && !_.isNull(newValue)) {
+            $location.search('page', newValue);
             $scope.filter.setCurrentPage(newValue);
             $timeout.cancel(getCommitsTimeout);
             getCommitsTimeout = $timeout(function () {

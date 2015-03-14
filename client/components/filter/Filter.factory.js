@@ -3,7 +3,7 @@
 
 
   var services = angular.module('GHReview');
-  services.factory('Filter', ['$q', '$location', '$log', 'filterUtils', '$injector', function ($q, $location, $log, filterUtils, $injector) {
+  services.factory('Filter', ['$q', '$log', 'filterUtils', '$injector', function ($q, $log, filterUtils, $injector) {
 
     var ghUser = $injector.get('ghUser'),
       commentCollector = $injector.get('commentCollector'),
@@ -250,14 +250,9 @@
 
     Filter.prototype.setCurrentPage = function (page) {
       this.currentPage = page;
-      $location.search('page', this.currentPage);
     };
 
-    //TODO move $location dependency out of Filter
     Filter.prototype.getPage = function () {
-      if ($location.search().page && $location.search().page !== this.currentPage) {
-        this.setCurrentPage($location.search().page);
-      }
       var start = (this.currentPage * this.maxResults) - this.maxResults;
       var end = start + this.maxResults;
       return this.commitList.slice(start, end);
