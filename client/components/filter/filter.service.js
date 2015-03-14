@@ -47,19 +47,6 @@
         return newFilter;
       };
 
-      this.getCloneOf = function(filter){
-        if (filter instanceof Filter) {
-          var clonedFilter = new Filter();
-          clonedFilter.options = fastClone(filter.options);
-          clonedFilter.options.meta.originalId = filter.options.meta.id;
-          clonedFilter.options.meta.id = clonedFilter.options.meta.id + '_clone';
-          clonedFilter.options.meta.isClone = true;
-          return clonedFilter;
-        } else {
-          $log.error('No Filter');
-        }
-      };
-
       this.remove = function (filterId) {
         localStorageService.remove('filter-' + filterId);
         var filterList = localStorageService.get('filter').split(',');

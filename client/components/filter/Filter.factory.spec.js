@@ -292,17 +292,6 @@ describe('Factory: Filter', function () {
       expect(localStorageService.get).toHaveBeenCalledWith('filter');
     });
 
-    it('Should delete clone properties while saving', function () {
-      var clonedFilter = filterService.getCloneOf(filter);
-      expect(clonedFilter.options.meta.isClone).toBe(true);
-      expect(clonedFilter.options.meta.originalId).toBeDefined();
-      spyOn(localStorageService, 'get').and.returnValue('filter1,filter2');
-      spyOn(localStorageService, 'set');
-      clonedFilter.save();
-      expect(clonedFilter.options.meta.isClone).not.toBeDefined();
-      expect(clonedFilter.options.meta.originalId).not.toBeDefined();
-    });
-
     it('Should delete isNew property while saving if Filter is new', function () {
       var newFilter = new Filter();
       expect(newFilter.options.meta.isNew).toBe(true);

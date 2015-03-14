@@ -46,23 +46,6 @@ describe('Service: filter', function () {
     });
   });
 
-  describe('.getCloneOf', function () {
-    it('Should return a clone of a given filter', function () {
-      var filterById = filter.getById('e0a35c44-1066-9a60-22f2-86bd825bc70c'),
-        clonedFilter = filter.getCloneOf(filterById);
-
-      expect(clonedFilter).toBeDefined();
-      expect(clonedFilter.options.meta.isClone).toBeDefined();
-      expect(clonedFilter.options.meta.originalId).toBe(filterById.options.meta.id);
-    });
-
-    it('Should log error if given argument is not an instance of Filter', function () {
-      spyOn($log, 'error');
-      filter.getCloneOf({});
-      expect($log.error).toHaveBeenCalledWith('No Filter');
-    });
-  });
-
   describe('.removeFilter', function () {
     it('Should remove specific filter', function () {
       filter.remove('e0a35c44-1066-9a60-22f2-86bd825bc70c');
