@@ -48,6 +48,8 @@
       };
 
       this.remove = function (filterId) {
+        var filter = this.getById(filterId);
+        filter.events.remove();
         localStorageService.remove('filter-' + filterId);
         var filterList = localStorageService.get('filter').split(',');
         _.remove(filterList, function (value) {
