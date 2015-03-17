@@ -17,6 +17,7 @@
     beforeEach(module('contributorCollectorMock'));
     beforeEach(module('branchCollectorMock'));
     beforeEach(module('treeCollectorMock'));
+    beforeEach(module('EventsMock'));
     beforeEach(module('commentCollectorMock'));
 
     beforeEach(inject(function($injector){

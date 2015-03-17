@@ -28,6 +28,7 @@ describe('Factory: Filter', function () {
   beforeEach(module('branchCollectorMock'));
   beforeEach(module('treeCollectorMock'));
   beforeEach(module('commentCollectorMock'));
+  beforeEach(module('EventsMock'));
 
   beforeEach(inject(function($injector){
     Filter = $injector.get('Filter');

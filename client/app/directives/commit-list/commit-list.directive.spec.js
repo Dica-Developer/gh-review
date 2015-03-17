@@ -5,10 +5,11 @@ describe('Directive: commit-list', function () {
   beforeEach(module('GHReview'));
   beforeEach(module('commitMockModule'));
   beforeEach(module('commentCollectorMock'));
+  beforeEach(module('EventsMock'));
   beforeEach(module('app/directives/commit-list/commit-list.html'));
   beforeEach(module('app/welcome/welcome.html'));
 
-  var $rootScope, $scope, $controller, $q, $location, commitsMock, commentCollector, filter, Events;
+  var $rootScope, $scope, $controller, $q, $location, commitsMock, commentCollector, filter;
 
   beforeEach(inject(function ($injector) {
     $rootScope = $injector.get('$rootScope');
@@ -18,12 +19,10 @@ describe('Directive: commit-list', function () {
     $location = $injector.get('$location');
     commitsMock = $injector.get('commitsMock');
     commentCollector = $injector.get('commentCollector');
-    Events = $injector.get('Events');
-
-    spyOn(Events.prototype, 'getEvents');
 
     var filterService = $injector.get('filter');
     filter = filterService.getNew();
+    $scope.filter = filter;
   }));
 
   it('Should call commentCollector.getCommitApproved on init', function () {

@@ -4,6 +4,7 @@ describe('Controller: FilterController', function () {
   var $rootScope, $scope, $controller, $q, $timeout, Filter, filterService, filterUtils;
 
   beforeEach(module('GHReview'));
+  beforeEach(module('EventsMock'));
   beforeEach(module('app/welcome/welcome.html'));
 
   beforeEach(inject(function ($injector) {

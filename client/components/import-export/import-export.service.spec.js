@@ -2,6 +2,7 @@ describe('Service: github', function () {
   'use strict';
 
   beforeEach(module('GHReview'));
+  beforeEach(module('EventsMock'));
 
   var importExport, filter, $rootScope;
 
