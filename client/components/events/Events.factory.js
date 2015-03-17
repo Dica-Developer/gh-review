@@ -20,7 +20,7 @@
         this.lastUpdate = new Date().getTime();
 
         var storedEvent = localStorageService.get(this.filterId + '_events');
-        if(storedEvent) {
+        if (storedEvent) {
           this.events = storedEvent.events;
           this.etag = storedEvent.etag;
           this.lastUpdate = storedEvent.lastUpdate;
@@ -37,8 +37,8 @@
           repo: this.repo,
           etag: this.etag === '' ? false : this.etag
         })
-          .then(this.preFilterByDateAndBranch.bind(this), function(){
-            $timeout(function(){
+          .then(this.preFilterByDateAndBranch.bind(this), function () {
+            $timeout(function () {
               this.getEvents();
             }.bind(this), 60000);
           }.bind(this));
@@ -56,7 +56,7 @@
             var createdAt = new Date(event.created_at).getTime(),
               eventBranch = false;
 
-            if(event.payload && event.payload.ref && event.payload.ref === 'refs/heads/' + branch){
+            if (event.payload && event.payload.ref && event.payload.ref === 'refs/heads/' + branch) {
               eventBranch = true;
             }
 
@@ -68,7 +68,7 @@
           this.save();
         }
 
-        $timeout(function(){
+        $timeout(function () {
           this.getEvents();
         }.bind(this), 60000);
       };
@@ -95,7 +95,7 @@
 
       Events.prototype.getCommits = function () {
         return this.getPushEvents()
-          .reduce(function(initialValue, event){
+          .reduce(function (initialValue, event) {
             return initialValue.concat(event.payload.commits);
           }, []);
       };
