@@ -100,17 +100,27 @@
           }, []);
       };
 
-      //Events.prototype.getComments = function () {
-      //  return this.commentEvents;
-      //};
-      //
-      //Events.prototype.removeCommit = function (commitId) {
-      //  //TODO
-      //};
-      //
-      //Events.prototype.removeComment = function (commentId) {
-      //  //TODO
-      //};
+      Events.prototype.removeCommit = function (sha) {
+        this.events = this.events.reduce(function (previous, event) {
+          if (event.type === 'PushEvent') {
+            event.payload.commits = event.payload.commits.reduce(function (previous, current) {
+              if (current.sha !== sha) {
+                previous.push(current);
+              }
+              return previous;
+            }, []);
+
+            if (event.payload.commits.length > 0) {
+              previous.push(event);
+            }
+          } else {
+            previous.push();
+          }
+
+          return previous;
+        }, []);
+        this.save();
+      };
 
       Events.prototype.save = function () {
         this.lastUpdate = new Date().getTime();
