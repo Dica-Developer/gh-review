@@ -46,7 +46,8 @@
 
       Events.prototype.preFilterByDateAndBranch = function (data) {
         var lastUpdate = this.lastUpdate,
-          branch = this.branch;
+          branch = this.branch,
+          postEventLength = this.events.length;
 
         this.etag = data.etag;
 
@@ -66,6 +67,10 @@
             return initialValue;
           }, this.events);
           this.save();
+
+          if(postEventLength < this.events.length){
+            this.filter.invalidateCommitsCache();
+          }
         }
 
         $timeout(function () {

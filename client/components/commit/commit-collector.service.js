@@ -59,6 +59,11 @@
           });
         return defer.promise;
       };
+
+      CommitCollector.prototype.invalidateCache = function (options) {
+        this.get.cache.delete(getCacheKey(options));
+      };
+
       return new CommitCollector();
     }]);
 }(angular));

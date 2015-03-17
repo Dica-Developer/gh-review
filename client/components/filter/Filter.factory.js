@@ -268,6 +268,11 @@
       return filterUtils.getCommentsUrl(this.options);
     };
 
+    Filter.prototype.invalidateCommitsCache = function () {
+      var options = filterUtils.prepareGithubApiCallOptions(this.options, false);
+      commitCollector.invalidateCache(options);
+    };
+
     Filter.prototype.getCommits = function (forStandup, maxResults) {
       this.maxResults = maxResults || this.maxResults;
 
