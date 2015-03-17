@@ -64,14 +64,14 @@
                             <div class="col-sm-3 col-xs-4">
 
                                 <div class="pull-right">
-                                    <span ng-if="filterEvents[filter.getId()].commits.length > 0" class="label label-info hidden-xs">
+                                    <span ng-if="filter.events.getCommits().length > 0" class="label label-info hidden-xs">
                                         <ng-pluralize
-                                                count="filterEvents[filter.getId()].commits.length"
+                                                count="filter.events.getCommits().length"
                                                 when="{'one': '1 new commit','other': '{} new commits'}">
                                         </ng-pluralize>
                                     </span>
 
-                                    <span class="label label-info visible-xs-inline-block" ng-if="filterEvents[filter.getId()].commits.length > 0">{{filterEvents[filter.getId()].commits.length}}</span>
+                                    <span class="label label-info visible-xs-inline-block" ng-if="filter.events.getCommits().length > 0">{{filter.events.getCommits().length}}</span>
                                     <span class="standup glyphicon glyphicon-dashboard" tooltip="Standup" ng-click="standup(filter.getId(), $event)"></span>
                                     <span class="destroy glyphicon glyphicon-remove-circle" tooltip="Remove" ng-click="removeFilter(filter.getId(), $event)"></span>
 
