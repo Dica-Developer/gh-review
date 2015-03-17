@@ -6,6 +6,7 @@
   services.factory('Filter', ['$q', '$log', 'filterUtils', '$injector', function ($q, $log, filterUtils, $injector) {
 
     var ghUser = $injector.get('ghUser'),
+      Events = $injector.get('Events'),
       commentCollector = $injector.get('commentCollector'),
       branchCollector = $injector.get('branchCollector'),
       contributorCollector = $injector.get('contributorCollector'),
@@ -20,6 +21,7 @@
       this.isFetchingCommits = false;
       this.healthCheckError = null;
       this.healthCheck();
+      this.events = new Events(this);
     }
 
     Filter.prototype.healthCheck = function(){
