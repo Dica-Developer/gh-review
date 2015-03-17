@@ -1,10 +1,9 @@
 describe('Service: filter', function () {
   'use strict';
 
-  var filter, $log, $q, filterUtils;
+  var filter, $log, $q, filterUtils, Events;
 
   beforeEach(module('GHReview'));
-  beforeEach(module('eventsMock'));
   beforeEach(module('contributorCollectorMock'));
   beforeEach(module('branchCollectorMock'));
   beforeEach(module('treeCollectorMock'));
@@ -18,6 +17,9 @@ describe('Service: filter', function () {
     $q = $injector.get('$q');
     filterUtils = $injector.get('filterUtils');
     spyOn(filterUtils, 'filterHealthCheck').and.returnValue($q.when());
+    Events = $injector.get('Events');
+
+    spyOn(Events.prototype, 'getEvents');
   }));
 
   afterEach(function () {

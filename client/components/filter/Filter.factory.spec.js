@@ -20,11 +20,10 @@ describe('Factory: Filter', function () {
       isSaved: true
     }
   },
-    Filter, filterService, localStorageService, branchCollector, contributorCollector, treeCollector, commentCollector, filterUtils, $q;
+    Filter, filterService, localStorageService, branchCollector, contributorCollector, treeCollector, commentCollector, filterUtils, $q, Events;
 
   beforeEach(module('GHReview'));
   beforeEach(module('commitMockModule'));
-  beforeEach(module('eventsMock'));
   beforeEach(module('contributorCollectorMock'));
   beforeEach(module('branchCollectorMock'));
   beforeEach(module('treeCollectorMock'));
@@ -41,6 +40,9 @@ describe('Factory: Filter', function () {
     $q = $injector.get('$q');
     filterUtils = $injector.get('filterUtils');
     spyOn(filterUtils, 'filterHealthCheck').and.returnValue($q.when());
+    Events = $injector.get('Events');
+
+    spyOn(Events.prototype, 'getEvents');
     window.localStorage.setItem('ghreview.filter-existing-filter', JSON.stringify(filterOptions));
   }));
 
