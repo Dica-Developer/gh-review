@@ -5,7 +5,7 @@
     .service('commitCollector', ['$q', '$timeout', 'github', '_', function ($q, $timeout, github, _) {
       var q = $q.defer;
 
-      function getCacheKey (options) {
+      function getCacheKey(options) {
         return _.values(options).join('-');
       }
 

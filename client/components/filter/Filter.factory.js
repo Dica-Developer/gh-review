@@ -24,17 +24,17 @@
       this.events = new Events(this);
     }
 
-    Filter.prototype.healthCheck = function(){
+    Filter.prototype.healthCheck = function () {
       var _this = this;
       filterUtils.filterHealthCheck(this.options)
-        .then(function(){
+        .then(function () {
           _this.healthCheckError = null;
-        }, function(error){
+        }, function (error) {
           _this.healthCheckError = error;
         });
     };
 
-    Filter.prototype.isHealthy = function(){
+    Filter.prototype.isHealthy = function () {
       return this.healthCheckError === null;
     };
 
@@ -77,11 +77,11 @@
       }
     };
 
-    Filter.prototype.isNew = function(){
+    Filter.prototype.isNew = function () {
       return angular.isDefined(this.options.meta.isNew);
     };
 
-    Filter.prototype.lastEdited = function(){
+    Filter.prototype.lastEdited = function () {
       return this.options.meta.lastEdited;
     };
 
@@ -218,7 +218,7 @@
       return (Object.keys(this.options.meta.customFilter).length > 0) || this.getAuthors().length > 1;
     };
 
-    Filter.prototype.handleError = function(error){
+    Filter.prototype.handleError = function (error) {
       $log.error(error);
     };
 
@@ -276,7 +276,7 @@
         githubApiCallOptions = filterUtils.prepareGithubApiCallOptions(this.options, forStandup);
 
 
-      if(this.isHealthy()){
+      if (this.isHealthy()) {
         this.isFetchingCommits = true;
         commitCollector.get(githubApiCallOptions)
           .then(
@@ -328,7 +328,7 @@
 
                   //TODO commit.author can be null how to find the login name of an author
                   if (processAuthors && (authors.indexOf(author) === -1)) {
-                      selectCommit = false;
+                    selectCommit = false;
                   }
 
                   if (excludeOwnCommits && author === userData.login) {
