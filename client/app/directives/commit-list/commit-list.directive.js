@@ -10,8 +10,7 @@
           templateUrl: 'app/directives/commit-list/commit-list.html',
           scope: {
             'commits': '=commitList',
-            'filter': '=',
-            'newCommits': '='
+            'filter': '='
           },
           controller: 'commitListDirectiveController',
           link: function () {

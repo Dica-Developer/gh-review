@@ -5,7 +5,7 @@
            ng-repeat="commit in commits"
            ui-sref="commitBySha({sha: commit.sha, user: filter.getOwner(), repo: filter.getRepo()})"
            class="list-group-item"
-           ng-click="loader = commit.sha">
+           ng-click="handleCommitClick(commit.sha)">
             <div id="{{commit.sha}}" class="scroll-anchor"></div>
             <div class="media">
                 <div class="media-left">

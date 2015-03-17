@@ -106,6 +106,13 @@
           $scope.sortedCommits = groupedSortedCommits;
         };
 
+        $scope.newCommits = _.pluck($scope.filter.events.getCommits(), 'sha');
+
+        $scope.handleCommitClick = function(sha){
+          $scope.loader = sha;
+          $scope.filter.events.removeCommit(sha);
+        };
+
         $scope.commitApproved = function (sha) {
           return approvedCommits && (true === approvedCommits[sha]);
         };
