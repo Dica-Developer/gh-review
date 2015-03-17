@@ -130,7 +130,7 @@
       Events.prototype.markAllCommitsAsRead = function () {
         this.events = this.events.reduce(function (previous, event) {
           if (event.type !== 'PushEvent') {
-            previous.push();
+            previous.push(event);
           }
           return previous;
         }, []);
