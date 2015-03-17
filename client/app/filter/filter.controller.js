@@ -14,7 +14,7 @@
         $scope.repoList = repoList;
         $scope.branchList = [];
         $scope.commits = [];
-        $scope.newCommits = _.pluck($scope.filter.getNewCommits(), 'sha');
+        $scope.newCommits = _.pluck($scope.filter.events.getCommits(), 'sha');
         $scope.currentPage = page;
         $scope.availableFilterSincePattern = ['days', 'weeks', 'years'];
         $scope.availableFilterReviewStates = ['unseen', 'reviewed', 'approved'];
