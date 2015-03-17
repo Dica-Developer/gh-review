@@ -19,7 +19,7 @@
         this.etag = '';
         this.lastUpdate = new Date().getTime();
 
-        var storedEvent = localStorageService.get(this.filterId + '_events');
+        var storedEvent = localStorageService.get('events-' + this.filterId);
         if (storedEvent) {
           this.events = storedEvent.events;
           this.etag = storedEvent.etag;
@@ -124,7 +124,7 @@
 
       Events.prototype.save = function () {
         this.lastUpdate = new Date().getTime();
-        localStorageService.set(this.filterId + '_events', {
+        localStorageService.set('events-' + this.filterId, {
           events: this.events,
           lastUpdate: this.lastUpdate,
           etag: this.etag
@@ -132,7 +132,7 @@
       };
 
       Events.prototype.remove = function () {
-        localStorageService.remove(this.filterId + '_events');
+        localStorageService.remove('events-' + this.filterId);
       };
 
       return Events;
