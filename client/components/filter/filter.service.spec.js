@@ -1,12 +1,13 @@
 describe('Service: filter', function () {
   'use strict';
 
-  var filter, $log, $q, filterUtils, Events;
+  var filter, $log, $q, filterUtils;
 
   beforeEach(module('GHReview'));
   beforeEach(module('contributorCollectorMock'));
   beforeEach(module('branchCollectorMock'));
   beforeEach(module('treeCollectorMock'));
+  beforeEach(module('EventsMock'));
 
   beforeEach(inject(function ($injector) {
     localStorage.setItem('ghreview.filter', 'e0a35c44-1066-9a60-22f2-86bd825bc70c,2d3e5719-fc16-b69e-4a27-1cb2521fbeba');
@@ -17,9 +18,6 @@ describe('Service: filter', function () {
     $q = $injector.get('$q');
     filterUtils = $injector.get('filterUtils');
     spyOn(filterUtils, 'filterHealthCheck').and.returnValue($q.when());
-    Events = $injector.get('Events');
-
-    spyOn(Events.prototype, 'getEvents');
   }));
 
   afterEach(function () {
