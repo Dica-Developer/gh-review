@@ -127,6 +127,16 @@
         this.save();
       };
 
+      Events.prototype.markAllCommitsAsRead = function () {
+        this.events = this.events.reduce(function (previous, event) {
+          if (event.type !== 'PushEvent') {
+            previous.push();
+          }
+          return previous;
+        }, []);
+        this.save();
+      };
+
       Events.prototype.save = function () {
         this.lastUpdate = new Date().getTime();
         localStorageService.set('events-' + this.filterId, {

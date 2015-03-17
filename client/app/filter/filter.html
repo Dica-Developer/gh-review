@@ -62,6 +62,7 @@
                             </ui-select>
                         </div>
                         <div class="pull-right">
+                            <button class="btn btn-default btn-xs" ng-hide="filter.isNew() || newCommits.length === 0" ng-click="filter.events.markAllCommitsAsRead()">Mark all commits as read</button>
                             <button class="btn btn-default btn-xs" ng-click="showAdvanced = !showAdvanced">{{showAdvanced ? 'Less' : 'More'}}</button>
                         </div>
                     </form>

@@ -119,6 +119,12 @@
         $scope.$watch('commits', function () {
           setSortedCommits();
         });
+
+        $scope.$watch(function(){
+          return $scope.filter.events.events.length;
+        }, function(){
+          $scope.newCommits = _.pluck($scope.filter.events.getCommits(), 'sha');
+        });
       }
     ]);
 }(angular));
