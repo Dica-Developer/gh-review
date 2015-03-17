@@ -64,7 +64,7 @@
               initialValue.push(event);
             }
             return initialValue;
-          }, []);
+          }, this.events);
           this.save();
         }
 
