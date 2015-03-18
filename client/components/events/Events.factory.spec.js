@@ -10,8 +10,12 @@ describe('Factory: Events', function () {
       getRepo: function () {
       },
       getBranch: function () {
+        return 'test_branch';
       },
       isHealthy: function () {
+      },
+      invalidateCommitsCache: function () {
+
       }
     },
     eventsList = [
@@ -26,7 +30,7 @@ describe('Factory: Events', function () {
               sha: '1.2'
             }]
         }
-      },{
+      }, {
         type: 'PushEvent',
         payload: {
           ref: '',
@@ -34,8 +38,9 @@ describe('Factory: Events', function () {
             sha: '2.1'
           }]
         }
-      },{
-        type: 'CommitCommentEvent'
+      }, {
+        type: 'CommitCommentEvent',
+        payload: {}
       }
     ];
 
@@ -195,6 +200,18 @@ describe('Factory: Events', function () {
 
   });
 
+  describe('.getCommitCommentEvent', function () {
+
+    it('Should return list of commits of all CommitCommentEvent', function () {
+      var events = new Events(filter), comments;
+      events.events = eventsList;
+      comments = events.getCommitCommentEvent();
+
+      expect(comments.length).toBe(1);
+    });
+
+  });
+
   describe('.removeCommit', function () {
 
     it('Should remove commit from commit list of PushEvent', function () {
@@ -264,11 +281,104 @@ describe('Factory: Events', function () {
         etag: 'new-etag',
         result: []
       });
-      
+
       expect(events.etag).toBe('new-etag');
 
     });
 
+    it('Should proccess filter only if result is an Array', function () {
+      var events = new Events(filter);
+      spyOn(events, 'save');
+
+      events.preFilter({
+        etag: 'new-etag',
+        result: {}
+      });
+
+      expect(events.save).not.toHaveBeenCalled();
+
+      events.preFilter({
+        etag: 'new-etag',
+        result: []
+      });
+
+      expect(events.save).toHaveBeenCalled();
+    });
+
+    it('Should invalidate commits cache if a new event is registered', function () {
+      var events = new Events(filter),
+        lastUpdate = events.lastUpdate,
+        eventListCopy = JSON.parse(JSON.stringify(eventsList));
+      /*jshint camelcase:false*/
+      eventListCopy[0].created_at = new Date(lastUpdate + 1000).toISOString();
+      eventListCopy[1].created_at = new Date(lastUpdate + 1000).toISOString();
+      eventListCopy[2].created_at = new Date(lastUpdate - 1000).toISOString();
+      eventListCopy[0].payload.ref = 'refs/heads/test_branch';
+      eventListCopy[1].payload.ref = 'refs/heads/not-matching';
+      eventListCopy[2].payload.ref = 'refs/heads/test_branch';
+
+      spyOn(filter, 'invalidateCommitsCache');
+
+      events.preFilter({
+        etag: 'new-etag',
+        result: []
+      });
+
+      expect(filter.invalidateCommitsCache).not.toHaveBeenCalled();
+
+      events.preFilter({
+        etag: 'new-etag',
+        result: eventListCopy
+      });
+
+      expect(filter.invalidateCommitsCache).toHaveBeenCalled();
+    });
+
+  });
+
+  describe('.filterByDate', function () {
+
+    it('Should return events if event is younger then Events.lastUpdate', function () {
+      var events = new Events(filter),
+        lastUpdate = events.lastUpdate,
+        eventListCopy = JSON.parse(JSON.stringify(eventsList));
+      /*jshint camelcase:false*/
+      eventListCopy[0].created_at = new Date(lastUpdate + 1000).toISOString();
+      eventListCopy[1].created_at = new Date(lastUpdate + 1000).toISOString();
+      eventListCopy[2].created_at = new Date(lastUpdate - 1000).toISOString();
+
+      var eventsFilteredByDate = events.filterByDate(eventListCopy);
+
+      expect(eventListCopy.length).toBe(3);
+      expect(eventsFilteredByDate.length).toBe(2);
+    });
+  });
+
+  describe('.filterByBranch', function () {
+
+    it('Should return events if event has same branch as Filter', function () {
+      var events = new Events(filter),
+        eventListCopy = JSON.parse(JSON.stringify(eventsList));
+      /*jshint camelcase:false*/
+      eventListCopy[0].payload = undefined;
+      eventListCopy[1].payload.ref = undefined;
+      eventListCopy[2].payload.ref = 'refs/heads/not-matching';
+
+      var eventsFilteredByBranch = events.filterByBranch(eventListCopy);
+
+      expect(eventListCopy.length).toBe(3);
+      expect(eventsFilteredByBranch.length).toBe(0);
+
+      eventListCopy = JSON.parse(JSON.stringify(eventsList));
+
+      eventListCopy[0].payload.ref = 'refs/heads/test_branch';
+      eventListCopy[1].payload.ref = 'refs/heads/not-matching';
+      eventListCopy[2].payload.ref = 'refs/heads/test_branch';
+
+      eventsFilteredByBranch = events.filterByBranch(eventListCopy);
+
+      expect(eventsFilteredByBranch.length).toBe(2);
+    });
   });
 
 });
