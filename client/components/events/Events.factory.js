@@ -37,35 +37,23 @@
           repo: this.repo,
           etag: this.etag === '' ? false : this.etag
         })
-          .then(this.preFilterByDateAndBranch.bind(this), function () {
+          .then(this.preFilter.bind(this), function () {
             $timeout(function () {
               this.getEvents();
             }.bind(this), 60000);
           }.bind(this));
       };
 
-      Events.prototype.preFilterByDateAndBranch = function (data) {
-        var lastUpdate = this.lastUpdate,
-          branch = this.branch,
-          postEventLength = this.events.length;
+      Events.prototype.preFilter = function (data) {
+        var postEventLength = this.events.length;
 
         this.etag = data.etag;
 
         if (Array.isArray(data.result)) {
-          this.events = data.result.reduce(function (initialValue, event) {
-            /*jshint camelcase:false*/
-            var createdAt = new Date(event.created_at).getTime(),
-              eventBranch = false;
+          var filteredByDate = this.filterByDate(data.result),
+            filteredByBranch = this.filterByBranch(filteredByDate);
 
-            if (event.payload && event.payload.ref && event.payload.ref === 'refs/heads/' + branch) {
-              eventBranch = true;
-            }
-
-            if (eventBranch && createdAt > lastUpdate) {
-              initialValue.push(event);
-            }
-            return initialValue;
-          }, this.events);
+          this.events = this.events.concat(filteredByBranch);
           this.save();
 
           if(postEventLength < this.events.length){
@@ -76,6 +64,30 @@
         $timeout(function () {
           this.getEvents();
         }.bind(this), 60000);
+      };
+
+      Events.prototype.filterByDate = function(events){
+        var lastUpdate = this.lastUpdate;
+        return events.reduce(function (initialValue, event) {
+          /*jshint camelcase:false*/
+          var createdAt = new Date(event.created_at).getTime();
+
+          if (createdAt > lastUpdate) {
+            initialValue.push(event);
+          }
+          return initialValue;
+        }, []);
+      };
+
+      Events.prototype.filterByBranch = function(events){
+        var branch = this.branch;
+
+        return events.reduce(function (initialValue, event) {
+          if (event.payload && event.payload.ref && event.payload.ref === 'refs/heads/' + branch) {
+            initialValue.push(event);
+          }
+          return initialValue;
+        }, []);
       };
 
       Events.prototype.getPushEvents = function () {

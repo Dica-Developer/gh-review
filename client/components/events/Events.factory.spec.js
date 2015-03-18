@@ -237,13 +237,13 @@ describe('Factory: Events', function () {
 
   });
 
-  describe('.preFilterByDateAndBranch', function () {
+  describe('.preFilter', function () {
 
     it('Should call .getCommits after a timeout of 1min', function () {
       var events = new Events(filter);
       spyOn(events, 'getEvents');
       events.events = eventsList;
-      events.preFilterByDateAndBranch({
+      events.preFilter({
         etag: '',
         result: []
       });
@@ -260,7 +260,7 @@ describe('Factory: Events', function () {
 
       expect(events.etag).toBe('');
 
-      events.preFilterByDateAndBranch({
+      events.preFilter({
         etag: 'new-etag',
         result: []
       });

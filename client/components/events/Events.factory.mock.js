@@ -23,7 +23,7 @@
 
       };
 
-      Events.prototype.preFilterByDateAndBranch = function () {
+      Events.prototype.preFilter = function () {
 
       };
 
