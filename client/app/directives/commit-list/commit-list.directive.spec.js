@@ -63,6 +63,16 @@ describe('Directive: commit-list', function () {
     expect($scope.commitApproved('10b2a797c7ff0f4d477439da88b2e8f45604e0e7')).toBe(false);
   });
 
+  it('$scope.handleCommitClick call $scope.filter.removeCommit', function () {
+    spyOn(commentCollector, 'getCommitApproved').and.returnValue($q.when({'7e3cc043458366a4205621bc2c006bafd6f6c4db': true}));
+    spyOn($scope.filter.events, 'removeCommit');
+    $controller('commitListDirectiveController', {
+      $scope: $scope
+    });
+    $scope.handleCommitClick('test-sha');
+    expect($scope.filter.events.removeCommit).toHaveBeenCalledWith('test-sha');
+  });
+
 
   /**
    * sorted commit order by commit date time descending
