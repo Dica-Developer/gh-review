@@ -109,7 +109,6 @@
         $scope.newCommits = _.pluck($scope.filter.events.getCommits(), 'sha');
 
         $scope.handleCommitClick = function(sha){
-          $scope.loader = sha;
           $scope.filter.events.removeCommit(sha);
         };
 
