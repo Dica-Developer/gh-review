@@ -8,7 +8,6 @@
         Comment = $injector.get('Comment'),
         Commit = $injector.get('Commit'),
         ghUser = $injector.get('ghUser'),
-        events = $injector.get('events'),
         addLineCommentsToLines, getComments, lineWithNewComment, removeCommentFromScope;
 
       ghUser.get()
@@ -25,7 +24,6 @@
           var splittedUrl = commitResponse.html_url.split('/');
           $scope.commitRepo = splittedUrl[4];
           $scope.repoOwner = splittedUrl[3];
-          events.removeNewCommit(commitResponse.commit.sha);
         });
 
       $scope.commit.getFiles()

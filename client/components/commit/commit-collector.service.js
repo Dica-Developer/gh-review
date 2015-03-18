@@ -5,7 +5,7 @@
     .service('commitCollector', ['$q', '$timeout', 'github', '_', function ($q, $timeout, github, _) {
       var q = $q.defer;
 
-      function getCacheKey (options) {
+      function getCacheKey(options) {
         return _.values(options).join('-');
       }
 
@@ -59,6 +59,11 @@
           });
         return defer.promise;
       };
+
+      CommitCollector.prototype.invalidateCache = function (options) {
+        this.get.cache.delete(getCacheKey(options));
+      };
+
       return new CommitCollector();
     }]);
 }(angular));

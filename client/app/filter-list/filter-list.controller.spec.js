@@ -2,7 +2,7 @@
   'use strict';
 
   describe('Controller: FilterListController', function () {
-    var $rootScope, $scope, $controller, $state, $q, _, importExport, events, filterUtils,
+    var $rootScope, $scope, $controller, $state, $q, _, importExport, filterUtils,
       filterOptions = [
         {'repo':'a','user':'b','sha':'c','since':{'pattern':'weeks','amount':2},'until':{},'path':'','authors':[],'meta':{'isSaved':true,'lastEdited':1412547650986,'customFilter':{'excludeOwnCommits':false,'state':'approved', 'id':'a'}}},
         {'repo':'a','user':'c','sha':'b','since':{'pattern':'weeks','amount':2},'until':{},'path':'','authors':[],'meta':{'isSaved':true,'lastEdited':1412547650986,'customFilter':{'excludeOwnCommits':false,'state':'unseen', 'id':'b'}}},
@@ -14,10 +14,10 @@
 
 
     beforeEach(module('GHReview'));
-    beforeEach(module('eventsMock'));
     beforeEach(module('contributorCollectorMock'));
     beforeEach(module('branchCollectorMock'));
     beforeEach(module('treeCollectorMock'));
+    beforeEach(module('EventsMock'));
     beforeEach(module('commentCollectorMock'));
 
     beforeEach(inject(function($injector){
@@ -29,9 +29,7 @@
       $q = $injector.get('$q');
       _ = $injector.get('_');
       importExport = $injector.get('importExport');
-      events = $injector.get('events');
       filterUtils = $injector.get('filterUtils');
-      spyOn(events, 'getAll');
       spyOn(filterUtils, 'filterHealthCheck').and.returnValue($q.when());
     }));
 

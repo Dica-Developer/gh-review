@@ -2,6 +2,7 @@ describe('Controller: StandupController', function(){
   'use strict';
 
   beforeEach(module('GHReview'));
+  beforeEach(module('EventsMock'));
 
   var $rootScope, $controller, $scope, $q, newFilter, filterUtils;
 

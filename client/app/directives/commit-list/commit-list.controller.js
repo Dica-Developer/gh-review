@@ -106,11 +106,24 @@
           $scope.sortedCommits = groupedSortedCommits;
         };
 
+        $scope.newCommits = _.pluck($scope.filter.events.getCommits(), 'sha');
+
+        $scope.handleCommitClick = function(sha){
+          $scope.loader = sha;
+          $scope.filter.events.removeCommit(sha);
+        };
+
         $scope.commitApproved = function (sha) {
           return approvedCommits && (true === approvedCommits[sha]);
         };
         $scope.$watch('commits', function () {
           setSortedCommits();
+        });
+
+        $scope.$watch(function(){
+          return $scope.filter.events.events.length;
+        }, function(){
+          $scope.newCommits = _.pluck($scope.filter.events.getCommits(), 'sha');
         });
       }
     ]);

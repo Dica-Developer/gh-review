@@ -5,6 +5,7 @@ describe('Directive: commit-list', function () {
   beforeEach(module('GHReview'));
   beforeEach(module('commitMockModule'));
   beforeEach(module('commentCollectorMock'));
+  beforeEach(module('EventsMock'));
   beforeEach(module('app/directives/commit-list/commit-list.html'));
   beforeEach(module('app/welcome/welcome.html'));
 
@@ -21,6 +22,7 @@ describe('Directive: commit-list', function () {
 
     var filterService = $injector.get('filter');
     filter = filterService.getNew();
+    $scope.filter = filter;
   }));
 
   it('Should call commentCollector.getCommitApproved on init', function () {
