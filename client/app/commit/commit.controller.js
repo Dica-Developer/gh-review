@@ -1,4 +1,3 @@
-/*global console*/
 (function (angular) {
   'use strict';
 
