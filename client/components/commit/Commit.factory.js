@@ -11,7 +11,7 @@
           ghComments = $injector.get('ghComments'),
           Comment = $injector.get('Comment'),
           options = $injector.get('options'),
-          Chunk = $injector.get('Chunk');
+          File = $injector.get('File');
 
 
         function splitInLineAndCommitComments(result, user, repo) {
@@ -64,23 +64,9 @@
         Commit.prototype.processCommit = function (commit) {
           this.commitData = commit;
           this.files = _.map(this.commitData.files, function (file) {
-            var lines = file.patch ? file.patch.split(/\r?\n/) : null,
-            /*jshint camelcase: false*/
-              start = file.blob_url.indexOf('blob/') + 'blob/'.length,
-              shaAndPath = file.blob_url.substr(start),
-              end = shaAndPath.indexOf('/'),
-              blobSha = shaAndPath.substr(0, end);
-
-            return {
-              lines: lines ? new Chunk(lines, file.filename) : null,
-              name: file.filename,
-              blobSha: blobSha,
-              additions: file.additions,
-              deletions: file.deletions,
-              changes: file.changes,
-              status: file.status
-            };
+            return new File(file);
           });
+          //console.log(this.files);
           return $q.when();
         };
 

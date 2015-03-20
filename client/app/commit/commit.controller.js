@@ -12,7 +12,7 @@
           lineComments.forEach(function (comment) {
             var path = comment.path,
               file = _.findWhere($scope.files, {
-                name: path
+                filename: path
               });
 
             if (file) {
