@@ -1,8 +1,8 @@
 (function (angular) {
   'use strict';
   angular.module('GHReview')
-    .factory('Comment', ['$q', '$rootScope', '$log', 'ghComments', '_',
-      function ($q, $rootScope, $log, ghComments, _) {
+    .factory('Comment', ['$q', '$log', 'ghComments', '_',
+      function ($q, $log, ghComments, _) {
 
         function Comment(options) {
           if (!options.mode) {
