@@ -6,7 +6,6 @@
       function ($injector) {
 
         var $q = $injector.get('$q'),
-          $timeout = $injector.get('$timeout'),
           _ = $injector.get('_'),
           ghCommits = $injector.get('ghCommits'),
           ghComments = $injector.get('ghComments'),
@@ -15,7 +14,7 @@
           Chunk = $injector.get('Chunk');
 
 
-        function splitInLineAndCommitComments (result, user, repo) {
+        function splitInLineAndCommitComments(result, user, repo) {
           var lineComments = _.filter(result, function (comment) {
             return !_.isNull(comment.line) || !_.isNull(comment.position);
           });
@@ -46,47 +45,57 @@
           };
         }
 
-        function getCacheKey (options) {
-          return _.values(options).join('-');
-        }
-
         function Commit(options) {
           this.options = options;
-          this.getCommit = _.memoize(function (githubOptions) {
-            var _this = this,
-              cacheKey = getCacheKey(githubOptions);
-            $timeout(function () {
-              _this.getCommit.cache.delete(cacheKey);
-            }, (10 * 60 * 1000)); //10min
-            return ghCommits.bySha(githubOptions);
-          }, getCacheKey);
         }
 
-        Commit.prototype.getFiles = function () {
-          var defer = $q.defer();
-          this.getCommit(this.options)
-            .then(function (commit) {
-              var files = _.map(commit.files, function (file) {
-                var lines = file.patch ? file.patch.split(/\r?\n/) : null,
-                /*jshint camelcase: false*/
-                  start = file.blob_url.indexOf('blob/') + 'blob/'.length,
-                  shaAndPath = file.blob_url.substr(start),
-                  end = shaAndPath.indexOf('/'),
-                  blobSha = shaAndPath.substr(0, end);
+        Commit.prototype.prepareForView = function () {
+          return ghCommits.bySha(this.options)
+            .then(this.processCommit.bind(this))
+            .then(this.getComments.bind(this))
+            .then(this.processComments.bind(this))
+            .then(this.returnSelf.bind(this));
+        };
 
-                return {
-                  lines: lines ? new Chunk(lines, file.filename) : null,
-                  name: file.filename,
-                  blobSha: blobSha,
-                  additions: file.additions,
-                  deletions: file.deletions,
-                  changes: file.changes,
-                  status: file.status
-                };
-              });
-              defer.resolve(files);
-            });
-          return defer.promise;
+        Commit.prototype.returnSelf = function () {
+          return $q.when(this);
+        };
+
+        Commit.prototype.processCommit = function (commit) {
+          this.commitData = commit;
+          this.files = _.map(this.commitData.files, function (file) {
+            var lines = file.patch ? file.patch.split(/\r?\n/) : null,
+            /*jshint camelcase: false*/
+              start = file.blob_url.indexOf('blob/') + 'blob/'.length,
+              shaAndPath = file.blob_url.substr(start),
+              end = shaAndPath.indexOf('/'),
+              blobSha = shaAndPath.substr(0, end);
+
+            return {
+              lines: lines ? new Chunk(lines, file.filename) : null,
+              name: file.filename,
+              blobSha: blobSha,
+              additions: file.additions,
+              deletions: file.deletions,
+              changes: file.changes,
+              status: file.status
+            };
+          });
+          return $q.when();
+        };
+
+        Commit.prototype.getComments = function () {
+          return ghComments.getForCommit(this.options);
+        };
+
+        Commit.prototype.processComments = function (comments) {
+          this.comments = splitInLineAndCommitComments(comments, this.options.user, this.options.repo);
+          return $q.when();
+        };
+
+        Commit.prototype.updateComments = function () {
+          return this.getComments()
+            .then(this.processComments.bind(this));
         };
 
         Commit.prototype.approve = function (user) {
@@ -107,38 +116,27 @@
 
         Commit.prototype.unapprove = function (user) {
 
-          var approvedComment = _.find(this.comments.commitComments, function(comment){
+          var approvedComment = _.find(this.comments.commitComments, function (comment) {
             return comment.getApprover().indexOf(user.login) > -1;
           }, this);
 
           return approvedComment.remove();
         };
 
-        Commit.prototype.getComments = function(){
-          var defer = $q.defer(),
-            self = this;
-          ghComments.getForCommit(this.options)
-            .then(function(commentResponse){
-              self.comments = splitInLineAndCommitComments(commentResponse, self.options.user, self.options.repo);
-              defer.resolve(self.comments);
-            });
-          return defer.promise;
-        };
-
-        Commit.prototype.getApprover = function(){
-          if(!this.comments){
+        Commit.prototype.getApprover = function () {
+          if (!this.comments) {
             return [];
           }
-          return _.reduce(this.comments.commitComments, function(result, comment){
+          return _.reduce(this.comments.commitComments, function (result, comment) {
             var approver = comment.getApprover();
-            if(approver){
+            if (approver) {
               result.push(approver);
             }
             return result;
           }, []);
         };
 
-        Commit.prototype.isApprovedByUser = function(user){
+        Commit.prototype.isApprovedByUser = function (user) {
           return user ? this.getApprover().indexOf(user.login) > -1 : false;
         };
 
