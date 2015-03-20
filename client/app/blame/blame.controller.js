@@ -1,7 +1,7 @@
 (function (angular) {
   'use strict';
   angular.module('GHReview')
-    .controller('FileController', [
+    .controller('BlameController', [
       '$scope',
       '$q',
       '$log',

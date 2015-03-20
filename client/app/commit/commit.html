@@ -31,7 +31,7 @@
                 <div class="panel-heading"
                      ng-init="file.isClosed = ($index >= 5 || file.status === 'removed' || file.changes === 0)">
                     File: <a
-                        ui-sref="file({user: repoOwner, repo: commitRepo, sha: commitResponse.sha, path: file.name, ref: file.blobSha})">{{file.name}}</a>
+                        ui-sref="blame({user: repoOwner, repo: commitRepo, sha: commitResponse.sha, path: file.name, ref: file.blobSha})">{{file.name}}</a>
 
                     <div class="pull-right">
                     <span class="label label-primary">

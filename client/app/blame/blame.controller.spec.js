@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  describe('Controller: FileController', function () {
+  describe('Controller: BlameController', function () {
 
     beforeEach(module('GHReview'));
 

@@ -5,10 +5,10 @@
       function ($stateProvider) {
 
         $stateProvider
-          .state('file', {
+          .state('blame', {
             url: '/{user}/{repo}/blob/{sha}/{path:.*}',
-            templateUrl: 'app/file/file.html',
-            controller: 'FileController',
+            templateUrl: 'app/blame/blame.html',
+            controller: 'BlameController',
             resolve: {
               fileContent: ['$stateParams', 'ghFile',
                 function ($stateParams, ghFile) {
