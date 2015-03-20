@@ -1,45 +1,56 @@
+/*global console*/
 (function (angular) {
   'use strict';
 
   angular.module('GHReview')
-    .controller('CommitController', ['$injector', '$scope', '$stateParams', function ($injector, $scope, $stateParams) {
+    .controller('CommitController', ['$injector', '$scope', 'preparedCommit', function ($injector, $scope, preparedCommit) {
 
       var _ = $injector.get('_'),
         Comment = $injector.get('Comment'),
-        Commit = $injector.get('Commit'),
         ghUser = $injector.get('ghUser'),
-        addLineCommentsToLines, getComments, lineWithNewComment, removeCommentFromScope;
+        lineWithNewComment, removeCommentFromScope,
+        addLineCommentsToLines = function (lineComments) {
+          lineComments.forEach(function (comment) {
+            var path = comment.path,
+              file = _.findWhere($scope.files, {
+                name: path
+              });
+
+            if (file) {
+              var commentPosition = file.lines.lines[comment.position];
+              if (!commentPosition.comments) {
+                commentPosition.comments = [];
+              }
+              if (!file.commentCount) {
+                file.commentCount = 0;
+              }
+              commentPosition.comments.push(comment);
+              file.commentCount++;
+            }
+          });
+        },
+        updateComments = function(){
+          preparedCommit.updateComments()
+            .then(function(){
+              addLineCommentsToLines(preparedCommit.comments.lineComments);
+              $scope.approvers = preparedCommit.getApprover();
+            });
+        };
 
       ghUser.get()
         .then(function (user) {
           $scope.loggedInUser = user;
         });
 
-      $scope.commit = new Commit($stateParams);
-      $scope.commit.getCommit($stateParams)
-        .then(function (commitResponse) {
-          $scope.commitResponse = commitResponse;
-          //TODO add test
-          /*jshint camelcase: false*/
-          var splittedUrl = commitResponse.html_url.split('/');
-          $scope.commitRepo = splittedUrl[4];
-          $scope.repoOwner = splittedUrl[3];
-        });
+      $scope.commit = preparedCommit;
+      $scope.commitResponse = preparedCommit.commitData;
+      $scope.commitRepo = preparedCommit.options.repo;
+      $scope.repoOwner = preparedCommit.options.user;
+      $scope.files = preparedCommit.files;
+      $scope.commitComments = preparedCommit.comments.commitComments;
+      $scope.approvers = preparedCommit.getApprover();
 
-      $scope.commit.getFiles()
-        .then(function (files) {
-          $scope.files = files;
-          getComments();
-        });
-
-      getComments = function () {
-        $scope.commit.getComments()
-          .then(function (commentsResponse) {
-            $scope.commitComments = commentsResponse.commitComments;
-            addLineCommentsToLines(commentsResponse.lineComments);
-            $scope.approvers = $scope.commit.getApprover();
-          });
-      };
+      addLineCommentsToLines(preparedCommit.comments.lineComments);
 
       $scope.addLineComment = function (line) {
         removeCommentFromScope();
@@ -50,11 +61,11 @@
           mode: 'edit',
           position: line.position,
           line: line.lineNrLeft || line.lineNrRight,
-          sha: $stateParams.sha,
+          sha: preparedCommit.options.sha,
           path: line.path,
           editInformations: {
-            repo: $stateParams.repo,
-            user: $stateParams.user
+            repo: preparedCommit.options.repo,
+            user: preparedCommit.options.user
           },
           user: $scope.loggedInUser
         }));
@@ -67,11 +78,11 @@
           mode: 'edit',
           position: null,
           line: null,
-          sha: $stateParams.sha,
+          sha: preparedCommit.options.sha,
           path: null,
           editInformations: {
-            repo: $stateParams.repo,
-            user: $stateParams.user
+            repo: preparedCommit.options.repo,
+            user: preparedCommit.options.user
           },
           user: $scope.loggedInUser
         }));
@@ -79,7 +90,7 @@
 
       $scope.removeComment = function (line, commentToRemove) {
         commentToRemove.remove()
-          .then(getComments);
+          .then(updateComments);
         if (line) {
           _.remove(line.comments, function (comment) {
             return comment.id === commentToRemove.id;
@@ -92,13 +103,13 @@
       };
 
       $scope.approveCommit = function () {
-        $scope.commit.approve($scope.loggedInUser)
-          .then(getComments);
+        preparedCommit.approve($scope.loggedInUser)
+          .then(updateComments);
       };
 
       $scope.unapproveCommit = function () {
-        $scope.commit.unapprove($scope.loggedInUser)
-          .then(getComments);
+        preparedCommit.unapprove($scope.loggedInUser)
+          .then(updateComments);
       };
 
       removeCommentFromScope = function () {
@@ -109,27 +120,6 @@
         _.remove($scope.commitComments, function (comment) {
           /*jshint camelcase:false*/
           return comment.mode === 'edit' || _.isUndefined(comment.body_html);
-        });
-      };
-
-      addLineCommentsToLines = function (lineComments) {
-        lineComments.forEach(function (comment) {
-          var path = comment.path,
-            file = _.findWhere($scope.files, {
-              name: path
-            });
-
-          if (file) {
-            var commentPosition = file.lines.lines[comment.position];
-            if (!commentPosition.comments) {
-              commentPosition.comments = [];
-            }
-            if (!file.commentCount) {
-              file.commentCount = 0;
-            }
-            commentPosition.comments.push(comment);
-            file.commentCount++;
-          }
         });
       };
     }]);
