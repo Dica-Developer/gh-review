@@ -16,6 +16,18 @@
           }
         }
 
+        File.prototype.addLineComment = function(position, comment){
+          var line = this.lines.lines[position];
+          if (!line.comments) {
+            line.comments = [];
+          }
+          if (!this.commentCount) {
+            this.commentCount = 0;
+          }
+          line.comments.push(comment);
+          this.commentCount++;
+        };
+
         return File;
       }]);
 

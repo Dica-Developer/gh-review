@@ -128,11 +128,10 @@ describe('Factory: Commit', function () {
       expect(commit.comments).toBeDefined();
     });
 
-    it('Should set commit.comments splitted in line and commit comments', function () {
+    it('Should set commit.comments', function () {
       expect(commit.comments).not.toBeDefined();
       commit.processComments(commentsMock[0]);
-      expect(commit.comments.lineComments).toBeDefined();
-      expect(commit.comments.commitComments).toBeDefined();
+      expect(commit.comments).toBeDefined();
     });
 
     it('Should return promise', function () {
@@ -219,7 +218,7 @@ describe('Factory: Commit', function () {
 
     it('Should return a promise', function () {
       commit.processComments(commentsMock[0]);
-      var comment = commit.comments.commitComments[0];
+      var comment = commit.comments[0];
       spyOn(comment, 'remove').and.returnValue($q.when());
       var expectedPromise = commit.unapprove({login: 'JayGray'});
       expect(expectedPromise.then).toBeDefined();
@@ -227,7 +226,7 @@ describe('Factory: Commit', function () {
 
     it('Should call Comment#remove', function () {
       commit.processComments(commentsMock[0]);
-      var comment = commit.comments.commitComments[0];
+      var comment = commit.comments[0];
       spyOn(comment, 'remove');
       commit.unapprove({login: 'JayGray'});
       expect(comment.remove).toHaveBeenCalled();

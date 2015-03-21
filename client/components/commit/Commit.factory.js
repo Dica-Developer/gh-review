@@ -14,37 +14,6 @@
           File = $injector.get('File');
 
 
-        function splitInLineAndCommitComments(result, user, repo) {
-          var lineComments = _.filter(result, function (comment) {
-            return !_.isNull(comment.line) || !_.isNull(comment.position);
-          });
-          var commitComments = _.where(result, {
-            line: null,
-            position: null
-          });
-
-          lineComments = _.map(lineComments, function (comment) {
-            comment.editInformations = {
-              user: user,
-              repo: repo
-            };
-            return new Comment(comment);
-          });
-
-          commitComments = _.map(commitComments, function (comment) {
-            comment.editInformations = {
-              user: user,
-              repo: repo
-            };
-            return new Comment(comment);
-          });
-
-          return {
-            lineComments: lineComments,
-            commitComments: commitComments
-          };
-        }
-
         function Commit(options) {
           this.options = options;
         }
@@ -74,7 +43,37 @@
         };
 
         Commit.prototype.processComments = function (comments) {
-          this.comments = splitInLineAndCommitComments(comments, this.options.user, this.options.repo);
+          var editInformations = {
+              user: this.options.user,
+              repo: this.options.repo
+            },
+            files = this.files;
+
+          //TODO should be optimized by not looping over comments again and again, one loop is enough
+
+          this.comments = comments.reduce(function (initialValue, comment) {
+            if (comment.path === '' || comment.path === null) {
+              comment.editInformations = editInformations;
+              initialValue.push(new Comment(comment));
+            }
+            return initialValue;
+          }, []);
+
+          var lineComments = comments.reduce(function (initialValue, comment) {
+            if (comment.path !== '' && comment.path !== null) {
+              comment.editInformations = editInformations;
+              initialValue.push(comment);
+            }
+            return initialValue;
+          }, []);
+
+          lineComments.forEach(function (comment) {
+            var file = _.findWhere(files, { filename: comment.path });
+            if(file){
+              file.addLineComment(comment.position, new Comment(comment));
+            }
+          });
+
           return $q.when();
         };
 
@@ -101,8 +100,8 @@
 
         Commit.prototype.unapprove = function (user) {
 
-          var approvedComment = _.find(this.comments.commitComments, function (comment) {
-            return comment.getApprover().indexOf(user.login) > -1;
+          var approvedComment = _.find(this.comments, function (comment) {
+            return comment.isApproval() && comment.getApprover().indexOf(user.login) > -1;
           }, this);
 
           return approvedComment.remove();
@@ -112,7 +111,7 @@
           if (!this.comments) {
             return [];
           }
-          return _.reduce(this.comments.commitComments, function (result, comment) {
+          return _.reduce(this.comments, function (result, comment) {
             var approver = comment.getApprover();
             if (approver) {
               result.push(approver);

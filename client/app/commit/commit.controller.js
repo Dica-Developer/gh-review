@@ -8,31 +8,11 @@
         Comment = $injector.get('Comment'),
         ghUser = $injector.get('ghUser'),
         lineWithNewComment, removeCommentFromScope,
-        addLineCommentsToLines = function (lineComments) {
-          lineComments.forEach(function (comment) {
-            var path = comment.path,
-              file = _.findWhere($scope.files, {
-                filename: path
-              });
-
-            if (file) {
-              var commentPosition = file.lines.lines[comment.position];
-              if (!commentPosition.comments) {
-                commentPosition.comments = [];
-              }
-              if (!file.commentCount) {
-                file.commentCount = 0;
-              }
-              commentPosition.comments.push(comment);
-              file.commentCount++;
-            }
-          });
-        },
         updateComments = function(){
           preparedCommit.updateComments()
             .then(function(){
-              addLineCommentsToLines(preparedCommit.comments.lineComments);
               $scope.approvers = preparedCommit.getApprover();
+              $scope.commitComments = preparedCommit.comments;
             });
         };
 
@@ -46,10 +26,8 @@
       $scope.commitRepo = preparedCommit.options.repo;
       $scope.repoOwner = preparedCommit.options.user;
       $scope.files = preparedCommit.files;
-      $scope.commitComments = preparedCommit.comments.commitComments;
+      $scope.commitComments = preparedCommit.comments;
       $scope.approvers = preparedCommit.getApprover();
-
-      addLineCommentsToLines(preparedCommit.comments.lineComments);
 
       $scope.addLineComment = function (line) {
         removeCommentFromScope();

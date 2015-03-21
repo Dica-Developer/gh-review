@@ -2,43 +2,18 @@
   'use strict';
 
   angular.module('CommitMock', [])
-    .factory('Commit', function (Comment, _) {
+    .factory('Commit', function (Comment) {
 
-      function splitInLineAndCommitComments(result, user, repo) {
-        var lineComments = _.filter(result, function (comment) {
-          return !_.isNull(comment.line) || !_.isNull(comment.position);
-        });
-        var commitComments = _.where(result, {
-          line: null,
-          position: null
-        });
-
-        lineComments = _.map(lineComments, function (comment) {
-          comment.editInformations = {
-            user: user,
-            repo: repo
-          };
-          return new Comment(comment);
-        });
-
-        commitComments = _.map(commitComments, function (comment) {
-          comment.editInformations = {
-            user: user,
-            repo: repo
-          };
-          return new Comment(comment);
-        });
-
-        return {
-          lineComments: lineComments,
-          commitComments: commitComments
-        };
-      }
 
       function Commit(options) {
         this.options = options;
         this.prepareComments = function(comments){
-          this.comments = splitInLineAndCommitComments(comments);
+          this.comments = comments.reduce(function (initialValue, comment) {
+            if (comment.path === '' || comment.path === null) {
+              initialValue.push(new Comment(comment));
+            }
+            return initialValue;
+          }, []);
         };
       }
 
