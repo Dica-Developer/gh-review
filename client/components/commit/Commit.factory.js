@@ -66,7 +66,6 @@
           this.files = _.map(this.commitData.files, function (file) {
             return new File(file);
           });
-          //console.log(this.files);
           return $q.when();
         };
 
