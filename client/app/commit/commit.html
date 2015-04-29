@@ -33,7 +33,29 @@
                     File: <a
                         ui-sref="file({user: repoOwner, repo: commitRepo, sha: commitResponse.sha, path: file.name, ref: file.blobSha})">{{file.name}}</a>
 
-                    <div class="pull-right">
+                    <div class="pull-right hidden-sm hidden-xs">
+                    <span class="label label-primary">
+                        <span class="glyphicon glyphicon-status"></span>{{file.status}}
+                    </span>
+                    <span class="label label-success" ng-if="file.additions > 0">
+                        <span class="glyphicon glyphicon-plus"></span> {{file.additions}}
+                    </span>
+                    <span class="label label-danger" ng-if="file.deletions > 0">
+                        <span class="glyphicon glyphicon-minus"></span> {{file.deletions}}
+                    </span>
+                    <span class="label label-info">
+                        <span class="glyphicon glyphicon-transfer"></span> {{file.changes}}
+                    </span>
+                    <span class="label label-primary" ng-if="file.commentCount">
+                        <span class="glyphicon glyphicon-comment"></span> {{file.commentCount}}
+                    </span>
+                    <span class="label label-default collapse-expand-label"
+                          ng-click="file.isClosed = file.isClosed ? false : true" ng-if="file.changes > 0">
+                        <span class="glyphicon glyphicon"
+                              ng-class="{'glyphicon-save': file.isClosed, 'glyphicon-open': !file.isClosed}"></span> {{file.isClosed ? 'Expand&nbsp;&nbsp;': 'Collapse'}}
+                    </span>
+                    </div>
+                    <div class="visible-xs visible-sm">
                     <span class="label label-primary">
                         <span class="glyphicon glyphicon-status"></span>{{file.status}}
                     </span>
