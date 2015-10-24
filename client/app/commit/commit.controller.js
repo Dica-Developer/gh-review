@@ -42,22 +42,24 @@
       };
 
       $scope.addLineComment = function (line) {
-        removeCommentFromScope();
-        line.comments = line.comments || [];
-        lineWithNewComment = line.comments;
+        if(line.format !== 'chunk-header') {
+          removeCommentFromScope();
+          line.comments = line.comments || [];
+          lineWithNewComment = line.comments;
 
-        line.comments.push(new Comment({
-          mode: 'edit',
-          position: line.position,
-          line: line.lineNrLeft || line.lineNrRight,
-          sha: $stateParams.sha,
-          path: line.path,
-          editInformations: {
-            repo: $stateParams.repo,
-            user: $stateParams.user
-          },
-          user: $scope.loggedInUser
-        }));
+          line.comments.push(new Comment({
+            mode: 'edit',
+            position: line.position,
+            line: line.lineNrLeft || line.lineNrRight,
+            sha: $stateParams.sha,
+            path: line.path,
+            editInformations: {
+              repo: $stateParams.repo,
+              user: $stateParams.user
+            },
+            user: $scope.loggedInUser
+          }));
+        }
       };
 
 
