@@ -12,7 +12,6 @@
 
         $scope.$watch('selectedRepo', function (newRepo, oldRepo) {
           if (!_.isEqual(newRepo, oldRepo) && !_.isNull(newRepo)) {
-            console.log(newRepo);
             $scope.user = newRepo.owner.login;
             $scope.repo = newRepo.name;
             ghPullRequest.getAll({
@@ -20,7 +19,6 @@
                 'repo': newRepo.name
               })
               .then(function (pulls) {
-                console.log(pulls);
                 $scope.pulls = pulls;
               });
           }

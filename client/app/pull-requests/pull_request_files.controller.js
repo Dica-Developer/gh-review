@@ -14,7 +14,7 @@
             number: $stateParams.number
           })
           .then(function (files) {
-            var cFiles = _.map(files, function (file) {
+            $scope.files = _.map(files, function (file) {
               var lines = file.patch ? file.patch.split(/\r?\n/) : null,
               /*jshint camelcase: false*/
                 start = file.blob_url.indexOf('blob/') + 'blob/'.length,
@@ -32,7 +32,6 @@
                 status: file.status
               };
             });
-            $scope.files = cFiles;
           });
       }
     ]);
