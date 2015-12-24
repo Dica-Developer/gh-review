@@ -15,6 +15,11 @@
           'title': 'Modules',
           'link': 'modules',
           'id': 'menu-modules'
+        },
+        {
+          'title': 'Pull Requests',
+          'link': 'pullRequestList',
+          'id': 'menu-pull_request_list'
         }
       ];
       $scope.submenu = [

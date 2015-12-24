@@ -1,0 +1,30 @@
+<div ng-include="'components/menu/menu.html'"></div>
+<div id="main" class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="form-group">
+                <label for="selectGroup">Repository: </label>
+                <select id="selectGroup"
+                        class="form-control input-sm"
+                        ng-options="repo.name group by repo.owner.login for repo in repoList track by repo.full_name"
+                        ng-model="scope.selectedRepo">
+                    <option value="">--- choose repository ---</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div ng-if="pulls.length > 0">
+                <ul class="list-group">
+                    <a ng-repeat="pull in pulls"
+                       ui-sref="pullRequestFiles({user: user, repo: repo, number: pull.number})"
+                       class="list-group-item"
+                    >
+                        {{pull.title}}
+                    </a>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
