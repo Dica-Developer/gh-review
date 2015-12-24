@@ -1,0 +1,81 @@
+patch-table {
+  .panel-heading {
+    display: flex;
+    flex-flow: row nowrap;
+
+    .patch-table-header-stats {
+      display: flex;
+      align-items: center;
+      margin-left: auto;
+    }
+  }
+
+  .panel-body {
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0;
+
+    table {
+
+      tr {
+        &.added {
+          &:hover {
+            td {
+              background-color: @gray-lighter;
+            }
+          }
+          td {
+            background-color: @state-success-bg;
+          }
+        }
+
+        &.deleted {
+          &:hover {
+            td {
+              background-color: @gray-lighter;
+            }
+          }
+          td {
+            background-color: @state-danger-bg;
+          }
+        }
+        &.chunk-header {
+          &:hover {
+            td {
+              background-color: @state-info-bg;
+            }
+          }
+          td {
+            background-color: @state-info-bg;
+          }
+        }
+      }
+
+      td {
+        padding-left: 10px;
+        padding-right: 10px;
+        font-family: DroidSansMono, monospace, monospace;
+
+        &.line-nr {
+          width: 1%;
+          min-width: 50px;
+          white-space: nowrap;
+          vertical-align: top;
+          text-align: right;
+          cursor: pointer;
+          border-right: 1px solid #cccccc;
+        }
+        pre {
+          padding: 0;
+          display: block;
+          margin: 0;
+          word-break: break-all;
+          word-wrap: break-word;
+          background-color: transparent;
+          border: none;
+          font-family: DroidSansMono, monospace, monospace;
+        }
+      }
+    }
+  }
+}

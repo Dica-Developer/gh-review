@@ -1,0 +1,26 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <span>File:</span>
+        <a ui-sref="file({user: repoOwner, repo: commitRepo, sha: commitResponse.sha, path: file.name, ref: file.blobSha})">{{file.name}}</a>
+
+        <div class="patch-table-header-stats">
+            <span class="label label-primary"><span class="glyphicon glyphicon-status"></span>{{file.status}}</span>
+            <span class="label label-success" ng-if="file.additions > 0"><span class="glyphicon glyphicon-plus"></span>{{file.additions}}</span>
+            <span class="label label-danger" ng-if="file.deletions > 0"><span class="glyphicon glyphicon-minus"></span> {{file.deletions}}</span>
+            <span class="label label-info"><span class="glyphicon glyphicon-transfer"></span>{{file.changes}}</span>
+            <span class="label label-primary" ng-if="file.commentCount"><span class="glyphicon glyphicon-comment"></span>{{file.commentCount}}</span>
+            <span class="label label-default collapse-expand-label" ng-click="toggleFileView()" ng-if="file.changes > 0">
+                <span class="glyphicon glyphicon" ng-class="{'glyphicon-save': isClosed, 'glyphicon-open': !isClosed}"></span>{{isClosed ? 'Expand&nbsp;&nbsp;': 'Collapse'}}
+            </span>
+        </div>
+    </div>
+    <div class="panel-body">
+        <table ng-if="!isClosed">
+            <tr ng-repeat="line in file.lines.lines" ng-class="line.format" ng-dblclick="addLineComment(line)">
+                <td class="line-nr">{{line.lineNrLeft}}</td>
+                <td class="line-nr">{{line.lineNrRight}}</td>
+                <td ><pre>{{line.text}}</pre></td>
+            </tr>
+        </table>
+    </div>
+</div>
