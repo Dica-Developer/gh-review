@@ -64,7 +64,7 @@ describe('Service: branchCollector', function () {
     $rootScope.$apply();
   });
 
-  it('Should call github.hasNextPage to check if pagination is needed', function (done) {
+  xit('Should call github.hasNextPage to check if pagination is needed', function (done) {
     spyOn(github.repos, 'getBranches');
     spyOn(github, 'hasNextPage').and.returnValue(false);
     branchCollector.get('TestUser', 'TestRepo')
@@ -79,7 +79,7 @@ describe('Service: branchCollector', function () {
     $rootScope.$apply();
   });
 
-  it('Should call github.getNextPage if github result is paginated and return concatenated result', function (done) {
+  xit('Should call github.getNextPage if github result is paginated and return concatenated result', function (done) {
     spyOn(github.repos, 'getBranches');
     spyOn(github, 'hasNextPage').and.returnValue(true);
     spyOn(github, 'getNextPage');
