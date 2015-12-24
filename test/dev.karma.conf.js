@@ -38,7 +38,7 @@ module.exports = function (config) {
     reporters: ['mocha', 'coverage'],
     preprocessors: {
       'client/!(bower_components)/**/!(*.spec|*.mock).js': 'coverage',
-      '**/*.html': 'html2js'
+      '**/*.html': 'ng-html2js'
     },
     ngHtml2JsPreprocessor: {
       stripPrefix: 'client/'
