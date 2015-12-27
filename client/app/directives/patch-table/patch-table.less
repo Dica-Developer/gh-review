@@ -49,6 +49,11 @@ patch-table {
             background-color: @state-info-bg;
           }
         }
+        &.blob {
+          td {
+            background-color: rgba(204, 204, 204, .1);
+          }
+        }
       }
 
       td {
@@ -65,6 +70,17 @@ patch-table {
           cursor: pointer;
           border-right: 1px solid #cccccc;
         }
+
+        &.expand {
+          width: 1%;
+          min-width: 50px;
+          white-space: nowrap;
+          vertical-align: top;
+          text-align: center;
+          cursor: pointer;
+          border-right: 1px solid #cccccc;
+        }
+
         pre {
           padding: 0;
           display: block;

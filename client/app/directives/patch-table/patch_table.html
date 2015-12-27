@@ -1,7 +1,7 @@
 <div class="panel panel-default">
     <div class="panel-heading">
         <span>File:</span>
-        <a ui-sref="file({user: repoOwner, repo: commitRepo, sha: commitResponse.sha, path: file.name, ref: file.blobSha})">{{file.name}}</a>
+        <a ui-sref="file({user: file.user, repo: file.repo, sha: file.sha, path: file.filename, ref: file.blobSha})">{{file.filename}}</a>
 
         <div class="patch-table-header-stats">
             <span class="label label-primary"><span class="glyphicon glyphicon-status"></span>{{file.status}}</span>
@@ -10,15 +10,19 @@
             <span class="label label-info"><span class="glyphicon glyphicon-transfer"></span>{{file.changes}}</span>
             <span class="label label-primary" ng-if="file.commentCount"><span class="glyphicon glyphicon-comment"></span>{{file.commentCount}}</span>
             <span class="label label-default collapse-expand-label" ng-click="toggleFileView()" ng-if="file.changes > 0">
-                <span class="glyphicon glyphicon" ng-class="{'glyphicon-save': isClosed, 'glyphicon-open': !isClosed}"></span>{{isClosed ? 'Expand&nbsp;&nbsp;': 'Collapse'}}
+                <span class="glyphicon glyphicon" ng-class="{'glyphicon-save': isClosed, 'glyphicon-open': !isClosed}"></span>{{isClosed ? 'Expand': 'Collapse'}}
             </span>
         </div>
     </div>
     <div class="panel-body">
         <table ng-if="!isClosed">
-            <tr ng-repeat="line in file.lines.lines" ng-class="line.format" ng-dblclick="addLineComment(line)">
-                <td class="line-nr">{{line.lineNrLeft}}</td>
-                <td class="line-nr">{{line.lineNrRight}}</td>
+            <tr ng-repeat="line in file.blob.lines" ng-class="line.format" ng-dblclick="addLineComment(line)">
+                <td class="line-nr" ng-if="line.format !== 'chunk-header'">{{line.lineNrLeft}}</td>
+                <td class="line-nr" ng-if="line.format !== 'chunk-header'">{{line.lineNrRight}}</td>
+                <td class="expand" ng-if="line.format == 'chunk-header'" colspan="2" ng-click="file.blob.expand(line)">
+                    <span class="glyphicon glyphicon-sort"></span>
+                    Expand
+                </td>
                 <td ><pre>{{line.text}}</pre></td>
             </tr>
         </table>
