@@ -12,6 +12,7 @@
 
     var chunkHeadingRegExp = new RegExp('^@@.*?[-+](\\d+)(,\\d+){0,1}\\s[-+](\\d+)(,\\d+){0,1} @@', 'g');
 
+    /* jshint -W040 */
     function addLine(line, index) {
       var computedLine = null;
       if (this.isMatchingChunkHeading(line)) {
@@ -26,6 +27,7 @@
       computedLine.position = index;
       return computedLine;
     }
+    /* jshint +W040 */
 
     function Chunk(lines, path) {
       this.leftNr = 0;
