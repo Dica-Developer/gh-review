@@ -26,7 +26,6 @@ describe('Factory: Chunk', function () {
 
   it('Should have correct API', function () {
     var chunk = new Chunk([]);
-    expect(chunk.addLine).toBeDefined();
     expect(chunk.extractChunk).toBeDefined();
     expect(chunk.addChunkLine).toBeDefined();
     expect(chunk.addDeletedLine).toBeDefined();
